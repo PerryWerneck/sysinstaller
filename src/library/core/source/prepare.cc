@@ -230,11 +230,13 @@
 				throw runtime_error(Logger::Message(_("Empty response from {}"),worker->url().c_str()));
 			}
 
+			/*
 			trace(
 				"Got a '{}' response from server '{}'",
 					worker->response("Content-Type").value(),
 					worker->response("Server").value()
 			);
+			*/
 
 			// FIX-ME: Detect server.
 			apache_mirror(index,worker->url().c_str(),imgpath,files);

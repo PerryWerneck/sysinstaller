@@ -171,9 +171,6 @@
 				return true;
 			});
 
-			// bool defscripts = getAttribute(node, "grub", "default-scripts", ???);
-
-
 		}
 
 		std::shared_ptr<Reinstall::Builder> BuilderFactory() const override {

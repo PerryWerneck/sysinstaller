@@ -111,6 +111,7 @@
 			Udjat::XML::StringFactory(
 				node,
 				"title",
+				"value",
 				hwnd.get_title().c_str()
 			)
 		);
@@ -119,6 +120,7 @@
 			Udjat::XML::StringFactory(
 				node,
 				"sub-title",
+				"value",
 				hwnd.layout.title.get_text().c_str()
 			)
 		);
@@ -127,6 +129,7 @@
 			Udjat::XML::StringFactory(
 				node,
 				"cancel",
+				"value",
 				hwnd.buttons.cancel.get_label().c_str()
 			)
 		);
@@ -135,6 +138,7 @@
 			Udjat::XML::StringFactory(
 				node,
 				"apply",
+				"value",
 				hwnd.buttons.apply.get_label().c_str()
 			)
 		);
@@ -143,8 +147,9 @@
 			Udjat::XML::StringFactory(
 				node,
 				"logo",
+				"value",
 				"logo"
-			)
+			).c_str()
 		);
 
 #endif // UDJAT_CHECK_VERSION

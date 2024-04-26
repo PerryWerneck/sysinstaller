@@ -99,7 +99,7 @@
 
 	// The group URL
 	{
-		const char *url = node.attribute("url").as_string();
+		const char *url = node.attribute("help-url").as_string();
 
 		if(url && *url) {
 
