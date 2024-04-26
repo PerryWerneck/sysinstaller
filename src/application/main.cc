@@ -22,13 +22,21 @@
   */
 
  #include <config.h>
-
- #include <gtkmm.h>
- #include <glibmm/i18n.h>
-
  #include <udjat/defs.h>
+ #include <udjat/ui/application.h>
+ #include <udjat/tools/logger.h>
+
+ using namespace Udjat;
 
  int main(int argc, char* argv[]) {
+
+#ifdef DEBUG
+	Logger::verbosity(9);
+	Logger::redirect();
+	Logger::console(true);
+#endif // DEBUG
+
+	HibridApplication{}.run(argc,argv,"./test.xml");
 
  }
 

@@ -27,16 +27,13 @@
  #include <glibmm/i18n.h>
 
  #include <udjat/defs.h>
- #include <udjat/ui/gtk/application.h>
+ #include <udjat/ui/application.h>
 
  namespace Reinstall {
 
-	class UDJAT_PRIVATE Application : public Udjat::Gtk::Application {
-	private:
-		Application();
-
+	class UDJAT_PRIVATE Application : public Udjat::HibridApplication {
 	public:
-		static Glib::RefPtr<Application> factory();
+		Application(int argc, const char **argv);
 		~Application();
 
 	};

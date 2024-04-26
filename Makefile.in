@@ -40,7 +40,8 @@ LIBRARY_SOURCES = \
 	$(wildcard $(srcdir)/library/os/@OSNAME@/*.cc)
 
 GUI_SOURCES= \
-	$(wildcard $(srcdir)/main/*.cc) \
+	$(wildcard $(srcdir)/src/application/*.cc) \
+	$(wildcard $(srcdir)/submodules/libudjatui/src/common/*.cc) \
 	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/dialogs/*.cc) \
 	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/menu/*.cc) \
 	$(wildcard $(srcdir)/submodules/libudjatui/src/gtk3/*.cc) \
@@ -105,10 +106,9 @@ LDFLAGS=\
 
 LIBS= \
 	@LIBS@ \
-	@UDJAT_LIBS@ \
 	@GTK_LIBS@ \
-	@ZIPLIB_LIBS@ \
-	@LIBSLP_LIBS@
+	@ZIPLIB_LIBS@ @LIBSLP_LIBS@ \
+	@UDJAT_LIBS@
 
 #---[ Debug Rules ]----------------------------------------------------------------------
 
@@ -394,13 +394,10 @@ install-data:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(BINDBG)/$(SONAME) \
-	$(foreach MODULE, $(MODULES), $(BINDBG)/modules/$(MODULE)@DLLEXT@)
+	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
 
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
-	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \
-	$(BINDBG)/$(SONAME)
+	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o)
 
 	@$(MKDIR) $(@D)
 	@echo $< ...
@@ -439,8 +436,7 @@ inspect: \
 	@GTK_DEBUG=interactive $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
 
 run: \
-	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(foreach MODULE, $(MODULES), $(BINDBG)/modules/$(MODULE)@DLLEXT@)
+	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ 
 
 	@LD_LIBRARY_PATH=$(BINDBG) \
 		$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ --output=/tmp/test.iso
@@ -465,13 +461,7 @@ endif
 
 clean: \
 	cleanDebug \
-	cleanRelease \
-	$(foreach MODULE, $(MODULES), clean-module-$(MODULE))
-
-clean-module-%: \
-	src/modules/%/Makefile
-
-	@$(MAKE) -C `dirname $<` clean
+	cleanRelease
 
 cleanDebug:
 

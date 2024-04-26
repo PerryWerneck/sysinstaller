@@ -138,13 +138,14 @@
 		<Unit filename="submodules/libudjatui/src/abstract/dialogs/progress.cc" />
 		<Unit filename="submodules/libudjatui/src/abstract/menu/controller.cc" />
 		<Unit filename="submodules/libudjatui/src/abstract/menu/item.cc" />
+		<Unit filename="submodules/libudjatui/src/common/hybridapplication.cc" />
 		<Unit filename="submodules/libudjatui/src/gtk3/application.cc" />
 		<Unit filename="submodules/libudjatui/src/gtk3/icon.cc" />
 		<Unit filename="submodules/libudjatui/src/gtk3/label.cc" />
 		<Unit filename="submodules/libudjatui/src/gtk3/popup.cc" />
 		<Unit filename="submodules/libudjatui/src/gtk3/progress.cc" />
-		<Unit filename="submodules/libudjatui/src/include/config.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/tools/userinterface.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/application.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialog.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/popup.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/progress.h" />
