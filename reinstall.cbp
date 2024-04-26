@@ -33,10 +33,131 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/include/libreinstall/diskimage/abstract.h" />
+		<Unit filename="src/include/private/application.h" />
+		<Unit filename="submodules/libudjatui/intl/bindtextdom.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/dcgettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/dcigettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/dcngettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/dgettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/dngettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
+		<Unit filename="submodules/libudjatui/intl/explodename.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/finddomain.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/gettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
+		<Unit filename="submodules/libudjatui/intl/gmo.h" />
+		<Unit filename="submodules/libudjatui/intl/hash-string.h" />
+		<Unit filename="submodules/libudjatui/intl/intl-compat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/l10nflist.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/loadinfo.h" />
+		<Unit filename="submodules/libudjatui/intl/loadmsgcat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/localcharset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/localcharset.h" />
+		<Unit filename="submodules/libudjatui/intl/localealias.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/localename.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/ngettext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/os2compat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/os2compat.h" />
+		<Unit filename="submodules/libudjatui/intl/osdep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/plural-exp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/plural-exp.h" />
+		<Unit filename="submodules/libudjatui/intl/plural.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/printf-args.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/printf-args.h" />
+		<Unit filename="submodules/libudjatui/intl/printf-parse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/printf-parse.h" />
+		<Unit filename="submodules/libudjatui/intl/printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/relocatable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/relocatable.h" />
+		<Unit filename="submodules/libudjatui/intl/textdomain.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/vasnprintf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="submodules/libudjatui/intl/vasnprintf.h" />
+		<Unit filename="submodules/libudjatui/intl/vasnwprintf.h" />
+		<Unit filename="submodules/libudjatui/intl/wprintf-parse.h" />
+		<Unit filename="submodules/libudjatui/intl/xsize.h" />
+		<Unit filename="submodules/libudjatui/src/abstract/dialogs/abstract.cc" />
+		<Unit filename="submodules/libudjatui/src/abstract/dialogs/controller.cc" />
+		<Unit filename="submodules/libudjatui/src/abstract/dialogs/popup.cc" />
+		<Unit filename="submodules/libudjatui/src/abstract/dialogs/progress.cc" />
+		<Unit filename="submodules/libudjatui/src/abstract/menu/controller.cc" />
+		<Unit filename="submodules/libudjatui/src/abstract/menu/item.cc" />
+		<Unit filename="submodules/libudjatui/src/gtk3/application.cc" />
+		<Unit filename="submodules/libudjatui/src/gtk3/icon.cc" />
+		<Unit filename="submodules/libudjatui/src/gtk3/label.cc" />
+		<Unit filename="submodules/libudjatui/src/gtk3/popup.cc" />
+		<Unit filename="submodules/libudjatui/src/gtk3/progress.cc" />
+		<Unit filename="submodules/libudjatui/src/include/config.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/tools/userinterface.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialog.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/popup.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/progress.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/application.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/icon.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/label.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/popup.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/progress.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/menu.h" />
+		<Unit filename="submodules/libudjatui/src/testprogram/testprogram.cc" />
 		<Extensions>
 			<code_completion>
-				<search_path add="src/fatfs/source" />
+				<search_path add="submodules/libudjatui/src/include" />
 			</code_completion>
 		</Extensions>
 	</Project>

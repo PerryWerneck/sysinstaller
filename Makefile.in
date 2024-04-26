@@ -17,6 +17,18 @@
 
 #---[ Library configuration ]------------------------------------------------------------
 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+srcdir=@srcdir@
+bindir=@bindir@
+sbindir=@sbindir@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+localedir=@localedir@
+docdir=@docdir@
+sysconfdir=@sysconfdir@
+
 PACKAGE_NAME=@PACKAGE_NAME@
 PRODUCT_NAME=@PRODUCT_NAME@
 APPLICATION_ID=@PRODUCT_ID@.@PACKAGE_NAME@
@@ -25,10 +37,14 @@ MODULES=@MODULES@
 SONAME=@SONAME@
 
 LIBRARY_SOURCES = \
-	$(wildcard src/os/@OSNAME@/*.cc)
+	$(wildcard $(srcdir)/library/os/@OSNAME@/*.cc)
 
 GUI_SOURCES= \
-	$(wildcard src/main/*.cc)
+	$(wildcard $(srcdir)/main/*.cc) \
+	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/dialogs/*.cc) \
+	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/menu/*.cc) \
+	$(wildcard $(srcdir)/submodules/libudjatui/src/gtk3/*.cc) \
+	$(wildcard $(srcdir)/submodules/libudjatui/src/gtk/os/@OSNAME@/*.cc)
 
 #---[ Tools ]----------------------------------------------------------------------------
 
@@ -50,17 +66,6 @@ INSTALL_DESKTOP=@INSTALL_DESKTOP@
 
 #---[ Paths ]----------------------------------------------------------------------------
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-bindir=@bindir@
-sbindir=@sbindir@
-libdir=@libdir@
-includedir=@includedir@
-datarootdir=@datarootdir@
-localedir=@localedir@
-docdir=@docdir@
-sysconfdir=/etc
-
 DLL_LDFLAGS=@DLL_LDFLAGS@
 
 OBJDIR=.obj
@@ -79,13 +84,13 @@ CXXFLAGS= \
 	-fPIC \
 	@CXXFLAGS@ \
 	-Isrc/include \
+	-Isubmodules/libudjatui/src/include \
 	-DBUILD_DATE=`date +%Y%m%d` \
 	-DLOCALEDIR=$(localedir) \
 	@UDJAT_CFLAGS@ \
 	@ISOFS_CFLAGS@ \
 	@GTK_CFLAGS@ \
 	@ZIPLIB_CFLAGS@ \
-	@JSON_CFLAGS@ \
 	@LIBSLP_CFLAGS@
 
 CFLAGS= \
@@ -103,7 +108,6 @@ LIBS= \
 	@UDJAT_LIBS@ \
 	@GTK_LIBS@ \
 	@ZIPLIB_LIBS@ \
-	@JSON_LIBS@ \
 	@LIBSLP_LIBS@
 
 #---[ Debug Rules ]----------------------------------------------------------------------

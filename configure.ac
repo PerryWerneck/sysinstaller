@@ -267,7 +267,7 @@ dnl https://www.gnu.org/software/autoconf-archive/ax_subdirs_configure.html
 dnl AX_SUBDIRS_CONFIGURE( [subdirs], [mandatory arguments], [possibly merged arguments], [replacement arguments], [forbidden arguments])
 dnl AX_SUBDIRS_CONFIGURE([sample],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
 
-AC_CONFIG_SUBDIRS( [submodules/libudjatui] )
+dnl AC_CONFIG_SUBDIRS( [submodules/libudjatui] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
