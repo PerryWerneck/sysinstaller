@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
  #include <libreinstall/iso9660.h>
@@ -34,10 +35,17 @@
 
  namespace iso9660 {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	Settings::Boot::ElTorito::ElTorito(const XML::Node &node) :
+		image{XML::QuarkFactory(node,"el-torito-boot-image","/boot/x86_64/loader/isolinux.bin")},
+		id{XML::QuarkFactory(node,"el-torito-boot-id",PACKAGE_NAME)} {
+	}
+#else
 	Settings::Boot::ElTorito::ElTorito(const XML::Node &node) :
 		image{XML::QuarkFactory(node,"el-torito-boot-image","value","/boot/x86_64/loader/isolinux.bin").c_str()},
 		id{XML::QuarkFactory(node,"el-torito-boot-id","value",PACKAGE_NAME).c_str()} {
 	}
+#endif // UDJAT_CHECK_VERSION
 
 	void Image::set_bootable(const char *catalog, const Settings::Boot::ElTorito &boot) {
 

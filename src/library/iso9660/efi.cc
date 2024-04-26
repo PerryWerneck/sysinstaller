@@ -25,6 +25,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/logger.h>
  #include <libreinstall/iso9660.h>
@@ -35,9 +36,15 @@
 
  namespace iso9660 {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	Settings::Boot::Efi::Efi(const XML::Node &node)
+		: image{XML::QuarkFactory(node,"efi-boot-image","/boot/x86_64/efi")} {
+	}
+#else
 	Settings::Boot::Efi::Efi(const XML::Node &node)
 		: image{XML::QuarkFactory(node,"efi-boot-image","value","/boot/x86_64/efi").c_str()} {
 	}
+#endif // UDJAT_CHECK_VERSION
 
 	void Image::set_bootable(const char *partdata, const Settings::Boot::Efi &boot) {
 

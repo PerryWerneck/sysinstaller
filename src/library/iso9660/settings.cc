@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <libreinstall/iso9660.h>
 
@@ -30,6 +31,27 @@
 
  namespace iso9660 {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	Settings::Boot::Boot(const XML::Node &node) :
+		catalog{XML::QuarkFactory(node,"boot-catalog","/boot/x86_64/loader/boot.cat")},
+		eltorito{node}, efi{node} {
+
+		}
+
+	Settings::Settings(const XML::Node &node) :
+		name{XML::QuarkFactory(node,"iso-name")},
+		system_area{XML::QuarkFactory(node,"system-area")},
+		volume_id{XML::QuarkFactory(node,"volume-id")},
+		publisher_id{XML::QuarkFactory(node,"publisher-id")},
+		data_preparer_id{XML::QuarkFactory(node,"data-preparer-id")},
+		application_id{XML::QuarkFactory(node,"application-id",PACKAGE_STRING)},
+		system_id{XML::QuarkFactory(node,"system-id","value")},
+		boot{node}
+	{
+
+	}
+
+#else
 	Settings::Boot::Boot(const XML::Node &node) :
 		catalog{XML::QuarkFactory(node,"boot-catalog","value","/boot/x86_64/loader/boot.cat").c_str()},
 		eltorito{node}, efi{node} {
@@ -48,5 +70,6 @@
 	{
 
 	}
+#endif // UDJAT_CHECK_VERSION
 
  }

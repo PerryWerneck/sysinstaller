@@ -38,8 +38,13 @@
 
 		Udjat::Dialog::setup(node);
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		allow_reboot = XML::AttributeFactory(node,"allow-reboot").as_bool();
+		allow_quit = XML::AttributeFactory(node,"allow-quit").as_bool();
+#else
 		allow_reboot = XML::StringFactory(node,"allow-reboot").as_bool();
 		allow_quit = XML::StringFactory(node,"allow-quit").as_bool();
+#endif // UDJAT_CHECK_VERSION
 
 	}
 
