@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <gtkmm.h>
  #include <glibmm/i18n.h>
  #include <private/mainwindow.h>
@@ -173,6 +174,22 @@
 
  std::shared_ptr<MainWindow::Group> MainWindow::find(const pugi::xml_node &node, const char *attrname) {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+ 	const char * name = XML::StringFactory(node,attrname);
+	if(name && *name) {
+		if(this->group) {
+			return this->group;
+		}
+		Logger::String{"Cant determine group name for <",node.name(),">"}.trace(PACKAGE_NAME);
+		throw runtime_error("Cant determine group name");
+	}
+
+	for(auto group : groups) {
+		if(!strcasecmp(group->get_name().c_str(),name)) {
+			return group;
+		}
+	}
+#else
  	auto name = XML::StringFactory(node,attrname);
 	if(name.empty()) {
 		if(this->group) {
@@ -187,6 +204,7 @@
 			return group;
 		}
 	}
+#endif
 
 	group = make_shared<Group>(node);
 	groups.push_back(group);

@@ -36,7 +36,11 @@
 
 	std::shared_ptr<Source> Source::factory(const Udjat::XML::Node &node) {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		switch(String{XML::StringFactory(node,"type","default")}.select("default","zip",nullptr)) {
+#else
 		switch(XML::StringFactory(node,"type","value","default").select("default","zip",nullptr)) {
+#endif // UDJAT_CHECK_VERSION
 		case 0: // Default
 			return make_shared<Source>(node);
 

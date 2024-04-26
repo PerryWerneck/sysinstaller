@@ -23,6 +23,8 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
+ #include <udjat/tools/xml.h>
  #include <gtkmm.h>
  #include <glibmm/i18n.h>
  #include <private/mainwindow.h>
@@ -63,10 +65,17 @@
 		grid.attach(subtitle,1,1,2,1);
 	}
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	if(XML::AttributeFactory(node,"show-icon").as_bool(true)) {
+		icon.get_style_context()->add_class("action-icon");
+		grid.attach(icon,0,0,1,2);
+	}
+#else
 	if(XML::StringFactory(node,"show-icon","value","true").as_bool(true)) {
 		icon.get_style_context()->add_class("action-icon");
 		grid.attach(icon,0,0,1,2);
 	}
+#endif
 
 	add(grid);
 

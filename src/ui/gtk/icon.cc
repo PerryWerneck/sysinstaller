@@ -27,6 +27,7 @@
  #include <glibmm/i18n.h>
 
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/string.h>
 
@@ -61,7 +62,11 @@
 	}
 
 	Gtk::Icon::Icon(const Udjat::XML::Node &node, const ::Gtk::IconSize iconsize, const char *attrname, const char *def) :
+#if UDJAT_CHECK_VERSION(1,2,0)
+		Icon{ XML::StringFactory(node,attrname,def), iconsize, true } {
+#else
 		Icon{ XML::StringFactory(node,attrname,"value",def).c_str(), iconsize, true } {
+#endif
 	}
 
  }

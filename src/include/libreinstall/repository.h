@@ -23,6 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/url.h>
  #include <libreinstall/slpclient.h>
@@ -58,8 +59,13 @@
 			const char *slpval = "";
 
 			KParm(const Udjat::XML::Node &node) :
+#if UDJAT_CHECK_VERSION(1,2,0)
+				Kernel::Parameter{Udjat::XML::QuarkFactory(node,"kernel-parameter-name")},
+				slpval{Udjat::XML::QuarkFactory(node,"slp-kernel-parameter","slp:/")} {
+#else
 				Kernel::Parameter{Udjat::XML::QuarkFactory(node,"kernel-parameter-name").c_str()},
 				slpval{Udjat::XML::QuarkFactory(node,"slp-kernel-parameter","value","slp:/").c_str()} {
+#endif
 			}
 
 			void set_name(const char *name) noexcept {

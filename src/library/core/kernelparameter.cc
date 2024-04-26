@@ -18,6 +18,7 @@
  */
 
  #include <config.h>
+ #include <udjat/version.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/intl.h>
@@ -38,8 +39,13 @@
 			const char *str;
 
 		public:
+#if UDJAT_CHECK_VERSION(1,2,0)
+			KValue(const Udjat::XML::Node &node) : Parameter{node}, str{XML::QuarkFactory(node,"value")} {
+			}
+#else
 			KValue(const Udjat::XML::Node &node) : Parameter{node}, str{XML::QuarkFactory(node,"value").c_str()} {
 			}
+#endif
 
 			const std::string value() const override {
 				return str;
@@ -52,8 +58,13 @@
 		return make_shared<KValue>(node);
 	}
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	Kernel::Parameter::Parameter(const Udjat::XML::Node &node) : Kernel::Parameter{Udjat::XML::QuarkFactory(node,"name")} {
+	}
+#else
 	Kernel::Parameter::Parameter(const Udjat::XML::Node &node) : Kernel::Parameter{Udjat::XML::QuarkFactory(node,"name").c_str()} {
 	}
+#endif // UDJAT_CHECK_VERSION
 
 
 	/*

@@ -40,12 +40,19 @@
 	/// @param node Definitions for file source.
 	/// @param defpath if true use default image path if attribute 'path' is empty.
 	Source::Source(const Udjat::XML::Node &node, bool defpath) :
+#if UDJAT_CHECK_VERSION(1,2,0)
+		Udjat::NamedObject{ node },
+		path{ node },
+		reponame{ XML::QuarkFactory(node,"repository") },
+		slpclient{ node },
+		imgpath{ XML::QuarkFactory(node,"path") } {
+#else
 		Udjat::NamedObject{ node },
 		path{ node },
 		reponame{ XML::QuarkFactory(node,"repository").c_str() },
 		slpclient{ node },
 		imgpath{ XML::QuarkFactory(node,"path").c_str() } {
-
+#endif
 		if(defpath && !(imgpath && *imgpath)) {
 
 			// No imgpath, use standard.

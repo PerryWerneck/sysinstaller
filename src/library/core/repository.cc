@@ -34,18 +34,31 @@
  namespace Reinstall {
 
 	Repository::Repository(const Udjat::XML::Node &node)
+#if UDJAT_CHECK_VERSION(1,2,0)
+		:	name{XML::QuarkFactory(node,"name")}, slpclient{node},
+			remote{XML::QuarkFactory(node,"remote")},
+			local{XML::QuarkFactory(node,"local")},
+			kparm{node} {
+#else
 		:	name{XML::QuarkFactory(node,"name").c_str()}, slpclient{node},
 			remote{XML::QuarkFactory(node,"remote").c_str()},
 			local{XML::QuarkFactory(node,"local").c_str()},
 			kparm{node} {
+#endif // UDJAT_CHECK_VERSION
 
 		if(!(name && *name)) {
 			throw runtime_error("Required attribute 'name' is missing or invalid");
 		}
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		if(!(remote && *remote)) {
+			remote = XML::QuarkFactory(node,"url");
+		}
+#else
 		if(!(remote && *remote)) {
 			remote = XML::QuarkFactory(node,"url").c_str();
 		}
+#endif // UDJAT_CHECK_VERSION
 
 		if(!(remote && *remote)) {
 			throw runtime_error("Required attribute 'remote' is missing or invalid");
@@ -105,7 +118,11 @@
 			Logger::String{"Kernel parameter was already set to '",kparm.name()}.warning(name);
 		}
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		kparm.set_name(XML::QuarkFactory(node,"name"));
+#else
 		kparm.set_name(XML::QuarkFactory(node,"name").c_str());
+#endif // UDJAT_CHECK_VERSION
 
 	}
 

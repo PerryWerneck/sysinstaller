@@ -20,6 +20,7 @@
  #pragma once
 
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/script.h>
  #include <memory>
@@ -62,6 +63,15 @@
 			/// @brief Failed dialog.
 			Popup failed;
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+			Dialogs(const Udjat::XML::Node &node) :
+				title{Udjat::XML::QuarkFactory(node,"title")},
+				confirmation{"confirmation",node},
+				progress{"progress",node},
+				success{"success",node},
+				failed{"failed",node} {
+			}
+#else
 			Dialogs(const Udjat::XML::Node &node) :
 				title{Udjat::XML::QuarkFactory(node,"title").c_str()},
 				confirmation{"confirmation",node},
@@ -69,6 +79,7 @@
 				success{"success",node},
 				failed{"failed",node} {
 			}
+#endif // UDJAT_CHECK_VERSION
 
 		} dialogs;
 

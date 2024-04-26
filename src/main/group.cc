@@ -25,6 +25,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <gtkmm.h>
  #include <glibmm/i18n.h>
  #include <private/mainwindow.h>
@@ -40,10 +41,15 @@
  using namespace ::Gtk;
 
  MainWindow::Group::Group(const XML::Node &node) :
+#if UDJAT_CHECK_VERSION(1,2,0)
+	::Gtk::Box{::Gtk::ORIENTATION_VERTICAL},label{node,"title"}, subtitle{XML::StringFactory(node,"sub-title")} {
+#else
 	::Gtk::Box{::Gtk::ORIENTATION_VERTICAL},label{node,"title"}, subtitle{XML::StringFactory(node,"sub-title").c_str()} {
+#endif // UDJAT_CHECK_VERSION
 
 	// Setup group.
-	set_name(XML::StringFactory(node,"name").c_str());
+	set_name(XML::StringFactory(node,"name"));
+
 	get_style_context()->add_class("group-box");
 
 	set_hexpand(true);
@@ -66,6 +72,24 @@
 	title.pack_start(label);
 
 	// Check help link.
+#if UDJAT_CHECK_VERSION(1,2,0)
+	{
+		const char *help = XML::StringFactory(node,"help");
+		if(help && *help) {
+			// https://developer-old.gnome.org/gtkmm/stable/classGtk_1_1LinkButton.html
+			linkbutton.get_style_context()->add_class("group-link");
+
+			linkbutton.set_uri(help);
+			linkbutton.set_hexpand(false);
+			linkbutton.set_vexpand(false);
+			linkbutton.set_halign(::Gtk::ALIGN_START);
+
+			// https://specifications.freedesktop.org/icon-naming-spec/latest/ar01s04.html
+			linkbutton.set_image_from_icon_name("help-faq");
+			title.pack_start(linkbutton);
+		}
+	}
+#else
 	{
 		auto help = XML::StringFactory(node,"help");
 		if(!help.empty()) {
@@ -82,7 +106,7 @@
 			title.pack_start(linkbutton);
 		}
 	}
-
+#endif
 	pack_start(title);
 
 	// The group sub-title

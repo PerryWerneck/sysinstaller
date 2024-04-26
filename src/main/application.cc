@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <gtkmm.h>
  #include <glibmm/i18n.h>
 
@@ -62,11 +63,12 @@
 
 	bool generic(const Udjat::XML::Node &node) override {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+
 		hwnd.set_title(
 			Udjat::XML::StringFactory(
 				node,
 				"title",
-				"value",
 				hwnd.get_title().c_str()
 			)
 		);
@@ -75,7 +77,6 @@
 			Udjat::XML::StringFactory(
 				node,
 				"sub-title",
-				"value",
 				hwnd.layout.title.get_text().c_str()
 			)
 		);
@@ -84,7 +85,6 @@
 			Udjat::XML::StringFactory(
 				node,
 				"cancel",
-				"value",
 				hwnd.buttons.cancel.get_label().c_str()
 			)
 		);
@@ -93,7 +93,6 @@
 			Udjat::XML::StringFactory(
 				node,
 				"apply",
-				"value",
 				hwnd.buttons.apply.get_label().c_str()
 			)
 		);
@@ -102,10 +101,54 @@
 			Udjat::XML::StringFactory(
 				node,
 				"logo",
-				"value",
 				"logo"
-			).c_str()
+			)
 		);
+
+#else
+
+		hwnd.set_title(
+			Udjat::XML::StringFactory(
+				node,
+				"title",
+				hwnd.get_title().c_str()
+			)
+		);
+
+		hwnd.layout.title.set_text(
+			Udjat::XML::StringFactory(
+				node,
+				"sub-title",
+				hwnd.layout.title.get_text().c_str()
+			)
+		);
+
+		hwnd.buttons.cancel.set_label(
+			Udjat::XML::StringFactory(
+				node,
+				"cancel",
+				hwnd.buttons.cancel.get_label().c_str()
+			)
+		);
+
+		hwnd.buttons.apply.set_label(
+			Udjat::XML::StringFactory(
+				node,
+				"apply",
+				hwnd.buttons.apply.get_label().c_str()
+			)
+		);
+
+		hwnd.logo.set(
+			Udjat::XML::StringFactory(
+				node,
+				"logo",
+				"logo"
+			)
+		);
+
+#endif // UDJAT_CHECK_VERSION
+
 
 		return true;
 	}

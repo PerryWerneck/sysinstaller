@@ -27,6 +27,7 @@
  #include <glibmm/i18n.h>
 
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/string.h>
 
@@ -34,8 +35,12 @@
 
  namespace Udjat {
 
-	Label::Label(const Udjat::XML::Node &node, const char *attrname, const char *def) :
-		Label{XML::StringFactory(node,attrname,"value",def).c_str()} {
+	Label::Label(const Udjat::XML::Node &node, const char *attrname, const char *def)
+#if UDJAT_CHECK_VERSION(1,2,0)
+		: Label{XML::StringFactory(node,attrname,def)} {
+#else
+		: Label{XML::StringFactory(node,attrname,"value",def).c_str()} {
+#endif
 
 		if(!get_text().empty()) {
 			show_all();
