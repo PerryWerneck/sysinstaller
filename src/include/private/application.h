@@ -31,7 +31,7 @@
 
  namespace Reinstall {
 
-	class UDJAT_PRIVATE Application : public Udjat::HibridApplication {
+	class UDJAT_PRIVATE Application : public Udjat::HybridApplication {
 	public:
 		Application(int argc, const char **argv);
 		~Application();

@@ -36,7 +36,7 @@
 	Logger::console(true);
 #endif // DEBUG
 
-	class Application : public HibridApplication {
+	class Application : public HybridApplication {
 	public:
 		Application() = default;
 
@@ -47,7 +47,7 @@
 				return true;
 			}
 
-			return HibridApplication::argument(name,value);
+			return HybridApplication::argument(name,value);
 		}
 
 		bool argument(const char name, const char *value) override {
@@ -57,13 +57,16 @@
 				return true;
 			}
 
-			return HibridApplication::argument(name,value);
+			return HybridApplication::argument(name,value);
 		}
 
 	};
 
-
-	Application{}.run(argc,argv,"./test.xml");
+#ifdef DEBUG
+	Application{}.run(argc,argv,"./xml.d");
+#else
+	Application{}.run(argc,argv);
+#endif // DEBUG
 
  }
 
