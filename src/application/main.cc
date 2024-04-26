@@ -36,7 +36,34 @@
 	Logger::console(true);
 #endif // DEBUG
 
-	HibridApplication{}.run(argc,argv,"./test.xml");
+	class Application : public HibridApplication {
+	public:
+		Application() = default;
+
+		bool argument(const char *name, const char *value) override {
+
+			if(!strcasecmp(name,"output")) {
+
+				return true;
+			}
+
+			return HibridApplication::argument(name,value);
+		}
+
+		bool argument(const char name, const char *value) override {
+
+			if(name == 'O') {
+
+				return true;
+			}
+
+			return HibridApplication::argument(name,value);
+		}
+
+	};
+
+
+	Application{}.run(argc,argv,"./test.xml");
 
  }
 
