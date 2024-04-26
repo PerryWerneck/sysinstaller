@@ -83,10 +83,6 @@ dnl ---------------------------------------------------------------------------
 dnl Check for OS specifics
 dnl ---------------------------------------------------------------------------
 
-app_cv_modules="isowriter isobuilder"
-AC_CONFIG_FILES(src/modules/isowriter/Makefile)
-AC_CONFIG_FILES(src/modules/isobuilder/Makefile)
-
 case "$host" in
 	*-mingw32|*-pc-msys)
 		EXEEXT=".exe"
@@ -131,11 +127,6 @@ dnl		AC_CONFIG_FILES(win/userinfo.nsi)
 		AC_SUBST(SONAME,libreinstall.so.$app_vrs_major.$app_vrs_minor)
 		AC_CONFIG_FILES(sysconf/launcher.desktop)
 
-		app_cv_modules="$app_cv_modules netinstall grub"
-
-		AC_CONFIG_FILES(src/modules/netinstall/Makefile)
-		AC_CONFIG_FILES(src/modules/grub/Makefile)
-
 esac
 
 AC_SUBST(LIBS)
@@ -150,15 +141,7 @@ dnl ---------------------------------------------------------------------------
 AC_PATH_TOOL([DOXYGEN], [doxygen])
 AC_PATH_TOOL([VALGRIND], [valgrind], [no])
 AC_PATH_TOOL([AR], [ar], [ar])
-AC_PATH_TOOL([CONVERT], [convert], [no])
 AC_PATH_TOOL([INSTALL_DESKTOP],[desktop-file-install],[no])
-
-dnl ---------------------------------------------------------------------------
-dnl test for usefull functions
-dnl ---------------------------------------------------------------------------
-
-AC_CHECK_FUNCS(pwrite, AC_DEFINE(HAVE_PWRITE))
-AC_CHECK_FUNCS(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R) )
 
 dnl ---------------------------------------------------------------------------
 dnl test for reentrant time routines
@@ -255,22 +238,6 @@ AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for pugixml
-dnl ---------------------------------------------------------------------------
-
-PKG_CHECK_MODULES(PUGIXML, pugixml, AC_DEFINE(HAVE_PUGIXML,[],[Do we have PUGIXML?]),AC_MSG_ERROR(pugixml is required))
-AC_SUBST(PUGIXML_LIBS)
-AC_SUBST(PUGIXML_CFLAGS)
-
-dnl ---------------------------------------------------------------------------
-dnl Check for fdisk
-dnl ---------------------------------------------------------------------------
-
-PKG_CHECK_MODULES(FDISK, fdisk, AC_DEFINE(HAVE_FDISK,[],[Do we have libfdisk?]),AC_MSG_NOTICE(libfdisk is required))
-AC_SUBST(FDISK_LIBS)
-AC_SUBST(FDISK_CFLAGS)
-
-dnl ---------------------------------------------------------------------------
 dnl Check for libburn
 dnl ---------------------------------------------------------------------------
 
@@ -289,37 +256,18 @@ AC_SUBST(ISOFS_LIBS)
 AC_SUBST(ISOFS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for libdbus
-dnl ---------------------------------------------------------------------------
-
-PKG_CHECK_MODULES( [DBUS], [dbus-1], AC_DEFINE(HAVE_DBUS,[],[Do we have d-bus?]), AC_MSG_NOTICE([ No DBUS support.]) )
-AC_SUBST(DBUS_LIBS)
-AC_SUBST(DBUS_CFLAGS)
-
-dnl ---------------------------------------------------------------------------
-dnl Check for jsoncpp
-dnl ---------------------------------------------------------------------------
-dnl 
-PKG_CHECK_MODULES( [JSON], [jsoncpp], AC_DEFINE(HAVE_GUESTFS,[],[Do we have jsoncpp?]), AC_MSG_ERROR([jsoncpp not present.]) )
-
-AC_SUBST(JSON_LIBS)
-AC_SUBST(JSON_CFLAGS)
-
-dnl ---------------------------------------------------------------------------
-dnl Output config
-dnl ---------------------------------------------------------------------------
-
-AC_SUBST(SRCDIR,$ac_pwd)
-AC_SUBST(BINDIR,$ac_pwd/.bin)
-AC_SUBST(MODULES,$app_cv_modules)
-
-dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
 dnl ---------------------------------------------------------------------------
 
-AC_CONFIG_FILES(src/library/Makefile)
+dnl AC_CONFIG_FILES(src/library/Makefile)
 AC_CONFIG_FILES(locale/Makefile)
 AC_CONFIG_FILES(Makefile)
+
+dnl https://www.gnu.org/software/autoconf-archive/ax_subdirs_configure.html
+dnl AX_SUBDIRS_CONFIGURE( [subdirs], [mandatory arguments], [possibly merged arguments], [replacement arguments], [forbidden arguments])
+dnl AX_SUBDIRS_CONFIGURE([sample],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
+
+AC_CONFIG_SUBDIRS( [submodules/libudjatui] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.

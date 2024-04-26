@@ -1,3 +1,19 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later 
+
+# Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #---[ Library configuration ]------------------------------------------------------------
 
@@ -9,26 +25,10 @@ MODULES=@MODULES@
 SONAME=@SONAME@
 
 LIBRARY_SOURCES = \
-	$(wildcard src/library/core/source/*.cc) \
-	$(wildcard src/library/core/*.cc) \
-	$(wildcard src/library/os/@OSNAME@/*.cc) \
-	$(wildcard src/library/ui/*.cc) \
-	$(wildcard src/library/ui/dialogs/*.cc) \
-	$(wildcard src/library/ui/menu/*.cc) \
-	$(wildcard src/library/sources/*.cc) \
-	$(wildcard src/library/tools/*.cc) \
-	$(wildcard src/library/builders/*.cc) \
-	$(wildcard src/library/writers/*.cc) \
-	$(wildcard src/library/actions/*.cc) \
-	$(wildcard src/library/iso9660/*.cc) \
-	$(wildcard src/library/fatfs/source/*.cc) \
-	$(wildcard src/library/fatfs/source/*.c)	
+	$(wildcard src/os/@OSNAME@/*.cc)
 
 GUI_SOURCES= \
-	$(wildcard src/main/*.cc) \
-	$(wildcard src/os/@OSNAME@/*.cc) \
-	$(wildcard src/ui/gtk/*.cc)
-
+	$(wildcard src/main/*.cc)
 
 #---[ Tools ]----------------------------------------------------------------------------
 
@@ -75,18 +75,13 @@ POTDIR=.pot
 
 #---[ Rules ]----------------------------------------------------------------------------
 
-DEPENDS= \
-	Makefile
-
 CXXFLAGS= \
 	-fPIC \
 	@CXXFLAGS@ \
 	-Isrc/include \
-	-Isrc/library/fatfs/source \
 	-DBUILD_DATE=`date +%Y%m%d` \
 	-DLOCALEDIR=$(localedir) \
 	@UDJAT_CFLAGS@ \
-	@PUGIXML_CFLAGS@ \
 	@ISOFS_CFLAGS@ \
 	@GTK_CFLAGS@ \
 	@ZIPLIB_CFLAGS@ \
@@ -97,7 +92,6 @@ CFLAGS= \
 	-fPIC \
 	@CFLAGS@ \
 	-Isrc/include \
-	-Isrc/library/fatfs/source \
 	-DBUILD_DATE=`date +%Y%m%d` \
 	-DLOCALEDIR=$(localedir)
 
@@ -107,7 +101,6 @@ LDFLAGS=\
 LIBS= \
 	@LIBS@ \
 	@UDJAT_LIBS@ \
-	@PUGIXML_LIBS@ \
 	@GTK_LIBS@ \
 	@ZIPLIB_LIBS@ \
 	@JSON_LIBS@ \

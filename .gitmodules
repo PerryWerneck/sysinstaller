@@ -1,0 +1,4 @@
+[submodule "submodules/libudjatui"]
+	path = submodules/libudjatui
+	url = git@github.com:PerryWerneck/libudjatui.git
+	branch = develop
