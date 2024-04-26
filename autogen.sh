@@ -37,6 +37,12 @@ automake --add-missing 2> /dev/null | true
 
 autopoint
 
+for submodule in $(find ./submodules -name autogen.sh)
+do
+	echo ${submodule}
+	NOCONFIGURE=1 ${submodule}
+done
+
 cd "$olddir"
 test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"
 
