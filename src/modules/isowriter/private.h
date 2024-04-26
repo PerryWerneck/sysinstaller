@@ -21,6 +21,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
 
  #include <memory>
 
@@ -59,6 +60,15 @@
 		/// @brief Failed dialog.
 		Popup failed;
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		Dialogs(const Udjat::XML::Node &node) :
+			title{Udjat::XML::QuarkFactory(node,"title")},
+			confirmation{"confirmation",node},
+			progress{"progress",node},
+			success{"success",node},
+			failed{"failed",node} {
+		}
+#else
 		Dialogs(const Udjat::XML::Node &node) :
 			title{Udjat::XML::QuarkFactory(node,"title").c_str()},
 			confirmation{"confirmation",node},
@@ -66,6 +76,7 @@
 			success{"success",node},
 			failed{"failed",node} {
 		}
+#endif // UDJAT_CHECK_VERSION
 
 	} dialogs;
 
@@ -96,9 +107,15 @@
 
  public:
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+	IsoWriter(const Udjat::XML::Node &node)
+		: MenuItem(node), remote{Udjat::XML::QuarkFactory(node,"remote")}, local{Udjat::XML::QuarkFactory(node,"local")} {
+	}
+#else
 	IsoWriter(const Udjat::XML::Node &node)
 		: MenuItem(node), remote{Udjat::XML::QuarkFactory(node,"remote").c_str()}, local{Udjat::XML::QuarkFactory(node,"local").c_str()} {
 	}
+#endif // UDJAT_CHECK_VERSION
 
  };
 

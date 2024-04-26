@@ -33,7 +33,11 @@
 
  static std::string find_logo(const char *name = "logo") {
 
+#ifdef DEBUG
+	String datadir{"./"};
+#else
 	Udjat::Application::DataDir datadir;
+#endif // DEBUG
 
 	std::string names[] {
 		(datadir + name),

@@ -18,6 +18,8 @@
  */
 
  #include <config.h>
+ #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/module.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/string.h>
@@ -62,6 +64,16 @@
 		unsigned long long length;
 
 	public:
+#if UDJAT_CHECK_VERSION(1,2,0)
+		FatAction(const XML::Node &node) : Reinstall::Action{node}, length{String{node,"length"}.as_ull()} {
+
+			search(node,"source",[this](const pugi::xml_node &node){
+				sources.push_back(Source::factory(node));
+				return false;
+			});
+
+		}
+#else
 		FatAction(const XML::Node &node) : Reinstall::Action{node}, length{XML::StringFactory(node,"length").as_ull()} {
 
 			search(node,"source",[this](const pugi::xml_node &node){
@@ -70,6 +82,7 @@
 			});
 
 		}
+#endif
 
 		std::shared_ptr<Reinstall::Builder> BuilderFactory() const override {
 			return Fat::BuilderFactory(length);
@@ -84,7 +97,11 @@
 
 		bool generic(const XML::Node &node) override {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+			switch(String{node,"filesystem","iso9660"}.select("fat32","iso9660",nullptr)) {
+#else
 			switch(XML::StringFactory(node,"filesystem","value","iso9660").select("fat32","iso9660",nullptr)) {
+#endif // UDJAT_CHECK_VERSION
 			case 0:	// FAT32
 				new FatAction(node);
 				break;
