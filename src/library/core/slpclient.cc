@@ -19,6 +19,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/string.h>
  #include <libreinstall/slpclient.h>
@@ -41,13 +42,21 @@
  namespace Reinstall {
 
 	SlpClient::SlpClient(const XML::Node &node)
+#if UDJAT_CHECK_VERSION(1,2,0)
+		: service_type{XML::QuarkFactory(node,"slp-service-type")},
+			scope{XML::QuarkFactory(node,"slp-scope")},
+			filter{XML::QuarkFactory(node,"slp-filter")},
+			kparm{XML::QuarkFactory(node,"slp-kernel-parameter")},
+			message{XML::QuarkFactory(node,"slp-search-message")},
+			allow_local{XML::AttributeFactory(node,"slp-allow-local").as_bool(false)} {
+#else
 		: service_type{XML::QuarkFactory(node,"slp-service-type").c_str()},
 			scope{XML::QuarkFactory(node,"slp-scope").c_str()},
 			filter{XML::QuarkFactory(node,"slp-filter").c_str()},
 			kparm{XML::QuarkFactory(node,"slp-kernel-parameter").c_str()},
 			message{XML::QuarkFactory(node,"slp-search-message").c_str()},
 			allow_local{XML::StringFactory(node,"slp-allow-local").as_bool(false)} {
-
+#endif
 	}
 
 #ifdef HAVE_LIBSLP

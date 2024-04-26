@@ -61,6 +61,15 @@
 	}
 
 	Template::Template(const Udjat::XML::Node &node) :
+#if UDJAT_CHECK_VERSION(1,2,0)
+		Udjat::NamedObject{node},
+		filter{Udjat::XML::QuarkFactory(node,"filter")},
+		url{Udjat::XML::QuarkFactory(node,"url")},
+		filename{Udjat::XML::QuarkFactory(node,"path")},
+		marker{get_marker(node)},
+		escape_values{getAttribute(node,"template","escape-control-characters",strncasecmp(name(),"grub",4) == 0)},
+		escape_chars{Udjat::XML::QuarkFactory(node,"control-characters","&")} {
+#else
 		Udjat::NamedObject{node},
 		filter{Udjat::XML::QuarkFactory(node,"filter").c_str()},
 		url{Udjat::XML::QuarkFactory(node,"url").c_str()},
@@ -68,6 +77,7 @@
 		marker{get_marker(node)},
 		escape_values{getAttribute(node,"template","escape-control-characters",strncasecmp(name(),"grub",4) == 0)},
 		escape_chars{Udjat::XML::QuarkFactory(node,"control-characters","value","&").c_str()} {
+#endif
 
 		if(!(filter && *filter)) {
 			filter = strrchr(url,'/');

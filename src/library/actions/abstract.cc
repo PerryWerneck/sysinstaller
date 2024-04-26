@@ -19,6 +19,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
@@ -60,6 +61,21 @@
 		// Load kernel parameters.
 		search(node,"kernel-parameter",[this](const pugi::xml_node &node){
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+			const char * reponame = Udjat::XML::StringFactory(node,"repository");
+
+			if(!(reponame && *reponame)) {
+
+				// It's a normal parameter
+				kparms.push_back(Kernel::Parameter::factory(node));
+
+			} else {
+
+				// It's a repository parameter.
+				const_cast<Repository &>(repository(reponame)).set_kernel_parameter(node);
+
+			}
+#else
 			auto reponame = Udjat::XML::StringFactory(node,"repository");
 
 			if(reponame.empty()) {
@@ -73,6 +89,7 @@
 				const_cast<Repository &>(repository(reponame.c_str())).set_kernel_parameter(node);
 
 			}
+#endif // UDJAT_CHECK_VERSION
 
 			return false;
 		});
@@ -101,12 +118,22 @@
 	}
 
 	Action::OutPut::OutPut(const Udjat::XML::Node &node)
+#if UDJAT_CHECK_VERSION(1,2,0)
+		: filename{XML::QuarkFactory(node,"output-file-name")},
+		  length{String{XML::StringFactory(node,"length")}.as_ull()} {
+#else
 		: filename{XML::QuarkFactory(node,"output-file-name").c_str()},
 		  length{XML::StringFactory(node,"length").as_ull()} {
+#endif // UDJAT_CHECK_VERSION
+
 	}
 
 	Action::BootOptions::BootOptions(const Udjat::XML::Node &node)
+#if UDJAT_CHECK_VERSION(1,2,0)
+		: label{XML::QuarkFactory(node,"boot-label")}, theme{XML::QuarkFactory(node,"boot-theme")} {
+#else
 		: label{XML::QuarkFactory(node,"boot-label").c_str()}, theme{XML::QuarkFactory(node,"boot-theme").c_str()} {
+#endif // UDJAT_CHECK_VERSION
 
 		if(!(label && *label) && node.parent()) {
 			label = Logger::Message{

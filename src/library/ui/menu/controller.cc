@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/ui/menu.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
@@ -53,6 +54,15 @@
 
 	void Menu::Controller::push_back(Item *item, const XML::Node &node) {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		if(XML::AttributeFactory(node,"default").as_bool()) {
+			def = item;
+		}
+
+		if(XML::AttributeFactory(node,"selected").as_bool()) {
+			selected = item;
+		}
+#else
 		if(XML::StringFactory(node,"default").as_bool()) {
 			def = item;
 		}
@@ -60,6 +70,7 @@
 		if(XML::StringFactory(node,"selected").as_bool()) {
 			selected = item;
 		}
+#endif
 
 	}
 

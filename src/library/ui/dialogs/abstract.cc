@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/dialogs/progress.h>
  #include <udjat/tools/logger.h>
@@ -37,6 +38,18 @@
 
 	void Dialog::setup(const XML::Node &node) {
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		message = XML::QuarkFactory(node,"message");
+		secondary = XML::QuarkFactory(node,"secondary");
+
+		for(auto parent = node;!(title && *title) && parent;parent = parent.parent()) {
+			title = XML::QuarkFactory(parent,"title");
+		}
+
+		for(auto parent = node;!(icon && *icon) && parent;parent = parent.parent()) {
+			icon = XML::QuarkFactory(parent,"icon-name");
+		}
+#else
 		message = XML::QuarkFactory(node,"message").c_str();
 		secondary = XML::QuarkFactory(node,"secondary").c_str();
 
@@ -47,7 +60,7 @@
 		for(auto parent = node;!(icon && *icon) && parent;parent = parent.parent()) {
 			icon = XML::QuarkFactory(parent,"icon-name").c_str();
 		}
-
+#endif
 		debug("-----------------------------------------------------------------------------------------");
 		debug("title=",title);
 		debug("message=",title);
@@ -87,8 +100,13 @@
 		// Not found, set only the needed properties.
 		Logger::String{"Cant find settings for dialog '",name,"', using defaults"}.trace("ui");
 
+#if UDJAT_CHECK_VERSION(1,2,0)
+		icon = XML::QuarkFactory(base,"icon-name");
+		title = XML::QuarkFactory(base,"title");
+#else
 		icon = XML::QuarkFactory(base,"icon-name").c_str();
 		title = XML::QuarkFactory(base,"title").c_str();
+#endif // UDJAT_CHECK_VERSION
 
 		return false;
 	}
