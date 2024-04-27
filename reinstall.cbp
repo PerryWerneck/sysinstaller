@@ -36,6 +36,7 @@
 		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/include/libreinstall/diskimage/abstract.h" />
 		<Unit filename="src/include/private/application.h" />
+		<Unit filename="src/include/private/mainwindow.h" />
 		<Unit filename="submodules/libudjatui/intl/bindtextdom.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -154,6 +155,7 @@
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/label.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/popup.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/progress.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/userinterface.h" />
 		<Unit filename="submodules/libudjatui/src/include/udjat/ui/menu.h" />
 		<Unit filename="submodules/libudjatui/src/testprogram/testprogram.cc" />
 		<Extensions>

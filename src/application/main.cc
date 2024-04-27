@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/ui/application.h>
  #include <udjat/tools/logger.h>
+ #include <private/mainwindow.h>
 
  using namespace Udjat;
 
@@ -42,7 +43,8 @@
 
 		bool argument(const char *name, const char *value) override {
 
-			if(!strcasecmp(name,"output")) {
+			if(!strcasecmp(name,"output") || strcasecmp(name,"usb-storage-device=") == 0) {
+
 
 				return true;
 			}
@@ -58,6 +60,16 @@
 			}
 
 			return HybridApplication::argument(name,value);
+		}
+
+		void activate() override {
+
+
+			debug("-------------------------------> activate");
+
+
+
+			HybridApplication::activate();
 		}
 
 	};
