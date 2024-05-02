@@ -34,4 +34,7 @@
  	MainWindow();
  	~MainWindow();
 
+	void push_back(Udjat::Menu::Item *item, const XML::Node &node) override;
+	void remove(const Udjat::Menu::Item *item) override;
+
  }
