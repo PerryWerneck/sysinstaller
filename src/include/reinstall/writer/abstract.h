@@ -18,30 +18,29 @@
  */
 
  /**
-  * @brief Declare abstract disk image.
+  * @brief Declares abstract disk writer.
   */
 
  #pragma once
- #include <udjat/defs.h>
- #include <functional>
-
  namespace Reinstall {
 
 	namespace Abstract {
 
-		class UDJAT_API DiskImage {
-		protected:
-
-			const char *name;
-
-			constexpr DiskImage(const char *n = "disk") : name{n} {
-			}
-
+		/// @brief Abstract disk device.
+		class UDJAT_API Writer {
 		public:
-			virtual ~DiskImage();
+			Writer();
+			virtual ~Writer();
 
-			/// @brief Write image
-			virtual void write(const std::function<int(const void *buff, size_t length, size_t total)> &writer) = 0;
+			/// @brief Get device length.
+			/// @return The device length.
+			/// @retval 0 The device length is undefined.
+			virtual void size() const;
+
+			/// @brief Write data to device.
+			/// @param offset Offset of current block.
+			/// @param length Total size of image (0 = undefined).
+			virtual void write(unsigned long long offset, const void *contents, unsigned long long length = 0) = 0;
 
 		};
 
