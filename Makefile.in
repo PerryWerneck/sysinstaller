@@ -40,12 +40,7 @@ LIBRARY_SOURCES = \
 	$(wildcard $(srcdir)/library/os/@OSNAME@/*.cc)
 
 GUI_SOURCES= \
-	$(wildcard $(srcdir)/src/application/*.cc) \
-	$(wildcard $(srcdir)/submodules/libudjatui/src/common/*.cc) \
-	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/dialogs/*.cc) \
-	$(wildcard $(srcdir)/submodules/libudjatui/src/abstract/menu/*.cc) \
-	$(wildcard $(srcdir)/submodules/libudjatui/src/gtk3/*.cc) \
-	$(wildcard $(srcdir)/submodules/libudjatui/src/gtk/os/@OSNAME@/*.cc)
+	$(wildcard $(srcdir)/src/application/*.cc)
 
 #---[ Tools ]----------------------------------------------------------------------------
 

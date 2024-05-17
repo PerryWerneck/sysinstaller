@@ -35,7 +35,7 @@
 			/// @brief Get device length.
 			/// @return The device length.
 			/// @retval 0 The device length is undefined.
-			virtual void size() const;
+			virtual unsigned long long size() const;
 
 			/// @brief Write data to device.
 			/// @param offset Offset of current block.
