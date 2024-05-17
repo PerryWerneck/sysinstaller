@@ -23,9 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/ui/application.h>
  #include <udjat/tools/logger.h>
- #include <private/mainwindow.h>
 
  using namespace Udjat;
 
@@ -37,48 +35,6 @@
 	Logger::console(true);
 #endif // DEBUG
 
-	class Application : public HybridApplication {
-	public:
-		Application() = default;
-
-		bool argument(const char *name, const char *value) override {
-
-			if(!strcasecmp(name,"output") || strcasecmp(name,"usb-storage-device=") == 0) {
-
-
-				return true;
-			}
-
-			return HybridApplication::argument(name,value);
-		}
-
-		bool argument(const char name, const char *value) override {
-
-			if(name == 'O') {
-
-				return true;
-			}
-
-			return HybridApplication::argument(name,value);
-		}
-
-		void activate() override {
-
-
-			debug("-------------------------------> activate");
-
-
-
-			HybridApplication::activate();
-		}
-
-	};
-
-#ifdef DEBUG
-	Application{}.run(argc,argv,"./xml.d");
-#else
-	Application{}.run(argc,argv);
-#endif // DEBUG
 
  }
 
