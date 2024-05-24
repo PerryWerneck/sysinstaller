@@ -34,11 +34,11 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="src/application/main.cc" />
+		<Unit filename="src/gtk4/mainloop.cc" />
 		<Unit filename="src/include/config.h" />
-		<Unit filename="src/include/private/application.h" />
-		<Unit filename="src/include/private/mainwindow.h" />
 		<Unit filename="src/include/reinstall/disk/abstract.h" />
 		<Unit filename="src/include/reinstall/writer/abstract.h" />
+		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
 		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
 		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
 		<Unit filename="submodules/libudjatui/intl/gmo.h" />
