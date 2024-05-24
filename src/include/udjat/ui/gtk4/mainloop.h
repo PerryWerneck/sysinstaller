@@ -60,11 +60,9 @@
 			void quit() override;
 
 
-		}
+		};
 
 	}
 
  }
 
-
-#endif // MAINLOOP_H_INCLUDED

@@ -232,7 +232,7 @@ dnl ---------------------------------------------------------------------------
 
 GLIB_GSETTINGS
 
-PKG_CHECK_MODULES( [GTK], [gtkgtkmm-4.0], AC_DEFINE(HAVE_GTK,,[ "Do we have GTK++?" ]), AC_MSG_ERROR([GTK4++ not present.]))
+PKG_CHECK_MODULES( [GTK], [gtkmm-4.0], AC_DEFINE(HAVE_GTK,,[ "Do we have GTK++?" ]), AC_MSG_ERROR([GTK4++ not present.]))
 
 AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)
