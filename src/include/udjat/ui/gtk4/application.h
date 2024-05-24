@@ -18,25 +18,37 @@
  */
 
  /**
-  * @brief Application entry point.
+  * @brief Implements grafic application.
   */
 
- #include <config.h>
+ #pragma once
+
  #include <udjat/defs.h>
- #include <udjat/tools/logger.h>
- #include <udjat/ui/gtk4/application.h>
+ #include <udjat/tools/mainloop.h>
+ #include <udjat/tools/application.h>
 
- using namespace Udjat;
+ namespace Udjat {
 
- int main(int argc, char* argv[]) {
+	namespace Gtk {
 
-#ifdef DEBUG
-	Logger::verbosity(9);
-	Logger::redirect();
-	Logger::console(true);
-#endif // DEBUG
+		class UDJAT_API Application : public Udjat::Application {
+		public:
+			Application();
+			virtual ~Application();
 
-	return Udjat::Gtk::Application{}.run(argc,argv);
+			/// @param definitions Path to a single xml file or a folder with xml files.
+			int run(int argc, char **argv, const char *definitions = nullptr) override;
+
+		protected:
+
+			typedef Udjat::Gtk::Application super;
+
+			/// @brief GUI was activated.
+			virtual void activate();
+
+
+		};
+
+	}
 
  }
-
