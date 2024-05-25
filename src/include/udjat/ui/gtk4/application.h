@@ -43,8 +43,14 @@
 
 			typedef Udjat::Gtk::Application super;
 
+			/// @brief Gui is starting
+			virtual void startup(const char *definitions);
+
 			/// @brief GUI was activated.
-			virtual void activate();
+			virtual void activate(const char *definitions);
+
+			/// @brief GUI is shutting down.
+			virtual void shutdown(const char *definitions);
 
 
 		};

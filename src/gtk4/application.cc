@@ -41,12 +41,6 @@
 	Gtk::Application::~Application() {
 	}
 
-	void Gtk::Application::activate() {
-
-		debug("-------------------------> ACTIVATING");
-
-	}
-
 	static const char * get_argument(int argc, char **argv, const char shortname, const char *longname) {
 
 		size_t szlong = strlen(longname);
@@ -128,20 +122,38 @@
 			auto app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark()); //
 			::Gtk::Application::set_default(app);
 
-			app->signal_startup().connect([this](){
+			app->signal_startup().connect([app,definitions,this](){
 
 				debug("Starting up");
+				app->mark_busy();
+				try {
+
+					this->startup(definitions);
+
+				} catch(const std::exception &e) {
+
+					error() << e.what() << endl;
+					app->quit();
+
+				} catch(...) {
+
+					error() << "Unexpected error starting GUI" << endl;
+					app->quit();
+
+				}
+				app->unmark_busy();
 
 
 			});
 
-			app->signal_activate().connect([app,this]{
+			app->signal_activate().connect([app,definitions,this]{
 
 				debug("Activating");
 
+				app->mark_busy();
 				try {
 
-					this->activate();
+					this->activate(definitions);
 
 				} catch(const std::exception &e) {
 
@@ -154,14 +166,29 @@
 					app->quit();
 
 				}
-
+				app->unmark_busy();
 
 			});
 
-			app->signal_shutdown().connect([this]{
+			app->signal_shutdown().connect([app,definitions,this]{
 
 				debug("Shutting down");
 
+				app->mark_busy();
+				try {
+
+					this->shutdown(definitions);
+
+				} catch(const std::exception &e) {
+
+					error() << e.what() << endl;
+
+				} catch(...) {
+
+					error() << "Unexpected error deactivating GUI" << endl;
+
+				}
+				app->unmark_busy();
 
 			});
 
@@ -172,6 +199,25 @@
 		return -1;
 	}
 
+	void Gtk::Application::activate(const char *definitions) {
+
+		debug("-------------------------> Activate");
+
+	}
+
+	void Gtk::Application::startup(const char *definitions) {
+
+		debug("-------------------------> Starting up");
+		init(definitions);
+
+	}
+
+	void Gtk::Application::shutdown(const char *definitions) {
+
+		debug("-------------------------> Shutting down");
+		deinit(definitions);
+
+	}
 
  }
 
