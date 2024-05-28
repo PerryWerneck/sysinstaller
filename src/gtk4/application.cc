@@ -109,6 +109,7 @@
 	int Gtk::Application::run(int argc, char **argv, const char *definitions) {
 
 		if(get_argument(argc,argv,'t',"text") || get_argument(argc,argv,'t',"console") ) {
+
 			debug("Running in console mode");
 
 
@@ -122,7 +123,7 @@
 
 			g_log_set_default_handler(g_syslog,NULL);
 
-			Glib::RefPtr<::Gtk::Application> app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark()); //
+			Glib::RefPtr<::Gtk::Application> app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark());
 			::Gtk::Application::set_default(app);
 
 			app->signal_startup().connect([app,definitions,this](){
@@ -145,7 +146,6 @@
 
 				}
 				app->unmark_busy();
-
 
 			});
 
@@ -215,7 +215,7 @@
 
 	}
 
-	void Gtk::Application::shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
+	void Gtk::Application::shutdown(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Shutting down");
 		deinit(definitions);

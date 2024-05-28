@@ -45,23 +45,29 @@
 			}
 		}
 
-		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
+		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
 			info() << "Building main window" << endl;
 			window = new MainWindow(app);
 			super::startup(app,definitions);
 		}
 
-		void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
+		void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
 			super::activate(app,definitions);
 			if(window) {
-				debug("Presenting main window");
-				//window->show_all();
 				window->present();
 			} else {
-				error() << "No window" << endl;
+				error() << "No window on activate signal" << endl;
 			}
 		}
 
+		void shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
+			if(window) {
+				window->hide();
+			} else {
+				error() << "No window on shutdown signal" << endl;
+			}
+			super::shutdown(app,definitions);
+		}
 
  	};
 
