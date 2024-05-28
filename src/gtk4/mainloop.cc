@@ -216,9 +216,13 @@
  	// MainLoop
  	//
 	Gtk::MainLoop::MainLoop() : Udjat::MainLoop{Udjat::MainLoop::GLib} {
+		debug("Activating GLIB based mainloop");
 	}
 
 	Gtk::MainLoop::~MainLoop() {
+	}
+
+	void Gtk::MainLoop::wakeup() noexcept {
 	}
 
 	int Gtk::MainLoop::run() {

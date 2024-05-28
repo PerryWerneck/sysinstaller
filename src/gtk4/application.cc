@@ -28,6 +28,7 @@
  #include <udjat/tools/string.h>
 
  #include <udjat/ui/gtk4/application.h>
+ #include <udjat/ui/gtk4/mainloop.h>
 
  #include <gtkmm.h>
 
@@ -36,6 +37,8 @@
  namespace Udjat {
 
 	Gtk::Application::Application() {
+		static Udjat::Gtk::MainLoop mainloop;
+		mainloop.active();
 	}
 
 	Gtk::Application::~Application() {
@@ -119,7 +122,7 @@
 
 			g_log_set_default_handler(g_syslog,NULL);
 
-			auto app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark()); //
+			Glib::RefPtr<::Gtk::Application> app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark()); //
 			::Gtk::Application::set_default(app);
 
 			app->signal_startup().connect([app,definitions,this](){
@@ -128,7 +131,7 @@
 				app->mark_busy();
 				try {
 
-					this->startup(definitions);
+					this->startup(app,definitions);
 
 				} catch(const std::exception &e) {
 
@@ -153,7 +156,7 @@
 				app->mark_busy();
 				try {
 
-					this->activate(definitions);
+					this->activate(app,definitions);
 
 				} catch(const std::exception &e) {
 
@@ -177,7 +180,7 @@
 				app->mark_busy();
 				try {
 
-					this->shutdown(definitions);
+					this->shutdown(app,definitions);
 
 				} catch(const std::exception &e) {
 
@@ -199,20 +202,20 @@
 		return -1;
 	}
 
-	void Gtk::Application::activate(const char *definitions) {
+	void Gtk::Application::activate(Glib::RefPtr<::Gtk::Application>, const char *) {
 
 		debug("-------------------------> Activate");
 
 	}
 
-	void Gtk::Application::startup(const char *definitions) {
+	void Gtk::Application::startup(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Starting up");
 		init(definitions);
 
 	}
 
-	void Gtk::Application::shutdown(const char *definitions) {
+	void Gtk::Application::shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
 
 		debug("-------------------------> Shutting down");
 		deinit(definitions);

@@ -18,44 +18,28 @@
  */
 
  /**
-  * @brief Implements grafic application.
+  * @brief Declare application window.
   */
 
  #pragma once
-
  #include <udjat/defs.h>
- #include <udjat/tools/mainloop.h>
- #include <udjat/tools/application.h>
  #include <gtkmm.h>
 
- namespace Udjat {
+ #include <udjat/tools/factory.h>
 
-	namespace Gtk {
+ class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Udjat::Factory {
+ public:
 
-		class UDJAT_API Application : public Udjat::Application {
-		public:
-			Application();
-			virtual ~Application();
+	MainWindow(Glib::RefPtr<::Gtk::Application> app);
+	virtual ~MainWindow();
 
-			/// @param definitions Path to a single xml file or a folder with xml files.
-			int run(int argc, char **argv, const char *definitions = nullptr) override;
+	// Udjat::Factory
+	bool generic(const pugi::xml_node &node) override;
 
-		protected:
-
-			typedef Udjat::Gtk::Application super;
-
-			/// @brief Gui is starting
-			virtual void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
-
-			/// @brief GUI was activated.
-			virtual void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
-
-			/// @brief GUI is shutting down.
-			virtual void shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
+ };
 
 
-		};
 
-	}
 
- }
+
+

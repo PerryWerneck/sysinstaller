@@ -26,9 +26,44 @@
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
 
+ #include <private/mainwindow.h>
+
+ using namespace std;
  using namespace Udjat;
 
  int main(int argc, char* argv[]) {
+
+ 	class Application : public Udjat::Gtk::Application {
+	private:
+		MainWindow *window = nullptr;
+
+	public:
+		~Application() {
+			if(window) {
+				delete window;
+				window = nullptr;
+			}
+		}
+
+		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
+			info() << "Building main window" << endl;
+			window = new MainWindow(app);
+			super::startup(app,definitions);
+		}
+
+		void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions) {
+			super::activate(app,definitions);
+			if(window) {
+				debug("Presenting main window");
+				//window->show_all();
+				window->present();
+			} else {
+				error() << "No window" << endl;
+			}
+		}
+
+
+ 	};
 
 #ifdef DEBUG
 	Logger::verbosity(9);
@@ -36,7 +71,7 @@
 	Logger::console(true);
 #endif // DEBUG
 
-	return Udjat::Gtk::Application{}.run(argc,argv);
+	return Application{}.run(argc,argv);
 
  }
 

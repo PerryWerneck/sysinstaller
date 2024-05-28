@@ -34,6 +34,8 @@
 			MainLoop();
 			virtual ~MainLoop();
 
+			void wakeup() noexcept override;
+
 			// Mainloop methods
 			bool enabled(const Timer *timer) const noexcept override;
 
