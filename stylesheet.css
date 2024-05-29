@@ -65,10 +65,9 @@
 
 .sidebar {
 	min-width: 150px;
-	margin-right: 6px;
+	padding: 6px;
 	background-color: #000;
 	opacity: 0.3;
-	border-radius: 6px;
 }
 
 .logo {
@@ -77,6 +76,10 @@
 
 .dialog-icon {
 	margin: 6px;
+}
+
+.contents {
+  margin: 12px;
 }
 
 .group-box {

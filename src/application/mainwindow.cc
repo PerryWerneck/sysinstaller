@@ -58,16 +58,18 @@
         layout.box.set_hexpand(true);
         layout.box.set_vexpand(true);
 
+        layout.vbox.get_style_context()->add_class("contents");
+
         // A wide variety of style classes may be applied to labels, such as .title, .subtitle, .dim-label, etc
         layout.title.get_style_context()->add_class("main-title");
         layout.title.set_vexpand(false);
         layout.vbox.append(layout.title);
 
+        layout.view.get_style_context()->add_class("main-view");
         layout.view.set_hexpand(true);
         layout.view.set_vexpand(true);
         layout.view.set_valign(Gtk::Align::START);
         layout.view.set_halign(Gtk::Align::START);
-        layout.view.get_style_context()->add_class("main-view");
 
         layout.swindow.set_hexpand(true);
         layout.swindow.set_vexpand(true);
@@ -78,9 +80,23 @@
 
         layout.box.append(layout.sidebar);
 
+		button.box.get_style_context()->add_class("buttons");
+		button.box.set_homogeneous();
+        button.box.append(button.apply);
+        button.box.append(button.cancel);
+
+        button.apply.set_sensitive(false);
+
+		button.box.set_valign(Gtk::Align::END);
+		button.box.set_halign(Gtk::Align::END);
+		button.box.set_hexpand(false);
+        button.box.set_vexpand(false);
+        layout.vbox.append(button.box);
+
         layout.vbox.set_hexpand(true);
         layout.vbox.set_vexpand(true);
         layout.box.append(layout.vbox);
+
         set_child(layout.box);
 
  }

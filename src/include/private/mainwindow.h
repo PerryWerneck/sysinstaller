@@ -42,8 +42,8 @@
 
 	struct {
 		Gtk::Button apply{_("_Apply"), true}, cancel{_("_Cancel"), true};
-		// Gtk::ButtonBox box;
-	} buttons;
+		Gtk::Box box{Gtk::Orientation::HORIZONTAL,6};
+	} button;
 
  public:
 
