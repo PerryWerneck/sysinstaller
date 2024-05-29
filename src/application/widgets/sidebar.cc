@@ -18,47 +18,47 @@
  */
 
  /**
-  * @brief Declare application window.
+  * @brief Implements sidebar widget.
   */
 
- #pragma once
+ #include <config.h>
+
  #include <udjat/defs.h>
+ #include <udjat/tools/xml.h>
+ #include <udjat/tools/configuration.h>
  #include <gtkmm.h>
-
  #include <widgets/sidebar.h>
+ #include <string>
 
- #include <udjat/tools/factory.h>
+ // https://gtkmm.org/en/documentation.html
 
- class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Udjat::Factory {
- private:
-	struct {
-		SideBar sidebar;
-		Gtk::Box box;
-		Gtk::Label title{ _( "Select option" ), Gtk::Align::START };
-		Gtk::Box view{Gtk::Orientation::VERTICAL};
-		Gtk::ScrolledWindow swindow;
-	} layout;
+ using namespace std;
+ using namespace Udjat;
 
-	struct {
-		Gtk::Button apply{_("_Apply"), true}, cancel{_("_Cancel"), true};
-		// Gtk::ButtonBox box;
-	} buttons;
+ SideBar::SideBar() : Gtk::Box{Gtk::Orientation::VERTICAL}{
 
- public:
+	get_style_context()->add_class("sidebar");
 
-	MainWindow(Glib::RefPtr<::Gtk::Application> app);
-	virtual ~MainWindow();
+	set_hexpand(false);
+	set_vexpand(true);
+	set_homogeneous(false);
 
-	// Setup widgets from xml definitions.
-	void set(const Udjat::XML::Node &node);
+	logo.get_style_context()->add_class("sidebar_logo");
 
-	// Udjat::Factory
-	bool generic(const pugi::xml_node &node) override;
+#ifdef DEBUG
+	logo.property_file().set_value(Config::Value<string>{"MainWindow","logo","./icon.svg"}.c_str());
+#else
+	logo.property_file().set_value(Config::Value<string>{"MainWindow","logo",Application::DataFile("icon.svg").c_str()}.c_str());
+#endif // DEBUG
 
- };
+	append(logo);
 
+//	show_all();
+ }
 
+ SideBar::~SideBar() {
+ }
 
-
-
+ void SideBar::set(const Udjat::XML::Node &node) {
+ }
 

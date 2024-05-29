@@ -35,6 +35,7 @@
 		</Compiler>
 		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/application/mainwindow.cc" />
+		<Unit filename="src/application/widgets/sidebar.cc" />
 		<Unit filename="src/gtk4/application.cc" />
 		<Unit filename="src/gtk4/mainloop.cc" />
 		<Unit filename="src/include/config.h" />
@@ -43,6 +44,7 @@
 		<Unit filename="src/include/reinstall/writer/abstract.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
+		<Unit filename="src/include/widgets/sidebar.h" />
 		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
 		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
 		<Unit filename="submodules/libudjatui/intl/gmo.h" />

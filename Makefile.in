@@ -41,6 +41,7 @@ LIBRARY_SOURCES = \
 
 GUI_SOURCES= \
 	$(wildcard $(srcdir)/src/application/*.cc) \
+	$(wildcard $(srcdir)/src/application/widgets/*.cc) \
 	$(wildcard $(srcdir)/src/gtk4/*.cc)
 
 #---[ Tools ]----------------------------------------------------------------------------

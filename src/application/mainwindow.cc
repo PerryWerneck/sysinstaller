@@ -25,13 +25,44 @@
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/factory.h>
+ #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
+ #include <string>
 
  #include <gtkmm.h>
  #include <private/mainwindow.h>
 
+ using namespace Udjat;
+ using namespace std;
+
  static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
  MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app}, Udjat::Factory{"group",moduleinfo} {
+
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
+
+		/*
+        {
+                auto css = Gtk::CssProvider::create();
+#ifdef DEBUG
+                css->load_from_path("./stylesheet.css");
+#else
+                css->load_from_path(Application::DataFile("stylesheet.css").c_str());
+#endif // DEBUG
+//                get_style_context()->add_provider_for_screen(Gdk::Screen::get_default(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        }
+        */
+
+        set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
+        set_default_size(800, 600);
+
+        set_icon_name(Config::Value<string>{"MainWindow","icon",PRODUCT_ID "." PACKAGE_NAME}.c_str());
+
+        layout.box.append(layout.sidebar);
+//        layout.swindow.append(layout.view);
+        layout.box.append(layout.swindow);
+
+//        layout.box.show_all();
+        set_child(layout.box);
  }
 
  MainWindow::~MainWindow() {
