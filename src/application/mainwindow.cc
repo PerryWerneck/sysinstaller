@@ -40,7 +40,6 @@
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 
-		/*
         {
                 auto css = Gtk::CssProvider::create();
 #ifdef DEBUG
@@ -48,21 +47,42 @@
 #else
                 css->load_from_path(Application::DataFile("stylesheet.css").c_str());
 #endif // DEBUG
-//                get_style_context()->add_provider_for_screen(Gdk::Screen::get_default(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+                get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
-        */
 
         set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
         set_default_size(800, 600);
 
         set_icon_name(Config::Value<string>{"MainWindow","icon",PRODUCT_ID "." PACKAGE_NAME}.c_str());
 
-        layout.box.append(layout.sidebar);
-//        layout.swindow.append(layout.view);
-        layout.box.append(layout.swindow);
+        layout.box.set_hexpand(true);
+        layout.box.set_vexpand(true);
 
-//        layout.box.show_all();
+        // A wide variety of style classes may be applied to labels, such as .title, .subtitle, .dim-label, etc
+        layout.title.get_style_context()->add_class("main-title");
+        layout.title.set_vexpand(false);
+        layout.vbox.append(layout.title);
+
+        layout.view.set_hexpand(true);
+        layout.view.set_vexpand(true);
+        layout.view.set_valign(Gtk::Align::START);
+        layout.view.set_halign(Gtk::Align::START);
+        layout.view.get_style_context()->add_class("main-view");
+
+        layout.swindow.set_hexpand(true);
+        layout.swindow.set_vexpand(true);
+
+        layout.swindow.set_child(layout.view);
+
+        layout.vbox.append(layout.swindow);
+
+        layout.box.append(layout.sidebar);
+
+        layout.vbox.set_hexpand(true);
+        layout.vbox.set_vexpand(true);
+        layout.box.append(layout.vbox);
         set_child(layout.box);
+
  }
 
  MainWindow::~MainWindow() {

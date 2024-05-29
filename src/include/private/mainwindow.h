@@ -34,6 +34,7 @@
 	struct {
 		SideBar sidebar;
 		Gtk::Box box;
+		Gtk::Box vbox{Gtk::Orientation::VERTICAL};
 		Gtk::Label title{ _( "Select option" ), Gtk::Align::START };
 		Gtk::Box view{Gtk::Orientation::VERTICAL};
 		Gtk::ScrolledWindow swindow;

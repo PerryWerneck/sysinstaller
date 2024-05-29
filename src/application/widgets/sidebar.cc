@@ -26,6 +26,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/logger.h>
  #include <gtkmm.h>
  #include <widgets/sidebar.h>
  #include <string>
@@ -46,14 +47,18 @@
 	logo.get_style_context()->add_class("sidebar_logo");
 
 #ifdef DEBUG
-	logo.property_file().set_value(Config::Value<string>{"MainWindow","logo","./icon.svg"}.c_str());
+	Config::Value<string> path{"MainWindow","logo","./icon.svg"};
 #else
-	logo.property_file().set_value(Config::Value<string>{"MainWindow","logo",Application::DataFile("icon.svg").c_str()}.c_str());
+	Config::Value<string> path{"MainWindow","logo",Application::DataFile("icon.svg").c_str()};
 #endif // DEBUG
 
+	Logger::String{"Getting logo from '",path.c_str(),"'"}.trace("sidebar");
+
+	logo.property_file().set_value(path);
 	append(logo);
 
-//	show_all();
+	set_visible();
+
  }
 
  SideBar::~SideBar() {
