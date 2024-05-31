@@ -48,10 +48,12 @@
 		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
 			info() << "Building main window" << endl;
 			window = new MainWindow(app);
+			debug("Definitions='",definitions,"'");
 			super::startup(app,definitions);
 		}
 
 		void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
+			debug("Definitions='",definitions,"'");
 			super::activate(app,definitions);
 			if(window) {
 				window->present();
@@ -66,6 +68,7 @@
 			} else {
 				error() << "No window on shutdown signal" << endl;
 			}
+			debug("Definitions='",definitions,"'");
 			super::shutdown(app,definitions);
 		}
 
@@ -75,9 +78,12 @@
 	Logger::verbosity(9);
 	Logger::redirect();
 	Logger::console(true);
+	return Application{}.run(argc,argv,"./xml.d");
+#else
+	Logger::redirect();
+	return Application{}.run(argc,argv);
 #endif // DEBUG
 
-	return Application{}.run(argc,argv);
 
  }
 

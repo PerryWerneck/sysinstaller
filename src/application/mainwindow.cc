@@ -36,7 +36,7 @@
  using namespace std;
 
  static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
- MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app}, Udjat::Factory{"group",moduleinfo} {
+ MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app}, Udjat::Factory{PACKAGE_NAME,moduleinfo} {
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 
@@ -104,6 +104,103 @@
  MainWindow::~MainWindow() {
  }
 
- bool MainWindow::generic(const pugi::xml_node &node) {
-	return false;
+ static int TypeFactory(const char *name) {
+
+	static const char * types[] = {
+		"MainWindow",
+		"group",
+	};
+
+	for(int id = 0; id < (int) (sizeof(types)/sizeof(types[0]));id++) {
+
+		if(!strcasecmp(name,types[id])) {
+			return id;
+		}
+
+	}
+
+	return -1;
+ }
+
+ int MainWindow::compare(const char *name) const noexcept {
+
+	if(TypeFactory(name) >= 0) {
+		debug("Found ",name);
+		return 0;
+	}
+
+	return Udjat::Factory::compare(name);
+
+ }
+
+
+ bool MainWindow::NodeFactory(const XML::Node &node) {
+
+	int type{TypeFactory(node.name())};
+
+	if(type < 0) {
+		return false;
+	}
+
+	// Build node
+	switch(type) {
+	case 0:	// MainWindow
+		{
+			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
+
+			static const struct {
+				const char *name;
+				const std::function<void(MainWindow &window, const XML::Node &node)> apply;
+			} properties[] = {
+				{
+					"title",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_title(node.attribute("value").as_string());
+					}
+				},
+				{
+					"modal",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_modal(node.attribute("value").as_bool());
+					}
+				},
+				{
+					"icon",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_icon_name(node.attribute("value").as_string(PACKAGE_NAME));
+					}
+				},
+				{
+					"resizable",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_resizable(node.attribute("value").as_bool());
+					}
+				},
+				{
+					"label",
+					[](MainWindow &window, const XML::Node &node) {
+						window.layout.title.set_markup(node.attribute("value").as_string());
+					}
+				},
+
+
+			};
+
+			for(auto &property : properties) {
+				for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
+					if(!strcasecmp(child.attribute("name").as_string("none"),property.name)) {
+						property.apply(*this,child);
+					}
+				}
+			}
+
+		}
+		break;
+
+	default:
+		Logger::String{"Unexpected configuration type '",node.name(),"'"}.warning("MainWindow");
+	}
+
+
+	return true;
  }

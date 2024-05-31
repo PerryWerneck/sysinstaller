@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<config log-debug='yes' log-trace='yes'>
+<config>
 
 	<!-- System version -->
 	<!-- attribute name='osversion' value='15.4' / -->
@@ -7,10 +7,6 @@
 	<!-- HTTP is required for downloading files -->
 	<module name='http' required='yes' />
 	
-	<MainWindow>
-		<attribute name='title' value='Sample reinstall settings' />	
-	</MainWindow>
-
 	<!-- 
 	
 		URL for the installation repositóry 

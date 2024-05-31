@@ -50,11 +50,9 @@
 	MainWindow(Glib::RefPtr<::Gtk::Application> app);
 	virtual ~MainWindow();
 
-	// Setup widgets from xml definitions.
-	void set(const Udjat::XML::Node &node);
-
 	// Udjat::Factory
-	bool generic(const pugi::xml_node &node) override;
+	int compare(const char *name) const noexcept;
+	bool NodeFactory(const Udjat::XML::Node &node) override;
 
  };
 

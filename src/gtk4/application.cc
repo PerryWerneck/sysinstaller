@@ -108,6 +108,8 @@
 	/// @param definitions Path to a single xml file or a folder with xml files.
 	int Gtk::Application::run(int argc, char **argv, const char *definitions) {
 
+		debug("---------------------------------Definitions='",definitions,"'");
+
 		if(get_argument(argc,argv,'t',"text") || get_argument(argc,argv,'t',"console") ) {
 
 			debug("Running in console mode");
