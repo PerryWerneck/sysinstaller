@@ -50,6 +50,8 @@
                 get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
 
+        set_deletable(false);
+
         set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
         set_default_size(800, 600);
 
@@ -98,6 +100,10 @@
         layout.box.append(layout.vbox);
 
         set_child(layout.box);
+
+		button.cancel.signal_clicked().connect([&]() {
+			close();
+		});
 
  }
 
