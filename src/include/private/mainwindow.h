@@ -29,14 +29,18 @@
 
  #include <udjat/tools/factory.h>
 
- class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Udjat::Factory {
+ #include <reinstall/group.h>
+
+ #include <list>
+
+ class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Udjat::Factory, private Reinstall::Group::Controller {
  private:
 	struct {
 		SideBar sidebar;
 		Gtk::Box box;
 		Gtk::Box vbox{Gtk::Orientation::VERTICAL};
 		Gtk::Label title{ _( "Select option" ), Gtk::Align::START };
-		Gtk::Box view{Gtk::Orientation::VERTICAL};
+		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the groups & options.
 		Gtk::ScrolledWindow swindow;
 	} layout;
 
@@ -53,6 +57,10 @@
 	// Udjat::Factory
 	int compare(const char *name) const noexcept;
 	bool NodeFactory(const Udjat::XML::Node &node) override;
+
+	// Reinstall::Group::Controller
+	void push_back(const Udjat::XML::Node &node, Reinstall::Group *group) override;
+	void remove(Reinstall::Group *group) override;
 
  };
 

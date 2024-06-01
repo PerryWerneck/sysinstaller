@@ -37,7 +37,8 @@ MODULES=@MODULES@
 SONAME=@SONAME@
 
 LIBRARY_SOURCES = \
-	$(wildcard $(srcdir)/library/os/@OSNAME@/*.cc)
+	$(wildcard $(srcdir)/src/library/*.cc) \
+	$(wildcard $(srcdir)/src/library/os/@OSNAME@/*.cc)
 
 GUI_SOURCES= \
 	$(wildcard $(srcdir)/src/application/*.cc) \

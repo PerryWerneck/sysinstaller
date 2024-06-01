@@ -67,16 +67,16 @@
         layout.title.set_vexpand(false);
         layout.vbox.append(layout.title);
 
-        layout.view.get_style_context()->add_class("main-view");
-        layout.view.set_hexpand(true);
-        layout.view.set_vexpand(true);
-        layout.view.set_valign(Gtk::Align::START);
-        layout.view.set_halign(Gtk::Align::START);
+        layout.contents.get_style_context()->add_class("contents");
+        layout.contents.set_hexpand(true);
+        layout.contents.set_vexpand(true);
+        layout.contents.set_valign(Gtk::Align::START);
+        layout.contents.set_halign(Gtk::Align::START);
 
         layout.swindow.set_hexpand(true);
         layout.swindow.set_vexpand(true);
 
-        layout.swindow.set_child(layout.view);
+        layout.swindow.set_child(layout.contents);
 
         layout.vbox.append(layout.swindow);
 
@@ -203,6 +203,12 @@
 		}
 		break;
 
+	case 1:	// Group
+		{
+
+		}
+		break;
+
 	default:
 		Logger::String{"Unexpected configuration type '",node.name(),"'"}.warning("MainWindow");
 	}
@@ -210,3 +216,10 @@
 
 	return true;
  }
+
+ void MainWindow::push_back(const XML::Node &node, Reinstall::Group *group) {
+ }
+
+ void MainWindow::remove(Reinstall::Group *group) {
+ }
+
