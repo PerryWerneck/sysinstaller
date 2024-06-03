@@ -47,15 +47,25 @@
 	logo.get_style_context()->add_class("sidebar_logo");
 
 #ifdef DEBUG
-	Config::Value<string> path{"MainWindow","logo","./icon.svg"};
+	Config::Value<string> path{"MainWindow","logo","./icons/logo.svg"};
 #else
-	Config::Value<string> path{"MainWindow","logo",Application::DataFile("icon.svg").c_str()};
+	Config::Value<string> path{"MainWindow","logo",Application::DataFile("icons/logo.svg").c_str()};
 #endif // DEBUG
 
-	Logger::String{"Getting logo from '",path.c_str(),"'"}.trace("sidebar");
+	try {
 
-	logo.property_file().set_value(path);
-	append(logo);
+		Logger::String{"Getting logo from '",path.c_str(),"'"}.trace("sidebar");
+
+		logo.set_pixel_size(128);
+		logo.set(Gdk::Pixbuf::create_from_file(path.c_str()));
+		append(logo);
+
+	} catch(const std::exception &e) {
+
+		Logger::String{path.c_str(),": ",e.what()}.error("sidebar");
+
+	}
+
 
 	set_visible();
 
