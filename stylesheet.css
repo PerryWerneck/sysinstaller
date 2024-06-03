@@ -66,12 +66,11 @@
 .sidebar {
 	min-width: 150px;
 	padding: 6px;
-	background-color: #000;
-	opacity: 0.3;
+	background-color: #808080;
 }
 
-.logo {
-	opacity: 1;
+.sidebar-logo {
+/*	opacity: 1.0; */
 }
 
 .dialog-icon {

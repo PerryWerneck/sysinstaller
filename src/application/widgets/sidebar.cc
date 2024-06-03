@@ -44,8 +44,6 @@
 	set_vexpand(true);
 	set_homogeneous(false);
 
-	logo.get_style_context()->add_class("sidebar_logo");
-
 #ifdef DEBUG
 	Config::Value<string> path{"MainWindow","logo","./icons/logo.svg"};
 #else
@@ -58,6 +56,7 @@
 
 		logo.set_pixel_size(128);
 		logo.set(Gdk::Pixbuf::create_from_file(path.c_str()));
+		logo.get_style_context()->add_class("sidebar-logo");
 		append(logo);
 
 	} catch(const std::exception &e) {
