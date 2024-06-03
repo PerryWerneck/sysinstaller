@@ -205,10 +205,7 @@
 		break;
 
 	case 1:	// Group
-		{
-			Group &group = groups.emplace_back(node);
-			layout.contents.append(group);
-		}
+		layout.contents.append(groups.emplace_back(node));
 		break;
 
 	default:
