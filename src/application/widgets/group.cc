@@ -55,6 +55,13 @@
 	if(icon) {
 		debug("Using icon '",icon.as_string(),"'");
 		margin = 1;
+
+		Gtk::Image image;
+		image.set_icon_size(Gtk::IconSize::LARGE);
+		image.get_style_context()->add_class("group-icon");
+		image.set_from_icon_name(icon.as_string("image-missing"));
+
+		attach(image,0,0,1,2);
 	}
 
 	attach(title,margin,0);
