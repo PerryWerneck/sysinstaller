@@ -29,6 +29,7 @@
 
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/ui/gtk4/mainloop.h>
+ #include <udjat/tools/application.h>
 
  #include <gtkmm.h>
 
@@ -39,6 +40,7 @@
 	Gtk::Application::Application() {
 		static Udjat::Gtk::MainLoop mainloop;
 		mainloop.active();
+
 	}
 
 	Gtk::Application::~Application() {
@@ -131,6 +133,17 @@
 			app->signal_startup().connect([app,definitions,this](){
 
 				debug("Starting up");
+#ifdef DEBUG
+				std::string iconpath{"./icons"};
+#else
+				Udjat::Application::DataDir iconpath{"icons"};
+#endif // DEBUG
+
+				Logger::String{"Searching '",iconpath.c_str(),"' for customized icons"}.trace("gtk");
+
+				// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1IconTheme.html
+				::Gtk::IconTheme::get_for_display(Gdk::Display::get_default())->add_search_path(iconpath);
+
 				app->mark_busy();
 				try {
 

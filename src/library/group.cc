@@ -58,8 +58,8 @@
 	//
 	// Group
 	//
-	Group::Group(const XML::Node &) {
-		Controller::getInstance().push_back(this);
+	Group::Group(const Udjat::XML::Node &node) {
+		Controller::getInstance().push_back(node,this);
 	}
 
 	Group::~Group() {

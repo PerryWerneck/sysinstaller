@@ -395,7 +395,8 @@ Debug: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
 
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
-	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o)
+	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \
+	$(BINDBG)/$(SONAME)
 
 	@$(MKDIR) $(@D)
 	@echo $< ...
