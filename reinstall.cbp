@@ -35,6 +35,7 @@
 		</Compiler>
 		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/application/mainwindow.cc" />
+		<Unit filename="src/application/widgets/group.cc" />
 		<Unit filename="src/application/widgets/sidebar.cc" />
 		<Unit filename="src/gtk4/application.cc" />
 		<Unit filename="src/gtk4/mainloop.cc" />

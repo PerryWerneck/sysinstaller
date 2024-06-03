@@ -27,6 +27,7 @@
  #include <udjat/tools/factory.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
+ #include <udjat/tools/xml.h>
  #include <string>
 
  #include <gtkmm.h>
@@ -205,7 +206,8 @@
 
 	case 1:	// Group
 		{
-
+			Group &group = groups.emplace_back(node);
+			layout.contents.append(group);
 		}
 		break;
 

@@ -28,6 +28,7 @@
  #include <widgets/sidebar.h>
 
  #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
 
  #include <reinstall/group.h>
 
@@ -48,6 +49,16 @@
 		Gtk::Button apply{_("_Apply"), true}, cancel{_("_Cancel"), true};
 		Gtk::Box box{Gtk::Orientation::HORIZONTAL,6};
 	} button;
+
+	class Group : public Gtk::Grid, public Reinstall::Group {
+	private:
+		Gtk::Label title;
+		Gtk::Label sub_title;
+	public:
+		Group(const Udjat::XML::Node &node);
+	};
+
+	std::list<Group> groups;
 
  public:
 
