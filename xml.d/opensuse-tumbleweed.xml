@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
 
-	<!-- System version -->
-	<!-- attribute name='osversion' value='15.4' / -->
-
 	<!-- HTTP is required for downloading files -->
 	<module name='http' required='yes' />
 	
@@ -24,14 +21,11 @@
 			slp-filter:			A query formulated of attribute pattern matching expressions in the form of an LDAPv3 search filter.
 			slp-url:			The URL for the kernel parameter when SLP is available.
 		
-		http://localhost/~perry/openSUSE-Leap-15.4-NET-x86_64
-		https://download.opensuse.org/distribution/leap/15.4/repo/oss
-		
 	-->
 	<repository name='install'>
-		<attribute name='remote' value='http://127.0.0.1/~perry/openSUSE-Leap-15.4-NET-x86_64' />
-		<attribute name='local' value='/home/perry/Público/openSUSE-Leap-15.4-NET-x86_64' valid-if='file:///home/perry/Público/update.dud' />
-		<attribute name='slp-service-type' value='service:install.suse' />
+		<attribute name='remote' value='https://download.opensuse.org/tumbleweed/repo/oss/' />
+		<attribute name='local' value='file:///${HOME}/Público/tumbleweed/repo/oss/' />
+		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
 		<attribute name='slp-kernel-parameter' value='slp:/' />
@@ -39,13 +33,13 @@
 	</repository>
 
 	<!-- Path for the driver update (Full URL or repository path) -->
-	<driver-update-disk name='dud' url='../update.dud' path='${boot-path}/update.dud' repository='install' />	
+	<!-- driver-update-disk name='dud' url='../update.dud' path='${boot-path}/update.dud' repository='install' / -->	
 
 	<!-- Path for the installation kernel (Full URL or repository path) -->
-	<kernel url='/boot/x86_64/loader/linux' repository='install' />
+	<kernel url='/boot/x86_64/loader/linux' repository='install' template-name='linux' />
 
 	<!-- Path for the installation init (Full URL or repository path) -->
-	<init url='/boot/x86_64/loader/initrd' repository='install' />
+	<init url='/boot/x86_64/loader/initrd' repository='install' template-name='initrd' />
 
 	<kernel-parameter name='splash' value='silent' /> 
 	<kernel-parameter name='lang' value='pt_BR' />
@@ -55,19 +49,18 @@
 	<kernel-parameter name='self_update' value='0' />
 	
 	<!-- Path for EFI boot-image -->
-	<efi-boot-image path='/boot/x86_64/efi' />
+	<efi-boot-image path='/boot/x86_64/efi' repository='install' />
 
 	<!-- Setup the kernel parameter based on repository 'install' settings, can be an URL or 'slp:/' for automatic detection -->
 	<kernel-parameter name='install' repository='install' />
 
-	<group name='OpenSUSE'>
+	<group name='TumbleWeed'>
 
-		<!-- Nome que aparece na opção de menu -->
- 		<attribute name='title' value='OpenSUSE Leap 15.4' />
- 		<attribute name='sub-title' value='A brand new way of building openSUSE and a new type of a hybrid Linux distribution' />
- 		<attribute name='help' value='https://get.opensuse.org/leap/15.4/' />
- 		
- 		<!-- 
+ 		<attribute name='title' value='OpenSUSE TumbleWeed' />
+ 		<attribute name='icon' value='opensuse-tumbleweed' />
+ 		<attribute name='sub-title' value='State-of-the-art desktop and server operating system' url='https://get.opensuse.org/tumbleweed/' /> 		
+
+    <!-- 
  		
  			Local installer:
  			
@@ -75,7 +68,7 @@
  				This allow reinstall of the workstation without use of any external midia.
  		
  		-->
- 		<local-installer name='reinstall-local' default='yes' allow-reboot-when-success='yes'>
+ 		<local-installer name='tw-local' default='yes' allow-reboot-when-success='yes'>
 
 			<attribute name='slp-allow-local' value='no' />
 
@@ -107,7 +100,7 @@
 
 		</local-installer>
  		
- 		<network-installer name='reinstall-usb' default='no' output-file='/tmp/test.iso'>
+ 		<network-installer name='tw-mini' default='no'>
 
 			<attribute name='slp-allow-local' value='yes' />
 
@@ -136,7 +129,7 @@
 
 		</network-installer>
 		
-		<iso-writer name='netinstall' default='no'>
+		<iso-writer name='tw-net' default='no'>
 
 	 		<attribute name='title' value='Create USB drive for network install' />
 	 		<attribute name='sub-title' value='This will download and write the OpenSUSE network install' />
@@ -155,7 +148,7 @@
 
 		</iso-writer>
 
-		<iso-writer name='netinstall' default='no'>
+		<iso-writer name='tw-full' default='no'>
 		
 	 		<attribute name='title' value='Create USB drive for offline install' />
 	 		<attribute name='sub-title' value='This will download and write the OpenSUSE full install' />
@@ -174,7 +167,6 @@
 		</iso-writer>
 
 	</group>
-
 
 </config>
 
