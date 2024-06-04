@@ -44,9 +44,9 @@ OBJDIR=.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
-BINDIR=.bin
-BINDBG=$(BINDIR)/Debug
-BINRLS=$(BINDIR)/Release
+BINDIR?=.bin
+BINDBG?=$(BINDIR)/Debug
+BINRLS?=$(BINDIR)/Release
 
 #---[ Rules ]----------------------------------------------------------------------------
 

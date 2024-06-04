@@ -71,7 +71,7 @@ OBJDIR=.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
-BINDIR=.bin
+BINDIR=$(PWD)/.bin
 BINDBG=$(BINDIR)/Debug
 BINRLS=$(BINDIR)/Release
 
@@ -152,6 +152,11 @@ $(OBJDBG)/%.o: \
 	@echo $< ...
 	@$(MKDIR) $(@D)
 	@$(WINDRES) $< -O coff -o $@
+	
+$(BINDBG)/modules/isowriter.@DLLEXT@:
+
+	@echo $< ...
+	@$(MAKE) BINDBG=$(BINDBG) -C modules/isowriter Debug
 
 #---[ Release Rules ]--------------------------------------------------------------------
 
@@ -392,7 +397,8 @@ install-data:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
+	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
+	$(BINDBG)/modules/isowriter.@DLLEXT@
 
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \

@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
 
@@ -49,6 +50,9 @@
 			info() << "Building main window" << endl;
 			window = new MainWindow(app);
 			debug("Definitions='",definitions,"'");
+#ifdef DEBUG
+			Udjat::Module::load(Udjat::File::Path{".bin/Debug/isowriter.so"});
+#endif // DEBUG
 			super::startup(app,definitions);
 		}
 
