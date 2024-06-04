@@ -1,0 +1,190 @@
+
+#---[ Library configuration ]------------------------------------------------------------
+
+PACKAGE_NAME=@PACKAGE_NAME@
+SONAME=isowriter
+
+SOURCES= \
+	$(wildcard src/library/*.cc) \
+	$(wildcard src/module/*.cc)
+
+TEST_SOURCES= \
+	$(wildcard src/testprogram/*.cc)
+
+#---[ Tools ]----------------------------------------------------------------------------
+
+CXX=@CXX@
+LD=@CXX@
+LN_S=@LN_S@
+MKDIR=@MKDIR_P@
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+XGETTEXT=@XGETTEXT@
+MSGCAT=@MSGCAT@
+WINDRES=@WINDRES@
+AR=@AR@
+VALGRIND=@VALGRIND@
+DLLTOOL=@DLLTOOL@
+
+#---[ Paths ]----------------------------------------------------------------------------
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+sbindir=@sbindir@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+localedir=@localedir@
+docdir=@docdir@
+sysconfdir=/etc
+
+OBJDIR=.obj
+OBJDBG=$(OBJDIR)/Debug
+OBJRLS=$(OBJDIR)/Release
+
+BINDIR=.bin
+BINDBG=$(BINDIR)/Debug
+BINRLS=$(BINDIR)/Release
+
+#---[ Rules ]----------------------------------------------------------------------------
+
+CFLAGS= \
+	@CPPFLAGS@ \
+	-Isrc/include \
+	-DBUILD_DATE=`date +%Y%m%d` \
+	@UDJAT_CFLAGS@ \
+	@REINSTALL_CFLAGS@
+
+LDFLAGS=\
+	@LDFLAGS@
+
+LIBS= \
+	@LIBS@ \
+	@UDJAT_LIBS@ \
+	@REINSTALL_LIBS@
+
+#---[ Debug Rules ]----------------------------------------------------------------------
+
+$(OBJDBG)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
+	%.rc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+	@$(WINDRES) $< -O coff -o $@
+
+#---[ Release Rules ]--------------------------------------------------------------------
+
+$(OBJRLS)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJRLS)/%.o: \
+	%.rc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+	@$(WINDRES) $< -O coff -o $@
+
+#---[ Release Targets ]------------------------------------------------------------------
+
+all: \
+	$(BINRLS)/$(SONAME)@LIBEXT@
+
+Release: \
+	$(BINRLS)/$(SONAME)@LIBEXT@
+
+$(BINRLS)/$(SONAME)@LIBEXT@: \
+	$(foreach SRC, $(basename $(SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-shared \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS)
+
+
+#---[ Install Targets ]------------------------------------------------------------------
+
+	
+#---[ Uninstall Targets ]----------------------------------------------------------------
+
+#---[ Debug Targets ]--------------------------------------------------------------------
+
+Debug: \
+	$(BINDBG)/$(SONAME)@LIBEXT@
+
+$(BINDBG)/$(SONAME)@LIBEXT@: \
+	$(foreach SRC, $(basename $(SOURCES)), $(OBJDBG)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-shared \
+		-Wl,-rpath,$(BINDBG) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS)
+
+
+
+#---[ Clean Targets ]--------------------------------------------------------------------
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+cleanDebug:
+
+	@rm -fr $(OBJDBG)
+	@rm -fr $(BINDBG)
+
+cleanRelease:
+
+	@rm -fr $(OBJRLS)
+	@rm -fr $(BINRLS)
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+-include $(foreach SRC, $(basename $(SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(SOURCES)), $(OBJRLS)/$(SRC).d)
+
+

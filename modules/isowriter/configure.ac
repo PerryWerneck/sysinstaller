@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([reinstall-module-isowriter], [5.1.0], [perry.werneck@gmail.com])
+AC_INIT([isowriter], [5.1.0], [perry.werneck@gmail.com])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
@@ -147,6 +147,14 @@ AC_ARG_WITH([module-path], [AS_HELP_STRING([--with-module-path], [Set module-pat
 
 AC_DEFINE_UNQUOTED(MODULE_PATH, $app_cv_module_path, [The path for module installation])
 AC_SUBST(MODULE_PATH,$app_cv_module_path)
+
+dnl ---------------------------------------------------------------------------
+dnl Check for libreinstall
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [REINSTALL], [libreinstall], AC_DEFINE(HAVE_REINSTALL,,[Do we have reinstall?]), AC_MSG_ERROR([libreinstall not present.]) )
+AC_SUBST(REINSTALL_LIBS)
+AC_SUBST(REINSTALL_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
