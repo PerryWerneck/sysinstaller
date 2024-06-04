@@ -60,7 +60,7 @@ case "$host" in
 		OSNAME="windows"
 
 		CPPFLAGS="$CPPFLAGS -D_WIN32_WINNT=0x0600"
-		DLLEXT=".dll"
+		LIBEXT=".dll"
 
 		app_win32_revision=$(date +%y.%m.%d.%H)
 		AC_SUBST(WIN32_VERSION,$app_win32_revision)
@@ -88,16 +88,16 @@ dnl		AC_CONFIG_FILES(win/userinfo.nsi)
 
  	*)
 		EXEEXT=""
-		DLLEXT=".so"
+		LIBEXT=".so"
 		OSNAME="linux"
-		CPPFLAGS="$CPPFLAGS -pthread"
+		CPPFLAGS="$CPPFLAGS -fPIC -pthread"
 		LDFLAGS="$LDFLAGS -pthread"
 
 esac
 
 AC_SUBST(LIBS)
 AC_SUBST(EXEEXT)
-AC_SUBST(DLLEXT)
+AC_SUBST(LIBEXT)
 AC_SUBST(OSNAME)
 AC_SUBST(DLL_LDFLAGS)
 

@@ -33,6 +33,23 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="modules/isowriter/intl/eval-plural.h" />
+		<Unit filename="modules/isowriter/intl/gettextP.h" />
+		<Unit filename="modules/isowriter/intl/gmo.h" />
+		<Unit filename="modules/isowriter/intl/hash-string.h" />
+		<Unit filename="modules/isowriter/intl/loadinfo.h" />
+		<Unit filename="modules/isowriter/intl/localcharset.h" />
+		<Unit filename="modules/isowriter/intl/os2compat.h" />
+		<Unit filename="modules/isowriter/intl/plural-exp.h" />
+		<Unit filename="modules/isowriter/intl/printf-args.h" />
+		<Unit filename="modules/isowriter/intl/printf-parse.h" />
+		<Unit filename="modules/isowriter/intl/relocatable.h" />
+		<Unit filename="modules/isowriter/intl/vasnprintf.h" />
+		<Unit filename="modules/isowriter/intl/vasnwprintf.h" />
+		<Unit filename="modules/isowriter/intl/wprintf-parse.h" />
+		<Unit filename="modules/isowriter/intl/xsize.h" />
+		<Unit filename="modules/isowriter/src/include/config.h" />
+		<Unit filename="modules/isowriter/src/module/init.cc" />
 		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/application/mainwindow.cc" />
 		<Unit filename="src/application/widgets/group.cc" />

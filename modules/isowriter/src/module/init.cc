@@ -23,7 +23,9 @@
  #include <udjat/tools/protocol.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
- 
+ #include <udjat/tools/xml.h>
+
+ using namespace Udjat;
  using namespace std;
 
  /// @brief Register udjat module.
@@ -33,8 +35,19 @@
           "Iso writing module."
 	};
 
-	class Module : public Udjat::Module, publid Udjat::Factory {
+	class Module : public Udjat::Module, public Udjat::Factory {
 	public:
+		Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
+		};
+
+		// Udjat::Factory
+		bool NodeFactory(const XML::Node &node) {
+
+			debug("Building iso-writer action");
+
+
+			return true;
+		}
 
 	};
 
