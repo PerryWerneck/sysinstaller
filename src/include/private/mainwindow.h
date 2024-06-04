@@ -31,6 +31,7 @@
  #include <udjat/tools/xml.h>
 
  #include <reinstall/group.h>
+ #include <reinstall/action.h>
 
  #include <list>
 
@@ -54,8 +55,12 @@
 	private:
 		Gtk::Label title;
 		Gtk::Label sub_title;
+		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the options.
 	public:
 		Group(const Udjat::XML::Node &node);
+		void push_back(const Udjat::XML::Node &node, Reinstall::Action *action) override;
+		void remove(Reinstall::Action *action) override;
+
 	};
 
 	std::list<Group> groups;

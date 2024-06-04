@@ -222,3 +222,9 @@
  void MainWindow::remove(Reinstall::Group *group) {
  }
 
+ void MainWindow::Group::push_back(const Udjat::XML::Node &node, Reinstall::Action *action) {
+ }
+
+ void MainWindow::Group::remove(Reinstall::Action *action) {
+ }
+

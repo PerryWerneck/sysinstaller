@@ -41,13 +41,14 @@
 		<Unit filename="src/gtk4/mainloop.cc" />
 		<Unit filename="src/include/config.h" />
 		<Unit filename="src/include/private/mainwindow.h" />
-		<Unit filename="src/include/reinstall/activity.h" />
+		<Unit filename="src/include/reinstall/action.h" />
 		<Unit filename="src/include/reinstall/disk/abstract.h" />
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/writer/abstract.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
 		<Unit filename="src/include/widgets/sidebar.h" />
+		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
 		<Unit filename="submodules/libudjatui/intl/gettextP.h" />

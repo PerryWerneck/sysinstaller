@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Declare a group
+  * @brief Declare an action.
   */
 
  #pragma once
@@ -27,38 +27,18 @@
 
  namespace Reinstall {
 
-	class Action;
+ 	class Group;
 
-	class UDJAT_API Group {
+	class UDJAT_API Action {
+	private:
+		Group &group;
+
 	public:
 
-		/// @brief Activity Controller
-		class UDJAT_API Controller {
-		private:
-			static Controller *instance;
-			static Group * selected;
+		Action(const Udjat::XML::Node &node);
+		virtual ~Action();
 
-		protected:
-			Controller();
-
-		public:
-			static Controller & getInstance();
-			~Controller();
-
-			Group & get(const Udjat::XML::Node &node);
-
-			virtual void push_back(const Udjat::XML::Node &node, Group *group) = 0;
-			virtual void remove(Group *group) = 0;
-
-		};
-
-		static Group & get(const Udjat::XML::Node &node);
-
-		Group(const Udjat::XML::Node &node);
-		virtual ~Group();
-
-		virtual void push_back(const Udjat::XML::Node &node, Action *action) = 0;
-		virtual void remove(Action *action) = 0;
+		virtual void activate() = 0;
 
 	};
 

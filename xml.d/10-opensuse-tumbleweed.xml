@@ -10,9 +10,8 @@
 		
 		Repository attributes:
 		
-			name: 				The repository name (install).
+			name: 			The repository name (install).
 			URL: 				The default URL to the repository.
-			layout:				The repository layout (apache/MirrorCache).		
 
 		Optional attributes for automatic repository detection using SLP (http://www.openslp.org/):
 		
@@ -29,7 +28,6 @@
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
 		<attribute name='slp-kernel-parameter' value='slp:/' />
-		<attribute name='layout' value='apache' />
 	</repository>
 
 	<!-- Path for the driver update (Full URL or repository path) -->
@@ -132,9 +130,10 @@
 		<iso-writer name='tw-net' default='no'>
 
 	 		<attribute name='title' value='Create USB drive for network install' />
-	 		<attribute name='sub-title' value='This will download and write the OpenSUSE network install' />
+	 		<attribute name='sub-title' value='This will download and write the network install image' />
 	 		<attribute name='icon-name' value='drive-removable-media' />
-			<attribute name='remote' value='http://download.opensuse.org/distribution/leap/15.4/iso/openSUSE-Leap-15.4-NET-x86_64-Current.iso' />
+      <attribute name='remote' value='../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
+      <attribute name='local' value='../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
 
 			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
 			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
@@ -153,9 +152,10 @@
 	 		<attribute name='title' value='Create USB drive for offline install' />
 	 		<attribute name='sub-title' value='This will download and write the OpenSUSE full install' />
 	 		<attribute name='icon-name' value='drive-removable-media' />
-			<attribute name='remote' value='http://download.opensuse.org/distribution/leap/15.4/iso/openSUSE-Leap-15.4-DVD-x86_64-Current.iso' />
+      <attribute name='remote' value='../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
+      <attribute name='local' value='../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
 
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
+      <!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
 			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
 				This is the secondary text on confirmation message.
 			</dialog>

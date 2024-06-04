@@ -55,6 +55,13 @@
 		throw logic_error(_("No active group controller"));
 	}
 
+	Group & Group::Controller::get(const Udjat::XML::Node &) {
+		if(selected) {
+			return *selected;
+		}
+		throw logic_error{_("A selected group is required")};
+	}
+
 	//
 	// Group
 	//
@@ -66,6 +73,9 @@
 		Controller::getInstance().remove(this);
 	}
 
+	Group & Group::get(const Udjat::XML::Node &node) {
+		return Controller::getInstance().get(node);
+	}
 
  }
 

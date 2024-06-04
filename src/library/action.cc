@@ -18,40 +18,23 @@
  */
 
  /**
-  * @brief Declare an activity
+  * @brief Implements abstract action.
   */
 
- #pragma once
+ #include <config.h>
  #include <udjat/defs.h>
+ #include <reinstall/action.h>
+ #include <reinstall/group.h>
 
  namespace Reinstall {
 
-	class UDJAT_API Activity {
-	public:
+	Action::Action(const Udjat::XML::Node &node) : group{Group::get(node)} {
+		group.push_back(node,this);
+	}
 
-		/// @brief Activity Controller
-		class UDJAT_API Controller {
-		private:
-			static Controller *instance;
-
-		protected:
-			Controller();
-
-		public:
-			static Controller & getInstance();
-			~Controller();
-
-			virtual void push_back(Activity *activity);
-			virtual void remove(Activity *activity)
-
-		};
-
-		Activity();
-		virtual ~Activity();
-
-		virtual void activate() = 0;
-
-	};
+	Action::~Action() {
+		group.remove(this);
+	}
 
  }
 
