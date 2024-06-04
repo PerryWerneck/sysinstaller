@@ -265,9 +265,9 @@ AC_CONFIG_FILES(Makefile)
 
 dnl https://www.gnu.org/software/autoconf-archive/ax_subdirs_configure.html
 dnl AX_SUBDIRS_CONFIGURE( [subdirs], [mandatory arguments], [possibly merged arguments], [replacement arguments], [forbidden arguments])
-dnl AX_SUBDIRS_CONFIGURE([sample],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
+dnl AX_SUBDIRS_CONFIGURE([modules/isowriter],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
 
-dnl AC_CONFIG_SUBDIRS( [submodules/libudjatui] )
+AC_CONFIG_SUBDIRS( [modules/isowriter] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.

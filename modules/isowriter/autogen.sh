@@ -8,6 +8,7 @@ cd "$srcdir"
 
 mkdir -p scripts
 mkdir -p m4
+mkdir -p src/include
 
 libtoolize --force
 if test $? != 0 ; then
@@ -36,13 +37,6 @@ fi
 automake --add-missing 2> /dev/null | true
 
 autopoint
-
-for module in $(find modules -name autogen.sh)
-do
-	echo "--------------------------------------------------------"
-	echo ${module}
-	NOCONFIGURE=1 ${module}
-done
 
 cd "$olddir"
 test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"
