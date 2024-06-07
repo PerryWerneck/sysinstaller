@@ -110,6 +110,7 @@
  MainWindow::~MainWindow() {
  }
 
+ /*
  static int TypeFactory(const char *name) {
 
 	static const char * types[] = {
@@ -127,6 +128,7 @@
 
 	return -1;
  }
+ */
 
 
  /*
