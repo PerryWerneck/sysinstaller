@@ -26,6 +26,7 @@
  #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
+ #include <udjat/tools/factory.h>
 
  #include <private/mainwindow.h>
 
@@ -34,11 +35,16 @@
 
  int main(int argc, char* argv[]) {
 
- 	class Application : public Udjat::Gtk::Application {
+	static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
+
+ 	class Application : public Udjat::Gtk::Application, private Udjat::Factory {
 	private:
 		MainWindow *window = nullptr;
 
 	public:
+		Application() :  Udjat::Factory{"MainWindow",moduleinfo} {
+		}
+
 		~Application() {
 			if(window) {
 				delete window;
@@ -46,8 +52,69 @@
 			}
 		}
 
+		bool NodeFactory(const Udjat::XML::Node &node) override {
+
+			if(!window) {
+				throw logic_error("Cant parse node before main window");
+			}
+
+			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
+
+			static const struct {
+				const char *name;
+				const std::function<void(MainWindow &window, const XML::Node &node)> apply;
+			} properties[] = {
+				{
+					"title",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_title(node.attribute("value").as_string());
+					}
+				},
+				{
+					"modal",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_modal(node.attribute("value").as_bool());
+					}
+				},
+				{
+					"icon",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_icon_name(node.attribute("value").as_string(PACKAGE_NAME));
+					}
+				},
+				{
+					"resizable",
+					[](MainWindow &window, const XML::Node &node) {
+						window.set_resizable(node.attribute("value").as_bool());
+					}
+				},
+				/*
+				{
+					"label",
+					[](MainWindow &window, const XML::Node &node) {
+						window.layout.title.set_markup(node.attribute("value").as_string());
+					}
+				},
+				*/
+
+
+			};
+
+			for(auto &property : properties) {
+				for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
+					if(!strcasecmp(child.attribute("name").as_string("none"),property.name)) {
+						property.apply(*window,child);
+					}
+				}
+			}
+
+			return true;
+
+
+		}
+
 		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
-			info() << "Building main window" << endl;
+			Udjat::Application::info() << "Building main window" << endl;
 			window = new MainWindow(app);
 			debug("Definitions='",definitions,"'");
 #ifdef DEBUG
@@ -62,7 +129,7 @@
 			if(window) {
 				window->present();
 			} else {
-				error() << "No window on activate signal" << endl;
+				Udjat::Application::error() << "No window on activate signal" << endl;
 			}
 		}
 
@@ -70,7 +137,7 @@
 			if(window) {
 				window->hide();
 			} else {
-				error() << "No window on shutdown signal" << endl;
+				Udjat::Application::error() << "No window on shutdown signal" << endl;
 			}
 			debug("Definitions='",definitions,"'");
 			super::shutdown(app,definitions);

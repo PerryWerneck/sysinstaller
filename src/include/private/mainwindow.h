@@ -35,7 +35,7 @@
 
  #include <list>
 
- class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Udjat::Factory, private Reinstall::Group::Controller {
+ class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Reinstall::Group::Controller {
  private:
 	struct {
 		SideBar sidebar;
@@ -63,15 +63,10 @@
 
 	};
 
-	std::list<Group> groups;
-
  public:
 
 	MainWindow(Glib::RefPtr<::Gtk::Application> app);
 	virtual ~MainWindow();
-
-	// Udjat::Factory
-	bool NodeFactory(const Udjat::XML::Node &node) override;
 
 	// Reinstall::Group::Controller
 	void push_back(const Udjat::XML::Node &node, Reinstall::Group *group) override;
