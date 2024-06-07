@@ -71,7 +71,6 @@
 	virtual ~MainWindow();
 
 	// Udjat::Factory
-	int compare(const char *name) const noexcept;
 	bool NodeFactory(const Udjat::XML::Node &node) override;
 
 	// Reinstall::Group::Controller
