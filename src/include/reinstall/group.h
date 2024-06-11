@@ -24,19 +24,20 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/object.h>
+ #include <udjat/tools/factory.h>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_API Group {
+	class UDJAT_API Group : public Udjat::NamedObject {
 	public:
 
 		/// @brief Activity Controller
-		class UDJAT_API Controller {
+		class UDJAT_API Controller : private Udjat::Factory {
 		private:
 			static Controller *instance;
-			static Group * selected;
 
 		protected:
 			Controller();
@@ -45,14 +46,12 @@
 			static Controller & getInstance();
 			~Controller();
 
-			Group & get(const Udjat::XML::Node &node);
+			virtual std::shared_ptr<Group> get(const Udjat::XML::Node &node) = 0;
 
-			virtual void push_back(const Udjat::XML::Node &node, Group *group) = 0;
-			virtual void remove(Group *group) = 0;
+			// Factory
+			bool NodeFactory(const Udjat::XML::Node &node) override;
 
 		};
-
-		static Group & get(const Udjat::XML::Node &node);
 
 		Group(const Udjat::XML::Node &node);
 		virtual ~Group();

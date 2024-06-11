@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/intl.h>
  #include <reinstall/group.h>
+ #include <udjat/module/info.h>
  #include <stdexcept>
 
  using namespace std;
@@ -34,10 +35,11 @@
 	//
 	// Group controller
 	//
-	Group::Controller * Group::Controller::instance = nullptr;
-	Group * Group::Controller::selected = nullptr;
+	static const Udjat::ModuleInfo moduleinfo{"libreinstall"};
 
-	Group::Controller::Controller() {
+	Group::Controller * Group::Controller::instance = nullptr;
+
+	Group::Controller::Controller() : Udjat::Factory{"group", moduleinfo} {
 		if(instance) {
 			throw system_error(EBUSY,system_category(),_("Group controller is already active"));
 		}
@@ -55,27 +57,31 @@
 		throw logic_error(_("No active group controller"));
 	}
 
+	/*
 	Group & Group::Controller::get(const Udjat::XML::Node &) {
 		if(selected) {
 			return *selected;
 		}
 		throw logic_error{_("A selected group is required")};
 	}
+	*/
 
 	//
 	// Group
 	//
-	Group::Group(const Udjat::XML::Node &node) {
-		Controller::getInstance().push_back(node,this);
+	Group::Group(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
+//		Controller::getInstance().push_back(node,this);
 	}
 
 	Group::~Group() {
-		Controller::getInstance().remove(this);
+//		Controller::getInstance().remove(this);
 	}
 
+	/*
 	Group & Group::get(const Udjat::XML::Node &node) {
 		return Controller::getInstance().get(node);
 	}
+	*/
 
  }
 

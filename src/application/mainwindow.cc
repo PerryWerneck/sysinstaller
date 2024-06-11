@@ -220,11 +220,13 @@
  }
  */
 
+ /*
  void MainWindow::push_back(const XML::Node &node, Reinstall::Group *group) {
  }
 
  void MainWindow::remove(Reinstall::Group *group) {
  }
+ */
 
  void MainWindow::Group::push_back(const Udjat::XML::Node &node, Reinstall::Action *action) {
  }

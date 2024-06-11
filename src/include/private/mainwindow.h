@@ -69,8 +69,10 @@
 	virtual ~MainWindow();
 
 	// Reinstall::Group::Controller
-	void push_back(const Udjat::XML::Node &node, Reinstall::Group *group) override;
-	void remove(Reinstall::Group *group) override;
+	std::shared_ptr<Reinstall::Group> get(const Udjat::XML::Node &node) override;
+
+	// void push_back(const Udjat::XML::Node &node, Reinstall::Group *group) override;
+	// void remove(Reinstall::Group *group) override;
 
  };
 

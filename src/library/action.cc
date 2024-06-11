@@ -28,6 +28,7 @@
 
  namespace Reinstall {
 
+	/*
 	Action::Action(const Udjat::XML::Node &node) : group{Group::get(node)} {
 		group.push_back(node,this);
 	}
@@ -35,6 +36,7 @@
 	Action::~Action() {
 		group.remove(this);
 	}
+	*/
 
  }
 

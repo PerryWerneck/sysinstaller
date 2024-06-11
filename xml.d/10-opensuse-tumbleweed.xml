@@ -2,7 +2,7 @@
 <config>
 
 	<!-- HTTP is required for downloading files -->
-	<module name='http' required='yes' />
+	<!-- module name='http' required='yes' / -->
 	
 	<!-- 
 	

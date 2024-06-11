@@ -221,7 +221,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for ZIPLIB
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [ZIPLIB], [libzip], AC_DEFINE(HAVE_ZIPLIB,,[ "Do we have zziplib?" ]), AC_MSG_ERROR([ziplib not present.]))
+PKG_CHECK_MODULES( [ZIPLIB], [libzip], AC_DEFINE(HAVE_ZIPLIB,,[ "Do we have zziplib?" ]), AC_MSG_NOTICE([ziplib not present.]))
 
 AC_SUBST(ZIPLIB_LIBS)
 AC_SUBST(ZIPLIB_CFLAGS)
