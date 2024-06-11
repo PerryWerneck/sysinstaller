@@ -110,6 +110,16 @@
  MainWindow::~MainWindow() {
  }
 
+ std::shared_ptr<Reinstall::Group> MainWindow::get(const Udjat::XML::Node &node) {
+
+ 	// FIX-ME: Search group by name before building a new one.
+
+	auto grp = make_shared<Group>(node);
+	layout.contents.append(*grp);
+
+	return grp;
+ }
+
  /*
  static int TypeFactory(const char *name) {
 
