@@ -35,6 +35,8 @@
 
 	Action::Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : NamedObject{node} {
 
+		debug("Building action '",name(),"'");
+
 		auto *group = dynamic_cast<const Group *>(&parent);
 
 		if(!group) {
@@ -44,6 +46,7 @@
 	}
 
 	Action::~Action() {
+		debug("Destroying action '",name(),"'");
 	}
 
 	void Action::activate() {

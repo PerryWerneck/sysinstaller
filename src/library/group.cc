@@ -27,8 +27,10 @@
  #include <reinstall/group.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/factory.h>
+ #include <udjat/tools/logger.h>
  #include <stdexcept>
 
+ using namespace Udjat;
  using namespace std;
 
  namespace Reinstall {
@@ -76,6 +78,8 @@
 	Group::~Group() {
 	}
 
+	void Group::push_back(const Udjat::XML::Node &, std::shared_ptr<Udjat::Abstract::Object>) {
+	}
 
  }
 

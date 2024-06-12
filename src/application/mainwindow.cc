@@ -126,6 +126,7 @@
 	debug("-------------------> ",child->name());
 
 
+	Reinstall::Group::push_back(node,child);
  }
 
  /*

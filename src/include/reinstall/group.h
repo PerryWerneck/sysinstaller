@@ -57,6 +57,9 @@
 		Group(const Udjat::XML::Node &node);
 		virtual ~Group();
 
+		// Udjat::Abstract::Object
+		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
+
 	};
 
  }
