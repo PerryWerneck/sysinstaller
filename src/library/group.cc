@@ -57,6 +57,17 @@
 		throw logic_error(_("No active group controller"));
 	}
 
+	bool Group::Controller::NodeFactory(const Udjat::XML::Node &node) {
+
+		auto group = get(node);
+		if(!group) {
+			return false;
+		}
+
+
+		return true;
+	}
+
 	/*
 	Group & Group::Controller::get(const Udjat::XML::Node &) {
 		if(selected) {
