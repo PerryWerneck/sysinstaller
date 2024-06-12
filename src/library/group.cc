@@ -26,6 +26,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/group.h>
  #include <udjat/module/info.h>
+ #include <udjat/tools/factory.h>
  #include <stdexcept>
 
  using namespace std;
@@ -58,41 +59,23 @@
 	}
 
 	bool Group::Controller::NodeFactory(const Udjat::XML::Node &node) {
-
 		auto group = get(node);
 		if(!group) {
 			return false;
 		}
-
-
+		group->setup(node);
 		return true;
 	}
-
-	/*
-	Group & Group::Controller::get(const Udjat::XML::Node &) {
-		if(selected) {
-			return *selected;
-		}
-		throw logic_error{_("A selected group is required")};
-	}
-	*/
 
 	//
 	// Group
 	//
 	Group::Group(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
-//		Controller::getInstance().push_back(node,this);
 	}
 
 	Group::~Group() {
-//		Controller::getInstance().remove(this);
 	}
 
-	/*
-	Group & Group::get(const Udjat::XML::Node &node) {
-		return Controller::getInstance().get(node);
-	}
-	*/
 
  }
 

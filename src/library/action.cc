@@ -26,17 +26,29 @@
  #include <reinstall/action.h>
  #include <reinstall/group.h>
 
+ #include <stdexcept>
+
+ using namespace Udjat;
+ using namespace std;
+
  namespace Reinstall {
 
-	/*
-	Action::Action(const Udjat::XML::Node &node) : group{Group::get(node)} {
-		group.push_back(node,this);
+	Action::Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : NamedObject{node} {
+
+		auto *group = dynamic_cast<const Group *>(&parent);
+
+		if(!group) {
+			throw logic_error("Action parent should be a group controller");
+		}
+
 	}
 
 	Action::~Action() {
-		group.remove(this);
 	}
-	*/
+
+	void Action::activate() {
+		throw runtime_error("Invalid action");
+	}
 
  }
 

@@ -58,8 +58,9 @@
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the options.
 	public:
 		Group(const Udjat::XML::Node &node);
-		void push_back(const Udjat::XML::Node &node, Reinstall::Action *action) override;
-		void remove(Reinstall::Action *action) override;
+
+		// Udjat::Abstract::Object
+		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
 
 	};
 
@@ -68,11 +69,7 @@
 	MainWindow(Glib::RefPtr<::Gtk::Application> app);
 	virtual ~MainWindow();
 
-	// Reinstall::Group::Controller
 	std::shared_ptr<Reinstall::Group> get(const Udjat::XML::Node &node) override;
-
-	// void push_back(const Udjat::XML::Node &node, Reinstall::Group *group) override;
-	// void remove(Reinstall::Group *group) override;
 
  };
 

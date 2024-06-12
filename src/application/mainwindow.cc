@@ -120,6 +120,14 @@
 	return grp;
  }
 
+
+ void MainWindow::Group::push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) {
+
+	debug("-------------------> ",child->name());
+
+
+ }
+
  /*
  static int TypeFactory(const char *name) {
 
@@ -238,9 +246,4 @@
  }
  */
 
- void MainWindow::Group::push_back(const Udjat::XML::Node &node, Reinstall::Action *action) {
- }
-
- void MainWindow::Group::remove(Reinstall::Action *action) {
- }
 

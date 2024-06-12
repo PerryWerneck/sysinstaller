@@ -24,21 +24,19 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/object.h>
 
  namespace Reinstall {
 
  	class Group;
 
-	class UDJAT_API Action {
-	private:
-		Group &group;
-
+	class UDJAT_API Action : public Udjat::NamedObject {
 	public:
 
-		Action(const Udjat::XML::Node &node);
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
 		virtual ~Action();
 
-		virtual void activate() = 0;
+		virtual void activate();
 
 	};
 

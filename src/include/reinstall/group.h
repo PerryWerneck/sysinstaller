@@ -26,6 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/factory.h>
+ #include <list>
 
  namespace Reinstall {
 
@@ -55,9 +56,6 @@
 
 		Group(const Udjat::XML::Node &node);
 		virtual ~Group();
-
-		virtual void push_back(const Udjat::XML::Node &node, Action *action) = 0;
-		virtual void remove(Action *action) = 0;
 
 	};
 

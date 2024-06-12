@@ -24,6 +24,7 @@
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
+ #include <reinstall/action.h>
 
  using namespace Udjat;
  using namespace std;
@@ -41,12 +42,10 @@
 		};
 
 		// Udjat::Factory
-		bool NodeFactory(const XML::Node &node) {
+		std::shared_ptr<Abstract::Object> ObjectFactory(const Abstract::Object &parent, const XML::Node &node) override {
 
-			debug("Building iso-writer action");
-
-
-			return true;
+			debug("---------------------------------> Building iso-writer action");
+			return make_shared<Reinstall::Action>(parent,node);
 		}
 
 	};
