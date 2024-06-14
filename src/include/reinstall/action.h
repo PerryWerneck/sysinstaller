@@ -38,6 +38,9 @@
 
 		virtual void activate();
 
+		/// @brief Test if the action is valid and can be activated.
+		virtual bool initialize();
+
 	};
 
  }

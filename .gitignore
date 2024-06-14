@@ -59,3 +59,4 @@ vgcore.*
 *.png
 .pot
 *.desktop
+*.cscope_file_list

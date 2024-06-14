@@ -53,5 +53,9 @@
 		throw runtime_error("Invalid action");
 	}
 
+	bool Action::initialize() {
+		return true;
+	}
+
  }
 

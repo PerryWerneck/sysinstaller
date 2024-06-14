@@ -26,6 +26,8 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/threadpool.h>
+ #include <udjat/tools/url.h>
  #include <string>
 
  #include <gtkmm.h>
@@ -56,7 +58,7 @@
 		margin = 1;
 
 		Gtk::Image image;
-		image.set_icon_size(Gtk::IconSize::INHERIT);
+		image.set_icon_size(Gtk::IconSize::LARGE);
 		image.get_style_context()->add_class("action-icon");
 		image.set_from_icon_name(icon.as_string("image-missing"));
 
@@ -72,8 +74,6 @@
 
 	signal_toggled().connect([this]() {
 
-		debug("Toggle!!");
-
 		MainWindow & window{MainWindow::getInstance()};
 
 		if(get_active()) {
@@ -87,6 +87,7 @@
 
 			get_style_context()->remove_class("action-inactive");
 			get_style_context()->add_class("action-active");
+
 		} else {
 
 			if(window.active == this) {
@@ -101,6 +102,27 @@
 	});
 
 	set_visible();
+	set_sensitive(false);
+
+	auto action = dynamic_cast<Reinstall::Action *>(a.get());
+
+	if(action) {
+		ThreadPool::getInstance().push([this,action](){
+			try {
+				if(action->initialize()) {
+					action->info() << "Initialization complete, enabling item" << endl;
+					Glib::signal_idle().connect([this](){
+						set_sensitive(true);
+						return 0;
+					});
+				} else {
+					action->warning() << "Initialization has failed, item will be disabled" << endl;
+				}
+			} catch(const exception &e) {
+				action->error() << e.what() << endl;
+			}
+		});
+	}
 
  }
 
