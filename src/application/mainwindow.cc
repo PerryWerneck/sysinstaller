@@ -28,6 +28,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/threadpool.h>
  #include <string>
 
  #include <gtkmm.h>
@@ -115,13 +116,20 @@
 		button.cancel.set_sensitive(false);
 		layout.vbox.set_sensitive(false);
 
-		if(active) {
-			active->activate();
-		}
+		ThreadPool::getInstance().push([&]{
 
-		button.apply.set_sensitive(true);
-		button.cancel.set_sensitive(true);
-		layout.vbox.set_sensitive(true);
+			if(active) {
+				active->activate();
+			}
+
+			Glib::signal_idle().connect([this](){
+				button.apply.set_sensitive(true);
+				button.cancel.set_sensitive(true);
+				layout.vbox.set_sensitive(true);
+				return 0;
+			});
+
+		});
 
 	});
 
