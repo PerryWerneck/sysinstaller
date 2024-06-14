@@ -51,11 +51,28 @@
 		Gtk::Box box{Gtk::Orientation::HORIZONTAL,6};
 	} button;
 
+	class Item : public Gtk::ToggleButton {
+	private:
+		std::shared_ptr<Udjat::Abstract::Object> action;
+		Gtk::Grid grid;
+		Gtk::LinkButton help_button;
+		Gtk::Label label, body;
+
+	public:
+		Item(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> action);
+		virtual ~Item();
+
+	};
+
+	Item *active = nullptr;
+	std::list<std::shared_ptr<Item>> itens;
+
 	class Group : public Gtk::Grid, public Reinstall::Group {
 	private:
 		Gtk::Label title;
 		Gtk::Label sub_title;
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the options.
+
 	public:
 		Group(const Udjat::XML::Node &node);
 
@@ -63,6 +80,12 @@
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
 
 	};
+
+	static MainWindow *instance;
+
+	static MainWindow & getInstance() {
+		return *instance;
+	}
 
  public:
 

@@ -470,11 +470,13 @@ clean: \
 
 cleanDebug:
 
+	@$(MAKE) -C modules/isowriter cleanDebug
 	@rm -fr $(OBJDBG)
 	@rm -fr $(BINDBG)
 
 cleanRelease:
 
+	@$(MAKE) -C modules/isowriter cleanRelease
 	@rm -fr $(OBJRLS)
 	@rm -fr $(BINRLS)
 

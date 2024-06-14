@@ -36,7 +36,11 @@
  using namespace Udjat;
  using namespace std;
 
+ MainWindow * MainWindow::instance = nullptr;
+
  MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app} {
+
+		instance = this;
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 
@@ -71,7 +75,7 @@
         layout.contents.set_hexpand(true);
         layout.contents.set_vexpand(true);
         layout.contents.set_valign(Gtk::Align::START);
-        layout.contents.set_halign(Gtk::Align::START);
+        layout.contents.set_halign(Gtk::Align::FILL);
 
         layout.swindow.set_hexpand(true);
         layout.swindow.set_vexpand(true);
@@ -108,6 +112,8 @@
  }
 
  MainWindow::~MainWindow() {
+ 	instance = nullptr;
+ 	itens.clear();
  }
 
  std::shared_ptr<Reinstall::Group> MainWindow::get(const Udjat::XML::Node &node) {
@@ -121,130 +127,5 @@
  }
 
 
- void MainWindow::Group::push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) {
-
-	debug("-------------------> ",child->name());
-
-
-	Reinstall::Group::push_back(node,child);
- }
-
- /*
- static int TypeFactory(const char *name) {
-
-	static const char * types[] = {
-		"MainWindow",
-		"group",
-	};
-
-	for(int id = 0; id < (int) (sizeof(types)/sizeof(types[0]));id++) {
-
-		if(!strcasecmp(name,types[id])) {
-			return id;
-		}
-
-	}
-
-	return -1;
- }
- */
-
-
- /*
- int MainWindow::compare(const char *name) const noexcept {
-
-	if(TypeFactory(name) >= 0) {
-		debug("Found ",name);
-		return 0;
-	}
-
-	return Udjat::Factory::compare(name);
-
- }
-
-
- bool MainWindow::NodeFactory(const XML::Node &node) {
-
-	int type{TypeFactory(node.name())};
-
-	if(type < 0) {
-		return false;
-	}
-
-	// Build node
-	switch(type) {
-	case 0:	// MainWindow
-		{
-			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
-
-			static const struct {
-				const char *name;
-				const std::function<void(MainWindow &window, const XML::Node &node)> apply;
-			} properties[] = {
-				{
-					"title",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_title(node.attribute("value").as_string());
-					}
-				},
-				{
-					"modal",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_modal(node.attribute("value").as_bool());
-					}
-				},
-				{
-					"icon",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_icon_name(node.attribute("value").as_string(PACKAGE_NAME));
-					}
-				},
-				{
-					"resizable",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_resizable(node.attribute("value").as_bool());
-					}
-				},
-				{
-					"label",
-					[](MainWindow &window, const XML::Node &node) {
-						window.layout.title.set_markup(node.attribute("value").as_string());
-					}
-				},
-
-
-			};
-
-			for(auto &property : properties) {
-				for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
-					if(!strcasecmp(child.attribute("name").as_string("none"),property.name)) {
-						property.apply(*this,child);
-					}
-				}
-			}
-
-		}
-		break;
-
-	case 1:	// Group
-		layout.contents.append(groups.emplace_back(node));
-		break;
-
-	default:
-		Logger::String{"Unexpected configuration type '",node.name(),"'"}.warning("MainWindow");
-	}
-
-
-	return true;
- }
- */
-
- /*
- void MainWindow::push_back(const XML::Node &node, Reinstall::Group *group) {
- }
-
- void MainWindow::remove(Reinstall::Group *group) {
- }
- */
 
 

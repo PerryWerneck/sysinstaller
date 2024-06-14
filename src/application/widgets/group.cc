@@ -29,7 +29,10 @@
  #include <gtkmm.h>
  #include <private/mainwindow.h>
 
+ #include <memory>
+
  using namespace Udjat;
+ using namespace std;
 
  MainWindow::Group::Group(const XML::Node &node) :
 	Reinstall::Group{node},
@@ -45,6 +48,12 @@
 
 	set_vexpand(false);
 	set_valign(Gtk::Align::START);
+
+	contents.set_hexpand(true);
+	contents.set_halign(Gtk::Align::FILL);
+
+	contents.set_vexpand(false);
+	contents.set_valign(Gtk::Align::START);
 
 	get_style_context()->add_class("group-box");
 
@@ -68,7 +77,21 @@
 
 	attach(title,margin,0);
 	attach(sub_title,margin,1);
+	attach(contents,margin,2);
 
 	set_visible();
 
+ }
+
+ void MainWindow::Group::push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) {
+
+	debug("-------------------> ",child->name());
+
+	auto item = make_shared<MainWindow::Item>(node,child);
+
+	MainWindow::getInstance().itens.push_back(item);
+	contents.append(*item);
+	item->set_visible();
+
+	Reinstall::Group::push_back(node,child);
  }
