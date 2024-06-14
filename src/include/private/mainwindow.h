@@ -62,6 +62,8 @@
 		Item(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> action);
 		virtual ~Item();
 
+		void activate() noexcept;
+
 	};
 
 	Item *active = nullptr;

@@ -40,74 +40,90 @@
 
  MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app} {
 
-		instance = this;
+	instance = this;
 
-		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
+	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 
-        {
-                auto css = Gtk::CssProvider::create();
+	{
+			auto css = Gtk::CssProvider::create();
 #ifdef DEBUG
-                css->load_from_path("./stylesheet.css");
+			css->load_from_path("./stylesheet.css");
 #else
-                css->load_from_path(Application::DataFile("stylesheet.css").c_str());
+			css->load_from_path(Application::DataFile("stylesheet.css").c_str());
 #endif // DEBUG
-                get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        }
+			get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	}
 
-        set_deletable(false);
+	set_deletable(false);
 
-        set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
-        set_default_size(800, 600);
+	set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
+	set_default_size(800, 600);
 
-        set_icon_name(Config::Value<string>{"MainWindow","icon",PRODUCT_ID "." PACKAGE_NAME}.c_str());
+	set_icon_name(Config::Value<string>{"MainWindow","icon",PRODUCT_ID "." PACKAGE_NAME}.c_str());
 
-        layout.box.set_hexpand(true);
-        layout.box.set_vexpand(true);
+	layout.box.set_hexpand(true);
+	layout.box.set_vexpand(true);
 
-        layout.vbox.get_style_context()->add_class("contents");
+	layout.vbox.get_style_context()->add_class("contents");
 
-        // A wide variety of style classes may be applied to labels, such as .title, .subtitle, .dim-label, etc
-        layout.title.get_style_context()->add_class("main-title");
-        layout.title.set_vexpand(false);
-        layout.vbox.append(layout.title);
+	// A wide variety of style classes may be applied to labels, such as .title, .subtitle, .dim-label, etc
+	layout.title.get_style_context()->add_class("main-title");
+	layout.title.set_vexpand(false);
+	layout.vbox.append(layout.title);
 
-        layout.contents.get_style_context()->add_class("contents");
-        layout.contents.set_hexpand(true);
-        layout.contents.set_vexpand(true);
-        layout.contents.set_valign(Gtk::Align::START);
-        layout.contents.set_halign(Gtk::Align::FILL);
+	layout.contents.get_style_context()->add_class("contents");
+	layout.contents.set_hexpand(true);
+	layout.contents.set_vexpand(true);
+	layout.contents.set_valign(Gtk::Align::START);
+	layout.contents.set_halign(Gtk::Align::FILL);
 
-        layout.swindow.set_hexpand(true);
-        layout.swindow.set_vexpand(true);
+	layout.swindow.set_hexpand(true);
+	layout.swindow.set_vexpand(true);
 
-        layout.swindow.set_child(layout.contents);
+	layout.swindow.set_child(layout.contents);
 
-        layout.vbox.append(layout.swindow);
+	layout.vbox.append(layout.swindow);
 
-        layout.box.append(layout.sidebar);
+	layout.box.append(layout.sidebar);
 
-		button.box.get_style_context()->add_class("buttons");
-		button.box.set_homogeneous();
-        button.box.append(button.apply);
-        button.box.append(button.cancel);
+	button.box.get_style_context()->add_class("buttons");
+	button.box.set_homogeneous();
+	button.box.append(button.apply);
+	button.box.append(button.cancel);
 
-        button.apply.set_sensitive(false);
+	button.apply.set_sensitive(false);
 
-		button.box.set_valign(Gtk::Align::END);
-		button.box.set_halign(Gtk::Align::END);
-		button.box.set_hexpand(false);
-        button.box.set_vexpand(false);
-        layout.vbox.append(button.box);
+	button.box.set_valign(Gtk::Align::END);
+	button.box.set_halign(Gtk::Align::END);
+	button.box.set_hexpand(false);
+	button.box.set_vexpand(false);
+	layout.vbox.append(button.box);
 
-        layout.vbox.set_hexpand(true);
-        layout.vbox.set_vexpand(true);
-        layout.box.append(layout.vbox);
+	layout.vbox.set_hexpand(true);
+	layout.vbox.set_vexpand(true);
+	layout.box.append(layout.vbox);
 
-        set_child(layout.box);
+	set_child(layout.box);
 
-		button.cancel.signal_clicked().connect([&]() {
-			close();
-		});
+	button.cancel.signal_clicked().connect([&]() {
+		close();
+	});
+
+	button.apply.signal_clicked().connect([&]() {
+
+		button.apply.set_sensitive(false);
+		button.cancel.set_sensitive(false);
+		layout.vbox.set_sensitive(false);
+
+		if(active) {
+			active->activate();
+		}
+
+		button.apply.set_sensitive(true);
+		button.cancel.set_sensitive(true);
+		layout.vbox.set_sensitive(true);
+
+	});
 
  }
 
