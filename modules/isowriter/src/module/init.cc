@@ -36,6 +36,22 @@
           "Iso writing module."
 	};
 
+	class Action : public Reinstall::Action {
+	private:
+
+	public:
+
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node} {
+		}
+
+		~Action() {
+		}
+
+		void activate() override {
+		}
+
+	};
+
 	class Module : public Udjat::Module, public Udjat::Factory {
 	public:
 		Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
