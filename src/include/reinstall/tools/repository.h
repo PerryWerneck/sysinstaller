@@ -47,7 +47,8 @@
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
 
-	}
+	};
+
+ }
 
 
-#endif // URL_H_INCLUDED

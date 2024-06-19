@@ -26,7 +26,8 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
 
- #include <reinstall/repository.h>
+ #include <reinstall/tools/repository.h>
+ #include <private/slpclient.h>
 
  using namespace Udjat;
 

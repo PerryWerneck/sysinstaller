@@ -34,11 +34,11 @@
 		const char *scope_list = "";
 		const char *filter = "";
 
+	public:
 		SLPClient(const Udjat::XML::Node &node);
 
-	public:
 		static std::shared_ptr<SLPClient> Factory(const Udjat::XML::Node &node);
 
-	}
+	};
 
-
+ }
