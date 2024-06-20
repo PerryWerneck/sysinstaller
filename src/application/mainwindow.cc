@@ -121,6 +121,8 @@
 
 			Udjat::Dialog::Progress::Factory()->run([&](Udjat::Dialog::Progress &dialog){
 
+				dialog.title(active->title().c_str());
+
 				try {
 
 					debug("TODO: Activate action");

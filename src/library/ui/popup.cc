@@ -34,6 +34,12 @@
 	Dialog::Popup::~Popup() {
 	}
 
+	void Dialog::Popup::message(const char *) {
+	}
+
+	void Dialog::Popup::detail(const char *) {
+	}
+
 	std::shared_ptr<Dialog::Popup> Dialog::Popup::Factory() {
 		return Controller::getInstance().PopupFactory();
 	}

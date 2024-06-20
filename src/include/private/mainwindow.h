@@ -66,6 +66,9 @@
 			return (bool) action.get();
 		}
 
+		inline auto title() const noexcept {
+			return label.get_text();
+		}
 	};
 
 	Item *active = nullptr;

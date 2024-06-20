@@ -34,6 +34,9 @@
 	Dialog::Progress::~Progress() {
 	}
 
+	void Dialog::Progress::title(const char *) {
+	}
+
 	std::shared_ptr<Dialog::Progress> Dialog::Progress::Factory() {
 		return Controller::getInstance().ProgressFactory();
 	}

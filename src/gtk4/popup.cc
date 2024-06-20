@@ -30,6 +30,7 @@
 
  #include <memory>
  #include <gtkmm.h>
+ #include <gtkmm/alertdialog.h>
 
  using namespace std;
 
@@ -37,12 +38,35 @@
 
 	std::shared_ptr<Dialog::Popup> Gtk::Application::PopupFactory() {
 
-		class Popup : public Udjat::Dialog::Popup, private ::Gtk::Window {
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
+
+		class Popup : public Udjat::Dialog::Popup, private ::Gtk::AlertDialog {
 		public:
 			Popup() {
+				gtk_window_set_transient_for(
+					GTK_WINDOW(gobj()),
+					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+				);
+				set_modal(true);
 			}
 
 			~Popup() {
+			}
+
+			void message(const char *message) override {
+				string str{message};
+				Glib::signal_idle().connect([this,str](){
+					set_message(str);
+					return 0;
+				});
+			}
+
+			void detail(const char *text) override {
+				string str{text};
+				Glib::signal_idle().connect([this,str](){
+					set_detail(str);
+					return 0;
+				});
 			}
 
 			int run(const std::function<int(Dialog::Popup &popup)> &task) noexcept override {

@@ -37,17 +37,37 @@
 
 	std::shared_ptr<Dialog::Progress> Gtk::Application::ProgressFactory() {
 
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
+
 		class Progress : public Udjat::Dialog::Progress, private ::Gtk::Window {
 		private:
 
 		public:
 			Progress() {
+				gtk_window_set_transient_for(
+					GTK_WINDOW(gobj()),
+					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+				);
+
+				set_modal(true);
+				set_deletable(false);
+				set_resizable(false);
 			}
 
 			~Progress() {
 			}
 
+			void title(const char *title) override {
+				string str{title};
+				Glib::signal_idle().connect([this,str](){
+					set_title(str);
+					return 0;
+				});
+			}
+
 			int run(const std::function<int(Dialog::Progress &progress)> &task) noexcept override {
+
+				present();
 
 				int rc = -1;
 				auto mainloop = Glib::MainLoop::create();

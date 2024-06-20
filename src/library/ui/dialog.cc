@@ -61,6 +61,9 @@
 		return *instance;
 	}
 
+	void Dialog::title(const char *) {
+	}
+
 	/*
 	int Dialog::Controller::run(Dialog *, const std::function<int()> &task) noexcept {
 

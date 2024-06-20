@@ -36,6 +36,12 @@
 
 		virtual int run(const std::function<int(Popup &popup)> &task) noexcept;
 
+		/// @brief Sets the message that will be shown in the alert.
+		virtual void message(const char *message);
+
+		/// @brief Sets the detail text that will be shown in the alert.
+		virtual void detail(const char *text);
+
 		virtual ~Popup();
 
 	};

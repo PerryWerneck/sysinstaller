@@ -38,6 +38,8 @@
 
 		virtual ~Progress();
 
+		void title(const char *title) override;
+
 	};
 
  }

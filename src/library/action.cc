@@ -49,7 +49,7 @@
 		debug("Destroying action '",name(),"'");
 	}
 
-	int Action::activate(std::shared_ptr<Udjat::Dialog::Progress> progress) {
+	int Action::activate(std::shared_ptr<Udjat::Dialog::Progress>) {
 		throw runtime_error("Invalid action");
 	}
 

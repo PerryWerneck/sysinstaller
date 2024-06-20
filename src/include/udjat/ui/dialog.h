@@ -46,15 +46,11 @@
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
 			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
-			// virtual int run(Dialog *dialog, const std::function<int()> &task) noexcept;
 
 		};
 
-		/*
-		inline int run(const std::function<int()> &task) noexcept {
-			return Controller::getInstance().run(this,task);
-		}
-		*/
+		virtual void title(const char *title);
+
 
 		virtual ~Dialog();
 
