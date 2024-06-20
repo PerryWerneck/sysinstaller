@@ -27,12 +27,13 @@
  #include <udjat/tools/mainloop.h>
  #include <udjat/tools/application.h>
  #include <gtkmm.h>
+ #include <udjat/ui/dialog.h>
 
  namespace Udjat {
 
 	namespace Gtk {
 
-		class UDJAT_API Application : public Udjat::Application {
+		class UDJAT_API Application : public Udjat::Application, private Udjat::Dialog::Controller {
 		public:
 			Application();
 			virtual ~Application();
@@ -52,6 +53,11 @@
 
 			/// @brief GUI is shutting down.
 			virtual void shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
+
+			// Udjat::Dialog::Controller
+			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
+			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
+			int run(Udjat::Dialog *dialog, const std::function<int()> &task) noexcept override;
 
 
 		};

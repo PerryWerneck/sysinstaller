@@ -52,6 +52,7 @@
 		<Unit filename="modules/isowriter/src/module/init.cc" />
 		<Unit filename="src/application/main.cc" />
 		<Unit filename="src/application/mainwindow.cc" />
+		<Unit filename="src/application/progress.cc" />
 		<Unit filename="src/application/widgets/group.cc" />
 		<Unit filename="src/application/widgets/item.cc" />
 		<Unit filename="src/application/widgets/sidebar.cc" />
@@ -70,11 +71,15 @@
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
 		<Unit filename="src/include/udjat/ui/popup.h" />
+		<Unit filename="src/include/udjat/ui/progress.h" />
 		<Unit filename="src/include/widgets/sidebar.h" />
 		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/repository.cc" />
 		<Unit filename="src/library/slpclient.cc" />
+		<Unit filename="src/library/ui/dialog.cc" />
+		<Unit filename="src/library/ui/popup.cc" />
+		<Unit filename="src/library/ui/progress.cc" />
 		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
 		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
 		<Unit filename="submodules/libudjatui/intl/gmo.h" />

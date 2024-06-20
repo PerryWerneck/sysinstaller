@@ -27,9 +27,11 @@
  #include <udjat/tools/logger.h>
  #include <udjat/tools/string.h>
 
+ #include <udjat/ui/dialog.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/ui/gtk4/mainloop.h>
  #include <udjat/tools/application.h>
+ #include <udjat/tools/threadpool.h>
 
  #include <gtkmm.h>
 
@@ -236,6 +238,48 @@
 		deinit(definitions);
 
 	}
+
+	int Gtk::Application::run(Udjat::Dialog *, const std::function<int()> &task) noexcept {
+
+		int rc = -1;
+
+		auto mainloop = Glib::MainLoop::create();
+
+		Udjat::ThreadPool::getInstance().push([&task,&rc,mainloop](){
+
+			try {
+
+				rc = task();
+
+			} catch(const std::exception &e) {
+
+				// TODO: Show error popup
+
+				rc = -1;
+				Logger::String{e.what()}.error("gtk");
+
+			} catch(...) {
+
+				// TODO: Show error popup
+
+				rc = -1;
+				Logger::String{"Unexpected error running background task"}.error("gtk");
+
+			}
+
+			Glib::signal_idle().connect([mainloop](){
+				mainloop->quit();
+				return 0;
+			});
+
+		});
+
+		mainloop->run();
+
+		return rc;
+
+	}
+
 
  }
 

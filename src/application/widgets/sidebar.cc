@@ -73,6 +73,6 @@
  SideBar::~SideBar() {
  }
 
- void SideBar::set(const Udjat::XML::Node &node) {
+ void SideBar::set(const Udjat::XML::Node &) {
  }
 

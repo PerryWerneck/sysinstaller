@@ -38,7 +38,7 @@
 		filter = XML::StringFactory(node,"slp-filter");
 	}
 
-	std::shared_ptr<SLPClient> Factory(const Udjat::XML::Node &node) {
+	std::shared_ptr<SLPClient> SLPClient::Factory(const Udjat::XML::Node &node) {
 
 		// TODO: Avoid duplicated objects.
 

@@ -62,7 +62,9 @@
 		Item(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> action);
 		virtual ~Item();
 
-		void activate() noexcept;
+		inline operator bool() const noexcept {
+			return (bool) action.get();
+		}
 
 	};
 

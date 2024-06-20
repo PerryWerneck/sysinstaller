@@ -29,6 +29,7 @@
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/threadpool.h>
+ #include <udjat/ui/progress.h>
  #include <string>
 
  #include <gtkmm.h>
@@ -89,8 +90,8 @@
 
 	button.box.get_style_context()->add_class("buttons");
 	button.box.set_homogeneous();
-	button.box.append(button.apply);
 	button.box.append(button.cancel);
+	button.box.append(button.apply);
 
 	button.apply.set_sensitive(false);
 
@@ -116,6 +117,30 @@
 		button.cancel.set_sensitive(false);
 		layout.vbox.set_sensitive(false);
 
+		auto progress = Udjat::Dialog::Progress::Factory();
+
+		if(*active) {
+			progress->run([&](){
+
+				try {
+
+					debug("TODO: Activate action");
+					sleep(10);
+
+				} catch(const std::exception &e) {
+
+					Logger::String{e.what()}.error("action");
+
+					// TODO: Show error popup.
+				}
+
+				return -1;
+			});
+		}
+
+
+		/*
+
 		ThreadPool::getInstance().push([&]{
 
 			if(active) {
@@ -130,6 +155,7 @@
 			});
 
 		});
+		*/
 
 	});
 

@@ -24,17 +24,20 @@
  #pragma once
  #include <udjat/defs.h>
  #include <memory>
+ #include <functional>
 
  namespace Udjat {
 
-	class Popup;
+	class UDJAT_API Dialog {
+	protected:
+		Dialog();
 
-	namespace Dialog {
+	public:
+
+		class Popup;
+		class Progress;
 
 		class UDJAT_API Controller {
-		private:
-			Controller * instance;
-
 		public:
 			Controller();
 			virtual ~Controller();
@@ -42,10 +45,18 @@
 			static Controller & getInstance();
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
+			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
+			virtual int run(Dialog *dialog, const std::function<int()> &task) noexcept;
 
 		};
 
-	}
+		inline int run(const std::function<int()> &task) noexcept {
+			return Controller::getInstance().run(this,task);
+		}
+
+		virtual ~Dialog();
+
+	};
 
  }
 

@@ -129,25 +129,3 @@
  MainWindow::Item::~Item() {
  }
 
- void MainWindow::Item::activate() noexcept {
-
-	Logger::String{"Starting action"}.info(action->name());
-
-	try {
-
-		debug("------------ WORK");
-
-
-	} catch(const std::exception &e) {
-
-		Logger::String{e.what()}.error(action->name());
-
-		// TODO: Show error popup.
-
-
-		return;
-	}
-
-	Logger::String{"Action complete"}.info(action->name());
-
- }

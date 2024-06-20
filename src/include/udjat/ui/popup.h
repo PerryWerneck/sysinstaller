@@ -27,12 +27,12 @@
 
  namespace Udjat {
 
-	class UDJAT_API Popup {
+	class UDJAT_API Dialog::Popup : public Dialog {
 	protected:
 		Popup();
 
 	public:
-		std::shared_ptr<Popup> Factory();
+		static std::shared_ptr<Popup> Factory();
 
 		virtual ~Popup();
 

@@ -18,31 +18,24 @@
  */
 
  /**
-  * @brief Declare an action.
+  * @brief Declares progress dialog.
   */
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
- #include <udjat/tools/object.h>
- #include <udjat/ui/progress.h>
+ #include <udjat/ui/dialog.h>
 
- namespace Reinstall {
+ namespace Udjat {
 
- 	class Group;
+	class UDJAT_API Dialog::Progress : public Dialog {
+	protected:
+		Progress();
 
-	class UDJAT_API Action : public Udjat::NamedObject {
 	public:
+		static std::shared_ptr<Progress> Factory();
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
-		virtual ~Action();
-
-		virtual int activate(std::shared_ptr<Udjat::Dialog::Progress> progress);
-
-		/// @brief Test if the action is valid and can be activated.
-		virtual bool initialize();
+		virtual ~Progress();
 
 	};
 
  }
-
