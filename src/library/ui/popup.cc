@@ -24,6 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/ui/popup.h>
+ #include <udjat/tools/logger.h>
 
  namespace Udjat {
 
@@ -35,6 +36,26 @@
 
 	std::shared_ptr<Dialog::Popup> Dialog::Popup::Factory() {
 		return Controller::getInstance().PopupFactory();
+	}
+
+	int Dialog::Popup::run(const std::function<int(Popup &popup)> &task) noexcept {
+
+		try {
+
+			return task(*this);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error("dialog");
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error running background task"}.error("dialog");
+
+		}
+
+		return -1;
+
 	}
 
  }

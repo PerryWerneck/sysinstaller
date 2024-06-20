@@ -113,14 +113,13 @@
 
 	button.apply.signal_clicked().connect([&]() {
 
-		button.apply.set_sensitive(false);
-		button.cancel.set_sensitive(false);
-		layout.vbox.set_sensitive(false);
-
-		auto progress = Udjat::Dialog::Progress::Factory();
-
 		if(*active) {
-			progress->run([&](){
+
+			button.apply.set_sensitive(false);
+			button.cancel.set_sensitive(false);
+			layout.vbox.set_sensitive(false);
+
+			Udjat::Dialog::Progress::Factory()->run([&](Udjat::Dialog::Progress &dialog){
 
 				try {
 
@@ -136,26 +135,12 @@
 
 				return -1;
 			});
+
+			button.apply.set_sensitive(true);
+			button.cancel.set_sensitive(true);
+			layout.vbox.set_sensitive(true);
+
 		}
-
-
-		/*
-
-		ThreadPool::getInstance().push([&]{
-
-			if(active) {
-				active->activate();
-			}
-
-			Glib::signal_idle().connect([this](){
-				button.apply.set_sensitive(true);
-				button.cancel.set_sensitive(true);
-				layout.vbox.set_sensitive(true);
-				return 0;
-			});
-
-		});
-		*/
 
 	});
 

@@ -61,6 +61,7 @@
 		return *instance;
 	}
 
+	/*
 	int Dialog::Controller::run(Dialog *, const std::function<int()> &task) noexcept {
 
 		try {
@@ -80,5 +81,6 @@
 		return -1;
 
 	}
+	*/
 
  }

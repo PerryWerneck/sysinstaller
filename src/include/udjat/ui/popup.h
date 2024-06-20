@@ -34,6 +34,8 @@
 	public:
 		static std::shared_ptr<Popup> Factory();
 
+		virtual int run(const std::function<int(Popup &popup)> &task) noexcept;
+
 		virtual ~Popup();
 
 	};

@@ -24,6 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/logger.h>
 
  namespace Udjat {
 
@@ -35,6 +36,26 @@
 
 	std::shared_ptr<Dialog::Progress> Dialog::Progress::Factory() {
 		return Controller::getInstance().ProgressFactory();
+	}
+
+	int Dialog::Progress::run(const std::function<int(Progress &progress)> &task) noexcept {
+
+		try {
+
+			return task(*this);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error("dialog");
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error running background task"}.error("dialog");
+
+		}
+
+		return -1;
+
 	}
 
  }

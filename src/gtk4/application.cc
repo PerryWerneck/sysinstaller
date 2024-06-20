@@ -239,6 +239,7 @@
 
 	}
 
+	/*
 	int Gtk::Application::run(Udjat::Dialog *, const std::function<int()> &task) noexcept {
 
 		int rc = -1;
@@ -279,7 +280,7 @@
 		return rc;
 
 	}
-
+	*/
 
  }
 

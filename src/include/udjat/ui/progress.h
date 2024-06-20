@@ -34,6 +34,8 @@
 	public:
 		static std::shared_ptr<Progress> Factory();
 
+		virtual int run(const std::function<int(Progress &progress)> &task) noexcept;
+
 		virtual ~Progress();
 
 	};

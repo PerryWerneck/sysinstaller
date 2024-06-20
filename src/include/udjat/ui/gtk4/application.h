@@ -57,7 +57,6 @@
 			// Udjat::Dialog::Controller
 			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
 			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
-			int run(Udjat::Dialog *dialog, const std::function<int()> &task) noexcept override;
 
 
 		};
