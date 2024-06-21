@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <reinstall/action.h>
  #include <reinstall/group.h>
+ #include <udjat/ui/progress.h>
 
  #include <stdexcept>
 
@@ -81,13 +82,18 @@
 		// Run action
 		//
 		auto dialog = Udjat::Dialog::Progress::Factory();
-		//dialog->title(group().title());
+
+		debug("group-title=",group().title());
+
+		info() << "Starting activity" << endl;
+
+		dialog->title(group().title());
 
 		dialog->run([&](Udjat::Dialog::Progress &progress){
 
 			try {
 
-				// activate(progress);
+				activate(progress);
 				sleep(60);
 				return 0;
 

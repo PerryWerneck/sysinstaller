@@ -49,6 +49,8 @@
 
 		int activate(Udjat::Dialog::Progress &) override {
 
+			debug("ACTIVATING ISO WRITER ACTION");
+
 			return -1;
 		}
 
@@ -61,9 +63,7 @@
 
 		// Udjat::Factory
 		std::shared_ptr<Abstract::Object> ObjectFactory(const Abstract::Object &parent, const XML::Node &node) override {
-
-			debug("---------------------------------> Building iso-writer action");
-			return make_shared<Reinstall::Action>(parent,node);
+			return make_shared<Action>(parent,node);
 		}
 
 	};
