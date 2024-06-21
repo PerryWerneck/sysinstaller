@@ -113,30 +113,13 @@
 
 	button.apply.signal_clicked().connect([&]() {
 
-		if(*active) {
+		if(*selected) {
 
 			button.apply.set_sensitive(false);
 			button.cancel.set_sensitive(false);
 			layout.vbox.set_sensitive(false);
 
-			Udjat::Dialog::Progress::Factory()->run([&](Udjat::Dialog::Progress &dialog){
-
-				dialog.title(active->title().c_str());
-
-				try {
-
-					debug("TODO: Activate action");
-					sleep(10);
-
-				} catch(const std::exception &e) {
-
-					Logger::String{e.what()}.error("action");
-
-					// TODO: Show error popup.
-				}
-
-				return -1;
-			});
+			selected->activate();
 
 			button.apply.set_sensitive(true);
 			button.cancel.set_sensitive(true);

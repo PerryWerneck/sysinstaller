@@ -33,16 +33,15 @@
 
  namespace Reinstall {
 
-	Action::Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : NamedObject{node} {
+	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
+		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)} {
 
-		debug("Building action '",name(),"'");
-
-		auto *group = dynamic_cast<const Group *>(&parent);
-
-		if(!group) {
+		debug("Building action '",name(),"' on group '",object.name(),"'");
+		if(!parent) {
 			throw logic_error("Action parent should be a group controller");
 		}
 
+		debug("------------- Group title is '",parent->title(),"'");
 	}
 
 	Action::~Action() {

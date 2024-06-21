@@ -78,11 +78,11 @@
 
 		if(get_active()) {
 
-			if(window.active && window.active != this) {
-				window.active->set_active(false);
+			if(window.selected && window.selected != this) {
+				window.selected->set_active(false);
 			}
 
-			window.active = this;
+			window.selected = this;
 			window.button.apply.set_sensitive(true);
 
 			get_style_context()->remove_class("action-inactive");
@@ -90,8 +90,8 @@
 
 		} else {
 
-			if(window.active == this) {
-				window.active = nullptr;
+			if(window.selected == this) {
+				window.selected = nullptr;
 				window.button.apply.set_sensitive(false);
 			}
 
@@ -129,3 +129,38 @@
  MainWindow::Item::~Item() {
  }
 
+ void MainWindow::Item::activate() const {
+
+	auto action = dynamic_cast<Reinstall::Action *>(this->action.get());
+	if(!action) {
+		return;
+	}
+
+	debug("Group name is '",action->group().name(),"'");
+	debug("Group title is '",action->group().title(),"'");
+
+	//
+	// Run action
+	//
+	auto dialog = Udjat::Dialog::Progress::Factory();
+	dialog->title(action->group().title());
+
+	dialog->run([&](Udjat::Dialog::Progress &dialog){
+
+		try {
+
+			debug("TODO: Activate action");
+			sleep(10);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error("action");
+
+			// TODO: Show error popup.
+		}
+
+		return -1;
+	});
+
+
+ }

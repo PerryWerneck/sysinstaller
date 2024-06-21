@@ -51,6 +51,7 @@
 
 		virtual void title(const char *title);
 
+		virtual bool confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept;
 
 		virtual ~Dialog();
 

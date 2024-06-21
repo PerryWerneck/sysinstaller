@@ -66,12 +66,15 @@
 			return (bool) action.get();
 		}
 
-		inline auto title() const noexcept {
+		inline auto message() const noexcept {
 			return label.get_text();
 		}
+
+		void activate() const;
+
 	};
 
-	Item *active = nullptr;
+	Item *selected = nullptr;
 	std::list<std::shared_ptr<Item>> itens;
 
 	class Group : public Gtk::Grid, public Reinstall::Group {

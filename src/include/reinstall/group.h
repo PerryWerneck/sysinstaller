@@ -33,6 +33,10 @@
 	class Action;
 
 	class UDJAT_API Group : public Udjat::NamedObject {
+	protected:
+
+		const char *dialog_title = "";
+
 	public:
 
 		/// @brief Activity Controller
@@ -59,6 +63,10 @@
 
 		// Udjat::Abstract::Object
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
+
+		inline const char *title() const noexcept {
+			return dialog_title;
+		}
 
 	};
 

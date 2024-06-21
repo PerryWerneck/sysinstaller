@@ -64,6 +64,10 @@
 	void Dialog::title(const char *) {
 	}
 
+	bool Dialog::confirmation(const char *, const char *, const char *) noexcept {
+		return true;
+	}
+
 	/*
 	int Dialog::Controller::run(Dialog *, const std::function<int()> &task) noexcept {
 

@@ -32,12 +32,20 @@
  	class Group;
 
 	class UDJAT_API Action : public Udjat::NamedObject {
+	private:
+		const Group *parent;
+
 	public:
 
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
 		virtual ~Action();
 
 		virtual int activate(std::shared_ptr<Udjat::Dialog::Progress> progress);
+
+		/// @brief Get action croup
+		inline const Group & group() const noexcept {
+			return *parent;
+		}
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();

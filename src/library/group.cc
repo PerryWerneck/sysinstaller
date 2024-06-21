@@ -72,7 +72,8 @@
 	//
 	// Group
 	//
-	Group::Group(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
+	Group::Group(const Udjat::XML::Node &node)
+		: Udjat::NamedObject{node}, dialog_title{XML::QuarkFactory(node,"title")} {
 	}
 
 	Group::~Group() {
