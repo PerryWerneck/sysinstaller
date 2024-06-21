@@ -57,6 +57,8 @@
 
 		*value = XML::QuarkFactory(node,name);
 
+		debug(node.attribute("name").as_string(),"(",name,")='",*value,"'");
+
 	}
 
 	Dialog::Dialog(const XML::Node &node, const char *name) : Dialog{} {
@@ -72,8 +74,16 @@
 				}
 
 				// Load dialog properties.
-				get_attribute_if_not_exists(node,"icon",&args.icon_name);
-				get_attribute_if_not_exists(node,"message",&args.message);
+				get_attribute_if_not_exists(child,"icon",&args.icon_name);
+				get_attribute_if_not_exists(child,"message",&args.message);
+
+				if(!(args.details && *args.details)) {
+					Udjat::String text{child.child_value()};
+					text.expand(child);
+					text.strip();
+					args.details = text.as_quark();
+					debug(child.attribute("name").as_string(),"(details)='",args.details,"'");
+				}
 
 			}
 
@@ -93,6 +103,13 @@
 		}
 
 		return *instance;
+	}
+
+	bool Dialog::confirm() const noexcept {
+		if(*this) {
+			return Controller::getInstance().ask_for_confirmation(args.icon_name,args.message,args.details);
+		}
+		return true; // Dialog is invalid, always return 'true'
 	}
 
  }

@@ -72,9 +72,10 @@
 
 	void Action::activate() {
 
-		//
-		// Ask for confirmation
-		//
+		if(!confirmation.confirm()) {
+			info() << "Operation cancelled by user" << endl;
+			return;
+		}
 
 		//
 		// Run action

@@ -36,6 +36,7 @@
 			const char *name = nullptr;
 			const char *icon_name = nullptr;
 			const char *message = nullptr;
+			const char *details = nullptr;
 		} args;
 
 		Dialog();
@@ -69,6 +70,9 @@
 		};
 
 		virtual ~Dialog();
+
+		/// @brief Get confirmation message.
+		bool confirm() const noexcept;
 
 	};
 

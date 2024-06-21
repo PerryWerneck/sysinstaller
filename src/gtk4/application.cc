@@ -244,7 +244,7 @@
 		bool rc = false;
 		auto mainloop = Glib::MainLoop::create();
 
-		const char* buttons[] = { _("Cancel"), _("Continue") };
+		const char* buttons[] = { _("Cancel"), _("Continue"), NULL };
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 		auto dialog = ::Gtk::AlertDialog::create();
