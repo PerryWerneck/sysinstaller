@@ -28,6 +28,8 @@
 
  #include <stdexcept>
 
+ #include <unistd.h> // sleep
+
  using namespace Udjat;
  using namespace std;
 
@@ -41,19 +43,50 @@
 			throw logic_error("Action parent should be a group controller");
 		}
 
-		debug("------------- Group title is '",parent->title(),"'");
 	}
 
 	Action::~Action() {
 		debug("Destroying action '",name(),"'");
 	}
 
-	int Action::activate(std::shared_ptr<Udjat::Dialog::Progress>) {
+	int Action::activate(Udjat::Dialog::Progress &) {
 		throw runtime_error("Invalid action");
 	}
 
 	bool Action::initialize() {
 		return true;
+	}
+
+	void Action::activate() {
+
+		//
+		// Ask for confirmation
+		//
+
+		//
+		// Run action
+		//
+		auto dialog = Udjat::Dialog::Progress::Factory();
+		//dialog->title(group().title());
+
+		dialog->run([&](Udjat::Dialog::Progress &progress){
+
+			try {
+
+				// activate(progress);
+				sleep(60);
+				return 0;
+
+			} catch(const std::exception &e) {
+
+				Logger::String{e.what()}.error(name());
+
+				// TODO: Show error popup.
+			}
+
+			return -1;
+		});
+
 	}
 
  }

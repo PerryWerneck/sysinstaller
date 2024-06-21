@@ -129,7 +129,7 @@
 		
 		<iso-writer name='tw-net' default='no'>
 
-	 		<attribute name='title' value='Create USB drive for network install' />
+	 		<attribute name='title' value='Build USB drive for network install' />
 	 		<attribute name='sub-title' value='This will download and write the network install image' />
 	 		<attribute name='icon-name' value='drive-removable-media' />
       <attribute name='url' value='../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
@@ -148,8 +148,8 @@
 
 		<iso-writer name='tw-full' default='no'>
 		
-	 		<attribute name='title' value='Create USB drive for offline install' />
-	 		<attribute name='sub-title' value='This will download and write the OpenSUSE full install' />
+	 		<attribute name='title' value='Build USB drive for offline install' />
+	 		<attribute name='sub-title' value='This will download and write the offline install image' />
 	 		<attribute name='icon-name' value='drive-removable-media' />
       <attribute name='url' value='../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
 

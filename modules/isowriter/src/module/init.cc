@@ -47,7 +47,7 @@
 		~Action() {
 		}
 
-		int activate(std::shared_ptr<Udjat::Dialog::Progress>) override {
+		int activate(Udjat::Dialog::Progress &) override {
 
 			return -1;
 		}

@@ -35,12 +35,96 @@
 
  namespace Udjat {
 
+	class Label : public ::Gtk::Label {
+	public:
+		Label(const char *style, ::Gtk::Align align = ::Gtk::Align::START, Pango::EllipsizeMode mode = Pango::EllipsizeMode::START) {
+			get_style_context()->add_class(style);
+			set_hexpand(true);
+			set_vexpand(false);
+			set_valign(::Gtk::Align::START);
+			set_halign(align);
+			set_single_line_mode();
+			set_ellipsize(mode);
+		}
+
+		inline Label & operator = (const char *value) {
+			string str{value};
+			Glib::signal_idle().connect([this,str](){
+				set_text(str);
+				return 0;
+			});
+			return *this;
+		}
+
+	};
+
+	class ProgressBar : public ::Gtk::ProgressBar {
+	private:
+		struct {
+			Glib::RefPtr<Glib::TimeoutSource> source;
+			unsigned int idle = (unsigned int) -1;
+		} timer;
+
+	public:
+		ProgressBar(const char *style) {
+			get_style_context()->add_class(style);
+			set_hexpand(true);
+			set_vexpand(false);
+			set_valign(::Gtk::Align::START);
+			set_halign(::Gtk::Align::FILL);
+			set_ellipsize(Pango::EllipsizeMode::END);
+
+			timer.source = Glib::TimeoutSource::create(100);
+
+			timer.source->connect([this]{
+
+				if(!is_visible()) {
+					return true;
+				}
+
+				if(timer.idle >= 100) {
+					::Gtk::ProgressBar::pulse();
+				} else {
+					timer.idle++;
+				}
+
+				return true;
+
+			});
+
+			timer.source->attach(Glib::MainContext::get_default());
+
+		}
+
+		~ProgressBar() {
+			timer.source->destroy();
+		}
+
+		inline ProgressBar & operator = (const double fraction) {
+			timer.idle = 0;
+			Glib::signal_idle().connect([this,fraction](){
+				set_fraction(fraction);
+				return 0;
+			});
+			return *this;
+
+		}
+
+		inline void pulse() {
+			timer.idle = 1000;
+		}
+
+	};
+
 	std::shared_ptr<Dialog::Progress> Gtk::Application::ProgressFactory() {
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
 
 		class Progress : public Udjat::Dialog::Progress, private ::Gtk::Window {
 		private:
+			Label message{"dialog-title"}, body{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
+			ProgressBar progress{"dialog-progress-bar"};
+			::Gtk::Image icon;
 
 		public:
 			Progress() {
@@ -52,6 +136,52 @@
 				set_modal(true);
 				set_deletable(false);
 				set_resizable(false);
+
+				set_decorated(false);
+				set_default_size(500,-1);
+
+				get_style_context()->add_class("dialog-progress");
+
+				::Gtk::Grid view;
+				view.set_hexpand(true);
+				view.set_vexpand(true);
+				view.set_column_spacing(3);
+				view.set_row_spacing(6);
+				view.set_row_homogeneous(false);
+				view.set_column_homogeneous(false);
+				view.set_margin(12);
+				view.get_style_context()->add_class("dialog-contents");
+
+				icon.get_style_context()->add_class("dialog-icon");
+				icon.set_hexpand(false);
+				icon.set_vexpand(false);
+
+				view.attach(message,1,0,1,1);
+				view.attach(body,1,1,1,1);
+				view.attach(icon,0,0,1,2);
+				view.attach(progress,0,2,2,1);
+
+				::Gtk::Box footer{::Gtk::Orientation::HORIZONTAL};
+				footer.get_style_context()->add_class("dialog-footer");
+				footer.set_homogeneous(true);
+				footer.set_hexpand(true);
+				footer.set_vexpand(false);
+				footer.set_valign(::Gtk::Align::END);
+				footer.append(left);
+				footer.append(right);
+				view.attach(footer,0,3,2,1);
+
+#ifdef DEBUG
+				message = "The message";
+				body = "The body";
+				progress = .5;
+				left = "left";
+				right = "right";
+#endif // DEBUG
+
+				set_child(view);
+				view.show();
+
 			}
 
 			~Progress() {
@@ -63,6 +193,11 @@
 					set_title(str);
 					return 0;
 				});
+			}
+
+			Dialog::Progress & operator = (const double fraction) override {
+				progress = fraction;
+				return *this;
 			}
 
 			int run(const std::function<int(Dialog::Progress &progress)> &task) noexcept override {

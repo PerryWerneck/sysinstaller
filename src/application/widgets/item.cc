@@ -132,35 +132,9 @@
  void MainWindow::Item::activate() const {
 
 	auto action = dynamic_cast<Reinstall::Action *>(this->action.get());
-	if(!action) {
-		return;
+	if(action) {
+		action->activate();
 	}
-
-	debug("Group name is '",action->group().name(),"'");
-	debug("Group title is '",action->group().title(),"'");
-
-	//
-	// Run action
-	//
-	auto dialog = Udjat::Dialog::Progress::Factory();
-	dialog->title(action->group().title());
-
-	dialog->run([&](Udjat::Dialog::Progress &dialog){
-
-		try {
-
-			debug("TODO: Activate action");
-			sleep(10);
-
-		} catch(const std::exception &e) {
-
-			Logger::String{e.what()}.error("action");
-
-			// TODO: Show error popup.
-		}
-
-		return -1;
-	});
 
 
  }

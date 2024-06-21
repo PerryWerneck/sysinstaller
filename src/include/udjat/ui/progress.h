@@ -40,6 +40,10 @@
 
 		void title(const char *title) override;
 
+		/// @brief Set progress bar value.
+		virtual Progress & operator = (const double fraction);
+
+
 	};
 
  }

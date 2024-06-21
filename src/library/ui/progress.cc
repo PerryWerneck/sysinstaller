@@ -61,4 +61,9 @@
 
 	}
 
+	Dialog::Progress & Dialog::Progress::operator = (const double) {
+		return *this;
+	}
+
+
  }
