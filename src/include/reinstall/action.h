@@ -36,6 +36,19 @@
 	private:
 		const Group *parent;
 
+		struct Args {
+			const char *icon_name = nullptr;
+			const char *title = nullptr;
+			const char *sub_title = nullptr;
+
+			Args(const Udjat::XML::Node &node)
+				: icon_name{Udjat::XML::QuarkFactory(node,"icon-name")},
+				  title{Udjat::XML::QuarkFactory(node,"title")},
+				  sub_title{Udjat::XML::QuarkFactory(node,"sub-title")} {
+			}
+
+		} args;
+
 		Udjat::Dialog confirmation;
 		Udjat::Dialog success;
 		Udjat::Dialog failed;
@@ -46,6 +59,18 @@
 		virtual ~Action();
 
 		void activate();
+
+		inline const char * icon_name() const noexcept {
+			return args.icon_name;
+		}
+
+		inline const char * title() const noexcept {
+			return args.title;
+		}
+
+		inline const char * sub_title() const noexcept {
+			return args.sub_title;
+		}
 
 		virtual int activate(Udjat::Dialog::Progress &progress);
 

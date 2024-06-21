@@ -51,7 +51,7 @@
 
 	int margin = 0;
 
-	auto icon = XML::AttributeFactory(node,"icon");
+	auto icon = XML::AttributeFactory(node,"icon-name");
 	if(icon) {
 
 		debug("Using icon '",icon.as_string(),"'");

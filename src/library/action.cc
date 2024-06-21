@@ -38,7 +38,7 @@
 
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
 		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)},
-		 confirmation{node,"confirmation"}, success{node,"success"}, failed{node,"failed"} {
+		 args{node}, confirmation{node,"confirmation"}, success{node,"success"}, failed{node,"failed"} {
 
 		debug("Building action '",name(),"' on group '",object.name(),"'");
 		if(!parent) {
@@ -88,6 +88,9 @@
 		info() << "Starting activity" << endl;
 
 		dialog->title(group().title());
+		dialog->message(args.title);
+		dialog->body(_("Initializing"));
+		dialog->icon_name(args.icon_name);
 
 		dialog->run([&](Udjat::Dialog::Progress &progress){
 
