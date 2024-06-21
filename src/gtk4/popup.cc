@@ -53,20 +53,22 @@
 			~Popup() {
 			}
 
-			void message(const char *message) override {
+			Popup & message(const char *message) override {
 				string str{message};
 				Glib::signal_idle().connect([this,str](){
 					set_message(str);
 					return 0;
 				});
+				return *this;
 			}
 
-			void detail(const char *text) override {
+			Popup & detail(const char *text) override {
 				string str{text};
 				Glib::signal_idle().connect([this,str](){
 					set_detail(str);
 					return 0;
 				});
+				return *this;
 			}
 
 			int run(const std::function<int(Dialog::Popup &popup)> &task) noexcept override {

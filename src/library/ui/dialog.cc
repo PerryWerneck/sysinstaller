@@ -25,6 +25,8 @@
  #include <udjat/defs.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/xml.h>
+ #include <udjat/tools/quark.h>
  #include <stdexcept>
 
  using namespace std;
@@ -47,6 +49,38 @@
 	Dialog::Dialog() {
 	}
 
+	static void get_attribute_if_not_exists(const XML::Node &node, const char *name, const char **value) {
+
+		if(*value && **value) {
+			return;
+		}
+
+		*value = XML::QuarkFactory(node,name);
+
+	}
+
+	Dialog::Dialog(const XML::Node &node, const char *name) : Dialog{} {
+
+		args.name = Quark{name}.c_str();
+
+		for(auto parent = node;parent;parent = parent.parent()) {
+
+			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
+
+				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
+					continue;
+				}
+
+				// Load dialog properties.
+				get_attribute_if_not_exists(node,"icon",&args.icon_name);
+				get_attribute_if_not_exists(node,"message",&args.message);
+
+			}
+
+		}
+
+	}
+
 	Dialog::~Dialog() {
 	}
 
@@ -60,34 +94,5 @@
 
 		return *instance;
 	}
-
-	void Dialog::title(const char *) {
-	}
-
-	bool Dialog::confirmation(const char *, const char *, const char *) noexcept {
-		return true;
-	}
-
-	/*
-	int Dialog::Controller::run(Dialog *, const std::function<int()> &task) noexcept {
-
-		try {
-
-			return task();
-
-		} catch(const std::exception &e) {
-
-			Logger::String{"Background task failed: ",e.what()}.error("dialog");
-
-		} catch(...) {
-
-			Logger::String{"Unexpected error running background task"}.error("dialog");
-
-		}
-
-		return -1;
-
-	}
-	*/
 
  }

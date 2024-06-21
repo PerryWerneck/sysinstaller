@@ -41,6 +41,8 @@
 			/// @param definitions Path to a single xml file or a folder with xml files.
 			int run(int argc, char **argv, const char *definitions = nullptr) override;
 
+			static ::Gtk::Window & get_active_window();
+
 		protected:
 
 			typedef Udjat::Gtk::Application super;
@@ -57,6 +59,7 @@
 			// Udjat::Dialog::Controller
 			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
 			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
+			bool ask_for_confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept override;
 
 
 		};

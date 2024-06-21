@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
 
  namespace Reinstall {
@@ -34,6 +35,10 @@
 	class UDJAT_API Action : public Udjat::NamedObject {
 	private:
 		const Group *parent;
+
+		Udjat::Dialog confirmation;
+		Udjat::Dialog success;
+		Udjat::Dialog failed;
 
 	public:
 

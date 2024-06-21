@@ -27,7 +27,7 @@
 
  namespace Udjat {
 
-	class UDJAT_API Dialog::Popup : public Dialog {
+	class UDJAT_API Dialog::Popup {
 	protected:
 		Popup();
 
@@ -37,10 +37,10 @@
 		virtual int run(const std::function<int(Popup &popup)> &task) noexcept;
 
 		/// @brief Sets the message that will be shown in the alert.
-		virtual void message(const char *message);
+		virtual Popup & message(const char *message);
 
 		/// @brief Sets the detail text that will be shown in the alert.
-		virtual void detail(const char *text);
+		virtual Popup & detail(const char *text);
 
 		virtual ~Popup();
 

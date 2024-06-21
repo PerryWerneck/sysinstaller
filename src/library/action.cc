@@ -36,11 +36,24 @@
  namespace Reinstall {
 
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
-		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)} {
+		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)},
+		 confirmation{node,"confirmation"}, success{node,"success"}, failed{node,"failed"} {
 
 		debug("Building action '",name(),"' on group '",object.name(),"'");
 		if(!parent) {
 			throw logic_error("Action parent should be a group controller");
+		}
+
+		if(!confirmation) {
+			Logger::String{"Confirmation dialog is not defined, disabling it"}.trace(name());
+		}
+
+		if(!success) {
+			Logger::String{"Success dialog is not defined, disabling it"}.trace(name());
+		}
+
+		if(!failed) {
+			Logger::String{"Failed dialog is not defined, disabling it"}.trace(name());
 		}
 
 	}

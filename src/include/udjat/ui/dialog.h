@@ -25,14 +25,32 @@
  #include <udjat/defs.h>
  #include <memory>
  #include <functional>
+ #include <udjat/tools/xml.h>
 
  namespace Udjat {
 
 	class UDJAT_API Dialog {
 	protected:
+
+		struct {
+			const char *name = nullptr;
+			const char *icon_name = nullptr;
+			const char *message = nullptr;
+		} args;
+
 		Dialog();
 
 	public:
+		/// @brief Declare dialog from XML Node.
+		Dialog(const XML::Node &node, const char *name);
+
+		inline void message(const char *message) noexcept {
+			args.message = message;
+		}
+
+		inline operator bool() const noexcept {
+			return (bool) args.message && *args.message;
+		}
 
 		class Popup;
 		class Progress;
@@ -46,12 +64,9 @@
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
 			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
+			virtual bool ask_for_confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept = 0;
 
 		};
-
-		virtual void title(const char *title);
-
-		virtual bool confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept;
 
 		virtual ~Dialog();
 

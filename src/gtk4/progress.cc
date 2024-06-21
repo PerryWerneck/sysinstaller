@@ -122,7 +122,7 @@
 
 		class Progress : public Udjat::Dialog::Progress, private ::Gtk::Window {
 		private:
-			Label message{"dialog-title"}, body{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
+			Label main{"dialog-title"}, subtitle{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
 			ProgressBar progress{"dialog-progress-bar"};
 			::Gtk::Image icon;
 
@@ -155,9 +155,12 @@
 				icon.get_style_context()->add_class("dialog-icon");
 				icon.set_hexpand(false);
 				icon.set_vexpand(false);
+				// icon.set_icon_size(::Gtk::IconSize::LARGE);
+				icon.set_pixel_size(45);
+				icon.set_from_icon_name("logo");
 
-				view.attach(message,1,0,1,1);
-				view.attach(body,1,1,1,1);
+				view.attach(main,1,0,1,1);
+				view.attach(subtitle,1,1,1,1);
 				view.attach(icon,0,0,1,2);
 				view.attach(progress,0,2,2,1);
 
@@ -172,8 +175,8 @@
 				view.attach(footer,0,3,2,1);
 
 #ifdef DEBUG
-				message = "The message";
-				body = "The body";
+				main = "The message";
+				subtitle = "The body";
 				progress = .5;
 				left = "left";
 				right = "right";
@@ -187,16 +190,36 @@
 			~Progress() {
 			}
 
-			void title(const char *title) override {
+			Dialog::Progress & title(const char *title) override {
 				string str{title};
 				Glib::signal_idle().connect([this,str](){
 					set_title(str);
 					return 0;
 				});
+				return *this;
 			}
 
 			Dialog::Progress & operator = (const double fraction) override {
 				progress = fraction;
+				return *this;
+			}
+
+			Dialog::Progress & message(const char *text) override {
+				main = text;
+				return *this;
+			}
+
+			Dialog::Progress & body(const char *text) override {
+				subtitle = text;
+				return *this;
+			}
+
+			Dialog::Progress & icon_name(const char *name) override {
+				string str{name};
+				Glib::signal_idle().connect([this,str](){
+					icon.set_from_icon_name(str);
+					return 0;
+				});
 				return *this;
 			}
 

@@ -239,48 +239,40 @@
 
 	}
 
-	/*
-	int Gtk::Application::run(Udjat::Dialog *, const std::function<int()> &task) noexcept {
+	bool Gtk::Application::ask_for_confirmation(const char *, const char *message, const char *body) noexcept {
 
-		int rc = -1;
-
+		bool rc = false;
 		auto mainloop = Glib::MainLoop::create();
 
-		Udjat::ThreadPool::getInstance().push([&task,&rc,mainloop](){
+		const char* buttons[] = { _("Cancel"), _("Continue") };
 
-			try {
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
+		auto dialog = ::Gtk::AlertDialog::create();
+		dialog->set_modal();
+		dialog->set_message(message);
 
-				rc = task();
+		gtk_alert_dialog_set_buttons(dialog->gobj(),buttons);
 
-			} catch(const std::exception &e) {
+		dialog->set_cancel_button(0);
 
-				// TODO: Show error popup
+		if(body && *body) {
+			dialog->set_detail(body);
+		}
 
-				rc = -1;
-				Logger::String{e.what()}.error("gtk");
-
-			} catch(...) {
-
-				// TODO: Show error popup
-
-				rc = -1;
-				Logger::String{"Unexpected error running background task"}.error("gtk");
-
-			}
-
-			Glib::signal_idle().connect([mainloop](){
-				mainloop->quit();
-				return 0;
-			});
-
+		dialog->choose(get_active_window(),[dialog,&mainloop,&rc](Glib::RefPtr<Gio::AsyncResult> result){
+			int button = dialog->choose_finish(result);
+			debug("Selected button=",button);
+			rc = (button == 1);
+			mainloop->quit();
 		});
 
 		mainloop->run();
-
 		return rc;
-
 	}
-	*/
+
+	::Gtk::Window & Gtk::Application::get_active_window() {
+		return *Glib::wrap(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
+	}
 
  }
 

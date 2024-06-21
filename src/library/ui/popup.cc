@@ -34,10 +34,12 @@
 	Dialog::Popup::~Popup() {
 	}
 
-	void Dialog::Popup::message(const char *) {
+	Dialog::Popup & Dialog::Popup::message(const char *) {
+		return *this;
 	}
 
-	void Dialog::Popup::detail(const char *) {
+	Dialog::Popup & Dialog::Popup::detail(const char *) {
+		return *this;
 	}
 
 	std::shared_ptr<Dialog::Popup> Dialog::Popup::Factory() {

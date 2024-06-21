@@ -27,7 +27,7 @@
 
  namespace Udjat {
 
-	class UDJAT_API Dialog::Progress : public Dialog {
+	class UDJAT_API Dialog::Progress {
 	protected:
 		Progress();
 
@@ -38,11 +38,17 @@
 
 		virtual ~Progress();
 
-		void title(const char *title) override;
+		virtual Progress & title(const char *text);
+		virtual Progress & message(const char *text);
+		virtual Progress & body(const char *text);
+		virtual Progress & icon_name(const char *name);
 
 		/// @brief Set progress bar value.
 		virtual Progress & operator = (const double fraction);
 
+		inline Progress & operator = (const char *text) {
+			return body(text);
+		}
 
 	};
 

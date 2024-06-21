@@ -34,7 +34,8 @@
 	Dialog::Progress::~Progress() {
 	}
 
-	void Dialog::Progress::title(const char *) {
+	Dialog::Progress & Dialog::Progress::title(const char *) {
+		return *this;
 	}
 
 	std::shared_ptr<Dialog::Progress> Dialog::Progress::Factory() {
@@ -65,5 +66,16 @@
 		return *this;
 	}
 
+	Dialog::Progress & Dialog::Progress::message(const char *) {
+		return *this;
+	}
+
+	Dialog::Progress & Dialog::Progress::body(const char *) {
+		return *this;
+	}
+
+	Dialog::Progress & Dialog::Progress::icon_name(const char *) {
+		return *this;
+	}
 
  }
