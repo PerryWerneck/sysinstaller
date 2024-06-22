@@ -26,12 +26,29 @@
  #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
 
+ #include <stdexcept>
+
+ using namespace std;
+
  namespace Udjat {
 
+	Dialog::Progress * Dialog::Progress::instance = nullptr;
+
 	Dialog::Progress::Progress() {
+		instance = this;
 	}
 
 	Dialog::Progress::~Progress() {
+		if(instance == this) {
+			instance = nullptr;
+		}
+	}
+
+	Dialog::Progress & Dialog::Progress::getInstance() {
+		if(!instance) {
+			throw logic_error("No active progress dialog");
+		}
+		return *instance;
 	}
 
 	Dialog::Progress & Dialog::Progress::title(const char *) {

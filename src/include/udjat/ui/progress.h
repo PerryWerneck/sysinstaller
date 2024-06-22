@@ -28,11 +28,16 @@
  namespace Udjat {
 
 	class UDJAT_API Dialog::Progress {
+	private:
+		static Progress * instance;
+
 	protected:
 		Progress();
 
 	public:
 		static std::shared_ptr<Progress> Factory();
+
+		static Progress & getInstance();
 
 		virtual int run(const std::function<int(Progress &progress)> &task) noexcept;
 

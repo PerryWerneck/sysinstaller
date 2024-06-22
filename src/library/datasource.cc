@@ -30,6 +30,7 @@
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
+ #include <sys/stat.h>
 
  #include <stdexcept>
 
@@ -98,6 +99,7 @@
 	}
 
 	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
+
 		auto url = remote();
 
 		info() << "Downloading " << url.c_str() << endl;
@@ -119,7 +121,7 @@
 		try {
 
 			progress.url(url.c_str());
-			url.get([&](unsigned long long current, unsigned long long total, const void *buf, size_t length){
+			url.get(path,[&](uint64_t current, uint64_t total){
 
 				debug(current,"/",total);
 
@@ -136,13 +138,28 @@
 	}
 
 	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
+
 		auto url = local();
 		if(!url.local()) {
 			throw runtime_error("Unable to save to remote path");
 		}
 
 		auto components = url.ComponentsFactory();
-		save(progress,components.path.c_str());
+
+		try {
+
+			save(progress,components.path.c_str());
+
+		} catch(...) {
+
+			struct stat sb;
+			const char *filename = components.path.c_str();
+			if(stat(filename,&sb) != 0 || sb.st_blocks != 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+				throw;
+			}
+
+			warning() << "Download error, using cached file '" << filename << "'" << endl;
+		}
 
 		return components.path;
 	}
