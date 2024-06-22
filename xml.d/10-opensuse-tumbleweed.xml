@@ -131,7 +131,7 @@
 
 	 		<attribute name='title' value='Build USB drive for network install' />
 	 		<attribute name='sub-title' value='This will download and write the network install image' />
-	 		<attribute name='icon-name' value='drive-removable-media' />
+	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
       <attribute name='url' value='../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
 
 			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
@@ -150,7 +150,7 @@
 		
 	 		<attribute name='title' value='Build USB drive for offline install' />
 	 		<attribute name='sub-title' value='This will download and write the offline install image' />
-	 		<attribute name='icon-name' value='drive-removable-media' />
+	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
       <attribute name='url' value='../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
 
       <!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->

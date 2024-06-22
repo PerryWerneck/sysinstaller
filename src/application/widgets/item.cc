@@ -51,16 +51,24 @@
 
 	int margin = 0;
 
-	auto icon = XML::AttributeFactory(node,"icon-name");
-	if(icon) {
+	Reinstall::Action *act = dynamic_cast<Reinstall::Action *>(action.get());
 
-		debug("Using icon '",icon.as_string(),"'");
+	const char *icon_name;
+	if(act) {
+		icon_name = act->icon_name();
+	} else {
+		icon_name = XML::AttributeFactory(node,"icon-name").as_string();
+	}
+
+	if(icon_name && *icon_name) {
+
+		debug("Using icon '",icon_name,"'");
 		margin = 1;
 
 		Gtk::Image image;
 		image.set_icon_size(Gtk::IconSize::LARGE);
 		image.get_style_context()->add_class("action-icon");
-		image.set_from_icon_name(icon.as_string("image-missing"));
+		image.set_from_icon_name(icon_name);
 
 		grid.attach(image,0,0,1,2);
 	}

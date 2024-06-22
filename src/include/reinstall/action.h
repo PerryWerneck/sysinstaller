@@ -36,6 +36,8 @@
 	private:
 		const Group *parent;
 
+	protected:
+
 		struct Args {
 			const char *icon_name = nullptr;
 			const char *title = nullptr;
