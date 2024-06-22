@@ -18,36 +18,33 @@
  */
 
  /**
-  * @brief Declare a repository.
+  * @brief Declares a reinstall data source.
   */
 
  #pragma once
-
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <memory>
 
- #include <reinstall/tools/datasource.h>
-
  namespace Reinstall {
 
-	class SLPClient;
+	class Repository;
 
-	class UDJAT_API Repository : public DataSource {
-	private:
+	class UDJAT_API DataSource : public Udjat::NamedObject {
+	protected:
 
-		std::shared_ptr<SLPClient> slpclient;
+		std::shared_ptr<Repository> repository;
+
+		struct {
+			const char *local = "";
+			const char *remote = "";
+		} url;
 
 	public:
-
-		static std::shared_ptr<Repository> Factory(const Udjat::XML::Node &node);
-
-		Repository(const Udjat::XML::Node &node);
-		virtual ~Repository();
+		DataSource(const Udjat::XML::Node &node);
+		virtual ~DataSource();
 
 	};
 
  }
-
-

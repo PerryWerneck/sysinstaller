@@ -25,17 +25,65 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/tools/intl.h>
 
+ #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
  #include <private/slpclient.h>
+ #include <list>
 
  using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
-	Repository::Repository(const Udjat::XML::Node &node) : Udjat::NamedObject{node}, slpclient{SLPClient::Factory(node)} {
-		url.local = XML::StringFactory(node,"local");
-		url.remote = XML::StringFactory(node,"remote");
+	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
+
+		const char * name = XML::StringFactory(node,"repository","install");
+
+		static list<std::shared_ptr<Repository>> repositories;
+
+		for(auto repository : repositories) {
+			if(!strcasecmp(repository->name(),name)) {
+				return repository;
+			}
+		}
+
+		for(auto parent = node;parent;parent = parent.parent()) {
+
+			for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
+
+				if(strcasecmp(child.attribute("name").as_string(),name)) {
+					continue;
+				}
+
+				if(!strcasecmp(XML::StringFactory(child,"repository",""),name)) {
+					Logger::String{"Ignoring circular dependency"}.warning("repository");
+					continue;
+				}
+
+				auto repo = make_shared<Repository>(child);
+				repositories.push_back(repo);
+
+				return repo;
+			}
+
+		}
+
+		throw runtime_error(Logger::Message{_("Required repository '{}' not found"),name});
+
+	}
+
+	Repository::Repository(const Udjat::XML::Node &node) : DataSource{node}, slpclient{SLPClient::Factory(node)} {
+
+		if(url.local[0]) {
+			Logger::String{"Using '",url.local,"' for local files"}.trace(name());
+		}
+
+		if(url.remote[0]) {
+			Logger::String{"Using '",url.remote,"' for remote files"}.trace(name());
+		}
+
 	}
 
 	Repository::~Repository() {

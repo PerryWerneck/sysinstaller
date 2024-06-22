@@ -66,6 +66,7 @@
 		<Unit filename="src/include/reinstall/action.h" />
 		<Unit filename="src/include/reinstall/disk/abstract.h" />
 		<Unit filename="src/include/reinstall/group.h" />
+		<Unit filename="src/include/reinstall/tools/datasource.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
 		<Unit filename="src/include/reinstall/writer/abstract.h" />
 		<Unit filename="src/include/udjat/ui/dialog.h" />
@@ -75,6 +76,7 @@
 		<Unit filename="src/include/udjat/ui/progress.h" />
 		<Unit filename="src/include/widgets/sidebar.h" />
 		<Unit filename="src/library/action.cc" />
+		<Unit filename="src/library/datasource.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/repository.cc" />
 		<Unit filename="src/library/slpclient.cc" />

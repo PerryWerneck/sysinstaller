@@ -25,6 +25,8 @@
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
+ #include <udjat/tools/intl.h>
+ #include <reinstall/tools/datasource.h>
 
  using namespace Udjat;
  using namespace std;
@@ -33,15 +35,16 @@
  UDJAT_API Udjat::Module * udjat_module_init() {
 
 	static const Udjat::ModuleInfo moduleinfo{
-          "Iso writing module."
+          "Download and write an ISO file."
 	};
 
 	class Action : public Reinstall::Action {
 	private:
+		Reinstall::DataSource iso;
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node} {
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node}, iso{node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
@@ -51,9 +54,10 @@
 		~Action() {
 		}
 
-		int activate(Udjat::Dialog::Progress &) override {
+		int activate(Udjat::Dialog::Progress &progress) override {
 
-			debug("ACTIVATING ISO WRITER ACTION");
+			progress = _("Getting ISO image");
+
 
 			return -1;
 		}

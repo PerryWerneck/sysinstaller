@@ -23,7 +23,7 @@
 	-->
 	<repository name='install'>
 		<attribute name='remote' value='https://download.opensuse.org/tumbleweed/repo/oss/' />
-		<attribute name='local' value='file:///${HOME}/Público/tumbleweed/repo/oss/' />
+		<attribute name='local' value='file:///srv/www/suse/tumbleweed/repo/oss/' />
 		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
