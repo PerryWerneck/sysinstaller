@@ -26,6 +26,7 @@
  #include <memory>
  #include <functional>
  #include <udjat/tools/xml.h>
+ #include <cstdarg>
 
  namespace Udjat {
 
@@ -49,6 +50,18 @@
 			args.message = message;
 		}
 
+		inline const char * message() const noexcept {
+			return args.message;
+		}
+
+		inline void details(const char *details) noexcept {
+			args.details = details;
+		}
+
+		inline const char * details() const noexcept {
+			return args.details;
+		}
+
 		inline operator bool() const noexcept {
 			return (bool) args.message && *args.message;
 		}
@@ -65,14 +78,18 @@
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
 			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
-			virtual bool ask_for_confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept = 0;
+			virtual int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept = 0;
 
 		};
+
+		friend class Controller;
 
 		virtual ~Dialog();
 
 		/// @brief Get confirmation message.
 		bool confirm() const noexcept;
+
+		int select(int cancel, const char *button, ...) const __attribute__ ((sentinel));
 
 	};
 

@@ -34,6 +34,7 @@
  #include <udjat/tools/threadpool.h>
 
  #include <gtkmm.h>
+ #include <vector>
 
  using namespace std;
 
@@ -239,6 +240,47 @@
 
 	}
 
+	int Gtk::Application::select(const Dialog &settings, int cancel, const char *button, va_list args) noexcept {
+
+		int rc = -1;
+
+		auto mainloop = Glib::MainLoop::create();
+
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
+		auto dialog = ::Gtk::AlertDialog::create();
+		dialog->set_modal();
+		dialog->set_message(settings.message());
+
+		const char *details = settings.details();
+		if(details && *details) {
+			dialog->set_detail(details);
+		}
+
+		if(button) {
+
+			std::vector<Glib::ustring> labels;
+			while(button) {
+				labels.push_back(button);
+				button = va_arg(args, const char *);
+			}
+
+			dialog->set_buttons(labels);
+			dialog->set_cancel_button(cancel);
+
+		}
+
+		dialog->choose(get_active_window(),[dialog,&mainloop,&rc](Glib::RefPtr<Gio::AsyncResult> result){
+			rc = dialog->choose_finish(result);
+			debug("Selected button=",rc);
+			mainloop->quit();
+		});
+
+		mainloop->run();
+		return rc;
+
+	}
+
+	/*
 	bool Gtk::Application::ask_for_confirmation(const char *, const char *message, const char *body) noexcept {
 
 		bool rc = false;
@@ -269,6 +311,7 @@
 		mainloop->run();
 		return rc;
 	}
+	*/
 
 	::Gtk::Window & Gtk::Application::get_active_window() {
 		return *Glib::wrap(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));

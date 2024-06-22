@@ -73,7 +73,7 @@
 
 	void Action::activate() {
 
-		if(!confirmation.confirm()) {
+		if(confirmation && confirmation.select(0,_("Cancel"),_("Continue"),nullptr) != 1) {
 			info() << "Operation cancelled by user" << endl;
 			return;
 		}

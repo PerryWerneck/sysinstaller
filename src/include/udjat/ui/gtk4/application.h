@@ -59,8 +59,7 @@
 			// Udjat::Dialog::Controller
 			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
 			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
-			bool ask_for_confirmation(const char *icon, const char *message, const char *body = nullptr) noexcept override;
-
+			int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept override;
 
 		};
 

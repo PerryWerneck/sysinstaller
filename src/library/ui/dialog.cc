@@ -27,6 +27,7 @@
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/quark.h>
+ #include <udjat/tools/intl.h>
  #include <stdexcept>
 
  using namespace std;
@@ -106,10 +107,27 @@
 	}
 
 	bool Dialog::confirm() const noexcept {
+
+		if(*this) {
+			return select(1, _("_No"),_("_Yes"),nullptr) == 0;
+		}
+		/*
 		if(*this) {
 			return Controller::getInstance().ask_for_confirmation(args.icon_name,args.message,args.details);
 		}
+		*/
 		return true; // Dialog is invalid, always return 'true'
+	}
+
+	int Dialog::select(int cancel, const char *button, ...) const {
+		int rc = -1;
+		if(*this) {
+			va_list args;
+			va_start(args, button);
+			rc = Controller::getInstance().select(*this,cancel,button,args);
+			va_end(args);
+		}
+		return rc;
 	}
 
  }
