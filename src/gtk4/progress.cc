@@ -223,6 +223,17 @@
 				return *this;
 			}
 
+			Dialog::Progress & url(const char *url) override {
+				string str{url};
+				Glib::signal_idle().connect([this,str](){
+					progress.pulse();
+					progress.set_text(str);
+					progress.set_show_text();
+					return 0;
+				});
+				return *this;
+			}
+
 			int run(const std::function<int(Dialog::Progress &progress)> &task) noexcept override {
 
 				present();

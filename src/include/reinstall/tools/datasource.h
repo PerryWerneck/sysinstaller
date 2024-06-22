@@ -26,6 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
+ #include <udjat/ui/progress.h>
  #include <memory>
 
  namespace Reinstall {
@@ -48,6 +49,10 @@
 
 		Udjat::URL local();
 		Udjat::URL remote();
+
+		void save(Udjat::Dialog::Progress &progress, const char *path);
+		std::string save(Udjat::Dialog::Progress &progress);
+
 
 	};
 

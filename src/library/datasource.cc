@@ -25,6 +25,8 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/tools/file.h>
+ #include <udjat/tools/string.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -38,7 +40,7 @@
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
 
-		url.remote = XML::QuarkFactory(node,"remote",url.remote);
+		url.remote = String{node,"remote"}.expand(node).expand().as_quark();
 		if(!url.remote[0]) {
 			url.remote = XML::QuarkFactory(node,"url",url.remote);
 			if(url.remote[0]) {
@@ -48,7 +50,7 @@
 			}
 		}
 
-		url.local = XML::QuarkFactory(node,"local");
+		url.local = String{node,"local"}.expand(node).expand().as_quark();
 		if(!url.local[0] && url.remote[0] == '.') {
 			url.local = url.remote;
 			Logger::String{"Using relative path '",url.local,"' for local url"}.trace(name());
@@ -59,9 +61,6 @@
 			Logger::String{"Relative path, searching for repository '",XML::StringFactory(node,"repository","install"),"'"}.trace(name());
 			repository = Repository::Factory(node);
 		}
-
-		debug("------------------------> '",local().c_str(),"'");
-		debug("------------------------> '",remote().c_str(),"'");
 
 	}
 
@@ -96,6 +95,56 @@
 
 		return URL{url.remote};
 
+	}
+
+	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
+		auto url = remote();
+
+		info() << "Downloading " << url.c_str() << endl;
+
+		debug("Downloading '",url.c_str(),"' to '",path,"'");
+
+		{
+			string str{path};
+			auto pos = str.rfind('/');
+			if(pos == string::npos) {
+				throw runtime_error("Invalid local path");
+			}
+			str.resize(pos);
+			if(File::Path::mkdir(str.c_str())) {
+				info() << "New path made: " << str << endl;
+			}
+		}
+
+		try {
+
+			progress.url(url.c_str());
+			url.get([&](unsigned long long current, unsigned long long total, const void *buf, size_t length){
+
+				debug(current,"/",total);
+
+
+				return true;
+			});
+
+		} catch(const std::exception &e) {
+
+			error() << url.c_str() << " -> " << path << ": " << e.what() << endl;
+			throw;
+		}
+
+	}
+
+	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
+		auto url = local();
+		if(!url.local()) {
+			throw runtime_error("Unable to save to remote path");
+		}
+
+		auto components = url.ComponentsFactory();
+		save(progress,components.path.c_str());
+
+		return components.path;
 	}
 
  }

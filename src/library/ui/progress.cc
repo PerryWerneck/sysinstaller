@@ -78,4 +78,8 @@
 		return *this;
 	}
 
+	Dialog::Progress & Dialog::Progress::url(const char *) {
+		return *this;
+	}
+
  }

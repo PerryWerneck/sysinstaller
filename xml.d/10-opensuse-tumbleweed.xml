@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
 
-	<!-- HTTP is required for downloading files -->
-	<!-- module name='http' required='yes' / -->
+	<!-- HTTP is required for file download -->
+	<module name='http' required='yes' />
 	
 	<!-- 
 	
@@ -23,7 +23,8 @@
 	-->
 	<repository name='install'>
 		<attribute name='remote' value='https://download.opensuse.org/tumbleweed/repo/oss/' />
-		<attribute name='local' value='file:///srv/www/suse/tumbleweed/repo/oss/' />
+		<!-- attribute name='local' value='file:///srv/www/suse/tumbleweed/repo/oss/' / -->
+		<attribute name='local' value='file://${HOME}/tmp/suse/tumbleweed/repo/oss/' />
 		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />

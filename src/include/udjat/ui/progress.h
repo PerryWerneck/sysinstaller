@@ -43,6 +43,9 @@
 		virtual Progress & body(const char *text);
 		virtual Progress & icon_name(const char *name);
 
+		/// @brief Set progress bar URL.
+		virtual Progress & url(const char *url);
+
 		/// @brief Set progress bar value.
 		virtual Progress & operator = (const double fraction);
 
