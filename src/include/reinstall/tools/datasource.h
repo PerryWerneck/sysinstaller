@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/tools/url.h>
  #include <memory>
 
  namespace Reinstall {
@@ -44,6 +45,9 @@
 	public:
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
+
+		Udjat::URL local();
+		Udjat::URL remote();
 
 	};
 

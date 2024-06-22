@@ -29,7 +29,10 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
 
+ #include <stdexcept>
+
  using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
@@ -57,9 +60,42 @@
 			repository = Repository::Factory(node);
 		}
 
+		debug("------------------------> '",local().c_str(),"'");
+		debug("------------------------> '",remote().c_str(),"'");
+
 	}
 
 	DataSource::~DataSource() {
+	}
+
+	Udjat::URL DataSource::local() {
+
+		if(url.local[0] == '.') {
+			if(!repository) {
+				throw logic_error("Unable to use relative URLs without repository");
+			}
+			URL value{repository->local()};
+			value += url.local;
+			return value;
+		}
+
+		return URL{url.local};
+
+	}
+
+	Udjat::URL DataSource::remote() {
+
+		if(url.remote[0] == '.') {
+			if(!repository) {
+				throw logic_error("Unable to use relative URLs without repository");
+			}
+			URL value{repository->remote()};
+			value += url.remote;
+			return value;
+		}
+
+		return URL{url.remote};
+
 	}
 
  }
