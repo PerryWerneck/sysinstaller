@@ -24,27 +24,43 @@
  #pragma once
  namespace Reinstall {
 
-	namespace Abstract {
+	/// @brief Abstract disk device.
+	class UDJAT_API Writer {
+	private:
+		static const char *devname;
+		static Writer *instance;
+		int fd = -1;
 
-		/// @brief Abstract disk device.
-		class UDJAT_API Writer {
-		public:
-			Writer();
-			virtual ~Writer();
+	protected:
+		Writer();
 
-			/// @brief Get device length.
-			/// @return The device length.
-			/// @retval 0 The device length is undefined.
-			virtual unsigned long long size() const;
+		/// @brief Open device
+		/// @return 0 of ok, error code if not.
+		int open(const char *device_name);
+		void close();
 
-			/// @brief Write data to device.
-			/// @param offset Offset of current block.
-			/// @param length Total size of image (0 = undefined).
-			virtual void write(unsigned long long offset, const void *contents, unsigned long long length = 0) = 0;
+	public:
+		virtual ~Writer();
 
-		};
+		/// @brief Get writer instance.
+		static Writer & getInstance();
 
-	}
+		/// @brief Select/detect and open device.
+		virtual void open() = 0;
+
+		bool allocate(unsigned long long length);
+
+		/// @brief Get device length.
+		/// @return The device length.
+		/// @retval 0 The device length is undefined.
+		unsigned long long size() const;
+
+		/// @brief Write data to device.
+		/// @param offset Offset of current block.
+		/// @param length Block length.
+		void write(unsigned long long offset, const void *contents, unsigned long long length);
+
+	};
 
  }
 

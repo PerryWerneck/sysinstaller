@@ -68,7 +68,7 @@
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
-		<Unit filename="src/include/reinstall/writer/abstract.h" />
+		<Unit filename="src/include/reinstall/writer.h" />
 		<Unit filename="src/include/udjat/ui/dialog.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
@@ -83,6 +83,7 @@
 		<Unit filename="src/library/ui/dialog.cc" />
 		<Unit filename="src/library/ui/popup.cc" />
 		<Unit filename="src/library/ui/progress.cc" />
+		<Unit filename="src/library/writer.cc" />
 		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
 		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
 		<Unit filename="submodules/libudjatui/intl/gmo.h" />
