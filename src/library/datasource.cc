@@ -123,8 +123,7 @@
 			progress.url(url.c_str());
 			url.get(path,[&](uint64_t current, uint64_t total){
 
-				debug(current,"/",total);
-
+				progress.file_sizes(current,total);
 
 				return true;
 			});

@@ -99,4 +99,8 @@
 		return *this;
 	}
 
+	Dialog::Progress & Dialog::Progress::file_sizes(const uint64_t, const uint64_t ) {
+		return *this;
+	}
+
  }

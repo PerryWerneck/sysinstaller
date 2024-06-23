@@ -59,12 +59,6 @@
 	};
 
 	class ProgressBar : public ::Gtk::ProgressBar {
-	private:
-		struct {
-			Glib::RefPtr<Glib::TimeoutSource> source;
-			unsigned int idle = (unsigned int) -1;
-		} timer;
-
 	public:
 		ProgressBar(const char *style) {
 			get_style_context()->add_class(style);
@@ -74,44 +68,9 @@
 			set_halign(::Gtk::Align::FILL);
 			set_ellipsize(Pango::EllipsizeMode::END);
 
-			timer.source = Glib::TimeoutSource::create(100);
-
-			timer.source->connect([this]{
-
-				if(!is_visible()) {
-					return true;
-				}
-
-				if(timer.idle >= 100) {
-					::Gtk::ProgressBar::pulse();
-				} else {
-					timer.idle++;
-				}
-
-				return true;
-
-			});
-
-			timer.source->attach(Glib::MainContext::get_default());
-
 		}
 
 		~ProgressBar() {
-			timer.source->destroy();
-		}
-
-		inline ProgressBar & operator = (const double fraction) {
-			timer.idle = 0;
-			Glib::signal_idle().connect([this,fraction](){
-				set_fraction(fraction);
-				return 0;
-			});
-			return *this;
-
-		}
-
-		inline void pulse() {
-			timer.idle = 1000;
 		}
 
 	};
@@ -125,6 +84,15 @@
 			Label main{"dialog-title"}, subtitle{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
 			ProgressBar progress{"dialog-progress-bar"};
 			::Gtk::Image icon;
+
+			Glib::RefPtr<Glib::TimeoutSource> timer;
+
+			unsigned int idle = (unsigned int) -1;
+			struct {
+				bool changed = false;
+				bool valid = false;
+				float fraction;
+			} values;
 
 		public:
 			Progress() {
@@ -177,7 +145,6 @@
 #ifdef DEBUG
 				main = "The message";
 				subtitle = "The body";
-				progress = .5;
 				left = "left";
 				right = "right";
 #endif // DEBUG
@@ -185,9 +152,39 @@
 				set_child(view);
 				view.show();
 
+				timer = Glib::TimeoutSource::create(100);
+
+				timer->connect([this]{
+
+					if(values.changed) {
+
+						idle = 0;
+						if(values.valid) {
+							progress.set_fraction(values.fraction);
+						}
+						values.changed = false;
+
+					} else if(idle >= 100 || !values.valid) {
+
+						progress.pulse();
+
+					} else {
+
+						idle++;
+						debug(idle);
+
+					}
+
+					return true;
+
+				});
+
+				timer->attach(Glib::MainContext::get_default());
+
 			}
 
 			~Progress() {
+				timer->destroy();
 			}
 
 			Dialog::Progress & title(const char *title) override {
@@ -200,7 +197,8 @@
 			}
 
 			Dialog::Progress & operator = (const double fraction) override {
-				progress = fraction;
+				values.fraction = fraction;
+				values.changed = true;
 				return *this;
 			}
 
@@ -231,6 +229,17 @@
 					progress.set_show_text();
 					return 0;
 				});
+				return *this;
+			}
+
+			Dialog::Progress & file_sizes(const uint64_t current, const uint64_t total) {
+				if(total) {
+					values.valid = true;
+					values.fraction = ((float) current) / ((float) total);
+				} else {
+					values.valid = false;
+				}
+				values.changed = true;
 				return *this;
 			}
 

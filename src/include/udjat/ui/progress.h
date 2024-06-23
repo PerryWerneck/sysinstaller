@@ -47,6 +47,7 @@
 		virtual Progress & message(const char *text);
 		virtual Progress & body(const char *text);
 		virtual Progress & icon_name(const char *name);
+		virtual Progress & file_sizes(const uint64_t current, const uint64_t total);
 
 		/// @brief Set progress bar URL.
 		virtual Progress & url(const char *url);
