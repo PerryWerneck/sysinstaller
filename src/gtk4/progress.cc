@@ -27,6 +27,7 @@
  #include <udjat/ui/progress.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/tools/threadpool.h>
+ #include <udjat/tools/string.h>
 
  #include <memory>
  #include <gtkmm.h>
@@ -88,8 +89,10 @@
 			Glib::RefPtr<Glib::TimeoutSource> timer;
 
 			unsigned int idle = (unsigned int) -1;
+
 			struct {
-				bool changed = false;
+				string label;
+				uint8_t changed = 0;
 				bool valid = false;
 				float fraction;
 			} values;
@@ -162,7 +165,10 @@
 						if(values.valid) {
 							progress.set_fraction(values.fraction);
 						}
-						values.changed = false;
+						if(values.changed &2) {
+							right.set_text(values.label);
+						}
+						values.changed = 0;
 
 					} else if(idle >= 100 || !values.valid) {
 
@@ -227,19 +233,40 @@
 					progress.pulse();
 					progress.set_text(str);
 					progress.set_show_text();
+					values.valid = false;
+					values.label.clear();
+					right.set_text("");
 					return 0;
 				});
 				return *this;
 			}
 
 			Dialog::Progress & file_sizes(const uint64_t current, const uint64_t total) {
+
+				string label;
+
 				if(total) {
 					values.valid = true;
 					values.fraction = ((float) current) / ((float) total);
+
+					if(current) {
+						label = Logger::Message{_("{} of {}"),
+									String{""}.set_byte((unsigned long long) current).c_str(),
+									String{""}.set_byte((unsigned long long) total).c_str()
+								};
+					}
+
 				} else {
 					values.valid = false;
 				}
-				values.changed = true;
+
+				if(strcmp(label.c_str(),values.label.c_str())) {
+					values.changed |= 2;
+					values.label = label;
+					debug(label);
+				}
+
+				values.changed |= 1;
 				return *this;
 			}
 
