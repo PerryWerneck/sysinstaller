@@ -35,6 +35,7 @@
  using namespace std;
 
  #define USE_MESSAGE_DIALOG 1
+ #define USE_DROPDOWN 1
 
  namespace Reinstall {
 
@@ -72,6 +73,33 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress) {
 
+		// https://fossies.org/linux/gtkmm/demos/gtk-demo/example_dropdown.cc
+
+		class DeviceHolder : public Glib::Object {
+		public:
+
+			enum Type : uint8_t {
+				Undefined,
+				AutoDetect,	///<< @brief Waiting for device.
+				File,		///<< @brief Select file name.
+				Device		///<< @brief Standard device entry.
+			} type = Undefined;
+
+			Glib::ustring	description;
+			std::string		device_name;
+
+			Glib::RefPtr<DeviceHolder> create(Type type, const char *name, const char *descr) {
+				return Glib::make_refptr_for_instance<DeviceHolder>(new DeviceHolder(type, name, descr));
+			}
+
+		private:
+
+			DeviceHolder(Type t, const char *name, const char *descr)
+				: type{t}, description{descr}, device_name{name} {
+			}
+
+		};
+
 #ifdef USE_MESSAGE_DIALOG
 		class Dialog : public Gtk::MessageDialog {
 		private:
@@ -79,9 +107,17 @@
 		class Dialog : public Gtk::Window {
 		private:
 #endif
+			/// @brief Cancel button.
 			Gtk::Button cancel{"_Cancel",true};
 
+#ifdef USE_DROPDOWN
+			/// @brief Dropdown contents.
+			Glib::RefPtr<Gio::ListStore<DeviceHolder>> store = Gio::ListStore<DeviceHolder>::create();
+			Gtk::DropDown dropdown{store};
+#endif // USE_DROPDOWN
+
 			void setup() {
+
 				gtk_window_set_transient_for(
 					GTK_WINDOW(gobj()),
 					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
@@ -89,7 +125,19 @@
 
 				set_modal(true);
 
+#ifdef USE_DROPDOWN
+				auto expression = Gtk::ClosureExpression<Glib::ustring>::create(
+					[](const Glib::RefPtr<Glib::ObjectBase>& item)->Glib::ustring
+					{
+						return std::dynamic_pointer_cast<DeviceHolder>(item)->description;
+					});
+
+				dropdown.set_expression(expression);
+				dropdown.set_enable_search();
+#endif // USE_DROPDOWN
+
 			}
+
 
 		public:
 
@@ -99,6 +147,7 @@
 				setup();
 
 				add_action_widget(cancel,-1);
+				add_action_widget(dropdown,1);
 
 				cancel.signal_clicked().connect([&]{
 					close();
