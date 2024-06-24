@@ -75,25 +75,12 @@
 #ifdef USE_MESSAGE_DIALOG
 		class Dialog : public Gtk::MessageDialog {
 		private:
-			Gtk::Button cancel{"_Cancel",true};
-		public:
-			Dialog() : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
-				add_action_widget(cancel,-1);
-				cancel.signal_clicked().connect([&]{
-					close();
-					response(-1);
-				});
-				setup();
-			}
 #else
 		class Dialog : public Gtk::Window {
-		public:
-			Dialog() {
-				setup()
-			}
-#endif // USE_MESSAGE_DIALOG
-
 		private:
+#endif
+			Gtk::Button cancel{"_Cancel",true};
+
 			void setup() {
 				gtk_window_set_transient_for(
 					GTK_WINDOW(gobj()),
@@ -101,10 +88,22 @@
 				);
 
 				set_modal(true);
-				set_decorated(false);
+
+			}
+
+		public:
 
 #ifdef USE_MESSAGE_DIALOG
-				// Using GTK::Dialog
+			Dialog() : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
+
+				setup();
+
+				add_action_widget(cancel,-1);
+
+				cancel.signal_clicked().connect([&]{
+					close();
+					response(-1);
+				});
 				set_message(
 					Config::Value<string>{
 						"messages",
@@ -123,10 +122,13 @@
 					true
 				);
 
+			}
 #else
-				// Using Gtk::Window
+		public:
+			Dialog() {
+				setup();
 
-				Gtk::Box view{Gtk::Orientation::VERTICAL};
+#				Gtk::Box view{Gtk::Orientation::VERTICAL};
 				view.set_hexpand(true);
 				view.set_vexpand(true);
 
@@ -191,9 +193,8 @@
 				}
 
 				set_child(view);
-
-#endif // USE_MESSAGE_DIALOG
 			}
+#endif // USE_MESSAGE_DIALOG
 
 		};
 
@@ -204,7 +205,7 @@
 			Dialog *dialog = new Dialog();
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([&busy](int){
+			dialog->signal_response().connect([&](int){
 				busy = false;
 			});
 #else
