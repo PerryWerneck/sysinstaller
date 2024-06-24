@@ -202,6 +202,22 @@
 				return *this;
 			}
 
+			Dialog::Progress & show() override {
+				Glib::signal_idle().connect([this](){
+					set_visible(true);
+					return 0;
+				});
+				return *this;
+			}
+
+			Dialog::Progress & hide() override {
+				Glib::signal_idle().connect([this](){
+					set_visible(false);
+					return 0;
+				});
+				return *this;
+			}
+
 			Dialog::Progress & operator = (const double fraction) override {
 				values.fraction = fraction;
 				values.changed = true;

@@ -22,6 +22,9 @@
   */
 
  #pragma once
+ #include <udjat/defs.h>
+ #include <udjat/ui/progress.h>
+
  namespace Reinstall {
 
 	/// @brief Abstract disk device.
@@ -37,16 +40,17 @@
 		/// @brief Open device
 		/// @return 0 of ok, error code if not.
 		int open(const char *device_name);
-		void close();
 
 	public:
 		virtual ~Writer();
+
+		void close();
 
 		/// @brief Get writer instance.
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open() = 0;
+		virtual void open(Udjat::Dialog::Progress &progress) = 0;
 
 		bool allocate(unsigned long long length);
 
@@ -59,6 +63,18 @@
 		/// @param offset Offset of current block.
 		/// @param length Block length.
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
+
+		/// @brief Write iso image to device.
+		void write(Udjat::Dialog::Progress &progress,const char *isoname);
+
+	};
+
+	class UDJAT_API GtkWriter : public Writer {
+	public:
+		GtkWriter() : Writer() {
+		}
+
+		void open(Udjat::Dialog::Progress &progress) override;
 
 	};
 

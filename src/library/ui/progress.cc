@@ -103,4 +103,12 @@
 		return *this;
 	}
 
+	Dialog::Progress & Dialog::Progress::show() {
+		return *this;
+	}
+
+	Dialog::Progress & Dialog::Progress::hide() {
+		return *this;
+	}
+
  }

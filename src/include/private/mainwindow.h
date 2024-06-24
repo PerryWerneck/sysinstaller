@@ -32,10 +32,11 @@
 
  #include <reinstall/group.h>
  #include <reinstall/action.h>
+ #include <reinstall/tools/writer.h>
 
  #include <list>
 
- class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Reinstall::Group::Controller {
+ class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Reinstall::Group::Controller, private Reinstall::GtkWriter {
  private:
 	struct {
 		SideBar sidebar;

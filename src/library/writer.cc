@@ -23,41 +23,13 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <reinstall/writer.h>
+ #include <reinstall/tools/writer.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/configuration.h>
  #include <stdexcept>
 
- #include <sys/ioctl.h>
- #include <sys/stat.h>
- #include <linux/fs.h>
- #include <sys/file.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <cstring>
-
- /*
-
-	BLKGETSIZE
-	Retrieve the size of the current device, expressed as the number of sectors. The value of arg passed by the system call is a pointer to a long value and should be used to copy the size to a user-space variable. This ioctl command is used, for instance, by mkfs to know the size of the filesystem being created.
-
-	BLKFLSBUF
-	Literally, ``flush buffers.'' The implementation of this command is the same for every device and is shown later with the sample code for the whole ioctl method.
-
-	BLKRAGET
-	Used to get the current read-ahead value for the device. The current value should be written to user space as a long item using the pointer passed to ioctl in arg.
-
-	BLKRASET
-	Set the read-ahead value. The user process passes the new value in arg.
-
-	BLKRRPART
-	Reread the partition table. This command is meaningful only for partitionable devices, introduced later in Section 12.7.
-
-	BLKROSET , BLKROGET
-	These commands are used to change and check the read-only flag for the device. They are implemented by the macro RO_IOCTLS(kdev_t dev, unsigned long where) because the code is device-independent. The macro is defined in blk.h.
-
- */
-
+ #include <gtkmm.h>
 
  using namespace Udjat;
  using namespace std;
@@ -67,9 +39,17 @@
 	const char * Writer::devname = nullptr;
 	Writer * Writer::instance = nullptr;
 
+	Writer & Writer::getInstance() {
+		if(instance) {
+			return *instance;
+		}
+		throw runtime_error(_("The device writer is not available"));
+	}
+
+
 	Writer::Writer() {
 		if(instance) {
-			throw logic_error("Writer is already available");
+			throw logic_error(_("Writer is already available"));
 		}
 		instance = this;
 	}
@@ -80,120 +60,118 @@
 		}
 	}
 
-	int Writer::open(const char *device_name) {
+	void Writer::write(Udjat::Dialog::Progress &progress,const char *isoname) {
+		open(progress);
 
-		// Set device as R/W
-		{
-			int dfd = ::open(device_name,O_RDONLY);
-			struct stat st;
-			if(dfd > 0 && fstat(fd,&st) == 0 && (st.st_mode & S_IFMT) == S_IFBLK) {
-				int state = 0;
-				if(ioctl(dfd, BLKROSET, &state) == -1) {
-					Logger::String{"Error '",strerror(errno),"' setting write permissions on ",device_name}.error("writer");
-				} else {
-					Logger::String{"Got write permission on ",device_name}.trace("writer");
-				}
-			}
-			::close(dfd);
-		}
 
-		// Open device ...
-		fd = ::open(device_name,O_RDWR);
-		if(fd < 0) {
-			return errno;
-		}
 
-		// ... and lock it.
-		if(::flock(fd, LOCK_EX|LOCK_NB) < 0) {
-			int err = errno;
-			Logger::String{"Error '",strerror(errno)," getting lock on ",device_name}.error("writer");
-			::close(fd);
-			return err;
-		}
-
-		Logger::String{"Got lock on ",device_name}.trace("writer");
-
-		return 0;
+		close();
 	}
 
-	void Writer::close() {
+	void GtkWriter::open(Udjat::Dialog::Progress &progress) {
 
-		if(fd > 0) {
-			::close(fd);
-			fd = -1;
-		}
+		class Dialog : public Gtk::Window {
+		private:
+			Gtk::Button cancel{_("_Cancel"),true}, apply{_("C_ontinue"),true};
 
-	}
+		public:
 
-	bool Writer::allocate(unsigned long long length) {
+			Dialog() {
 
-		struct stat st;
-		if(fd > 0 && fstat(fd,&st) == 0) {
+				gtk_window_set_transient_for(
+					GTK_WINDOW(gobj()),
+					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+				);
 
-			if((st.st_mode & S_IFMT) == S_IFBLK) {
+				set_modal(true);
+				set_deletable(false);
+				set_resizable(false);
+				set_decorated(false);
+				set_default_size(500,-1);
+				set_title(_("Select destination device"));
 
-				// Block device
+				Gtk::Box view{Gtk::Orientation::VERTICAL};
+				view.set_hexpand(true);
+				view.set_vexpand(true);
 
-				unsigned long long devlen = 0LL;
-				if(ioctl(fd,BLKGETSIZE64,&devlen) < 0) {
-					Logger::String{"Unable to get device length: ",strerror(errno)}.error("wrirter");
-					return false;
+				Gtk::Box contents{Gtk::Orientation::VERTICAL};
+				contents.set_hexpand(true);
+				contents.set_vexpand(true);
+				contents.set_spacing(6);
+				contents.set_margin(12);
+
+				{
+					Gtk::Label label;
+					label.set_markup(
+						Config::Value<string>{
+							"messages",
+							"insert-device-message",
+							_("Insert an storage device <b>NOW</b> ")
+						}.c_str()
+					);
+					label.get_style_context()->add_class("dialog-title");
+					label.set_vexpand(false);
+					contents.append(label);
 				}
 
-				if(devlen >= length) {
-					return true;
+				{
+					Gtk::Label label;
+					label.set_markup(
+						Config::Value<string>{
+							"messages",
+							"insert-device-body",
+							_("This action will <b>DELETE ALL CONTENT</b> on the device.")
+						}.c_str()
+					);
+					label.get_style_context()->add_class("dialog-subtitle");
+					label.set_vexpand(false);
+					contents.append(label);
+				}
+				view.append(contents);
+
+				{
+					Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
+					buttons.set_hexpand(true);
+					buttons.set_vexpand(false);
+					buttons.set_homogeneous(true);
+
+					cancel.set_hexpand(true);
+					apply.set_hexpand(true);
+
+					buttons.append(cancel);
+					buttons.append(apply);
+
+					view.append(buttons);
 				}
 
-				throw runtime_error(_( "Not enough space on device") );
-
-			} else if((st.st_mode & S_IFMT) == S_IFREG) {
-
-				// Regular file
-				if(fallocate(fd,0,0,length) == 0) {
-					return true;
-				}
-
-				throw runtime_error(strerror(errno));
-
+				set_child(view);
 			}
 
+		};
+
+		bool busy = true;
+
+		Glib::signal_idle().connect([this,&busy](){
+
+			Dialog *dialog = new Dialog();
+
+			dialog->signal_destroy().connect([&busy]{
+				busy = false;
+			});
+
+			dialog->present();
+
+			return 0;
+
+		});
+
+		progress.hide();
+		while(busy) {
+			sleep(1);
 		}
+		progress.show();
 
-		return false;
-	}
-
-	unsigned long long Writer::size() const {
-
-		unsigned long long devlen = 0LL;
-		struct stat st;
-
-		if(fd > 0 && fstat(fd,&st) == 0) {
-
-			if((st.st_mode & S_IFMT) == S_IFBLK) {
-				if(ioctl(fd,BLKGETSIZE64,&devlen) < 0) {
-					cerr << "disk\tUnable to get storage length: " << strerror(errno) << endl;
-				} else {
-					return devlen;
-				}
-			}
-
-		}
-
-		return devlen;
-	}
-
-	void Writer::write(unsigned long long offset, const void *contents, unsigned long long length) {
-
-		while(length > 0) {
-			auto rc = pwrite(fd,contents,length,offset);
-			if(rc < 0) {
-				throw runtime_error(strerror(errno));
-			} else if(rc > 0) {
-				length -= rc;
-				contents = (((uint8_t *) contents) + rc);
-				offset += rc;
-			}
-		}
+		throw runtime_error("Incomplete");
 
 	}
 

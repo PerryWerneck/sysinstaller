@@ -108,7 +108,7 @@
 	set_child(layout.box);
 
 	button.cancel.signal_clicked().connect([&]() {
-		close();
+		Gtk::Window::close();
 	});
 
 	button.apply.signal_clicked().connect([&]() {

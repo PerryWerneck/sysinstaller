@@ -27,6 +27,7 @@
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/writer.h>
 
  using namespace Udjat;
  using namespace std;
@@ -59,6 +60,8 @@
 			progress = _("Getting ISO image");
 			auto path = iso.save(progress);
 
+			progress = _("Writing ISO image");
+			Reinstall::Writer::getInstance().write(progress,path.c_str());
 
 			return -1;
 		}
