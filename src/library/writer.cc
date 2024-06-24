@@ -34,6 +34,8 @@
  using namespace Udjat;
  using namespace std;
 
+ #define USE_MESSAGE_DIALOG 1
+
  namespace Reinstall {
 
 	const char * Writer::devname = nullptr;
@@ -70,25 +72,59 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress) {
 
-		class Dialog : public Gtk::Window {
+#ifdef USE_MESSAGE_DIALOG
+		class Dialog : public Gtk::MessageDialog {
 		private:
-			Gtk::Button cancel{_("_Cancel"),true}, apply{_("C_ontinue"),true};
-
+			Gtk::Button cancel{"_Cancel",true};
 		public:
-
+			Dialog() : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
+				add_action_widget(cancel,-1);
+				cancel.signal_clicked().connect([&]{
+					close();
+					response(-1);
+				});
+				setup();
+			}
+#else
+		class Dialog : public Gtk::Window {
+		public:
 			Dialog() {
+				setup()
+			}
+#endif // USE_MESSAGE_DIALOG
 
+		private:
+			void setup() {
 				gtk_window_set_transient_for(
 					GTK_WINDOW(gobj()),
 					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
 				);
 
 				set_modal(true);
-				set_deletable(false);
-				set_resizable(false);
 				set_decorated(false);
-				set_default_size(500,-1);
-				set_title(_("Select destination device"));
+
+#ifdef USE_MESSAGE_DIALOG
+				// Using GTK::Dialog
+				set_message(
+					Config::Value<string>{
+						"messages",
+						"insert-device-message",
+						_("Insert an storage device <b>NOW</b> ")
+					},
+					true
+				);
+
+				set_secondary_text(
+					Config::Value<string>{
+						"messages",
+						"insert-device-body",
+						_("This action will <b>DELETE ALL CONTENT</b> on the device.")
+					},
+					true
+				);
+
+#else
+				// Using Gtk::Window
 
 				Gtk::Box view{Gtk::Orientation::VERTICAL};
 				view.set_hexpand(true);
@@ -130,21 +166,33 @@
 				view.append(contents);
 
 				{
+					Gtk::Box action_box{Gtk::Orientation::HORIZONTAL};
+					action_box.get_style_context()->add_class("dialog-action-box");
+
 					Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
+					buttons.get_style_context()->add_class("dialog-action-area");
 					buttons.set_hexpand(true);
 					buttons.set_vexpand(false);
 					buttons.set_homogeneous(true);
 
 					cancel.set_hexpand(true);
+					cancel.get_style_context()->add_class("text-button");
+					cancel.set_use_underline(true);
+
 					apply.set_hexpand(true);
+					apply.get_style_context()->add_class("text-button");
+					apply.set_use_underline(true);
 
 					buttons.append(cancel);
 					buttons.append(apply);
 
-					view.append(buttons);
+					action_box.append(buttons);
+					view.append(action_box);
 				}
 
 				set_child(view);
+
+#endif // USE_MESSAGE_DIALOG
 			}
 
 		};
@@ -155,10 +203,13 @@
 
 			Dialog *dialog = new Dialog();
 
-			dialog->signal_destroy().connect([&busy]{
+#ifdef USE_MESSAGE_DIALOG
+			dialog->signal_response().connect([&busy](int){
 				busy = false;
 			});
-
+#else
+			#error TODO
+#endif
 			dialog->present();
 
 			return 0;

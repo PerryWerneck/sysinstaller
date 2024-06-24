@@ -69,7 +69,6 @@
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
 		<Unit filename="src/include/reinstall/tools/writer.h" />
-		<Unit filename="src/include/reinstall/writer.h" />
 		<Unit filename="src/include/udjat/ui/dialog.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />

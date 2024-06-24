@@ -97,7 +97,6 @@
 			try {
 
 				activate(progress);
-				sleep(60);
 				return 0;
 
 			} catch(const std::exception &e) {
