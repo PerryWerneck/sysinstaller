@@ -80,7 +80,9 @@
 		<Unit filename="src/library/datasource.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/gtkremovabledevicedialog.cc" />
+		<Unit filename="src/library/os/linux/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/os/linux/writer.cc" />
+		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/repository.cc" />
 		<Unit filename="src/library/slpclient.cc" />
 		<Unit filename="src/library/ui/dialog.cc" />

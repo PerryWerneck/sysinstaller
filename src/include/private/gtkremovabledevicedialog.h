@@ -72,10 +72,11 @@
 	/// @brief Cancel button.
 	Gtk::Button cancel{"_Cancel",true};
 
-	void setup();
+	void setup(bool allow_output_to_file);
+	void load_devices();
 
  public:
-	GtkRemovableDeviceDialog();
+	GtkRemovableDeviceDialog(bool allow_output_to_file = true);
 
  };
 

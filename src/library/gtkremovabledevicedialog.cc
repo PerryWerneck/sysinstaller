@@ -22,6 +22,10 @@
   */
 
  // https://fossies.org/linux/gtkmm/demos/gtk-demo/example_dropdown.cc
+ // http://storaged.org/doc/udisks2-api/latest/ref-dbus.html
+ // https://stackoverflow.com/questions/63537158/how-to-list-all-the-removable-devices-with-dbus-and-udisks2
+ // https://github.com/GNOME/glibmm/blob/master/examples/dbus/client_bus_listnames.cc
+ // http://transit.iut2.upmf-grenoble.fr/doc/glibmm-2.4/reference/html/classGio_1_1DBus_1_1Proxy.html
 
  #include <config.h>
  #include <udjat/defs.h>
@@ -37,9 +41,10 @@
 
 #ifdef USE_MESSAGE_DIALOG
 
- GtkRemovableDeviceDialog::GtkRemovableDeviceDialog() : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
+ GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(bool allow_output_to_file)
+ : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
 
-	setup();
+	setup(allow_output_to_file);
 
 	add_action_widget(cancel,-1);
 	add_action_widget(dropdown,1);
@@ -69,7 +74,7 @@
  }
 #else
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog() {
-	setup();
+	setup(allow_output_to_file);
 
 #				Gtk::Box view{Gtk::Orientation::VERTICAL};
 	view.set_hexpand(true);
@@ -140,7 +145,7 @@
 }
 #endif // USE_MESSAGE_DIALOG
 
- void GtkRemovableDeviceDialog::setup() {
+ void GtkRemovableDeviceDialog::setup(bool allow_output_to_file) {
 
 	gtk_window_set_transient_for(
 		GTK_WINDOW(gobj()),
@@ -161,8 +166,13 @@
 	dropdown.set_expression(expression);
 	dropdown.set_enable_search();
 
-	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Waiting for device")));
+	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Auto detect")));
 
+	if(allow_output_to_file) {
+		store->append(DeviceHolder::create(DeviceHolder::File,"",_("Save image to file")));
+	}
+
+	load_devices();
 #endif // USE_DROPDOWN
 
  }
