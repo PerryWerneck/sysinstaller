@@ -148,6 +148,8 @@
 	);
 
 	set_modal(true);
+	set_default_size(600,-1);
+
 
 #ifdef USE_DROPDOWN
 	auto expression = Gtk::ClosureExpression<Glib::ustring>::create(
@@ -159,7 +161,7 @@
 	dropdown.set_expression(expression);
 	dropdown.set_enable_search();
 
-	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Auto detect")));
+	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Waiting for device")));
 
 #endif // USE_DROPDOWN
 
