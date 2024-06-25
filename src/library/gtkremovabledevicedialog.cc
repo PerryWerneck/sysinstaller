@@ -41,7 +41,7 @@
 
 #ifdef USE_MESSAGE_DIALOG
 
- GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(bool allow_output_to_file)
+ GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(const Udjat::Dialog &dialog, bool allow_output_to_file)
  : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
 
 	setup(allow_output_to_file);
@@ -53,23 +53,9 @@
 		close();
 		response(-1);
 	});
-	set_message(
-		Config::Value<string>{
-			"messages",
-			"insert-device-message",
-			_("Insert an storage device <b>NOW</b> ")
-		},
-		true
-	);
 
-	set_secondary_text(
-		Config::Value<string>{
-			"messages",
-			"insert-device-body",
-			_("This action will <b>DELETE ALL CONTENT</b> on the device.")
-		},
-		true
-	);
+	set_message(dialog.message(_("Insert an storage device <b>NOW</b>")),true);
+	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
 
  }
 #else

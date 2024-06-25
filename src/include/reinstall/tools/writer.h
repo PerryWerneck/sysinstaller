@@ -50,7 +50,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(Udjat::Dialog::Progress &progress) = 0;
+		virtual void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) = 0;
 
 		bool allocate(unsigned long long length);
 
@@ -65,7 +65,7 @@
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 		/// @brief Write iso image to device.
-		void write(Udjat::Dialog::Progress &progress,const char *isoname);
+		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, const char *isoname);
 
 	};
 
@@ -74,7 +74,7 @@
 		GtkWriter() : Writer() {
 		}
 
-		void open(Udjat::Dialog::Progress &progress) override;
+		void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) override;
 
 	};
 

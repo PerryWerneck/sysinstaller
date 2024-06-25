@@ -34,7 +34,7 @@
 	protected:
 
 		struct {
-			const char *name = nullptr;
+			const char *name = "default";
 			const char *icon_name = nullptr;
 			const char *message = nullptr;
 			const char *details = nullptr;
@@ -50,17 +50,13 @@
 			args.message = message;
 		}
 
-		inline const char * message() const noexcept {
-			return args.message;
-		}
+		std::string message(const char *def = "") const;
 
 		inline void details(const char *details) noexcept {
 			args.details = details;
 		}
 
-		inline const char * details() const noexcept {
-			return args.details;
-		}
+		std::string details(const char *def = "") const;
 
 		inline operator bool() const noexcept {
 			return (bool) args.message && *args.message;

@@ -28,6 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
+ #include <udjat/ui/dialog.h>
 
  using namespace Udjat;
  using namespace std;
@@ -42,14 +43,16 @@
 	class Action : public Reinstall::Action {
 	private:
 		Reinstall::DataSource iso;
+		Udjat::Dialog output;
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node}, iso{node} {
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node}, iso{node}, output{node,"select-device"} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
 			}
+
 		}
 
 		~Action() {
@@ -61,7 +64,7 @@
 			auto path = iso.save(progress);
 
 			progress = _("Writing ISO image");
-			Reinstall::Writer::getInstance().write(progress,path.c_str());
+			Reinstall::Writer::getInstance().write(progress,output,path.c_str());
 
 			return -1;
 		}

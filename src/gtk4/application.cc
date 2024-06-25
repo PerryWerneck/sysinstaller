@@ -251,8 +251,8 @@
 		dialog->set_modal();
 		dialog->set_message(settings.message());
 
-		const char *details = settings.details();
-		if(details && *details) {
+		auto details = settings.details();
+		if(!details.empty()) {
 			dialog->set_detail(details);
 		}
 

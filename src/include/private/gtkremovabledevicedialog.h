@@ -25,6 +25,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <gtkmm.h>
+ #include <udjat/ui/dialog.h>
 
  #define USE_MESSAGE_DIALOG 1
  #define USE_DROPDOWN 1
@@ -76,7 +77,7 @@
 	void load_devices();
 
  public:
-	GtkRemovableDeviceDialog(bool allow_output_to_file = true);
+	GtkRemovableDeviceDialog(const Udjat::Dialog &dialog, bool allow_output_to_file = true);
 
  };
 

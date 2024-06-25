@@ -61,21 +61,21 @@
 		}
 	}
 
-	void Writer::write(Udjat::Dialog::Progress &progress,const char *isoname) {
-		open(progress);
+	void Writer::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog, const char *isoname) {
+		open(progress,dialog);
 
 
 
 		close();
 	}
 
-	void GtkWriter::open(Udjat::Dialog::Progress &progress) {
+	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
 
 		bool busy = true;
 
-		Glib::signal_idle().connect([this,&busy](){
+		Glib::signal_idle().connect([this,&busy,&settings](){
 
-			auto *dialog = new GtkRemovableDeviceDialog();
+			auto *dialog = new GtkRemovableDeviceDialog(settings);
 
 #ifdef USE_MESSAGE_DIALOG
 			dialog->signal_response().connect([&](int){

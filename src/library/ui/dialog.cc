@@ -29,6 +29,7 @@
  #include <udjat/tools/quark.h>
  #include <udjat/tools/intl.h>
  #include <stdexcept>
+ #include <udjat/tools/configuration.h>
 
  using namespace std;
 
@@ -48,6 +49,20 @@
 	}
 
 	Dialog::Dialog() {
+	}
+
+	std::string Dialog::message(const char *def) const {
+		if(args.message && *args.message) {
+			return args.message;
+		}
+		return Config::Value<string>{ (string{"dialog-"} + args.name).c_str(), "message", def};
+	}
+
+	std::string Dialog::details(const char *def) const {
+		if(args.details && *args.details) {
+			return args.details;
+		}
+		return Config::Value<string>{ (string{"dialog-"} + args.name).c_str(), "details", def};
 	}
 
 	static void get_attribute_if_not_exists(const XML::Node &node, const char *name, const char **value) {
