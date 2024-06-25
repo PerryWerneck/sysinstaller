@@ -35,6 +35,7 @@
 
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/logger.h>
 
  using namespace Udjat;
  using namespace std;
@@ -153,6 +154,12 @@
 	dropdown.set_enable_search();
 
 	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Auto detect")));
+
+	dropdown.property_selected().signal_changed().connect([&](){
+
+		debug("Device selection has changed");
+
+	});
 
 	if(allow_output_to_file) {
 		store->append(DeviceHolder::create(DeviceHolder::File,"",_("Save image to file")));
