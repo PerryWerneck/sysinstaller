@@ -30,12 +30,10 @@
  #include <stdexcept>
 
  #include <gtkmm.h>
+ #include <private/gtkremovabledevicedialog.h>
 
  using namespace Udjat;
  using namespace std;
-
- #define USE_MESSAGE_DIALOG 1
- #define USE_DROPDOWN 1
 
  namespace Reinstall {
 
@@ -73,185 +71,11 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress) {
 
-		// https://fossies.org/linux/gtkmm/demos/gtk-demo/example_dropdown.cc
-
-		class DeviceHolder : public Glib::Object {
-		public:
-
-			enum Type : uint8_t {
-				Undefined,
-				AutoDetect,	///<< @brief Waiting for device.
-				File,		///<< @brief Select file name.
-				Device		///<< @brief Standard device entry.
-			} type = Undefined;
-
-			Glib::ustring	description;
-			std::string		device_name;
-
-			Glib::RefPtr<DeviceHolder> create(Type type, const char *name, const char *descr) {
-				return Glib::make_refptr_for_instance<DeviceHolder>(new DeviceHolder(type, name, descr));
-			}
-
-		private:
-
-			DeviceHolder(Type t, const char *name, const char *descr)
-				: type{t}, description{descr}, device_name{name} {
-			}
-
-		};
-
-#ifdef USE_MESSAGE_DIALOG
-		class Dialog : public Gtk::MessageDialog {
-		private:
-#else
-		class Dialog : public Gtk::Window {
-		private:
-#endif
-			/// @brief Cancel button.
-			Gtk::Button cancel{"_Cancel",true};
-
-#ifdef USE_DROPDOWN
-			/// @brief Dropdown contents.
-			Glib::RefPtr<Gio::ListStore<DeviceHolder>> store = Gio::ListStore<DeviceHolder>::create();
-			Gtk::DropDown dropdown{store};
-#endif // USE_DROPDOWN
-
-			void setup() {
-
-				gtk_window_set_transient_for(
-					GTK_WINDOW(gobj()),
-					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
-				);
-
-				set_modal(true);
-
-#ifdef USE_DROPDOWN
-				auto expression = Gtk::ClosureExpression<Glib::ustring>::create(
-					[](const Glib::RefPtr<Glib::ObjectBase>& item)->Glib::ustring
-					{
-						return std::dynamic_pointer_cast<DeviceHolder>(item)->description;
-					});
-
-				dropdown.set_expression(expression);
-				dropdown.set_enable_search();
-#endif // USE_DROPDOWN
-
-			}
-
-
-		public:
-
-#ifdef USE_MESSAGE_DIALOG
-			Dialog() : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
-
-				setup();
-
-				add_action_widget(cancel,-1);
-				add_action_widget(dropdown,1);
-
-				cancel.signal_clicked().connect([&]{
-					close();
-					response(-1);
-				});
-				set_message(
-					Config::Value<string>{
-						"messages",
-						"insert-device-message",
-						_("Insert an storage device <b>NOW</b> ")
-					},
-					true
-				);
-
-				set_secondary_text(
-					Config::Value<string>{
-						"messages",
-						"insert-device-body",
-						_("This action will <b>DELETE ALL CONTENT</b> on the device.")
-					},
-					true
-				);
-
-			}
-#else
-		public:
-			Dialog() {
-				setup();
-
-#				Gtk::Box view{Gtk::Orientation::VERTICAL};
-				view.set_hexpand(true);
-				view.set_vexpand(true);
-
-				Gtk::Box contents{Gtk::Orientation::VERTICAL};
-				contents.set_hexpand(true);
-				contents.set_vexpand(true);
-				contents.set_spacing(6);
-				contents.set_margin(12);
-
-				{
-					Gtk::Label label;
-					label.set_markup(
-						Config::Value<string>{
-							"messages",
-							"insert-device-message",
-							_("Insert an storage device <b>NOW</b> ")
-						}.c_str()
-					);
-					label.get_style_context()->add_class("dialog-title");
-					label.set_vexpand(false);
-					contents.append(label);
-				}
-
-				{
-					Gtk::Label label;
-					label.set_markup(
-						Config::Value<string>{
-							"messages",
-							"insert-device-body",
-							_("This action will <b>DELETE ALL CONTENT</b> on the device.")
-						}.c_str()
-					);
-					label.get_style_context()->add_class("dialog-subtitle");
-					label.set_vexpand(false);
-					contents.append(label);
-				}
-				view.append(contents);
-
-				{
-					Gtk::Box action_box{Gtk::Orientation::HORIZONTAL};
-					action_box.get_style_context()->add_class("dialog-action-box");
-
-					Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
-					buttons.get_style_context()->add_class("dialog-action-area");
-					buttons.set_hexpand(true);
-					buttons.set_vexpand(false);
-					buttons.set_homogeneous(true);
-
-					cancel.set_hexpand(true);
-					cancel.get_style_context()->add_class("text-button");
-					cancel.set_use_underline(true);
-
-					apply.set_hexpand(true);
-					apply.get_style_context()->add_class("text-button");
-					apply.set_use_underline(true);
-
-					buttons.append(cancel);
-					buttons.append(apply);
-
-					action_box.append(buttons);
-					view.append(action_box);
-				}
-
-				set_child(view);
-			}
-#endif // USE_MESSAGE_DIALOG
-
-		};
-
 		bool busy = true;
 
 		Glib::signal_idle().connect([this,&busy](){
 
-			Dialog *dialog = new Dialog();
+			auto *dialog = new GtkRemovableDeviceDialog();
 
 #ifdef USE_MESSAGE_DIALOG
 			dialog->signal_response().connect([&](int){
