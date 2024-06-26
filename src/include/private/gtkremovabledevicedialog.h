@@ -76,6 +76,9 @@
 	void setup(bool allow_output_to_file);
 	void load_devices();
 
+	/// @brief Select filename for output.
+	void select_file();
+
  public:
 	GtkRemovableDeviceDialog(const Udjat::Dialog &dialog, bool allow_output_to_file = true);
 

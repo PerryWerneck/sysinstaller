@@ -71,6 +71,7 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
 
+		// TODO: Use sem_wait()
 		bool busy = true;
 
 		Glib::signal_idle().connect([this,&busy,&settings](){

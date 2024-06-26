@@ -63,13 +63,13 @@
 	font-style: italic;
 }
 
-.sidebar {
+.toplevel-sidebar {
 	min-width: 150px;
 	padding: 6px;
 	background-color: #808080;
 }
 
-.sidebar-logo {
+.toplevel-sidebar-logo {
 /*	opacity: 1.0; */
 }
 

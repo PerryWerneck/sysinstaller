@@ -38,7 +38,7 @@
 
  SideBar::SideBar() : Gtk::Box{Gtk::Orientation::VERTICAL}{
 
-	get_style_context()->add_class("sidebar");
+	get_style_context()->add_class("toplevel-sidebar");
 
 	set_hexpand(false);
 	set_vexpand(true);
@@ -56,7 +56,7 @@
 
 		logo.set_pixel_size(128);
 		logo.set(Gdk::Pixbuf::create_from_file(path.c_str()));
-		logo.get_style_context()->add_class("sidebar-logo");
+		logo.get_style_context()->add_class("toplevel-sidebar-logo");
 		append(logo);
 
 	} catch(const std::exception &e) {

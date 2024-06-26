@@ -32,6 +32,7 @@
 
  #include <private/gtkremovabledevicedialog.h>
  #include <gtkmm.h>
+ #include <gtkmm/filedialog.h>
 
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
@@ -163,6 +164,10 @@
 
 			debug("Selected device='",device->description.c_str(),"'");
 
+			if(device->type == DeviceHolder::File) {
+				select_file();
+			}
+
 		} else {
 
 			g_warning("Unexpected item in DropDown widget");
@@ -190,5 +195,21 @@ auto item = model->get_object(position);
 
 	load_devices();
 #endif // USE_DROPDOWN
+
+ }
+
+ void GtkRemovableDeviceDialog::select_file() {
+
+	debug("Selecting filename");
+
+	auto dialog = Gtk::FileDialog::create();
+
+	dialog->set_title(_("Select output file"));
+	dialog->set_modal();
+
+	dialog->save(*this,[](Glib::RefPtr<Gio::AsyncResult> result){
+
+
+	});
 
  }
