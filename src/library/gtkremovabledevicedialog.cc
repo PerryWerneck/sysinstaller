@@ -159,6 +159,29 @@
 
 		debug("Device selection has changed");
 
+		if (auto device = std::dynamic_pointer_cast<DeviceHolder>(dropdown.get_selected_item())) {
+
+			debug("Selected device='",device->description.c_str(),"'");
+
+		} else {
+
+			g_warning("Unexpected item in DropDown widget");
+
+		}
+
+/*
+		if (auto model = std::dynamic_pointer_cast<Gio::ListModel>(dropdown.get_model())) {
+
+
+		} else {
+			g_warning("Unexpected modelo in DropDown widget");
+		}
+
+auto item = model->get_object(position);
+    if (auto app_info = std::dynamic_pointer_cast<Gio::AppInfo>(item))
+      app_info->launch(std::vector<Glib::RefPtr<Gio::File>>());
+*/
+
 	});
 
 	if(allow_output_to_file) {
