@@ -72,6 +72,7 @@
 
 	/// @brief Cancel button.
 	Gtk::Button cancel{"_Cancel",true};
+	Gtk::Button apply{"C_ontinue",true};
 
 	void setup(bool allow_output_to_file);
 	void load_devices();

@@ -49,7 +49,9 @@
 	setup(allow_output_to_file);
 
 	add_action_widget(cancel,-1);
-	add_action_widget(dropdown,1);
+	add_action_widget(apply,0);
+
+	apply.set_sensitive(false);
 
 	cancel.signal_clicked().connect([&]{
 		close();
@@ -58,6 +60,11 @@
 
 	set_message(dialog.message(_("Insert an storage device <b>NOW</b>")),true);
 	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
+
+#ifdef USE_DROPDOWN
+	dropdown.get_style_context()->add_class("device-selector");
+	get_message_area()->append(dropdown);
+#endif // USE_DROPDOWN
 
  }
 #else
@@ -174,18 +181,6 @@
 
 		}
 
-/*
-		if (auto model = std::dynamic_pointer_cast<Gio::ListModel>(dropdown.get_model())) {
-
-
-		} else {
-			g_warning("Unexpected modelo in DropDown widget");
-		}
-
-auto item = model->get_object(position);
-    if (auto app_info = std::dynamic_pointer_cast<Gio::AppInfo>(item))
-      app_info->launch(std::vector<Glib::RefPtr<Gio::File>>());
-*/
 
 	});
 
@@ -207,7 +202,7 @@ auto item = model->get_object(position);
 	dialog->set_title(_("Select output file"));
 	dialog->set_modal();
 
-	dialog->save(*this,[](Glib::RefPtr<Gio::AsyncResult> result){
+	dialog->save(*this,[&](Glib::RefPtr<Gio::AsyncResult> result){
 
 
 	});
