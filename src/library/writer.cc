@@ -26,8 +26,10 @@
  #include <reinstall/tools/writer.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/configuration.h>
  #include <stdexcept>
+ #include <semaphore.h>
 
  #include <gtkmm.h>
  #include <private/gtkremovabledevicedialog.h>
@@ -71,32 +73,32 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
 
-		// TODO: Use sem_wait()
-		bool busy = true;
+		sem_t semaphore;
+		sem_init(&semaphore,0,0);
 
-		Glib::signal_idle().connect([this,&busy,&settings](){
+		progress.hide();
+		progress.file_sizes(0,0);
+
+		Glib::signal_idle().connect([this,&semaphore,&settings](){
 
 			auto *dialog = new GtkRemovableDeviceDialog(settings);
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([&](int response){
-				// https://docs.gtk.org/gtk4/enum.ResponseType.html
-				debug("Got response ",response);
-				busy = false;
+			dialog->signal_response().connect([dialog,&semaphore](int response){
+				debug("Response=",response);
+				sem_post(&semaphore);
+				delete dialog;
 			});
-#else
-			#error TODO
-#endif
+#endif // USE_MESSAGE_DIALOG
+
+
 			dialog->present();
 
 			return 0;
 
 		});
 
-		progress.hide();
-		while(busy) {
-			sleep(1);
-		}
+		sem_wait(&semaphore);
 		progress.show();
 
 		throw runtime_error("Incomplete");
