@@ -64,7 +64,7 @@
 
  namespace Reinstall {
 
-	int Writer::open(const char *device_name) {
+	void Writer::open(const char *device_name) {
 
 		// Set device as R/W
 		{
@@ -73,7 +73,7 @@
 			if(dfd > 0 && fstat(fd,&st) == 0 && (st.st_mode & S_IFMT) == S_IFBLK) {
 				int state = 0;
 				if(ioctl(dfd, BLKROSET, &state) == -1) {
-					Logger::String{"Error '",strerror(errno),"' setting write permissions on ",device_name}.error("writer");
+					Logger::String{"Error '",strerror(errno),"' setting write permissions on ",device_name}.warning("writer");
 				} else {
 					Logger::String{"Got write permission on ",device_name}.trace("writer");
 				}
@@ -82,22 +82,35 @@
 		}
 
 		// Open device ...
-		fd = ::open(device_name,O_RDWR);
+		int options = O_RDWR;
+
+#ifndef _WIN32
+		{
+			if(strncmp(device_name,"/dev/",5)) {
+				debug(device_name," is not a device");
+				options |= O_CREAT|O_TRUNC;
+			}
+		}
+#endif // _WIN32
+
+		fd = ::open(device_name,options,0644);
 		if(fd < 0) {
-			return errno;
+			int err = errno;
+			Logger::Message{"Error '{}' opening device {}",strerror(err),device_name}.error("writer");
+			throw std::system_error(err,std::system_category(),_("Unable to access output device"));
 		}
 
-		// ... and lock it.
+		// ... lock it ...
 		if(::flock(fd, LOCK_EX|LOCK_NB) < 0) {
 			int err = errno;
-			Logger::String{"Error '",strerror(errno)," getting lock on ",device_name}.error("writer");
-			::close(fd);
-			return err;
+			Logger::Message{"Error '{}' getting lock on {}",strerror(err),device_name}.error("writer");
+			throw std::system_error(err,std::system_category(),_("Unable to lock output device"));
 		}
 
 		Logger::String{"Got lock on ",device_name}.trace("writer");
 
-		return 0;
+		// ... and check if it can hold the image.
+
 	}
 
 	void Writer::close() {
@@ -109,7 +122,11 @@
 
 	}
 
-	bool Writer::allocate(unsigned long long length) {
+	void Writer::allocate() {
+
+		if(!length) {
+			return;
+		}
 
 		struct stat st;
 		if(fd > 0 && fstat(fd,&st) == 0) {
@@ -120,30 +137,25 @@
 
 				unsigned long long devlen = 0LL;
 				if(ioctl(fd,BLKGETSIZE64,&devlen) < 0) {
-					Logger::String{"Unable to get device length: ",strerror(errno)}.error("writer");
-					return false;
+					throw system_error(errno,system_category(),_("Cant get device length"));
 				}
 
-				if(devlen >= length) {
-					return true;
+				if(devlen < length) {
+					throw runtime_error(_( "Not enough space on device"));
 				}
 
-				throw runtime_error(_( "Not enough space on device") );
 
 			} else if((st.st_mode & S_IFMT) == S_IFREG) {
 
 				// Regular file
-				if(fallocate(fd,0,0,length) == 0) {
-					return true;
+				if(fallocate(fd,0,0,length) != 0) {
+					throw system_error(errno,system_category(),_("Cant allocate space for output file"));
 				}
-
-				throw runtime_error(strerror(errno));
 
 			}
 
 		}
 
-		return false;
 	}
 
 	unsigned long long Writer::size() const {

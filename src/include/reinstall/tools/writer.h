@@ -24,25 +24,42 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/ui/progress.h>
+ #include <string>
 
  namespace Reinstall {
 
 	/// @brief Abstract disk device.
 	class UDJAT_API Writer {
 	private:
-		static const char *devname;
+
+		/// @brief Device set from command-line option.
+		static std::string selected;
 		static Writer *instance;
+
 		int fd = -1;
+		unsigned long long length = 0LL;
+
+		/// @brief Device description.
+		// std::string devdescr;
+
+		/// @brief Device name.
+		//std::string devname;
 
 	protected:
 		Writer();
 
 		/// @brief Open device
-		/// @return 0 of ok, error code if not.
-		int open(const char *device_name);
+		void open(const char *device_name);
+
+		/// @brief Allocate required space, exception if not enough.
+		void allocate();
 
 	public:
 		virtual ~Writer();
+
+		inline operator bool() const noexcept {
+			return (bool) (fd != -1);
+		}
 
 		void close();
 
@@ -52,12 +69,15 @@
 		/// @brief Select/detect and open device.
 		virtual void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) = 0;
 
-		bool allocate(unsigned long long length);
-
 		/// @brief Get device length.
 		/// @return The device length.
 		/// @retval 0 The device length is undefined.
 		unsigned long long size() const;
+
+		/// @brief Set required device length.
+		inline void size(unsigned long long length) {
+			this->length = length;
+		}
 
 		/// @brief Write data to device.
 		/// @param offset Offset of current block.

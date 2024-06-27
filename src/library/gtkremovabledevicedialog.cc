@@ -43,20 +43,15 @@
 
 #ifdef USE_MESSAGE_DIALOG
 
- GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(const Udjat::Dialog &dialog, bool allow_output_to_file)
- : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE} {
+ GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Udjat::Dialog &dialog, bool allow_output_to_file)
+ : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, writer{w} {
 
 	setup(allow_output_to_file);
 
-	add_action_widget(cancel,-1);
+	add_action_widget(cancel,ECANCELED);
 	add_action_widget(apply,0);
 
 	apply.set_sensitive(false);
-
-	cancel.signal_clicked().connect([&]{
-		close();
-		response(-1);
-	});
 
 	set_message(dialog.message(_("Insert an storage device <b>NOW</b>")),true);
 	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
@@ -150,7 +145,6 @@
 	set_modal(true);
 	set_default_size(600,-1);
 
-
 #ifdef USE_DROPDOWN
 	auto expression = Gtk::ClosureExpression<Glib::ustring>::create(
 		[](const Glib::RefPtr<Glib::ObjectBase>& item)->Glib::ustring
@@ -237,7 +231,29 @@
 
 		}
 
-
 	});
 
+
+ }
+
+ const char * GtkRemovableDeviceDialog::description() const {
+
+#ifdef USE_DROPDOWN
+	if (auto device = std::dynamic_pointer_cast<const DeviceHolder>(dropdown.get_selected_item())) {
+		return device->description.c_str();
+	}
+#endif // USE_DROPDOWN
+
+	return "";
+ }
+
+ const char * GtkRemovableDeviceDialog::device() const {
+
+#ifdef USE_DROPDOWN
+	if (auto device = std::dynamic_pointer_cast<const DeviceHolder>(dropdown.get_selected_item())) {
+		return device->device_name.c_str();
+	}
+#endif // USE_DROPDOWN
+
+	return "";
  }

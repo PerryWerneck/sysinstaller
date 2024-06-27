@@ -39,7 +39,7 @@
 
  namespace Reinstall {
 
-	const char * Writer::devname = nullptr;
+	std::string Writer::selected;
 	Writer * Writer::instance = nullptr;
 
 	Writer & Writer::getInstance() {
@@ -73,32 +73,67 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
 
-		sem_t semaphore;
-		sem_init(&semaphore,0,0);
+		struct {
+			string devdescr;
+			string devname;
+			int response = -1;
+			sem_t semaphore;
+		} info;
+
+		sem_init(&info.semaphore,0,0);
 
 		progress.hide();
 		progress.file_sizes(0,0);
 
-		Glib::signal_idle().connect([this,&semaphore,&settings](){
+		while(!*this) {
 
-			auto *dialog = new GtkRemovableDeviceDialog(settings);
+			Glib::signal_idle().connect([this,&info,&settings](){
+
+				auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([dialog,&semaphore](int response){
-				debug("Response=",response);
-				sem_post(&semaphore);
-				delete dialog;
-			});
+				dialog->signal_response().connect([dialog,&info](int rsp){
+					info.response = rsp;
+					info.devdescr = dialog->description();
+					info.devname = dialog->device();
+					debug("Response=",info.response," (",info.devdescr,")");
+					sem_post(&info.semaphore);
+					delete dialog;
+				});
 #endif // USE_MESSAGE_DIALOG
 
+				dialog->present();
 
-			dialog->present();
+				return 0;
 
-			return 0;
+			});
 
-		});
+			sem_wait(&info.semaphore);
 
-		sem_wait(&semaphore);
+			if(info.response) {
+				Logger::String{"Device selection dialog exits with rc=",info.response," (",strerror(info.response),")"}.warning("writer");
+				close();
+				throw runtime_error(strerror(info.response));
+			}
+
+			if(!*this) {
+
+				try {
+
+					Writer::open(info.devname.c_str());
+
+				} catch(const std::exception &e) {
+
+					Logger::String{e.what()}.error("writer");
+					close();
+
+				}
+
+			}
+
+		}
+
+		progress.url(info.devdescr.c_str());
 		progress.show();
 
 		throw runtime_error("Incomplete");

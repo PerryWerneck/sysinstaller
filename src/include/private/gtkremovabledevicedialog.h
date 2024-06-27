@@ -26,6 +26,7 @@
  #include <udjat/defs.h>
  #include <gtkmm.h>
  #include <udjat/ui/dialog.h>
+ #include <reinstall/tools/writer.h>
 
  #define USE_MESSAGE_DIALOG 1
  #define USE_DROPDOWN 1
@@ -81,8 +82,17 @@
 	/// @brief Select filename for output.
 	void select_file();
 
+	/// @brief The writer
+	Reinstall::Writer &writer;
+
  public:
-	GtkRemovableDeviceDialog(const Udjat::Dialog &dialog, bool allow_output_to_file = true);
+	GtkRemovableDeviceDialog(Reinstall::Writer &writer, const Udjat::Dialog &dialog, bool allow_output_to_file = true);
+
+	/// @brief Get selected device description.
+	const char *description() const;
+
+	/// @brief Get Device path
+	const char *device() const;
 
  };
 
