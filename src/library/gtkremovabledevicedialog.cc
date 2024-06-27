@@ -202,7 +202,19 @@
 	dialog->set_title(_("Select output file"));
 	dialog->set_modal();
 
-	dialog->save(*this,[&](Glib::RefPtr<Gio::AsyncResult> result){
+	dialog->save(*this,[this,dialog](Glib::RefPtr<Gio::AsyncResult> result){
+
+		try {
+
+			auto file = dialog->save_finish(result);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error("FileDialog");
+			dropdown.set_selected(0);
+
+		}
+
 
 
 	});
