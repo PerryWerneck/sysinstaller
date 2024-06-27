@@ -45,15 +45,16 @@
 		enum Type : uint8_t {
 			Undefined,
 			AutoDetect,	///<< @brief Waiting for device.
-			File,		///<< @brief Select file name.
+			FileDialog,	///<< @brief File dialog.
+			File,		///<< @brief File name.
 			Device		///<< @brief Standard device entry.
 		} type = Undefined;
 
 		Glib::ustring	description;
 		std::string		device_name;
 
-		static Glib::RefPtr<DeviceHolder> create(Type type, const char *name, const char *descr) {
-			return Glib::make_refptr_for_instance<DeviceHolder>(new DeviceHolder(type, name, descr));
+		static Glib::RefPtr<DeviceHolder> create(Type type, const char *devname, const char *descr) {
+			return Glib::make_refptr_for_instance<DeviceHolder>(new DeviceHolder(type, devname, descr));
 		}
 
 	private:

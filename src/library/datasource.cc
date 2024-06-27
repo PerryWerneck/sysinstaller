@@ -153,7 +153,8 @@
 
 			struct stat sb;
 			const char *filename = components.path.c_str();
-			if(stat(filename,&sb) != 0 || sb.st_blocks != 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+			if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+				error() << "Download error, cached file '" << filename << "' not available" << endl;
 				throw;
 			}
 

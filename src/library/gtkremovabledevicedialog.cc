@@ -171,8 +171,28 @@
 
 			debug("Selected device='",device->description.c_str(),"'");
 
-			if(device->type == DeviceHolder::File) {
+			switch(device->type) {
+			case DeviceHolder::AutoDetect:
+				apply.set_sensitive(false);
+				break;
+
+			case DeviceHolder::Undefined:
+				apply.set_sensitive(false);
+				break;
+
+			case DeviceHolder::FileDialog:
+				apply.set_sensitive(false);
 				select_file();
+				break;
+
+			case DeviceHolder::File:
+				apply.set_sensitive(true);
+				break;
+
+			case DeviceHolder::Device:
+				apply.set_sensitive(false);
+				break;
+
 			}
 
 		} else {
@@ -185,7 +205,7 @@
 	});
 
 	if(allow_output_to_file) {
-		store->append(DeviceHolder::create(DeviceHolder::File,"",_("Save image to file")));
+		store->append(DeviceHolder::create(DeviceHolder::FileDialog,"",_("Save image to file")));
 	}
 
 	load_devices();
@@ -206,7 +226,9 @@
 
 		try {
 
-			auto file = dialog->save_finish(result);
+			auto file = dialog->save_finish(result)->get_path();
+			store->append(DeviceHolder::create(DeviceHolder::File,file.c_str(),file.c_str()));
+			dropdown.set_selected((dropdown.get_model()->get_n_items()-1));
 
 		} catch(const std::exception &e) {
 
@@ -214,7 +236,6 @@
 			dropdown.set_selected(0);
 
 		}
-
 
 
 	});

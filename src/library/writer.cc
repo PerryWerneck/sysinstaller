@@ -79,7 +79,9 @@
 			auto *dialog = new GtkRemovableDeviceDialog(settings);
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([&](int){
+			dialog->signal_response().connect([&](int response){
+				// https://docs.gtk.org/gtk4/enum.ResponseType.html
+				debug("Got response ",response);
 				busy = false;
 			});
 #else
