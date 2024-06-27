@@ -110,6 +110,7 @@
 		Logger::String{"Got lock on ",device_name}.trace("writer");
 
 		// ... and check if it can hold the image.
+		allocate();
 
 	}
 
@@ -125,6 +126,7 @@
 	void Writer::allocate() {
 
 		if(!length) {
+			Logger::String{"No pre-defined size, will not check it"}.trace("writer");
 			return;
 		}
 
@@ -142,6 +144,8 @@
 
 				if(devlen < length) {
 					throw runtime_error(_( "Not enough space on device"));
+				} else {
+					Logger::String{"Device is bigger than ",String{}.set_byte(length).c_str()," bytes"}.info("writer");
 				}
 
 
@@ -150,6 +154,8 @@
 				// Regular file
 				if(fallocate(fd,0,0,length) != 0) {
 					throw system_error(errno,system_category(),_("Cant allocate space for output file"));
+				} else {
+					Logger::String{"Allocated ",String{}.set_byte(length).c_str()," bytes for output file"}.info("writer");
 				}
 
 			}

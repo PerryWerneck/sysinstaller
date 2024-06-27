@@ -31,6 +31,12 @@
  #include <stdexcept>
  #include <semaphore.h>
 
+ #include <fcntl.h>
+
+ #ifndef _WIN32
+	#include <unistd.h>
+ #endif // _WIN32
+
  #include <gtkmm.h>
  #include <private/gtkremovabledevicedialog.h>
 
@@ -64,11 +70,51 @@
 	}
 
 	void Writer::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog, const char *isoname) {
-		open(progress,dialog);
 
+		int fd = ::open(isoname,O_RDONLY);
+		if(fd < 0) {
+			throw std::system_error(errno,std::system_category(),"Cant open source file");
+		}
 
+		try {
+
+			struct stat st;
+			if(fstat(fd,&st) != 0) {
+				throw std::system_error(errno,std::system_category(),"Cant get file stats");
+			}
+
+			size(st.st_size);
+
+			open(progress,dialog);
+
+			unsigned long long offset = 0;
+			uint8_t buffer[st.st_blksize];
+			while(offset < ((unsigned long long) st.st_size)) {
+
+				ssize_t bytes = read(fd,buffer,st.st_blksize);
+				if(bytes < 0) {
+					throw std::system_error(errno,std::system_category(),"Error reading source file");
+				} else if(bytes == 0) {
+					throw runtime_error("Unexpected EOF on source file");
+				}
+
+				progress.file_sizes(offset,st.st_size);
+				Writer::write(offset,buffer,(unsigned long long) bytes);
+				offset += bytes;
+
+			}
+			progress.file_sizes(offset,st.st_size);
+
+		} catch(...) {
+
+			::close(fd);
+			close();
+
+			throw;
+		}
 
 		close();
+
 	}
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
@@ -135,8 +181,6 @@
 
 		progress.url(info.devdescr.c_str());
 		progress.show();
-
-		throw runtime_error("Incomplete");
 
 	}
 

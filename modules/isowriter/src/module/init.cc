@@ -66,7 +66,7 @@
 			progress = _("Writing ISO image");
 			Reinstall::Writer::getInstance().write(progress,output,path.c_str());
 
-			return -1;
+			return 0;
 		}
 
 	};
