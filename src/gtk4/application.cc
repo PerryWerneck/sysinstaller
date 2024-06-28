@@ -293,9 +293,56 @@
 				dialog->set_detail(details);
 			}
 
-			dialog->choose(get_active_window(),[dialog](Glib::RefPtr<Gio::AsyncResult> result){
-				auto rc = dialog->choose_finish(result);
-				debug("Selected button=",rc);
+			static const struct {
+				Dialog::Option option;
+				const char *label;
+			} buttons[] = {
+				{ Dialog::AllowReboot,			N_("_Reboot")			},
+				{ Dialog::AllowQuitApplication,	N_("_Quit application")	},
+				{ Dialog::AllowCancel,			N_("_Cancel")			},
+				{ Dialog::AllowContinue,		N_("C_ontinue")			}
+			};
+
+			std::vector<Glib::ustring> labels;
+			std::vector<int> values;
+
+			int cancel_button = -1;
+
+			for(int ix = 0; ix < (int) (sizeof(buttons)/sizeof(buttons[0])); ix++) {
+				if(settings.test(buttons[ix].option)) {
+					labels.push_back(gettext(buttons[ix].label));
+					values.push_back(ix);
+				}
+				if(buttons[ix].option == Dialog::AllowCancel) {
+					cancel_button = ix;
+				}
+			}
+
+			dialog->set_buttons(labels);
+			if(cancel_button > 0) {
+				dialog->set_cancel_button(cancel_button);
+			}
+
+			dialog->choose(get_active_window(),[dialog,values](Glib::RefPtr<Gio::AsyncResult> result){
+
+				auto rc = values[dialog->choose_finish(result)];
+				Logger::String{"User selected option '",buttons[rc].label,"'"}.info("Dialog");
+
+				switch(rc) {
+				case 0: // Dialog::AllowReboot
+					break;
+
+				case 1: // Dialog::AllowQuitApplication
+					Gio::Application::get_default()->quit();
+					break;
+
+				case 2: // Dialog::AllowCancel
+					break;
+
+				case 3: // Dialog::AllowContinue
+					break;
+
+				}
 
 			});
 

@@ -41,8 +41,8 @@
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
 		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)},
 		 args{node}, confirmation{"confirmation",Dialog::Option::None,node},
-		 success{"success",Dialog::Option::AllowQuitApplication,node},
-		 failed{"failed",Dialog::Option::AllowQuitApplication,node} {
+		 success{"success",Dialog::Option::AllowQuitContinue,node},
+		 failed{"failed",Dialog::Option::AllowQuitContinue,node} {
 
 		debug("Building action '",name(),"' on group '",object.name(),"'");
 		if(!parent) {

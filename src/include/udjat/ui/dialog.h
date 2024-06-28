@@ -37,6 +37,10 @@
 			None 					= 0x0000,
 			AllowQuitApplication 	= 0x0001,
 			AllowReboot				= 0x0002,
+			AllowCancel				= 0x0004,
+			AllowContinue			= 0x0008,
+
+			AllowQuitContinue		= (AllowQuitApplication|AllowContinue)
 		};
 
 	protected:
@@ -69,11 +73,15 @@
 		/// @brief Declare dialog from XML Node.
 		Dialog(const char *name, Option options, const XML::Node &node);
 
-		Dialog(const char *name, const XML::Node &node) : Dialog{name,None,node} {
+		Dialog(const char *name, const XML::Node &node) : Dialog{name,Dialog::AllowContinue,node} {
 		}
 
 		inline void message(const char *message) noexcept {
 			args.message = message;
+		}
+
+		inline bool test(const Option options) const noexcept {
+			return this->options & options;
 		}
 
 		std::string message(const char *def = "") const;
