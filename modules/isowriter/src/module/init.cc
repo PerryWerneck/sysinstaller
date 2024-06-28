@@ -47,7 +47,8 @@
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) : Reinstall::Action{parent,node}, iso{node}, output{node,"select-device"} {
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+			: Reinstall::Action{parent,node}, iso{node}, output{"select-device",node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";

@@ -55,6 +55,8 @@
 		Udjat::Dialog success;
 		Udjat::Dialog failed;
 
+		void complete(int rc);
+
 	public:
 
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);

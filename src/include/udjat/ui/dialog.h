@@ -31,20 +31,43 @@
  namespace Udjat {
 
 	class UDJAT_API Dialog {
+	public:
+
+		enum Option : uint8_t {
+			None 					= 0x0000,
+			AllowQuitApplication 	= 0x0001,
+			AllowReboot				= 0x0002,
+		};
+
 	protected:
 
-		struct {
-			const char *name = "default";
+		Option options = None;
+
+		struct Args {
+			const char *name = "dialog";
 			const char *icon_name = nullptr;
 			const char *message = nullptr;
 			const char *details = nullptr;
+
+			constexpr Args() {
+			}
+
+			constexpr Args(const char *i, const char *m, const char *d)
+				: icon_name{i},message{m},details{d} { }
+
+			constexpr Args(const char *m, const char *d)
+				: message{m},details{d} { }
+
 		} args;
 
-		Dialog();
-
 	public:
+
+		constexpr Dialog(const char *name) {
+			args.name = name;
+		}
+
 		/// @brief Declare dialog from XML Node.
-		Dialog(const XML::Node &node, const char *name);
+		Dialog(const char *name, Option options, const XML::Node &node);
 
 		inline void message(const char *message) noexcept {
 			args.message = message;
@@ -74,6 +97,7 @@
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
 			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
+			virtual void present(const Dialog &dialog) = 0;
 			virtual int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept = 0;
 
 		};
@@ -86,6 +110,10 @@
 		bool confirm() const noexcept;
 
 		int select(int cancel, const char *button, ...) const __attribute__ ((sentinel));
+
+		inline void present() const noexcept {
+			Dialog::Controller::getInstance().present(*this);
+		}
 
 	};
 

@@ -26,6 +26,8 @@
  #include <reinstall/action.h>
  #include <reinstall/group.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/ui/dialog.h>
+ #include <udjat/tools/exception.h>
 
  #include <stdexcept>
 
@@ -38,7 +40,9 @@
 
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
 		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)},
-		 args{node}, confirmation{node,"confirmation"}, success{node,"success"}, failed{node,"failed"} {
+		 args{node}, confirmation{"confirmation",Dialog::Option::None,node},
+		 success{"success",Dialog::Option::AllowQuitApplication,node},
+		 failed{"failed",Dialog::Option::AllowQuitApplication,node} {
 
 		debug("Building action '",name(),"' on group '",object.name(),"'");
 		if(!parent) {
@@ -92,22 +96,43 @@
 		dialog->body(_("Initializing"));
 		dialog->icon_name(args.icon_name);
 
-		dialog->run([&](Udjat::Dialog::Progress &progress){
+		auto rc = dialog->run([&](Udjat::Dialog::Progress &progress){
 
 			try {
 
 				activate(progress);
 				return 0;
 
+			} catch(const Udjat::Exception &e) {
+
+				failed.message(e.title());
+				failed.details(e.body());
+
 			} catch(const std::exception &e) {
 
-				Logger::String{e.what()}.error(name());
+				failed.message(_("Operation failed"));
+				failed.details(e.what());
 
-				// TODO: Show error popup.
 			}
 
 			return -1;
 		});
+
+		complete(rc);
+
+	}
+
+	void Action::complete(int rc) {
+
+		if(rc) {
+			Logger::String{failed.details()}.error(name());
+			failed.present();
+		} else if(success) {
+			Logger::String{success.details()}.info(name());
+			success.present();
+		} else {
+			Logger::String{"Completed, no success dialog"}.info(name());
+		}
 
 	}
 

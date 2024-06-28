@@ -281,41 +281,23 @@
 	}
 
 	/*
-	bool Gtk::Application::ask_for_confirmation(const char *, const char *message, const char *body) noexcept {
+	int Gtk::Application::failed(const Dialog &settings, bool allow_continue) {
 
-		bool rc = false;
-		auto mainloop = Glib::MainLoop::create();
-
-		const char* buttons[] = { _("Cancel"), _("Continue"), NULL };
-
-		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
-		auto dialog = ::Gtk::AlertDialog::create();
-		dialog->set_modal();
-		dialog->set_message(message);
-
-		gtk_alert_dialog_set_buttons(dialog->gobj(),buttons);
-
-		dialog->set_cancel_button(0);
-
-		if(body && *body) {
-			dialog->set_detail(body);
+		int rc = -1;
+		if(allow_continue) {
+			rc = settings.select(settings, 0, _("_Quit application"), _("_Continue"), nullptr);
+		} else {
+			rc = settings.select(settings, 0, _("_Quit application"), nullptr);
 		}
+		return 0;
 
-		dialog->choose(get_active_window(),[dialog,&mainloop,&rc](Glib::RefPtr<Gio::AsyncResult> result){
-			int button = dialog->choose_finish(result);
-			debug("Selected button=",button);
-			rc = (button == 1);
-			mainloop->quit();
-		});
-
-		mainloop->run();
-		return rc;
 	}
 	*/
 
 	::Gtk::Window & Gtk::Application::get_active_window() {
 		return *Glib::wrap(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
 	}
+
 
  }
 

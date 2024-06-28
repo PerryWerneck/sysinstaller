@@ -119,7 +119,9 @@
 			button.cancel.set_sensitive(false);
 			layout.vbox.set_sensitive(false);
 
-			selected->activate();
+			if(selected) {
+				selected->activate();
+			}
 
 			button.apply.set_sensitive(true);
 			button.cancel.set_sensitive(true);
