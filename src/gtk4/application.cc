@@ -280,6 +280,30 @@
 
 	}
 
+	void Gtk::Application::present(const Dialog &settings) {
+
+		Glib::signal_idle().connect([settings](){
+
+			auto dialog = ::Gtk::AlertDialog::create();
+			dialog->set_modal();
+			dialog->set_message(settings.message());
+
+			auto details = settings.details();
+			if(!details.empty()) {
+				dialog->set_detail(details);
+			}
+
+			dialog->choose(get_active_window(),[dialog](Glib::RefPtr<Gio::AsyncResult> result){
+				auto rc = dialog->choose_finish(result);
+				debug("Selected button=",rc);
+
+			});
+
+			return 0;
+		});
+
+	}
+
 	/*
 	int Gtk::Application::failed(const Dialog &settings, bool allow_continue) {
 
