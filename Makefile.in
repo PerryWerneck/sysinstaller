@@ -88,6 +88,7 @@ CXXFLAGS= \
 	-Isubmodules/libudjatui/src/include \
 	-DBUILD_DATE=`date +%Y%m%d` \
 	-DLOCALEDIR=$(localedir) \
+	@DBUS_CFLAGS@ \
 	@UDJAT_CFLAGS@ \
 	@ISOFS_CFLAGS@ \
 	@GTK_CFLAGS@ \
@@ -106,6 +107,7 @@ LDFLAGS=\
 
 LIBS= \
 	@LIBS@ \
+	@DBUS_LIBS@ \
 	@GTK_LIBS@ \
 	@ZIPLIB_LIBS@ @LIBSLP_LIBS@ \
 	@UDJAT_LIBS@

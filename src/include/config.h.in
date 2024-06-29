@@ -51,6 +51,9 @@
 /* Do we have udjat? */
 #undef HAVE_UDJAT
 
+/* Do we have udjat dbus api? */
+#undef HAVE_UDJAT_DBUS
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 

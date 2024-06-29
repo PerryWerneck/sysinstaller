@@ -203,6 +203,14 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$app_cv_product",[The gettext package name.]
 AC_SUBST(GETTEXT_PACKAGE,$app_cv_product)
 
 dnl ---------------------------------------------------------------------------
+dnl Check for libudjatdbus
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [DBUS], [udjat-dbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+AC_SUBST(DBUS_LIBS)
+AC_SUBST(DBUS_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
 dnl Check for libslp
 dnl ---------------------------------------------------------------------------
 
