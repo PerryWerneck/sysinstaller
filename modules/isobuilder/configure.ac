@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([reinstall], [5.1.0], [perry.werneck@gmail.com])
+AC_INIT([isowriter], [5.1.0], [perry.werneck@gmail.com])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
@@ -48,36 +48,7 @@ dnl ---------------------------------------------------------------------------
 dnl Version info
 dnl ---------------------------------------------------------------------------
 
-AC_SUBST(PACKAGE_DESCRIPTION,"Instalar/Reinstalar terminal")
-
-app_vrs_major=$(echo $VERSION | cut -d. -f1)
-app_vrs_minor=$(echo $VERSION | cut -d. -f2)
-app_vrs_release=$(echo $VERSION | cut -d. -f3)
-
-AC_DEFINE_UNQUOTED(PACKAGE_MAJOR_VERSION, $app_vrs_major, [The library major version])
-AC_DEFINE_UNQUOTED(PACKAGE_MINOR_VERSION, $app_vrs_minor, [The library minor version])
-AC_DEFINE_UNQUOTED(PACKAGE_MINOR_VERSION, $app_vrs_release, [The library release number])
-
-AC_SUBST(PACKAGE_MAJOR_VERSION,$app_vrs_major)
-AC_SUBST(PACKAGE_MINOR_VERSION,$app_vrs_minor)
-AC_SUBST(PACKAGE_MINOR_VERSION,$app_vrs_minor)
-
-AC_ARG_WITH([release], [AS_HELP_STRING([--with-release], [Set release])], [ app_cv_release="$withval" ],[ app_cv_release="`date +%-y`.`date +%-m`.`date +%-d`" ])
-
-app_rls_major=$(echo $app_cv_release.0.0 | cut -d. -f1)
-app_rls_minor=$(echo $app_cv_release.0.0 | cut -d. -f2)
-
-app_vrs_revision=$(date +%Y%m%d)
-AC_SUBST(PACKAGE_REVISION,$app_vrs_revision)
-AC_DEFINE_UNQUOTED(PACKAGE_REVISION,$app_vrs_revision,[The package revision (for win32 installer)])
-
-AC_DEFINE_UNQUOTED(PACKAGE_MAJOR_RELEASE, $app_rls_major, [The library major release])
-AC_DEFINE_UNQUOTED(PACKAGE_MINOR_RELEASE, $app_rls_minor, [The library minor release])
-AC_DEFINE_UNQUOTED(PACKAGE_RELEASE, "$app_cv_release", [The package release])
-
-AC_SUBST(PACKAGE_RELEASE,"$app_cv_release")
-AC_SUBST(PACKAGE_MAJOR_RELEASE,$app_rls_major)
-AC_SUBST(PACKAGE_MINOR_RELEASE,$app_rls_minor)
+AC_SUBST(PACKAGE_DESCRIPTION,"ISO Image writer")
 
 dnl ---------------------------------------------------------------------------
 dnl Check for OS specifics
@@ -88,10 +59,8 @@ case "$host" in
 		EXEEXT=".exe"
 		OSNAME="windows"
 
-		CFLAGS="$CFLAGS -D_WIN32_WINNT=0x0600"
-		DLL_LDFLAGS="-shared -Wl,--output-def,\$(@D)/\$(LIBNAME).def"
-		DLLEXT=".dll"
-		AC_SUBST(SONAME,"reinstall.dll")
+		CPPFLAGS="$CPPFLAGS -D_WIN32_WINNT=0x0600"
+		LIBEXT=".dll"
 
 		app_win32_revision=$(date +%y.%m.%d.%H)
 		AC_SUBST(WIN32_VERSION,$app_win32_revision)
@@ -119,43 +88,23 @@ dnl		AC_CONFIG_FILES(win/userinfo.nsi)
 
  	*)
 		EXEEXT=""
-		DLLEXT=".so"
+		LIBEXT=".so"
 		OSNAME="linux"
-		CFLAGS="$CFLAGS -pthread"
+		CPPFLAGS="$CPPFLAGS -fPIC -pthread"
 		LDFLAGS="$LDFLAGS -pthread"
-		DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
-		AC_SUBST(SONAME,libreinstall.so.$app_vrs_major.$app_vrs_minor)
-		AC_CONFIG_FILES(sysconf/launcher.desktop)
 
 esac
 
 AC_SUBST(LIBS)
 AC_SUBST(EXEEXT)
-AC_SUBST(DLLEXT)
+AC_SUBST(LIBEXT)
 AC_SUBST(OSNAME)
 AC_SUBST(DLL_LDFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for other programs
 dnl ---------------------------------------------------------------------------
-AC_PATH_TOOL([DOXYGEN], [doxygen])
 AC_PATH_TOOL([VALGRIND], [valgrind], [no])
-AC_PATH_TOOL([AR], [ar], [ar])
-AC_PATH_TOOL([INSTALL_DESKTOP],[desktop-file-install],[no])
-
-dnl ---------------------------------------------------------------------------
-dnl test for reentrant time routines
-dnl ---------------------------------------------------------------------------
-
-AC_MSG_CHECKING(for localtime_r in time.h)
-AC_EGREP_HEADER(localtime_r, time.h,
- [ AC_DEFINE([HAVE_LOCALTIME_R], [1], [Define to 1 if localtime_r is available.]) AC_MSG_RESULT(yes) ],
- AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING(for gmtime_r in time.h)
-AC_EGREP_HEADER(gmtime_r, time.h,
- [ AC_DEFINE([HAVE_GMTIME_R], [1], [Define to 1 if gmtime_r is available.]) AC_MSG_RESULT(yes) ],
- AC_MSG_RESULT(no))
 
 dnl ---------------------------------------------------------------------------
 dnl Check for C++ 2017 support
@@ -199,69 +148,37 @@ AC_ARG_WITH([module-path], [AS_HELP_STRING([--with-module-path], [Set module-pat
 AC_DEFINE_UNQUOTED(MODULE_PATH, $app_cv_module_path, [The path for module installation])
 AC_SUBST(MODULE_PATH,$app_cv_module_path)
 
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$app_cv_product",[The gettext package name.])
-AC_SUBST(GETTEXT_PACKAGE,$app_cv_product)
-
 dnl ---------------------------------------------------------------------------
-dnl Check for libudjatdbus
+dnl Check for libreinstall
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [DBUS], [udjat-dbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
-AC_SUBST(DBUS_LIBS)
-AC_SUBST(DBUS_CFLAGS)
+PKG_CHECK_MODULES( [REINSTALL], [libreinstall], AC_DEFINE(HAVE_REINSTALL,,[Do we have reinstall?]), AC_MSG_ERROR([libreinstall not present.]) )
+AC_SUBST(REINSTALL_LIBS)
+AC_SUBST(REINSTALL_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for libslp
+dnl Check for libburn
 dnl ---------------------------------------------------------------------------
 
-AC_CHECK_HEADER(slp.h, [app_cv_libslp="yes"], [AC_MSG_NOTICE([Can't find required file slp.h])])
+PKG_CHECK_MODULES( [BURN], [libburn-1], AC_DEFINE(HAVE_BURN,[],[Do we have libburn?]), AC_MSG_NOTICE([libburn not present.]) )
 
-if test x$app_cv_libslp = xyes; then
-        AC_DEFINE(HAVE_LIBSLP, 1, [OpenSLP is available])
-        AC_SUBST(LIBSLP_LIBS,"-lslp")
-else
-        AC_SUBST(LIBSLP_LIBS,"")
-fi
-
-AC_SUBST(LIBSLP_CFLAGS)
+AC_SUBST(BURN_LIBS)
+AC_SUBST(BURN_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for ZIPLIB
+dnl Check for Libisofs
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [ZIPLIB], [libzip], AC_DEFINE(HAVE_ZIPLIB,,[ "Do we have zziplib?" ]), AC_MSG_NOTICE([ziplib not present.]))
+PKG_CHECK_MODULES( [ISOFS], [libisofs-1], AC_DEFINE(HAVE_ISOFS,[],[Do we have libisofs?]), AC_MSG_NOTICE([libisofs not present.]) )
 
-AC_SUBST(ZIPLIB_LIBS)
-AC_SUBST(ZIPLIB_CFLAGS)
-
-dnl ---------------------------------------------------------------------------
-dnl Check for GTK
-dnl ---------------------------------------------------------------------------
-
-GLIB_GSETTINGS
-
-PKG_CHECK_MODULES( [GTK], [gtkmm-4.0], AC_DEFINE(HAVE_GTK,,[ "Do we have GTK++?" ]), AC_MSG_ERROR([GTK4++ not present.]))
-
-AC_SUBST(GTK_LIBS)
-AC_SUBST(GTK_CFLAGS)
+AC_SUBST(ISOFS_LIBS)
+AC_SUBST(ISOFS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
 dnl ---------------------------------------------------------------------------
 
-dnl AC_CONFIG_FILES(src/library/Makefile)
-AC_CONFIG_FILES(locale/Makefile)
 AC_CONFIG_FILES(Makefile)
-
-dnl https://www.gnu.org/software/autoconf-archive/ax_subdirs_configure.html
-dnl AX_SUBDIRS_CONFIGURE( [subdirs], [mandatory arguments], [possibly merged arguments], [replacement arguments], [forbidden arguments])
-dnl AX_SUBDIRS_CONFIGURE([modules/isowriter],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
-
-export REINSTALL_CFLAGS="-I$ac_pwd/src/include"
-export REINSTALL_LIBS="-L$ac_pwd/.bin/Debug/libreinstall.so.$app_vrs_major.$app_vrs_minor"
-
-AC_CONFIG_SUBDIRS( [modules/isowriter] )
-AC_CONFIG_SUBDIRS( [modules/isobuilder] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
