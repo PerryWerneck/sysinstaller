@@ -93,7 +93,6 @@
 			}
 			progress.item();
 
-
 			return 0;
 		}
 
