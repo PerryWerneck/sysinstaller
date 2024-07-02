@@ -50,8 +50,17 @@
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
 
-		/// @brief Load and parse INDEX.gz
+		/// @brief Load repository index (INDEX.gz)
+		/// @return true if the repository has an index.
 		bool index();
+
+		inline const auto begin() const noexcept {
+			return files.begin();
+		}
+
+		inline const auto end() const noexcept {
+			return files.end();
+		}
 
 	};
 

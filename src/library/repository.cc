@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements Source repository..
+  * @brief Implements Source repository.
   */
 
  #include <config.h>
@@ -27,6 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/file.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -113,12 +114,30 @@
 
 			try {
 
-				auto filename = url.filename([&progress](double current, double total){
-					progress = (total/current);
-					return true;
-				});
+				string filename;
+				if(this->url.local && *this->url.local) {
 
-				debug("filename='",filename.c_str(),"'");
+					// Has local path, update file.
+
+					filename = local().ComponentsFactory().path;
+					File::Path::mkdir(filename.c_str());
+					filename += "INDEX.gz";
+
+					url.get(filename.c_str(),[&progress](double current, double total){
+						progress = (total/current);
+						return true;
+					});
+
+				} else {
+
+					// No local path, use cache.
+
+					filename = url.filename([&progress](double current, double total){
+						progress = (total/current);
+						return true;
+					});
+
+				}
 
 				gzFile fd = gzopen(filename.c_str(), "r");
 				if(!fd) {
@@ -142,8 +161,12 @@
 
 			}
 
+			return true;
+
 		}
 #endif // HAVE_ZLIB
+
+		// Parse html
 
 		return false;
 	}

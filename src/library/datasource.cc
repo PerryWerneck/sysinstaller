@@ -176,40 +176,33 @@
 
 	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(const DataSource &value)> &func) const {
 
+		if(!this->url.local || this->url.local[0] != '.') {
+			throw logic_error("A local relative path is required");
+		}
+
 		if(repository.get() && repository->index()) {
 
 			debug("Using repository index");
 
-		}
+			size_t szlocal = strlen(this->url.local);
 
-			/*
-		if(repository) {
+			for(const auto &path : *repository) {
 
-			// Have repository, try 'INDEX.gz'
-			URL url{repository->remote()};
-			progress.url(url.c_str());
-			url += "INDEX.gz";
+				if(strncmp(this->url.local,path.c_str(),szlocal)) {
+					continue;
+				}
 
-			debug("Checking '",url.c_str(),"'");
+				DataSource source;
+				source.repository = this->repository;
+				source.url.local = source.url.remote = path.c_str();
 
-			try {
-
-				auto filename = url.filename([&progress](double current, double total){
-					progress = (total/current);
+				if(func(source)) {
 					return true;
-				});
-
-				debug("filename='",filename.c_str(),"'");
-
-			} catch(const std::exception &e) {
-
-				Logger::String{url.c_str(),": ",e.what()};
+				}
 
 			}
 
 		}
-			*/
-
 
 		return false;
 	}

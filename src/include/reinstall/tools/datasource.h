@@ -46,6 +46,9 @@
 			const char *remote = "";
 		} url;
 
+		DataSource() {
+		}
+
 	public:
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
