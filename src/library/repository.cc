@@ -147,6 +147,11 @@
 				char buffer[4096];
 				memset(buffer,0,4096);
 				while(gzgets(fd,buffer,4095)) {
+					for(size_t ix = 0; ix < 4096 && buffer[ix]; ix++) {
+						if(buffer[ix] < ' ') {
+							buffer[ix] = 0;
+						}
+					}
 					files.emplace_back(buffer);
 				}
 

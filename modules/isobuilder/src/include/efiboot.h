@@ -40,11 +40,6 @@
 			/// @brief Size of image in bytes
 			unsigned long size = 0;
 
-			/// @brief Filesystem for image.
-			enum FileSystem : uint8_t {
-				FAT32
-			} filesystem = FAT32;
-
 		} options;
 
 	public:
@@ -62,7 +57,7 @@
 		}
 
 		/// @brief Build image (if necessary), add source to action.
-		virtual void build(Reinstall::Action &action);
+		//virtual void build(Reinstall::Action &action);
 
 	};
 

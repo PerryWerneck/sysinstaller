@@ -50,6 +50,7 @@
 		virtual Progress & file_sizes(const uint64_t current, const uint64_t total);
 		virtual Progress & show();
 		virtual Progress & hide();
+		virtual Progress & item(const size_t current = 0, const size_t total = 0);
 
 		/// @brief Set progress bar URL.
 		virtual Progress & url(const char *url);

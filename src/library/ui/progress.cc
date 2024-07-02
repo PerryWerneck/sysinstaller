@@ -103,6 +103,10 @@
 		return *this;
 	}
 
+	Dialog::Progress & Dialog::Progress::item(const size_t, const size_t) {
+		return *this;
+	}
+
 	Dialog::Progress & Dialog::Progress::show() {
 		return *this;
 	}

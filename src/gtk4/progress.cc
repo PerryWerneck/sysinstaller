@@ -177,7 +177,7 @@
 					} else {
 
 						idle++;
-						debug(idle);
+//						debug(idle);
 
 					}
 
@@ -243,6 +243,18 @@
 				return *this;
 			}
 
+			Dialog::Progress & item(const size_t current, const size_t total) override {
+				Glib::signal_idle().connect([this,current,total](){
+					if(total) {
+						left.set_text(Logger::Message{_("{} of {}"),current,total});
+					} else {
+						left.set_text("");
+					}
+					return 0;
+				});
+				return *this;
+			}
+
 			Dialog::Progress & url(const char *url) override {
 				string str{url};
 				Glib::signal_idle().connect([this,str](){
@@ -279,7 +291,7 @@
 				if(strcmp(label.c_str(),values.label.c_str())) {
 					values.changed |= 2;
 					values.label = label;
-					debug(label);
+//					debug(label);
 				}
 
 				values.changed |= 1;
