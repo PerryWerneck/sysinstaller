@@ -90,7 +90,6 @@ CXXFLAGS= \
 	-DLOCALEDIR=$(localedir) \
 	@DBUS_CFLAGS@ \
 	@UDJAT_CFLAGS@ \
-	@ISOFS_CFLAGS@ \
 	@GTK_CFLAGS@ \
 	@ZIPLIB_CFLAGS@ \
 	@LIBSLP_CFLAGS@
@@ -161,6 +160,11 @@ $(BINDBG)/modules/isowriter.@DLLEXT@:
 
 	@echo $< ...
 	@$(MAKE) BINDBG=$(BINDBG) -C modules/isowriter Debug
+
+$(BINDBG)/modules/isobuilder.@DLLEXT@:
+
+	@echo $< ...
+	@$(MAKE) BINDBG=$(BINDBG) -C modules/isobuilder Debug
 
 #---[ Release Rules ]--------------------------------------------------------------------
 
@@ -306,7 +310,6 @@ $(BINRLS)/$(SONAME): \
 		-o $@ \
 		$(LDFLAGS) \
 		$^ \
-		@ISOFS_LIBS@ \
 		$(LIBS)
 
 #---[ Install Targets ]------------------------------------------------------------------
@@ -402,7 +405,8 @@ install-data:
 
 Debug: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(BINDBG)/modules/isowriter.@DLLEXT@
+	$(BINDBG)/modules/isowriter.@DLLEXT@ \
+	$(BINDBG)/modules/isobuilder.@DLLEXT@
 
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \
@@ -435,7 +439,6 @@ $(BINDBG)/$(SONAME): \
 		-o $@ \
 		$(LDFLAGS) \
 		$^ \
-		@ISOFS_LIBS@ \
 		$(LIBS)
 		
 
@@ -475,12 +478,14 @@ clean: \
 cleanDebug:
 
 	@$(MAKE) -C modules/isowriter cleanDebug
+	@$(MAKE) -C modules/isobuilder cleanDebug
 	@rm -fr $(OBJDBG)
 	@rm -fr $(BINDBG)
 
 cleanRelease:
 
 	@$(MAKE) -C modules/isowriter cleanRelease
+	@$(MAKE) -C modules/isobuilder cleanRelease
 	@rm -fr $(OBJRLS)
 	@rm -fr $(BINRLS)
 

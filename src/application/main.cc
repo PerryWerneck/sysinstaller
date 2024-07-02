@@ -119,6 +119,7 @@
 			debug("Definitions='",definitions,"'");
 #ifdef DEBUG
 			Udjat::Module::load(Udjat::File::Path{".bin/Debug/isowriter.so"});
+			Udjat::Module::load(Udjat::File::Path{".bin/Debug/isobuilder.so"});
 #endif // DEBUG
 			super::startup(app,definitions);
 		}

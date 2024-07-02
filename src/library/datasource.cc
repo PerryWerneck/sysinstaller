@@ -164,5 +164,13 @@
 		return components.path;
 	}
 
+	void DataSource::load(const Udjat::XML::Node &node, vector<DataSource> &sources) {
+		for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
+			for(Udjat::XML::Node child = nd.child("source"); child; child = child.next_sibling("source")) {
+				sources.emplace_back(child);
+			}
+		}
+	}
+
  }
 

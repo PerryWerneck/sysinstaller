@@ -28,6 +28,9 @@
  #include <udjat/tools/url.h>
  #include <udjat/ui/progress.h>
  #include <memory>
+ #include <vector>
+
+ #include <reinstall/tools/datasource.h>
 
  namespace Reinstall {
 
@@ -53,6 +56,7 @@
 		void save(Udjat::Dialog::Progress &progress, const char *path);
 		std::string save(Udjat::Dialog::Progress &progress);
 
+		static void load(const Udjat::XML::Node &node, std::vector<DataSource> &sources);
 
 	};
 

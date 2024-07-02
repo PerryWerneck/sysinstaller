@@ -99,13 +99,13 @@
 
 		</local-installer>
  		
- 		<network-installer name='tw-mini' default='no'>
+ 		<iso-builder name='tw-mini' default='no'>
 
 			<attribute name='slp-allow-local' value='yes' />
 
 	 		<attribute name='title' value='Build a simple network install image'/>
 	 		<attribute name='sub-title' value='Build an small usb based boot device for network install' />
-	 		<attribute name='icon-name' value='drive-removable-media' />
+	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
 
 			<!-- Replace every 'grub.cfg' file with template -->
 			<template name='grub.cfg' url='file://${template-dir}/grub.cfg' escape-control-characters='yes' />
@@ -126,7 +126,7 @@
 				This is the secondary text of sucess message.
 			</dialog>
 
-		</network-installer>
+		</iso-builder>
 		
 		<iso-writer name='tw-net' default='no'>
 

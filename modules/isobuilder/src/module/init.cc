@@ -43,15 +43,19 @@
 	class Action : public Reinstall::Action {
 	private:
 		Udjat::Dialog output;
+		vector<Reinstall::DataSource> sources;
 
 	public:
 
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, iso{node}, output{"select-device",node} {
+			: Reinstall::Action{parent,node}, output{"select-device",node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
 			}
+
+			// Load sources.
+			Reinstall::DataSource::load(node,sources);
 
 		}
 
@@ -68,7 +72,7 @@
 
 	class Module : public Udjat::Module, public Udjat::Factory {
 	public:
-		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("network-installer",moduleinfo) {
+		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
 		};
 
 		// Udjat::Factory
