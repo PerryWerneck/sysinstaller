@@ -33,6 +33,8 @@
  #include <vector>
  #include <list>
 
+ #include <iso9660.h>
+
  using namespace Udjat;
  using namespace std;
  using namespace Reinstall;
@@ -47,12 +49,13 @@
 	class Action : public Reinstall::Action {
 	private:
 		Udjat::Dialog output;
+		iso9660::Image::Settings imgdef;
 		vector<Reinstall::DataSource> sources;
 
 	public:
 
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, output{"select-device",node} {
+			: Reinstall::Action{parent,node}, output{"select-device",node}, imgdef{node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
@@ -78,6 +81,8 @@
 				});
 			}
 
+			Logger::String{files.size()," files to download"}.trace(name());
+
 			return 0;
 		}
 
@@ -89,7 +94,7 @@
 		};
 
 		// Udjat::Factory
-		std::shared_ptr<Abstract::Object> ObjectFactory(const Abstract::Object &parent, const XML::Node &node) override {
+		std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
 			return make_shared<Action>(parent,node);
 		}
 

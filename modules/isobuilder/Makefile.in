@@ -6,7 +6,8 @@ SONAME=isobuilder
 
 SOURCES= \
 	$(wildcard src/library/*.cc) \
-	$(wildcard src/module/*.cc)
+	$(wildcard src/module/*.cc) \
+	$(wildcard src/iso9660/*.cc)
 
 TEST_SOURCES= \
 	$(wildcard src/testprogram/*.cc)

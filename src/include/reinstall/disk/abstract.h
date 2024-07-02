@@ -26,8 +26,6 @@
  #include <functional>
  #include <udjat/tools/url.h>
 
- #include <reinstall/writer/abstract.h>
-
  namespace Reinstall {
 
 	namespace Abstract {
@@ -47,16 +45,12 @@
 			/// @brief Add URL to image.
 			/// @param url The URL of the file to append.
 			/// @param to Destination file in the image.
-			void append(const URL &url, const char *to);
+			void append(const Udjat::URL &url, const char *to);
 
 			/// @brief Add file to image.
 			/// @param from Full path for file on local file system.
 			/// @param to Destination file in the image.
 			virtual void append(const char *from, const char *to) = 0;
-
-			/// @brief Write image to device.
-			/// @param writer The image writer to use.
-			virtual void write(Writer &writer) = 0;
 
 		};
 
