@@ -83,6 +83,13 @@
 
 			Logger::String{files.size()," files to download"}.trace(name());
 
+			// Build image
+			iso9660::Image image{imgdef};
+
+			for(auto &file : files) {
+				image.append(file);
+			}
+
 			return 0;
 		}
 

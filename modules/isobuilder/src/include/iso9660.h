@@ -75,6 +75,11 @@
 		Image(const Settings &settings);
 		virtual ~Image();
 
+		inline void append(Reinstall::DataSource &source) {
+			Reinstall::Abstract::Image::append(source);
+		}
+
+	protected:
 		// Abstract::Image
 		void append(const char *from, const char *to) override;
 

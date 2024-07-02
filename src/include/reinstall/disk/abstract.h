@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <functional>
  #include <udjat/tools/url.h>
+ #include <reinstall/tools/datasource.h>
 
  namespace Reinstall {
 
@@ -39,18 +40,21 @@
 			constexpr Image(const char *n = "disk") : name{n} {
 			}
 
-		public:
-			virtual ~Image();
-
-			/// @brief Add URL to image.
-			/// @param url The URL of the file to append.
-			/// @param to Destination file in the image.
-			void append(const Udjat::URL &url, const char *to);
-
 			/// @brief Add file to image.
 			/// @param from Full path for file on local file system.
 			/// @param to Destination file in the image.
 			virtual void append(const char *from, const char *to) = 0;
+
+		public:
+			virtual ~Image();
+
+			/// @brief Append data source to image, download file if needed.
+			void append(DataSource &source);
+
+			/// @brief Add URL to image.
+			/// @param url The URL of the file to append.
+			/// @param to Destination file in the image.
+			// void append(const Udjat::URL &url, const char *to);
 
 		};
 

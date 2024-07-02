@@ -8,7 +8,7 @@
 #define HAVE_ICONV 1
 
 /* Do we have libisofs? */
-/* #undef HAVE_ISOFS */
+#define HAVE_ISOFS /**/
 
 /* Do we have reinstall? */
 #define HAVE_REINSTALL /**/
