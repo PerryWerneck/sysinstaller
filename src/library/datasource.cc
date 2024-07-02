@@ -34,6 +34,7 @@
  #include <sys/stat.h>
 
  #include <stdexcept>
+ #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
@@ -82,6 +83,13 @@
 
 		return URL{url.local};
 
+	}
+
+	const char * DataSource::image_path() const {
+		if(url.local[0] != '.') {
+			throw logic_error("Unable to handle non relative path");
+		}
+		return url.local+1;
 	}
 
 	Udjat::URL DataSource::remote() const {
@@ -137,7 +145,7 @@
 
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
+	std::string DataSource::save(Udjat::Dialog::Progress &progress, bool prefer_local) {
 
 		auto url = local();
 		if(!url.local()) {
@@ -145,6 +153,15 @@
 		}
 
 		auto components = url.ComponentsFactory();
+
+#ifdef DEBUG
+		prefer_local = true;
+#endif // DEBUG
+
+		if(prefer_local && access(components.path.c_str(),R_OK) == 0) {
+			debug(components.path.c_str()," already exists");
+			return components.path.c_str();
+		}
 
 		try {
 

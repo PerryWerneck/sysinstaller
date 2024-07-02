@@ -86,12 +86,14 @@
 			// Build image
 			iso9660::Image image{imgdef};
 
+			image.pre(*this);
 			size_t item = 0;
 			for(auto &file : files) {
 				progress.item(++item,files.size());
 				image.append(file);
 			}
 			progress.item();
+			image.post(*this);
 
 			return 0;
 		}

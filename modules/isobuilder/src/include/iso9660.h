@@ -56,9 +56,10 @@
 				struct {
 
 					bool enabled = true;
+					const char *id = nullptr;
 					const char *image = "/boot/x86_64/loader/isolinux.bin";
 
-					inline operator bool() const {
+					inline operator bool() const noexcept {
 						return enabled;
 					}
 
@@ -78,6 +79,10 @@
 		inline void append(Reinstall::DataSource &source) {
 			Reinstall::Abstract::Image::append(source);
 		}
+
+		void pre(Udjat::Abstract::Object &object);
+
+		void post(Udjat::Abstract::Object &object);
 
 	protected:
 		// Abstract::Image

@@ -56,8 +56,10 @@
 		Udjat::URL local() const;
 		Udjat::URL remote() const;
 
+		const char * image_path() const;
+
 		void save(Udjat::Dialog::Progress &progress, const char *path);
-		std::string save(Udjat::Dialog::Progress &progress);
+		std::string save(Udjat::Dialog::Progress &progress, bool prefer_local = false);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 

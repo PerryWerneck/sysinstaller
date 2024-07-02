@@ -39,7 +39,7 @@
 	void Abstract::Image::append(DataSource &source) {
 
 		std::string from = source.save(Dialog::Progress::getInstance());
-
+		append(from.c_str(),source.image_path());
 
 	}
 
