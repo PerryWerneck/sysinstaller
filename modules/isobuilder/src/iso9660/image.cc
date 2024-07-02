@@ -26,11 +26,15 @@
  #include <iso9660.h>
  #include <string>
 
+ #include <udjat/tools/application.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/configuration.h>
 
  #define LIBISOFS_WITHOUT_LIBBURN
  #include <libisofs/libisofs.h>
+
+ #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
@@ -70,6 +74,96 @@
 		iso_write_opts_new(&opts, 2);
 		iso_write_opts_set_relaxed_vol_atts(opts, 1);
 		iso_write_opts_set_rrip_version_1_10(opts,1);
+
+		// Set system area
+		{
+			char data[32768];
+			memset(data,0,sizeof(data));
+
+			int fd;
+
+			if(settings.system_area && *settings.system_area) {
+				fd = open(settings.system_area,O_RDONLY);
+			} else {
+				fd = open(Config::Value<string>("iso9660","system-area","/usr/share/syslinux/isohdpfx.bin").c_str(),O_RDONLY);
+			}
+
+			if(fd <  0) {
+				throw system_error(errno, system_category(), _("Error loading system area"));
+			}
+
+			try {
+
+				if(read(fd,data,sizeof(data)) < 1) {
+					throw system_error(errno, system_category(), _("Cant read system area definition file"));
+				}
+
+				int rc = iso_write_opts_set_system_area(opts,data,2,0);
+				if(rc != ISO_SUCCESS) {
+					throw runtime_error(iso_error_to_msg(rc));
+				}
+
+			} catch(...) {
+				::close(fd);
+				throw;
+			}
+
+			::close(fd);
+
+		}
+
+		// Set volume id
+		{
+			if(settings.volume_id && *settings.volume_id) {
+				iso_image_set_volume_id(image, settings.volume_id);
+			} else {
+				iso_image_set_volume_id(image, Config::Value<string>("iso9660","volume-id",Application::Name().c_str()).c_str());
+			}
+		}
+
+		// set publisher id
+		{
+			if(settings.publisher_id && *settings.publisher_id) {
+				iso_image_set_publisher_id(image, settings.publisher_id);
+			} else {
+				iso_image_set_publisher_id(image, Config::Value<string>{"iso9660","publisher-id",Application::Name().c_str()}.c_str());
+			}
+		}
+
+		// set data preparer id
+		{
+			if(settings.data_preparer_id && *settings.data_preparer_id) {
+
+				iso_image_set_data_preparer_id(image, settings.data_preparer_id);
+
+			} else {
+
+				char username[32];
+				if(getlogin_r(username, 32) == 0) {
+					iso_image_set_data_preparer_id(image, username);
+				}
+
+			}
+		}
+
+		// set system id
+		{
+			if(settings.system_id && *settings.system_id) {
+				iso_image_set_system_id(image,settings.system_id);
+			} else {
+				iso_image_set_system_id(image,Config::Value<string>("iso9660","system-id","LINUX").c_str());;
+			}
+		}
+
+		// set application id
+		{
+			if(settings.application_id && *settings.application_id) {
+				iso_image_set_application_id(image,settings.application_id);
+			} else {
+				iso_image_set_application_id(image,Config::Value<string>("iso9660","application-id",Application::Name().c_str()).c_str());;
+			}
+		}
+
 
 	}
 
