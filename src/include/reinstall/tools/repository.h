@@ -27,6 +27,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <memory>
+ #include <vector>
 
  #include <reinstall/tools/datasource.h>
 
@@ -39,12 +40,18 @@
 
 		std::shared_ptr<SLPClient> slpclient;
 
+		/// @brief The repository files (from INDEX.gz)
+		std::vector<std::string> files;
+
 	public:
 
 		static std::shared_ptr<Repository> Factory(const Udjat::XML::Node &node);
 
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
+
+		/// @brief Load and parse INDEX.gz
+		bool index();
 
 	};
 

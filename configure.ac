@@ -246,6 +246,15 @@ AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
+dnl Check for zlib
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [ZLIB], [zlib], AC_DEFINE(HAVE_ZLIB,,[ "Do we have zlib" ]), AC_MSG_ERROR([zlib not present.]))
+
+AC_SUBST(ZLIB_LIBS)
+AC_SUBST(ZLIB_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
 dnl ---------------------------------------------------------------------------
 

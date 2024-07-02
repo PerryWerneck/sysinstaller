@@ -50,11 +50,15 @@
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
 
-		Udjat::URL local();
-		Udjat::URL remote();
+		Udjat::URL local() const;
+		Udjat::URL remote() const;
 
 		void save(Udjat::Dialog::Progress &progress, const char *path);
 		std::string save(Udjat::Dialog::Progress &progress);
+
+		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
+
+		bool for_each(Udjat::Dialog::Progress &progress, const std::function<bool(const DataSource &value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<DataSource> &sources);
 

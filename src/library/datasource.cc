@@ -27,6 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/file.h>
  #include <udjat/tools/string.h>
+ #include <udjat/tools/url.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -68,7 +69,7 @@
 	DataSource::~DataSource() {
 	}
 
-	Udjat::URL DataSource::local() {
+	Udjat::URL DataSource::local() const {
 
 		if(url.local[0] == '.') {
 			if(!repository) {
@@ -83,7 +84,7 @@
 
 	}
 
-	Udjat::URL DataSource::remote() {
+	Udjat::URL DataSource::remote() const {
 
 		if(url.remote[0] == '.') {
 			if(!repository) {
@@ -171,6 +172,48 @@
 			}
 		}
 	}
+
+
+	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(const DataSource &value)> &func) const {
+
+		if(repository.get() && repository->index()) {
+
+			debug("Using repository index");
+
+		}
+
+			/*
+		if(repository) {
+
+			// Have repository, try 'INDEX.gz'
+			URL url{repository->remote()};
+			progress.url(url.c_str());
+			url += "INDEX.gz";
+
+			debug("Checking '",url.c_str(),"'");
+
+			try {
+
+				auto filename = url.filename([&progress](double current, double total){
+					progress = (total/current);
+					return true;
+				});
+
+				debug("filename='",filename.c_str(),"'");
+
+			} catch(const std::exception &e) {
+
+				Logger::String{url.c_str(),": ",e.what()};
+
+			}
+
+		}
+			*/
+
+
+		return false;
+	}
+
 
  }
 

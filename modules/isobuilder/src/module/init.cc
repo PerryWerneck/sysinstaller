@@ -29,9 +29,13 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <udjat/ui/dialog.h>
+ #include <udjat/ui/progress.h>
+ #include <vector>
+ #include <list>
 
  using namespace Udjat;
  using namespace std;
+ using namespace Reinstall;
 
  /// @brief Register udjat module.
  UDJAT_API Udjat::Module * udjat_module_init() {
@@ -64,6 +68,15 @@
 
 		int activate(Udjat::Dialog::Progress &progress) override {
 
+			progress = _("Getting required files");
+			list<DataSource> files;
+
+			for(auto &source : sources) {
+				source.for_each(progress,[&files](const DataSource &value){
+					files.push_back(value);
+					return false;
+				});
+			}
 
 			return 0;
 		}

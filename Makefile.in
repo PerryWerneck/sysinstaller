@@ -91,7 +91,7 @@ CXXFLAGS= \
 	@DBUS_CFLAGS@ \
 	@UDJAT_CFLAGS@ \
 	@GTK_CFLAGS@ \
-	@ZIPLIB_CFLAGS@ \
+	@ZIPLIB_CFLAGS@ @ZLIB_CFLAGS@\
 	@LIBSLP_CFLAGS@
 
 CFLAGS= \
@@ -108,7 +108,7 @@ LIBS= \
 	@LIBS@ \
 	@DBUS_LIBS@ \
 	@GTK_LIBS@ \
-	@ZIPLIB_LIBS@ @LIBSLP_LIBS@ \
+	@ZIPLIB_LIBS@ @ZLIB_LIBS@ @LIBSLP_LIBS@ \
 	@UDJAT_LIBS@
 
 #---[ Debug Rules ]----------------------------------------------------------------------

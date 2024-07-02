@@ -54,6 +54,9 @@
 /* "Do we have zziplib?" */
 #undef HAVE_ZIPLIB
 
+/* "Do we have zlib" */
+#undef HAVE_ZLIB
+
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 
