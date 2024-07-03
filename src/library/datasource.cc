@@ -28,6 +28,7 @@
  #include <udjat/tools/file.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/url.h>
+ #include <udjat/tools/object.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -43,6 +44,12 @@
  namespace Reinstall {
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
+
+#ifdef DEBUG
+		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(false);
+#else
+		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(update_from_remote);
+#endif // DEBUG
 
 		url.remote = String{node,"remote"}.expand(node).expand().as_quark();
 		if(!url.remote[0]) {
@@ -64,6 +71,17 @@
 			// Relative URLs, search for repository
 			Logger::String{"Relative path, searching for repository '",XML::StringFactory(node,"repository","install"),"'"}.trace(name());
 			repository = Repository::Factory(node);
+		}
+
+		url.image = String{node,"image-path"}.expand(node).expand().as_quark();
+		if(!url.image[0]) {
+			if(url.local[0] == '.') {
+				url.image = url.local;
+				Logger::String{"Using relative path '",url.image,"' for image path"}.trace(name());
+			} else if(url.remote[0] == '.') {
+				url.image = url.remote;
+				Logger::String{"Using relative path '",url.image,"' for image path"}.trace(name());
+			}
 		}
 
 	}
@@ -146,7 +164,7 @@
 
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &progress, bool prefer_local) {
+	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
 
 		auto url = local();
 		if(!url.local()) {
@@ -155,12 +173,8 @@
 
 		auto components = url.ComponentsFactory();
 
-#ifdef DEBUG
-		prefer_local = true;
-#endif // DEBUG
-
-		if(prefer_local && access(components.path.c_str(),R_OK) == 0) {
-			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,"datasource");
+		if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
+			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
 			return components.path.c_str();
 		}
 
@@ -210,13 +224,15 @@
 				}
 
 				DataSource source;
+				source.rename(this->name());
+				source.update_from_remote = this->update_from_remote;
 				source.repository = this->repository;
-				source.url.local = source.url.remote = path.c_str();
+				source.url.local = source.url.remote = source.url.image = path.c_str();
 
 				// Check templates.
 				for(auto &tmplt : templates) {
 					if(tmplt == source.url.remote) {
-						Logger::String{"Using template '",tmplt.name(),"' for ",path.c_str()}.write(Logger::Debug,"datasource");
+						Logger::String{"Using template '",tmplt.name(),"' for ",path.c_str()}.trace(name());
 
 						break;
 					}

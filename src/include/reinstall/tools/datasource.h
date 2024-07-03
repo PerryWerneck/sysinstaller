@@ -42,9 +42,13 @@
 
 		std::shared_ptr<Repository> repository;
 
+		/// @brief When true allways check file timestamp with remote server.
+		bool update_from_remote = true;
+
 		struct {
-			const char *local = "";
-			const char *remote = "";
+			const char *image = "";		///< @brief The path in the target image.
+			const char *local = "";		///< @brief The path in the local filesystem.
+			const char *remote = "";	///< @brief The path in the remote server.
 		} url;
 
 		DataSource() {
@@ -60,7 +64,7 @@
 		const char * image_path() const;
 
 		void save(Udjat::Dialog::Progress &progress, const char *path);
-		std::string save(Udjat::Dialog::Progress &progress, bool prefer_local = false);
+		std::string save(Udjat::Dialog::Progress &progress);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
