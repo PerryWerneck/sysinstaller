@@ -124,6 +124,10 @@
 
 			debug("Running in console mode");
 
+			if(Udjat::Application::setup(argc, argv, definitions)) {
+				return -1;
+			}
+
 
 		} else {
 
@@ -134,6 +138,10 @@
 			debug("Running ",String{PRODUCT_ID,".",name().c_str()}.c_str()," in graphic mode");
 
 			g_log_set_default_handler(g_syslog,NULL);
+
+			if(Udjat::Application::setup(argc, argv, definitions)) {
+				return -1;
+			}
 
 			Glib::RefPtr<::Gtk::Application> app = ::Gtk::Application::create(String{PRODUCT_ID,".",name().c_str()}.as_quark());
 			::Gtk::Application::set_default(app);

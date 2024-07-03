@@ -27,6 +27,7 @@
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/tools/factory.h>
+ #include <reinstall/tools/writer.h>
 
  #include <private/mainwindow.h>
 
@@ -50,6 +51,26 @@
 				delete window;
 				window = nullptr;
 			}
+		}
+
+		bool argument(const char *name, const char *value) override {
+
+			if(value && (strcasecmp(name,"usb-output-device") == 0 || strcasecmp(name,"output") == 0)) {
+				Reinstall::Writer::set_output(value);
+				return true;
+			}
+
+			return Udjat::Gtk::Application::argument(name,value);
+		}
+
+		bool argument(const char name, const char *value) {
+
+			if(value && name == 'O') {
+				Reinstall::Writer::set_output(value);
+				return true;
+			}
+
+			return Udjat::Gtk::Application::argument(name,value);
 		}
 
 		bool NodeFactory(const Udjat::XML::Node &node) override {

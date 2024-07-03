@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <reinstall/tools/writer.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/application.h>
  #include <udjat/tools/intl.h>
  #include <stdexcept>
 
@@ -63,6 +64,11 @@
  using namespace std;
 
  namespace Reinstall {
+
+	void Writer::set_output(const char *path) {
+		selected = path;
+		Logger::String{"Output set to '",path,"'"}.trace(Application::Name());
+	}
 
 	void Writer::open(const char *device_name) {
 

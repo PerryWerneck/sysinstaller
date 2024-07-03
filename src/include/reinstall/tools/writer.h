@@ -34,6 +34,8 @@
 
 		/// @brief Device set from command-line option.
 		static std::string selected;
+
+		/// @brief The active writer instance.
 		static Writer *instance;
 
 		int fd = -1;
@@ -62,6 +64,9 @@
 		}
 
 		void close();
+
+		/// @brief Set output from comand-line
+		static void set_output(const char *path);
 
 		/// @brief Get writer instance.
 		static Writer & getInstance();
