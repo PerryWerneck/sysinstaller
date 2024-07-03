@@ -73,32 +73,48 @@
 	void Writer::open(const char *device_name) {
 
 		// Set device as R/W
+		int options = O_RDWR;
 		{
 			int dfd = ::open(device_name,O_RDONLY);
-			struct stat st;
-			if(dfd > 0 && fstat(fd,&st) == 0 && (st.st_mode & S_IFMT) == S_IFBLK) {
-				int state = 0;
-				if(ioctl(dfd, BLKROSET, &state) == -1) {
-					Logger::String{"Error '",strerror(errno),"' setting write permissions on ",device_name}.warning("writer");
+			if(dfd > 0) {
+
+				struct stat st;
+
+				if(fstat(fd,&st) != 0) {
+
+				} else if((st.st_mode & S_IFMT) == S_IFBLK) {
+
+					Logger::String{device_name," is a block device"}.trace("writer");
+					int state = 0;
+					if(ioctl(dfd, BLKROSET, &state) == -1) {
+						Logger::String{"Error '",strerror(errno),"' setting write permissions on ",device_name}.warning("writer");
+					} else {
+						Logger::String{"Got write permission on ",device_name}.trace("writer");
+					}
+
+				} else if((st.st_mode & S_IFMT) == S_IFREG) {
+
+					Logger::String{device_name," is a file"}.trace("writer");
+					options |= O_CREAT|O_TRUNC;
+
 				} else {
-					Logger::String{"Got write permission on ",device_name}.trace("writer");
+
+					::close(dfd);
+					throw runtime_error("Unexpected or invalid device type");
+
 				}
+
+				::close(dfd);
+
+			} else if(errno == ENOENT) {
+
+				Logger::String{"Creating ",device_name}.trace("writer");
+				options |= O_CREAT|O_TRUNC;
+
 			}
-			::close(dfd);
 		}
 
 		// Open device ...
-		int options = O_RDWR;
-
-#ifndef _WIN32
-		{
-			if(strncmp(device_name,"/dev/",5)) {
-				debug(device_name," is not a device");
-				options |= O_CREAT|O_TRUNC;
-			}
-		}
-#endif // _WIN32
-
 		fd = ::open(device_name,options,0644);
 		if(fd < 0) {
 			int err = errno;

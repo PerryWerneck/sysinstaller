@@ -119,6 +119,25 @@
 
 	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
 
+		if(!selected.empty()) {
+
+			// Use pre-selected output.
+
+			try {
+
+				Writer::open(selected.c_str());
+
+			} catch(const std::exception &e) {
+
+				Logger::String{e.what()}.error("writer");
+				close();
+
+			}
+
+			return;
+
+		}
+
 		struct {
 			string devdescr;
 			string devname;

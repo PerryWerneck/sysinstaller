@@ -32,9 +32,6 @@
 	class UDJAT_API Writer {
 	private:
 
-		/// @brief Device set from command-line option.
-		static std::string selected;
-
 		/// @brief The active writer instance.
 		static Writer *instance;
 
@@ -49,6 +46,9 @@
 
 	protected:
 		Writer();
+
+		/// @brief Device set from command-line option.
+		static std::string selected;
 
 		/// @brief Open device
 		void open(const char *device_name);
