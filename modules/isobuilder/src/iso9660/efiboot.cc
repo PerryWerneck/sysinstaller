@@ -38,11 +38,6 @@
 		options.enabled = XML::AttributeFactory(node,"efi-boot-image").as_bool(options.enabled);
 		options.path = XML::QuarkFactory(node,"efi-boot-image",options.path);
 
-//		options.size = Reinstall::Action::getImageSize(node);
-//		if(options.size) {
-//			Logger::String{"Will build a ",String{}.set_byte((unsigned long long) options.size)," boot image"}.trace(name());
-//		}
-
 	}
 
 	/*

@@ -60,9 +60,6 @@
 			return options.path;
 		}
 
-		/// @brief Build image (if necessary), add source to action.
-		//virtual void build(Reinstall::Action &action);
-
 	};
 
  }

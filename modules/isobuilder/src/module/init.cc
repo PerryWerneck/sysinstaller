@@ -95,6 +95,14 @@
 			progress.item();
 			image.post(*this);
 
+			progress = _("Writing image");
+			Reinstall::Writer &writer = Reinstall::Writer::getInstance();
+			writer.open(progress,output);
+
+			image.write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
+				writer.write(offset,contents,length);
+			});
+
 			return 0;
 		}
 

@@ -168,6 +168,10 @@
 
 	Image::~Image() {
 
+		if(!empty(efibootpart)) {
+			unlink(efibootpart.c_str());
+		}
+
 		iso_image_unref(image);
 		iso_write_opts_free(opts);
 
@@ -207,13 +211,7 @@
 
 	}
 
-	void Image::append(const char *from, const char *to) {
-
-		if(*to == '.') {
-			to++;
-		}
-
-		// debug("Appending '",to,"'");
+	static void add_new_node(IsoImage *image, const char *from, const char *to) {
 
 		int rc = -1;
 
@@ -255,14 +253,32 @@
 
 	}
 
-	void Image::pre(Udjat::Abstract::Object &object) {
+	void Image::append(const char *from, const char *to) {
 
-		/*
-		if(efibootimage->enabled()) {
-			efibootimage->build(object);
+		if(*to == '.') {
+			to++;
 		}
-		*/
 
+		if(settings.boot.efi->enabled() && strcmp(to,settings.boot.efi->path()) == 0) {
+
+			// Copy contents to temporary file.
+			if(!empty(efibootpart)) {
+				throw runtime_error("EFI boot partition already set");
+			}
+			efibootpart = Udjat::File::Temporary::create();
+
+			Udjat::File::copy(from,efibootpart.c_str());
+			from = efibootpart.c_str();
+
+			// TODO: Apply templates in efibootpart
+
+		}
+
+		add_new_node(image,from,to);
+
+	}
+
+	void Image::pre(Udjat::Abstract::Object &object) {
 	}
 
 	void Image::post(Udjat::Abstract::Object &object) {
@@ -328,8 +344,7 @@
 		if(settings.boot.efi->enabled()) {
 
 			// Add EFI boot image
-			Logger::String{"Adding ",settings.boot.efi->path()," as EFI boot image"}.trace("iso9660");
-
+			Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image"}.trace("iso9660");
 
 			// set_efi_boot_image(const char *boot_image, bool like_iso_hybrid)
 			// set_efi_boot_image(settings.boot.efi->path().c_str());
@@ -338,7 +353,7 @@
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
 
 				// Isohybrid, set partition
-				int rc = iso_write_opts_set_partition_img(opts,2,0xef,(char *) settings.boot.efi->path(),0);
+				int rc = iso_write_opts_set_partition_img(opts,2,0xef,(char *) efibootpart.c_str(),0);
 
 				if(rc != ISO_SUCCESS) {
 					string msg{iso_error_to_msg(rc)};
@@ -346,7 +361,7 @@
 					throw runtime_error(msg);
 				}
 
-				Logger::String{"EFI partition set from '",settings.boot.efi->path(),"'"}.trace("iso9660");
+				Logger::String{"EFI partition set from '",efibootpart.c_str(),"'"}.trace("iso9660");
 
 			} else {
 
@@ -382,6 +397,56 @@
 			}
 
 		}
+
+	}
+
+	void Image::write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &write) {
+
+		dialog = _( "Preparing to write" );
+
+		int rc = iso_image_update_sizes(image);
+		if (rc < 0) {
+			string msg{iso_error_to_msg(rc)};
+			Logger::String{"Error updating image size: ",msg.c_str()}.error("iso9660");
+			throw runtime_error(msg);
+		}
+
+		struct burn_source *burn_src = NULL;
+		rc = iso_image_create_burn_source(image, opts, &burn_src);
+		if (rc < 0) {
+			string msg{iso_error_to_msg(rc)};
+			Logger::String{"Error creating burn source: ",msg.c_str()}.error("iso9660");
+			throw runtime_error(msg);
+		}
+
+		dialog = _( "Writing image" );
+
+		try {
+
+			#define BUFLEN 2048
+			unsigned char buffer[BUFLEN];
+
+			unsigned long long current = 0;
+			unsigned long long total = burn_src->get_size(burn_src);
+
+			while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
+				write(current, buffer, BUFLEN);
+				current += BUFLEN;
+				if(total) {
+					dialog = ((double) total) / ((double) current);
+				}
+			}
+
+		} catch(...) {
+
+				burn_src->free_data(burn_src);
+				free(burn_src);
+				throw;
+
+		}
+
+		burn_src->free_data(burn_src);
+		free(burn_src);
 
 	}
 

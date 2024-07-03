@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <reinstall/disk/abstract.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/ui/progress.h>
  #include <efiboot.h>
 
  typedef struct Iso_Image IsoImage;
@@ -85,6 +86,8 @@
 
 		void post(Udjat::Abstract::Object &object);
 
+		void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+
 	protected:
 		// Abstract::Image
 		void append(const char *from, const char *to) override;
@@ -93,6 +96,7 @@
 		const Settings &settings;
 		IsoImage *image = nullptr;
 		IsoWriteOpts *opts = nullptr;
+		std::string efibootpart;
 
 	};
 
