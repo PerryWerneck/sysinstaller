@@ -80,7 +80,7 @@
 			list<DataSource> files;
 
 			for(auto &source : sources) {
-				source.for_each(progress,[&files](const DataSource &value){
+				source.for_each(progress,templates,[&files](const DataSource &value){
 					files.push_back(value);
 					return false;
 				});

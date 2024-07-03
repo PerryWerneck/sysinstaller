@@ -35,6 +35,7 @@
  namespace Reinstall {
 
 	class Repository;
+	class Template;
 
 	class UDJAT_API DataSource : public Udjat::NamedObject {
 	protected:
@@ -63,7 +64,7 @@
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
-		bool for_each(Udjat::Dialog::Progress &progress, const std::function<bool(const DataSource &value)> &func) const;
+		bool for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(const DataSource &value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<DataSource> &sources);
 

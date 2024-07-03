@@ -84,6 +84,16 @@
 		}
 	}
 
+	bool Template::operator==(const char *path) const {
+
+		const char *ptr = strrchr(path,'/');
+		if(ptr && !strcmp(ptr+1,name())) {
+			return true;
+		}
+
+		return false;
+	}
+
 	bool Template::getProperty(const char *key, std::string &value) const {
 
 		if(!strcasecmp(key,"template-dir")) {

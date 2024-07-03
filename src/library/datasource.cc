@@ -31,6 +31,7 @@
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
+ #include <reinstall/tools/template.h>
  #include <sys/stat.h>
 
  #include <stdexcept>
@@ -190,8 +191,7 @@
 		}
 	}
 
-
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(const DataSource &value)> &func) const {
+	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(const DataSource &value)> &func) const {
 
 		if(!this->url.local || this->url.local[0] != '.') {
 			throw logic_error("A local relative path is required");
@@ -212,6 +212,15 @@
 				DataSource source;
 				source.repository = this->repository;
 				source.url.local = source.url.remote = path.c_str();
+
+				// Check templates.
+				for(auto &tmplt : templates) {
+					if(tmplt == source.url.remote) {
+						Logger::String{"Using template '",tmplt.name(),"' for ",path.c_str()}.write(Logger::Debug,"datasource");
+
+						break;
+					}
+				}
 
 				if(func(source)) {
 					return true;
