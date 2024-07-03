@@ -33,98 +33,17 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="modules/isobuilder/intl/bindtextdom.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/dcgettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/dcigettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/dcngettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/dgettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/dngettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/eval-plural.h" />
-		<Unit filename="modules/isobuilder/intl/explodename.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/finddomain.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/gettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/gettextP.h" />
 		<Unit filename="modules/isobuilder/intl/gmo.h" />
 		<Unit filename="modules/isobuilder/intl/hash-string.h" />
-		<Unit filename="modules/isobuilder/intl/intl-compat.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/l10nflist.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/loadinfo.h" />
-		<Unit filename="modules/isobuilder/intl/loadmsgcat.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/localcharset.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/localcharset.h" />
-		<Unit filename="modules/isobuilder/intl/localealias.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/localename.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/log.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/ngettext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/os2compat.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/os2compat.h" />
-		<Unit filename="modules/isobuilder/intl/osdep.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/plural-exp.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/plural-exp.h" />
-		<Unit filename="modules/isobuilder/intl/plural.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/printf-args.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/printf-args.h" />
-		<Unit filename="modules/isobuilder/intl/printf-parse.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/printf-parse.h" />
-		<Unit filename="modules/isobuilder/intl/printf.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/relocatable.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/relocatable.h" />
-		<Unit filename="modules/isobuilder/intl/textdomain.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="modules/isobuilder/intl/vasnprintf.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="modules/isobuilder/intl/vasnprintf.h" />
 		<Unit filename="modules/isobuilder/intl/vasnwprintf.h" />
 		<Unit filename="modules/isobuilder/intl/wprintf-parse.h" />
@@ -253,6 +172,7 @@
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
+		<Unit filename="src/include/reinstall/tools/template.h" />
 		<Unit filename="src/include/reinstall/tools/writer.h" />
 		<Unit filename="src/include/udjat/ui/dialog.h" />
 		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
@@ -270,6 +190,7 @@
 		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/repository.cc" />
 		<Unit filename="src/library/slpclient.cc" />
+		<Unit filename="src/library/template.cc" />
 		<Unit filename="src/library/ui/dialog.cc" />
 		<Unit filename="src/library/ui/popup.cc" />
 		<Unit filename="src/library/ui/progress.cc" />

@@ -451,7 +451,7 @@ run: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ 
 
 	@LD_LIBRARY_PATH=$(BINDBG) \
-		$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ --output=/tmp/test.iso
+		$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
 
 memcheck: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
@@ -466,7 +466,7 @@ else
 
 	@LD_LIBRARY_PATH=$(BINDBG) \
 		$(VALGRIND) --leak-check=full --track-origins=yes --gen-suppressions=all --suppressions=valgrind.suppression \
-		$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ --output=/tmp/test.iso
+		$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@
 endif
 
 #---[ Clean Targets ]--------------------------------------------------------------------

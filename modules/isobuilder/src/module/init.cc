@@ -28,6 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/tools/template.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <vector>
@@ -51,6 +52,7 @@
 		Udjat::Dialog output;
 		iso9660::Image::Settings imgdef;
 		vector<Reinstall::DataSource> sources;
+		vector<Reinstall::Template> templates;
 
 	public:
 
@@ -63,6 +65,9 @@
 
 			// Load sources.
 			Reinstall::DataSource::load(node,sources);
+
+			// Load templates
+			Reinstall::Template::load(*this,node,templates);
 
 		}
 

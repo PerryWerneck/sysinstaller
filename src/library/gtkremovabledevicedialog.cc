@@ -157,6 +157,10 @@
 
 	store->append(DeviceHolder::create(DeviceHolder::AutoDetect,"",_("Auto detect")));
 
+#ifdef DEBUG
+	store->append(DeviceHolder::create(DeviceHolder::File,"/tmp/test.iso","Test image at /tmp/test.iso"));
+#endif // DEBUG
+
 	dropdown.property_selected().signal_changed().connect([&](){
 
 		debug("Device selection has changed");

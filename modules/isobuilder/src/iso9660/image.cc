@@ -82,12 +82,15 @@
 
 			int fd;
 
+			string filename;
 			if(settings.system_area && *settings.system_area) {
-				fd = open(settings.system_area,O_RDONLY);
+				filename = settings.system_area;
 			} else {
-				fd = open(Config::Value<string>("iso9660","system-area","/usr/share/syslinux/isohdpfx.bin").c_str(),O_RDONLY);
+				filename = Config::Value<string>("iso9660","system-area","/usr/share/syslinux/isohdpfx.bin");
 			}
 
+			Logger::String{"Loading system area from '",filename.c_str(),"'"}.trace("iso9660");
+			fd = open(filename.c_str(),O_RDONLY);
 			if(fd <  0) {
 				throw system_error(errno, system_category(), _("Error loading system area"));
 			}
