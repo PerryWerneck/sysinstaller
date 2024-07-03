@@ -159,7 +159,7 @@
 #endif // DEBUG
 
 		if(prefer_local && access(components.path.c_str(),R_OK) == 0) {
-			debug(components.path.c_str()," already exists");
+			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,"datasource");
 			return components.path.c_str();
 		}
 

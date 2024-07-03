@@ -48,6 +48,7 @@
 			int rockridge = 1;
 			int joliet = 1;
 			int allow_deep_paths = 1;
+			bool like_iso_hybrid = true;
 
 			struct {
 

@@ -43,6 +43,8 @@
 		system_id = XML::QuarkFactory(node,"system-id");
 
 		boot.eltorito.enabled = XML::AttributeFactory(node,"eltorito").as_bool(boot.eltorito.enabled);
+		boot.eltorito.id = XML::QuarkFactory(node,"system-name");
+
 		boot.eltorito.image = XML::QuarkFactory(node,"eltorito-boot-image",boot.eltorito.image);
 		boot.catalog = XML::QuarkFactory(node,"boot-catalog",(boot.eltorito.enabled ? boot.catalog : ""));
 

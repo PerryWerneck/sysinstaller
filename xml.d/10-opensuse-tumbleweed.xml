@@ -53,9 +53,10 @@
 	<!-- Setup the kernel parameter based on repository 'install' settings, can be an URL or 'slp:/' for automatic detection -->
 	<kernel-parameter name='install' repository='install' />
 
-	<group name='TumbleWeed'>
+	<group name='TumbleWeed' >
 
  		<attribute name='title' value='OpenSUSE TumbleWeed' />
+ 		<attribute name='system-name' value='OpenSUSE TumbleWeed' />
  		<attribute name='icon' value='opensuse-tumbleweed' />
  		<attribute name='sub-title' value='State-of-the-art desktop and server operating system' url='https://get.opensuse.org/tumbleweed/' /> 		
 

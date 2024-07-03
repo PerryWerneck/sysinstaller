@@ -213,7 +213,7 @@
 			to++;
 		}
 
-		debug("Appending '",to,"'");
+		// debug("Appending '",to,"'");
 
 		int rc = -1;
 
@@ -273,144 +273,116 @@
 
 		if(settings.boot.eltorito) {
 
-			// Search to confirm presence of the boot_image.
-			/*
-			const char *filename = action->source(action->boot.eltorito.image)->filename();
-			if(!(filename && *filename)) {
-				throw runtime_error(_("Unexpected filename on el-torito boot image"));
+			ElToritoBootImage *bootimg = NULL;
+
+			Logger::String{"Setting el-torito boot image to '",settings.boot.eltorito.image,"'"}.trace("iso9660");
+			Logger::String{"Setting boot catalog to '",settings.boot.catalog,"'"}.trace("iso9660");
+
+			int rc = iso_image_set_boot_image(
+							image,
+							settings.boot.eltorito.image,
+							ELTORITO_NO_EMUL,
+							settings.boot.catalog,
+							&bootimg
+						);
+
+			if(rc < 0) {
+				string msg{iso_error_to_msg(rc)};
+				Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image"}.error("iso9660");
+				throw runtime_error(msg);
 			}
-			*/
 
-			/*
-			set_el_torito_boot_image(
-				action->boot.eltorito.image, isopath
-				action->boot.catalog, catalog
-				action->volume_id id
-			);
-			*/
-			{
-				ElToritoBootImage *bootimg = NULL;
+			el_torito_set_load_size(bootimg, 4);
+			el_torito_patch_isolinux_image(bootimg);
 
-				Logger::String{"Setting el-torito boot image to '",settings.boot.eltorito.image,"'"}.trace("iso9660");
-				Logger::String{"Setting boot catalog to '",settings.boot.catalog,"'"}.trace("iso9660");
-
-				int rc = iso_image_set_boot_image(
-								image,
-								settings.boot.eltorito.image,
-								ELTORITO_NO_EMUL,
-								settings.boot.catalog,
-								&bootimg
-							);
-
-				if(rc < 0) {
-					string msg{iso_error_to_msg(rc)};
-					Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image"}.error("iso9660");
-					throw runtime_error(msg);
-				}
-
-				el_torito_set_load_size(bootimg, 4);
-				el_torito_patch_isolinux_image(bootimg);
+			if(settings.like_iso_hybrid) {
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
+			}
 
-				{
-					uint8_t id_string[28];
-					memset(id_string,' ',sizeof(id_string));
+			{
+				uint8_t id_string[28];
+				memset(id_string,' ',sizeof(id_string));
 
-					if(settings.boot.eltorito.id && *settings.boot.eltorito.id) {
-						size_t len = strlen(settings.boot.eltorito.id);
-						if(len > 28) {
-							len = 28;
-						}
-						strncpy((char *) id_string,settings.boot.eltorito.id,len);
-					} else {
-						Config::Value<string> defstring("iso9660","el-torito-id",Application::Name().c_str());
-						strncpy((char *) id_string,defstring,strlen(defstring));
+				if(settings.boot.eltorito.id && *settings.boot.eltorito.id) {
+					size_t len = strlen(settings.boot.eltorito.id);
+					if(len > 28) {
+						len = 28;
 					}
-
-					el_torito_set_id_string(bootimg,id_string);
-					Logger::String{"El-torito ID string set to '",string((const char *) id_string,28).c_str(),"'"}.trace("iso9660");
+					strncpy((char *) id_string,settings.boot.eltorito.id,len);
+				} else {
+					Config::Value<string> defstring("iso9660","el-torito-id",Application::Name().c_str());
+					strncpy((char *) id_string,defstring,strlen(defstring));
 				}
 
-				// bit0= Patch the boot info table of the boot image. This does the same as mkisofs option -boot-info-table.
-				el_torito_set_isolinux_options(bootimg,1,0);
-
+				el_torito_set_id_string(bootimg,id_string);
+				Logger::String{"El-torito ID string set to '",string((const char *) id_string,28).c_str(),"'"}.trace("iso9660");
 			}
+
+			// bit0= Patch the boot info table of the boot image. This does the same as mkisofs option -boot-info-table.
+			el_torito_set_isolinux_options(bootimg,1,0);
 
 			Logger::String{"El-torito boot image set to '",settings.boot.eltorito.image,"'"}.trace("iso9660");
 
 		}
 
-		/*
-		Reinstall::Dialog::Progress::getInstance().set_sub_title(_("Setting up ISO image"));
-
-		set_rockridge();
-		set_joliet();
-		set_allow_deep_paths();
-
-		if(action->boot.eltorito) {
-
-			Reinstall::Dialog::Progress::getInstance().set_sub_title(_("Adding el-torito boot image"));
-
-			// Search to confirm presence of the boot_image.
-			const char *filename = action->source(action->boot.eltorito.image)->filename();
-			if(!(filename && *filename)) {
-				throw runtime_error(_("Unexpected filename on el-torito boot image"));
-			}
-
-			set_el_torito_boot_image(
-				action->boot.eltorito.image,
-				action->boot.catalog,
-				action->volume_id
-			);
-
-			cout << "iso9660\tEl-torito boot image set to '" << action->boot.eltorito.image << "'" << endl;
-		}
-
-		if(action->boot.efi->enabled()) {
-
-			Reinstall::Dialog::Progress::getInstance().set_sub_title(_("Adding EFI boot image"));
-
-			auto source = action->source(action->boot.efi->path());
-			const char *filename = source->filename(true);
-			if(!filename[0]) {
-				throw runtime_error(_("Unexpected filename on EFI boot image"));
-			}
-
-			// Apply templates on EFI boot image.
-			{
-				debug("Applying templates on EFI boot image at '",filename,"'");
-
-				Disk::Image disk(filename);
-
-				for(auto tmpl : action->templates) {
-
-					disk.forEach([this,&tmpl](const char *mountpoint, const char *path){
-
-						if(tmpl->test(path)) {
-							tmpl->load((Udjat::Object &) *this);
-							cout << "efi\tReplacing " << path << " with template " << tmpl->c_str() << endl;
-							tmpl->replace((string{mountpoint} + "/" + path).c_str());
-						}
-
-					});
-
-				}
-			}
+		if(settings.boot.efi->enabled()) {
 
 			// Add EFI boot image
-			Logger::String{"Adding ",filename," as EFI boot image"}.info(name);
-			set_efi_boot_image(filename);
+			Logger::String{"Adding ",settings.boot.efi->path()," as EFI boot image"}.trace("iso9660");
 
-			if(action->boot.catalog && *action->boot.catalog) {
-				Logger::String{"Adding ",source->path," as boot image"}.info(name);
-				add_boot_image(source->path,0xEF);
+
+			// set_efi_boot_image(const char *boot_image, bool like_iso_hybrid)
+			// set_efi_boot_image(settings.boot.efi->path().c_str());
+			if(settings.like_iso_hybrid) {
+
+				iso_write_opts_set_part_like_isohybrid(opts, 1);
+
+				// Isohybrid, set partition
+				int rc = iso_write_opts_set_partition_img(opts,2,0xef,(char *) settings.boot.efi->path(),0);
+
+				if(rc != ISO_SUCCESS) {
+					string msg{iso_error_to_msg(rc)};
+					Logger::String{"Cant set EFI partition: ",msg.c_str()}.error("iso9660");
+					throw runtime_error(msg);
+				}
+
+				Logger::String{"EFI partition set from '",settings.boot.efi->path(),"'"}.trace("iso9660");
+
 			} else {
-				Logger::String{"No boot catalog, ",source->path," was not added as boot image"}.trace(name);
+
+				// Not isohybrid.
+				int rc = iso_write_opts_set_efi_bootp(opts,(char *) settings.boot.efi->path(),0);
+
+				if(rc != ISO_SUCCESS) {
+					string msg{iso_error_to_msg(rc)};
+					Logger::String{"Cant set EFI bootp: ",msg.c_str()}.error("iso9660");
+					throw runtime_error(msg);
+				}
+
+				Logger::String{"EFI bootp set from '",settings.boot.efi->path(),"'"}.trace("iso9660");
+
+			}
+
+			if(settings.boot.catalog && *settings.boot.catalog) {
+
+				Logger::String{"Adding ",settings.boot.efi->path()," as boot image"}.trace("iso9660");
+
+                ElToritoBootImage *bootimg = NULL;
+                int rc = iso_image_add_boot_image(image,settings.boot.efi->path(),ELTORITO_NO_EMUL,0,&bootimg);
+                if(rc < 0) {
+ 					string msg{iso_error_to_msg(rc)};
+					Logger::String{"Cant add EFI boot image: ",msg.c_str()}.error("iso9660");
+					throw runtime_error(msg);
+				}
+
+				el_torito_set_boot_platform_id(bootimg, 0xEF);
+
+			} else {
+				Logger::String{"No boot catalog, ",settings.boot.efi->path()," was not added as boot image"}.warning("iso9660");
 			}
 
 		}
 
-		*/
 	}
 
  }
