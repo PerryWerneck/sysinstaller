@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/ui/dialog.h>
  #include <vector>
 
  namespace Reinstall {
@@ -48,11 +49,18 @@
 		// Check if template match path.
 		bool operator==(const char *path) const;
 
+		/// @brief Save template to local file.
+		/// @return The local file with the 'raw' template
+		std::string save(Udjat::Dialog::Progress &progress);
+
+		/// @brief Apply object on template, save to file
+		void save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &parent, const char *path);
+
 	private:
 
 		Type type = (Type) 0;
 		bool escape = false;
-		char marker = '%';
+		char marker = '$';
 
 		const char *url = nullptr;
 		const char *path = nullptr;

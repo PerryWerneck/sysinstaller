@@ -40,9 +40,16 @@
 		/// @brief Append datasource in list, check for tempalte.
 		void push_back(std::list<std::shared_ptr<DataSource>> &files, std::shared_ptr<DataSource> value);
 
+		struct {
+			const char *label = nullptr;
+			std::string theme;
+		} boot;
+
 	protected:
 		Udjat::Dialog output;
 		const Udjat::Abstract::Object &parent;
+
+		bool getProperty(const char *key, std::string &value) const;
 
 	public:
 		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);

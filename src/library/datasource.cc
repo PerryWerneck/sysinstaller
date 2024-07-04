@@ -44,7 +44,7 @@
  namespace Reinstall {
 
 	DataSource::DataSource(const DataSource &src)
-		: repository{src.repository}, update_from_remote{src.update_from_remote} {
+		: Udjat::NamedObject{src.name()}, repository{src.repository}, update_from_remote{src.update_from_remote} {
 	}
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
@@ -178,6 +178,19 @@
 				sources.push_back(make_shared<FileSource>(child));
 			}
 		}
+	}
+
+	bool DataSource::for_each(const std::function<bool(const char *filename)> &func) const {
+
+		if(repository.get() && repository->index()) {
+			for(const std::string &filename : *repository) {
+				if(func(filename.c_str())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {

@@ -120,6 +120,19 @@
 
 	}
 
+	bool Action::getProperty(const char *key, std::string &value) const {
+
+		debug("----> getProperty(",key,")");
+
+		if(Udjat::NamedObject::getProperty(key,value)) {
+			return true;
+		}
+
+		Logger::String{"Unable to expand property '",key,"'"}.warning(name());
+
+		return false;
+	}
+
 	void Action::complete(int rc) {
 
 		if(rc) {

@@ -66,6 +66,15 @@
 		~Action() {
 		}
 
+		bool getProperty(const char *key, std::string &value) const override {
+
+			if(Builder::getProperty(key,value)) {
+				return true;
+			}
+
+			return Reinstall::Action::getProperty(key,value);
+		}
+
 		int activate(Udjat::Dialog::Progress &progress) override {
 
 			debug("Action activated");

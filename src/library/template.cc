@@ -29,6 +29,8 @@
  #include <udjat/tools/application.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/quark.h>
+ #include <udjat/tools/url.h>
+ #include <udjat/tools/file.h>
  #include <stdexcept>
 
  #include <unistd.h>
@@ -96,7 +98,8 @@
 
 		if(!strcasecmp(key,"template-dir")) {
 #ifdef DEBUG
-			value = "./templates";
+			value = getenv("PWD");
+			value += "/templates";
 #else
 			value = Application::DataDir{"templates"};
 #endif // DEBUG
@@ -114,6 +117,47 @@
 		});
 
 		debug("Got ",templates.size()," templates");
+
+	}
+
+	std::string Template::save(Udjat::Dialog::Progress &progress) {
+
+		Udjat::URL url{this->url};
+
+		if(url.local()) {
+			debug("url=",url.c_str());
+			return url.ComponentsFactory().path;
+		}
+
+		throw runtime_error("Unable to handle remote template");
+
+	}
+
+	void Template::save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &object, const char *path) {
+
+		auto from = save(progress);
+		if( (type & Template::Text) != 0) {
+
+			// Parse text file
+			String contents{File::Text{from.c_str()}.c_str()};
+			contents.expand(marker,object,true,true);
+
+			// and save parsed contents.
+			File::Text{path}.set(contents.c_str()).save();
+
+		} else {
+
+			throw runtime_error("Cant handle binary templates");
+
+		}
+
+		if((type && Template::Script) != 0) {
+			if(chmod(path,0755) < 0) {
+					throw system_error(errno,system_category(),_("Cant update template permissions"));
+			}
+		}
+
+		debug("Template '",name(),"' saved on file ",path);
 
 	}
 

@@ -31,6 +31,7 @@
  #include <udjat/tools/file/temporary.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/logger.h>
  #include <vector>
  #include <unistd.h>
 
@@ -41,6 +42,23 @@
 
 	Builder::Builder(const Udjat::Abstract::Object &p, const Udjat::XML::Node &node)
 		: output{"select-device",node}, parent{p} {
+
+		boot.theme = XML::StringFactory(node,"boot-theme");
+
+		static const char *labels[] = {
+			"grub-label",
+			"boot-label",
+			"system-name",
+			"label",
+			"title"
+		};
+
+		for(const char *label : labels) {
+			boot.label = XML::QuarkFactory(node,label);
+			if(*boot.label) {
+				break;
+			}
+		}
 
 		// Load sources.
 		Reinstall::DataSource::load(node,sources);
@@ -68,16 +86,17 @@
 			TemplateSource(const Udjat::Abstract::Object &p, std::shared_ptr<Reinstall::Template> t, std::shared_ptr<DataSource> source)
 				: DataSource{*source},parent{p},tmplt{t} {
 
-				rename(source->name());
 				path.local = source->local();
 				path.remote = source->remote();
 
 			}
 
 			~TemplateSource() {
+#ifndef DEBUG
 				if(!filename.empty()) {
 					unlink(filename.c_str());
 				}
+#endif // DEBUG
 			}
 
 			/// @brief Get URL for source on local filesystem.
@@ -90,12 +109,8 @@
 				return path.remote.c_str();
 			}
 
-
 			void save(Udjat::Dialog::Progress &progress, const char *path) override {
-				Udjat::URL url = url_local();
-
-				debug("Getting template from '",url.c_str(),"'");
-
+				tmplt->save(progress,parent,path);
 			}
 
 			std::string save(Udjat::Dialog::Progress &progress) override {
@@ -119,6 +134,62 @@
 		}
 
 		files.push_back(value);
+	}
+
+	bool Builder::getProperty(const char *key, std::string &value) const {
+
+		if(!strcasecmp(key,"boot-label") && boot.label && *boot.label) {
+			value = boot.label;
+			return true;
+		}
+
+		if(!strcasecmp(key,"boot-theme")) {
+
+			if(boot.theme.empty()) {
+
+				for(auto source : sources) {
+
+					if(strncmp(source->path(),"/boot/",6)) {
+						source->for_each([&](const char *filename){
+
+							if(strncmp(filename,"./boot/",7)) {
+								return false;
+							}
+
+							filename = strchr(filename+7,'/');
+							if(!filename) {
+								return false;
+							}
+
+							filename = strchr(filename+1,'/');
+							if(!filename || strncmp(filename,"/themes/",8)) {
+								return false;
+							}
+
+							filename += 8;
+							const char *ptr = strchr(filename,'/');
+							if(!ptr) {
+								return false;
+							}
+
+							const_cast<Builder *>(this)->boot.theme = string{filename,(size_t)(ptr - filename)}.c_str();
+							return true;
+
+						});
+						break;
+					}
+				}
+
+				Logger::String{"Detected boot theme was '",boot.theme.c_str(),"'"}.trace(parent.name());
+
+			}
+
+			value = boot.theme;
+			return !empty(value);
+
+		}
+
+		return false;
 	}
 
 	void Builder::prepare(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) {

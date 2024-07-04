@@ -64,6 +64,8 @@
 
 		void activate();
 
+		bool getProperty(const char *key, std::string &value) const override;
+
 		inline const char * icon_name() const noexcept {
 			return args.icon_name;
 		}
