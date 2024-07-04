@@ -49,7 +49,7 @@
 			virtual ~Image();
 
 			/// @brief Append data source to image, download file if needed.
-			void append(DataSource &source);
+			void append(std::shared_ptr<DataSource> );
 
 			/// @brief Add URL to image.
 			/// @param url The URL of the file to append.

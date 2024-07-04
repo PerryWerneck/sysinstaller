@@ -36,8 +36,9 @@
  	Abstract::Image::~Image() {
  	}
 
-	void Abstract::Image::append(DataSource &source) {
-		append(source.save(Dialog::Progress::getInstance()).c_str(),source.path());
+	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
+		debug(source->path());
+		append(source->save(Dialog::Progress::getInstance()).c_str(),source->path());
 	}
 
  }

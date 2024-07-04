@@ -78,7 +78,7 @@
 		Image(const Settings &settings);
 		virtual ~Image();
 
-		inline void append(Reinstall::DataSource &source) {
+		inline void append(std::shared_ptr<Reinstall::DataSource> source) {
 			Reinstall::Abstract::Image::append(source);
 		}
 

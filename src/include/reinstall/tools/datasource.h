@@ -50,6 +50,8 @@
 		DataSource() {
 		}
 
+		DataSource(const DataSource &src);
+
 	public:
 
 		DataSource(const char *name) : Udjat::NamedObject(name) {}
@@ -57,10 +59,10 @@
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
 
-		/// @brief Get URL for source on local filesystem.
+		/// @brief Get path for source on local filesystem.
 		virtual const char * local() const = 0;
 
-		/// @brief Get URL for source on remote filesystem.
+		/// @brief Get path for source on remote filesystem.
 		virtual const char * remote() const = 0;
 
 		/// @brief Get path for source on target image.
@@ -75,6 +77,9 @@
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources);
 
+		Udjat::URL url_local() const;
+		Udjat::URL url_remote() const;
+
 	};
 
 	/// @brief Data source with remote and local URLs
@@ -88,9 +93,6 @@
 	public:
 		FileSource(const char *path);
 		FileSource(const Udjat::XML::Node &node);
-
-		Udjat::URL url_local() const;
-		Udjat::URL url_remote() const;
 
 		inline bool has_local() const noexcept {
 			return url.local && *url.local;

@@ -75,44 +75,6 @@
 		return url.remote;
 	}
 
-	Udjat::URL FileSource::url_local() const {
-
-		const char *path = local();
-
-		if(path[0] == '.') {
-			if(!repository) {
-				throw logic_error("Unable to use relative URLs without repository");
-			}
-
-			URL url{repository->local()};
-			url += path;
-
-			return url;
-		}
-
-		return URL{path};
-
-	}
-
-	Udjat::URL FileSource::url_remote() const {
-
-		const char *path = remote();
-
-		if(path[0] == '.') {
-			if(!repository) {
-				throw logic_error("Unable to use relative URLs without repository");
-			}
-
-			URL url{repository->remote()};
-			url += path;
-
-			return url;
-		}
-
-		return URL{path};
-
-	}
-
 	void FileSource::save(Udjat::Dialog::Progress &progress, const char *path) {
 
 		auto url = url_remote();

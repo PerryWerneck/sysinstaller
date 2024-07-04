@@ -87,8 +87,6 @@
 		//
 		auto dialog = Udjat::Dialog::Progress::Factory();
 
-		debug("group-title=",group().title());
-
 		info() << "Starting activity" << endl;
 
 		dialog->title(group().title());

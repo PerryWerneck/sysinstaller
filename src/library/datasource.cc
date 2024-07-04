@@ -43,6 +43,10 @@
 
  namespace Reinstall {
 
+	DataSource::DataSource(const DataSource &src)
+		: repository{src.repository}, update_from_remote{src.update_from_remote} {
+	}
+
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
 
 #ifdef DEBUG
@@ -208,56 +212,48 @@
 
 		}
 
-		/*
-		if(!this->url.local || this->url.local[0] != '.') {
-			throw logic_error("A local relative path is required");
-		}
-
-		if(repository.get() && repository->index()) {
-
-			debug("Using repository index");
-
-			size_t szlocal = strlen(this->url.local);
-
-			for(const auto &path : *repository) {
-
-				if(strncmp(this->url.local,path.c_str(),szlocal)) {
-					continue;
-				}
-
-				debug("TODO: ",path.c_str());
-
-				// URL Based data source
-				auto source = make_shared<DataSource>();
-				source->rename(this->name());
-				source->update_from_remote = this->update_from_remote;
-				source->repository = this->repository;
-				source->url.local = source->url.remote = source->url.image = path.c_str();
-
-				// Check templates.
-				for(auto &tmplt : templates) {
-					if(tmplt == source->url.remote) {
-						Logger::String{"Using template '",tmplt.name(),"' for ",path.c_str()}.trace(name());
-
-						break;
-					}
-				}
-
-
-				if(func(source)) {
-					return true;
-				}
-
-			}
-
-		}
-
 		// TODO: Parse index.html
 
-		*/
 		return false;
 	}
 
+	Udjat::URL DataSource::url_local() const {
+
+		const char *path = local();
+
+		if(path[0] == '.') {
+			if(!repository) {
+				throw logic_error("Unable to use relative URLs without repository");
+			}
+
+			URL url{repository->local()};
+			url += path;
+
+			return url;
+		}
+
+		return URL{path};
+
+	}
+
+	Udjat::URL DataSource::url_remote() const {
+
+		const char *path = remote();
+
+		if(path[0] == '.') {
+			if(!repository) {
+				throw logic_error("Unable to use relative URLs without repository");
+			}
+
+			URL url{repository->remote()};
+			url += path;
+
+			return url;
+		}
+
+		return URL{path};
+
+	}
 
  }
 

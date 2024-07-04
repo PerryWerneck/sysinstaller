@@ -28,6 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
+ #include <udjat/tools/file/temporary.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <vector>
@@ -65,8 +66,9 @@
 
 		public:
 			TemplateSource(const Udjat::Abstract::Object &p, std::shared_ptr<Reinstall::Template> t, std::shared_ptr<DataSource> source)
-				: parent{p},tmplt{t} {
+				: DataSource{*source},parent{p},tmplt{t} {
 
+				rename(source->name());
 				path.local = source->local();
 				path.remote = source->remote();
 
@@ -88,10 +90,20 @@
 				return path.remote.c_str();
 			}
 
+
 			void save(Udjat::Dialog::Progress &progress, const char *path) override {
+				Udjat::URL url = url_local();
+
+				debug("Getting template from '",url.c_str(),"'");
+
 			}
 
 			std::string save(Udjat::Dialog::Progress &progress) override {
+				if(filename.empty()) {
+					filename = File::Temporary::create();
+					save(progress,filename.c_str());
+				}
+				return filename;
 			}
 
 		};
