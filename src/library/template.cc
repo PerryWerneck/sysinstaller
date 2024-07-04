@@ -108,10 +108,10 @@
 		return Udjat::NamedObject::getProperty(key,value);
 	}
 
-	void Template::load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<Template> &templates) {
+	void Template::load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Template>> &templates) {
 
 		parent.for_each(node, "template", [&parent,&templates](const XML::Node &child){
-			templates.emplace_back(parent,child);
+			templates.push_back(make_shared<Template>(parent,child));
 			return false;
 		});
 

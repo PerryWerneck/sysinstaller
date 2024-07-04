@@ -52,7 +52,7 @@
 		Udjat::Dialog output;
 		iso9660::Image::Settings imgdef;
 		vector<shared_ptr<Reinstall::DataSource>> sources;
-		vector<Reinstall::Template> templates;
+		vector<shared_ptr<Reinstall::Template>> templates;
 
 	public:
 

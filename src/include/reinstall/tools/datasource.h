@@ -46,7 +46,6 @@
 		bool update_from_remote = true;
 
 		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname) const;
-		Udjat::URL UrlFactory(const char *relative) const;
 
 	public:
 
@@ -64,12 +63,12 @@
 		/// @brief Get path for source on target image.
 		virtual const char * path() const;
 
-		void save(Udjat::Dialog::Progress &progress, const char *path);
-		std::string save(Udjat::Dialog::Progress &progress);
+		virtual void save(Udjat::Dialog::Progress &progress, const char *path);
+		virtual std::string save(Udjat::Dialog::Progress &progress);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
-		bool for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
+		bool for_each(Udjat::Dialog::Progress &progress, std::vector<std::shared_ptr<Template>> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources);
 
@@ -77,7 +76,7 @@
 
 	/// @brief Data source with remote and local URLs
 	class UDJAT_API FileSource : public DataSource {
-	private:
+	protected:
 		struct {
 			const char *local = "";		///< @brief The URL for source in the local filesystem.
 			const char *remote = "";	///< @brief The URL for source in the remote server.
@@ -86,9 +85,18 @@
 	public:
 		FileSource(const Udjat::XML::Node &node);
 
+		Udjat::URL url_local() const;
+		Udjat::URL url_remote() const;
+
+		inline bool has_local() const noexcept {
+			return url.local && *url.local;
+		}
+
 		// DataSource
 		const char * local() const override;
 		const char * remote() const override;
+		void save(Udjat::Dialog::Progress &progress, const char *path) override;
+		std::string save(Udjat::Dialog::Progress &progress) override;
 
 	};
 

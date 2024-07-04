@@ -45,6 +45,9 @@
 
 	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
 
+		static mutex guard;
+		lock_guard<mutex> lock(guard);
+
 		const char * name = XML::StringFactory(node,"repository","install");
 
 		static list<std::shared_ptr<Repository>> repositories;
@@ -99,20 +102,19 @@
 
 			auto &progress = Dialog::Progress::getInstance();
 
-			URL url = UrlFactory(remote());
+			URL url = url_remote();
 			progress.url(url.c_str());
 			url += "INDEX.gz";
 
 			try {
 
 				string filename;
-				const char *path = local();
 
-				if(path && *path) {
+				if(has_local()) {
 
 					// Has local path, update file.
 
-					filename = UrlFactory(path).ComponentsFactory().path;
+					filename = url_local().ComponentsFactory().path;
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
 

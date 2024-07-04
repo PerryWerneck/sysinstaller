@@ -112,6 +112,37 @@
 	set_visible();
 	set_sensitive(false);
 
+	ThreadPool::getInstance().push([this,a](){
+
+		try {
+
+			auto action = dynamic_cast<Reinstall::Action *>(a.get());
+			if(action && !action->initialize()) {
+				action->info("Action initialization has returned 'false', keeping it disabled");
+				return;
+			}
+
+		} catch(const std::exception &e) {
+
+			a->error() << e.what() << endl;
+			return;
+
+		} catch(...) {
+
+			a->error() << "Unexpected error while initializing action" << endl;
+			return;
+
+		}
+
+		a->info() << "Initialization complete, enabling item" << endl;
+		Glib::signal_idle().connect([this](){
+			set_sensitive(true);
+			return 0;
+		});
+
+	});
+
+	/*
 	auto action = dynamic_cast<Reinstall::Action *>(a.get());
 
 	if(action) {
@@ -131,6 +162,7 @@
 			}
 		});
 	}
+	*/
 
  }
 

@@ -43,7 +43,7 @@
 
 		bool getProperty(const char *key, std::string &value) const override;
 
-		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<Template> &templates);
+		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Template>> &templates);
 
 		// Check if template match path.
 		bool operator==(const char *path) const;

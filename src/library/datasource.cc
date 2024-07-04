@@ -95,6 +95,8 @@
 	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname) const {
 
 		const char *path = String{node,attrname}.expand(node).expand().as_quark();
+		debug(node.name(),"(",attrname,") = '",path,"'");
+
 		if(!path[0]) {
 			path = String{node,"url"}.expand(node).expand().as_quark();
 			if(path[0]) {
@@ -103,6 +105,7 @@
 				Logger::String{"Attribute '",attrname,"' is missing"}.warning(name());
 			}
 		}
+
 		return path;
 	}
 
@@ -149,21 +152,6 @@
 	}
 	*/
 
-	Udjat::URL DataSource::UrlFactory(const char *relative) const {
-
-		if(relative[0] == '.') {
-			if(!repository) {
-				throw logic_error("Unable to use relative URLs without repository");
-			}
-			URL url{repository->remote()};
-			url += relative;
-
-			return url;
-		}
-
-		return URL{relative};
-	}
-
 	const char * DataSource::path() const {
 		const char *path = local();
 		if(path[0] != '.') {
@@ -172,89 +160,23 @@
 		return path+1;
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
-
-		auto url = UrlFactory(remote());
-
-		info() << "Downloading " << url.c_str() << endl;
-
-		debug("Downloading '",url.c_str(),"' to '",path,"'");
-
-		{
-			string str{path};
-			auto pos = str.rfind('/');
-			if(pos == string::npos) {
-				throw runtime_error("Invalid local path");
-			}
-			str.resize(pos);
-			if(File::Path::mkdir(str.c_str())) {
-				info() << "New path made: " << str << endl;
-			}
-		}
-
-		try {
-
-			progress.url(url.c_str());
-			url.get(path,[&](uint64_t current, uint64_t total){
-
-				progress.file_sizes(current,total);
-
-				return true;
-			});
-
-		} catch(const std::exception &e) {
-
-			error() << url.c_str() << " -> " << path << ": " << e.what() << endl;
-			throw;
-		}
-
+	void DataSource::save(Udjat::Dialog::Progress &, const char *) {
+		throw logic_error("Abstract datasource is unable to save to file");
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
-
-		auto url = UrlFactory(local());
-		if(!url.local()) {
-			throw runtime_error("Unable to save to remote path");
-		}
-
-		auto components = url.ComponentsFactory();
-
-		if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
-			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
-			return components.path.c_str();
-		}
-
-		try {
-
-			save(progress,components.path.c_str());
-
-		} catch(...) {
-
-			struct stat sb;
-			const char *filename = components.path.c_str();
-			if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
-				error() << "Download error, cached file '" << filename << "' not available" << endl;
-				throw;
-			}
-
-			warning() << "Download error, using cached file '" << filename << "'" << endl;
-		}
-
-		return components.path;
-
+	std::string DataSource::save(Udjat::Dialog::Progress &) {
+		throw logic_error("Abstract datasource is unable to save");
 	}
 
 	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources) {
-		/*
 		for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
 			for(Udjat::XML::Node child = nd.child("source"); child; child = child.next_sibling("source")) {
-				sources.emplace_back(child);
+				sources.push_back(make_shared<FileSource>(child));
 			}
 		}
-		*/
 	}
 
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<std::shared_ptr<Template>> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		/*
 		if(!this->url.local || this->url.local[0] != '.') {
