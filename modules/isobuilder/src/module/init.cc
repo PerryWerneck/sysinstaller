@@ -51,7 +51,7 @@
 	private:
 		Udjat::Dialog output;
 		iso9660::Image::Settings imgdef;
-		vector<Reinstall::DataSource> sources;
+		vector<shared_ptr<Reinstall::DataSource>> sources;
 		vector<Reinstall::Template> templates;
 
 	public:
@@ -77,10 +77,10 @@
 		int activate(Udjat::Dialog::Progress &progress) override {
 
 			progress = _("Getting required files");
-			list<DataSource> files;
+			list<std::shared_ptr<DataSource>> files;
 
 			for(auto &source : sources) {
-				source.for_each(progress,templates,[&files](const DataSource &value){
+				source->for_each(progress,templates,[&files](std::shared_ptr<DataSource> value){
 					files.push_back(value);
 					return false;
 				});
@@ -95,7 +95,7 @@
 			size_t item = 0;
 			for(auto &file : files) {
 				progress.item(++item,files.size());
-				image.append(file);
+				image.append(*file);
 			}
 			progress.item();
 			image.post(*this);

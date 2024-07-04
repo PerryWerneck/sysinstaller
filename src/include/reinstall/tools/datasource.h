@@ -45,32 +45,50 @@
 		/// @brief When true allways check file timestamp with remote server.
 		bool update_from_remote = true;
 
-		struct {
-			const char *image = "";		///< @brief The path in the target image.
-			const char *local = "";		///< @brief The path in the local filesystem.
-			const char *remote = "";	///< @brief The path in the remote server.
-		} url;
-
-		DataSource() {
-		}
+		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname) const;
+		Udjat::URL UrlFactory(const char *relative) const;
 
 	public:
+
+		DataSource(const char *name) : Udjat::NamedObject(name) {}
+
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
 
-		Udjat::URL local() const;
-		Udjat::URL remote() const;
+		/// @brief Get URL for source on local filesystem.
+		virtual const char * local() const = 0;
 
-		const char * image_path() const;
+		/// @brief Get URL for source on remote filesystem.
+		virtual const char * remote() const = 0;
+
+		/// @brief Get path for source on target image.
+		virtual const char * path() const;
 
 		void save(Udjat::Dialog::Progress &progress, const char *path);
 		std::string save(Udjat::Dialog::Progress &progress);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
-		bool for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(const DataSource &value)> &func) const;
+		bool for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
-		static void load(const Udjat::XML::Node &node, std::vector<DataSource> &sources);
+		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources);
+
+	};
+
+	/// @brief Data source with remote and local URLs
+	class UDJAT_API FileSource : public DataSource {
+	private:
+		struct {
+			const char *local = "";		///< @brief The URL for source in the local filesystem.
+			const char *remote = "";	///< @brief The URL for source in the remote server.
+		} url;
+
+	public:
+		FileSource(const Udjat::XML::Node &node);
+
+		// DataSource
+		const char * local() const override;
+		const char * remote() const override;
 
 	};
 

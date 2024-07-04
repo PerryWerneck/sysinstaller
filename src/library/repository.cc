@@ -80,16 +80,7 @@
 
 	}
 
-	Repository::Repository(const Udjat::XML::Node &node) : DataSource{node}, slpclient{SLPClient::Factory(node)} {
-
-		if(url.local[0]) {
-			Logger::String{"Using '",url.local,"' for local files"}.trace(name());
-		}
-
-		if(url.remote[0]) {
-			Logger::String{"Using '",url.remote,"' for remote files"}.trace(name());
-		}
-
+	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, slpclient{SLPClient::Factory(node)} {
 	}
 
 	Repository::~Repository() {
@@ -108,18 +99,20 @@
 
 			auto &progress = Dialog::Progress::getInstance();
 
-			URL url{remote()};
+			URL url = UrlFactory(remote());
 			progress.url(url.c_str());
 			url += "INDEX.gz";
 
 			try {
 
 				string filename;
-				if(this->url.local && *this->url.local) {
+				const char *path = local();
+
+				if(path && *path) {
 
 					// Has local path, update file.
 
-					filename = local().ComponentsFactory().path;
+					filename = UrlFactory(path).ComponentsFactory().path;
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
 

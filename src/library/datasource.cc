@@ -51,6 +51,8 @@
 		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(update_from_remote);
 #endif // DEBUG
 
+		/*
+
 		url.remote = String{node,"remote"}.expand(node).expand().as_quark();
 		if(!url.remote[0]) {
 			url.remote = XML::QuarkFactory(node,"url",url.remote);
@@ -83,12 +85,28 @@
 				Logger::String{"Using relative path '",url.image,"' for image path"}.trace(name());
 			}
 		}
+		*/
 
 	}
 
 	DataSource::~DataSource() {
 	}
 
+	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname) const {
+
+		const char *path = String{node,attrname}.expand(node).expand().as_quark();
+		if(!path[0]) {
+			path = String{node,"url"}.expand(node).expand().as_quark();
+			if(path[0]) {
+				Logger::String{"Getting '",attrname,"' from 'url' attribute"}.trace(name());
+			} else {
+				Logger::String{"Attribute '",attrname,"' is missing"}.warning(name());
+			}
+		}
+		return path;
+	}
+
+	/*
 	Udjat::URL DataSource::local() const {
 
 		if(url.local[0] == '.') {
@@ -103,14 +121,18 @@
 		return URL{url.local};
 
 	}
+	*/
 
+	/*
 	const char * DataSource::image_path() const {
 		if(url.local[0] != '.') {
 			throw logic_error("Unable to handle non relative path");
 		}
 		return url.local+1;
 	}
+	*/
 
+	/*
 	Udjat::URL DataSource::remote() const {
 
 		if(url.remote[0] == '.') {
@@ -125,10 +147,34 @@
 		return URL{url.remote};
 
 	}
+	*/
+
+	Udjat::URL DataSource::UrlFactory(const char *relative) const {
+
+		if(relative[0] == '.') {
+			if(!repository) {
+				throw logic_error("Unable to use relative URLs without repository");
+			}
+			URL url{repository->remote()};
+			url += relative;
+
+			return url;
+		}
+
+		return URL{relative};
+	}
+
+	const char * DataSource::path() const {
+		const char *path = local();
+		if(path[0] != '.') {
+			throw logic_error("Unable to handle non relative path");
+		}
+		return path+1;
+	}
 
 	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
 
-		auto url = remote();
+		auto url = UrlFactory(remote());
 
 		info() << "Downloading " << url.c_str() << endl;
 
@@ -166,7 +212,7 @@
 
 	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
 
-		auto url = local();
+		auto url = UrlFactory(local());
 		if(!url.local()) {
 			throw runtime_error("Unable to save to remote path");
 		}
@@ -195,18 +241,22 @@
 		}
 
 		return components.path;
+
 	}
 
-	void DataSource::load(const Udjat::XML::Node &node, vector<DataSource> &sources) {
+	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources) {
+		/*
 		for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
 			for(Udjat::XML::Node child = nd.child("source"); child; child = child.next_sibling("source")) {
 				sources.emplace_back(child);
 			}
 		}
+		*/
 	}
 
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(const DataSource &value)> &func) const {
+	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<Template> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
+		/*
 		if(!this->url.local || this->url.local[0] != '.') {
 			throw logic_error("A local relative path is required");
 		}
@@ -223,20 +273,24 @@
 					continue;
 				}
 
-				DataSource source;
-				source.rename(this->name());
-				source.update_from_remote = this->update_from_remote;
-				source.repository = this->repository;
-				source.url.local = source.url.remote = source.url.image = path.c_str();
+				debug("TODO: ",path.c_str());
+
+				// URL Based data source
+				auto source = make_shared<DataSource>();
+				source->rename(this->name());
+				source->update_from_remote = this->update_from_remote;
+				source->repository = this->repository;
+				source->url.local = source->url.remote = source->url.image = path.c_str();
 
 				// Check templates.
 				for(auto &tmplt : templates) {
-					if(tmplt == source.url.remote) {
+					if(tmplt == source->url.remote) {
 						Logger::String{"Using template '",tmplt.name(),"' for ",path.c_str()}.trace(name());
 
 						break;
 					}
 				}
+
 
 				if(func(source)) {
 					return true;
@@ -248,6 +302,7 @@
 
 		// TODO: Parse index.html
 
+		*/
 		return false;
 	}
 

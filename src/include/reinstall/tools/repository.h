@@ -35,7 +35,7 @@
 
 	class SLPClient;
 
-	class UDJAT_API Repository : public DataSource {
+	class UDJAT_API Repository : public FileSource {
 	private:
 
 		std::shared_ptr<SLPClient> slpclient;

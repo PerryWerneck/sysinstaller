@@ -18,27 +18,50 @@
  */
 
  /**
-  * @brief Implements abstract image.
+  * @brief Implements Source repository.
   */
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <functional>
- #include <udjat/tools/url.h>
- #include <reinstall/tools/datasource.h>
- #include <reinstall/disk/abstract.h>
+ #include <udjat/tools/xml.h>
+ #include <udjat/tools/object.h>
+ #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/file.h>
+
+ #include <reinstall/tools/datasource.h>
 
  using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
- 	Abstract::Image::~Image() {
- 	}
+	FileSource::FileSource(const Udjat::XML::Node &node) : DataSource{node} {
 
-	void Abstract::Image::append(DataSource &source) {
-		append(source.save(Dialog::Progress::getInstance()).c_str(),source.path());
+		url.remote = PathFactory(node,"remote");
+		url.local = PathFactory(node,"local");
+
+		if(!url.local[0] && url.remote[0] == '.') {
+			url.local = url.remote;
+			Logger::String{"Using relative path '",url.local,"' for local files"}.trace(name());
+		} else {
+			Logger::String{"Using '",url.local,"' for local files"}.trace(name());
+		}
+
+		if(url.remote[0]) {
+			Logger::String{"Using '",url.remote,"' for remote files"}.trace(name());
+		}
+
+	}
+
+	const char * FileSource::local() const {
+		return url.local;
+	}
+
+	const char * FileSource::remote() const {
+		return url.local;
 	}
 
  }
+
 

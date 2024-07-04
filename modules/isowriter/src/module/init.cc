@@ -42,7 +42,7 @@
 
 	class Action : public Reinstall::Action {
 	private:
-		Reinstall::DataSource iso;
+		Reinstall::FileSource iso;
 		Udjat::Dialog output;
 
 	public:

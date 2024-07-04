@@ -182,6 +182,7 @@
 		<Unit filename="src/include/widgets/sidebar.h" />
 		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/datasource.cc" />
+		<Unit filename="src/library/filesource.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/image.cc" />
