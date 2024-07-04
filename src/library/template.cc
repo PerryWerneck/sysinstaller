@@ -38,8 +38,8 @@
 
  namespace Reinstall {
 
-	Template::Template(const Udjat::Abstract::Object &p, const Udjat::XML::Node &node, Type t)
-		: Udjat::NamedObject{node}, parent{p}, type{t} {
+	Template::Template(const Udjat::XML::Node &node, Type t)
+		: Udjat::NamedObject{node}, type{t} {
 
 		// Get URL
 		{
@@ -49,7 +49,6 @@
 			}
 
 			str.unescape();
-			str.expand(parent);
 			str.expand(*this);
 
 			url = str.as_quark();
@@ -64,7 +63,6 @@
 			if(!str.empty()) {
 
 				str.unescape();
-				str.expand(parent);
 				str.expand(*this);
 
 				path = str.as_quark();
@@ -110,8 +108,8 @@
 
 	void Template::load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Template>> &templates) {
 
-		parent.for_each(node, "template", [&parent,&templates](const XML::Node &child){
-			templates.push_back(make_shared<Template>(parent,child));
+		parent.for_each(node, "template", [&templates](const XML::Node &child){
+			templates.push_back(make_shared<Template>(child));
 			return false;
 		});
 

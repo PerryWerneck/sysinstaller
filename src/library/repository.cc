@@ -167,6 +167,7 @@
 #endif // HAVE_ZLIB
 
 		// Parse html
+		throw system_error(ENOTSUP, system_category(), _("Cant parse server file list"));
 
 		return false;
 	}

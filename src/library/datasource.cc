@@ -176,7 +176,37 @@
 		}
 	}
 
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, std::vector<std::shared_ptr<Template>> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+
+		const char * required_prefix = local();
+		if(required_prefix[0] != '.') {
+			throw logic_error("The source local path should be relative (starting with '.')");
+		}
+
+		if(repository.get() && repository->index()) {
+
+			Logger::String{"Using indexed repository"}.trace(name());
+
+			size_t szlocal = strlen(required_prefix);
+			for(const auto &path : *repository) {
+
+				if(strncmp(required_prefix,path.c_str(),szlocal)) {
+					continue;
+				}
+
+				debug("path='",path.c_str(),"'");
+				auto source = make_shared<FileSource>(path.c_str());
+				source->rename(this->name());
+				source->update_from_remote = this->update_from_remote;
+				source->repository = this->repository;
+
+				if(func(source)) {
+					return true;
+				}
+
+			}
+
+		}
 
 		/*
 		if(!this->url.local || this->url.local[0] != '.') {

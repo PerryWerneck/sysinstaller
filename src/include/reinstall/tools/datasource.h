@@ -47,6 +47,9 @@
 
 		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname) const;
 
+		DataSource() {
+		}
+
 	public:
 
 		DataSource(const char *name) : Udjat::NamedObject(name) {}
@@ -68,7 +71,7 @@
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
-		bool for_each(Udjat::Dialog::Progress &progress, std::vector<std::shared_ptr<Template>> &templates, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
+		bool for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources);
 
@@ -83,6 +86,7 @@
 		} url;
 
 	public:
+		FileSource(const char *path);
 		FileSource(const Udjat::XML::Node &node);
 
 		Udjat::URL url_local() const;

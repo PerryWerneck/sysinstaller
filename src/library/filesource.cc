@@ -39,6 +39,10 @@
 
  namespace Reinstall {
 
+	FileSource::FileSource(const char *path) {
+		url.remote = url.local = path;
+	}
+
 	FileSource::FileSource(const Udjat::XML::Node &node) : DataSource{node} {
 
 		url.remote = PathFactory(node,"remote");

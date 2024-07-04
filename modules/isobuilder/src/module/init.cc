@@ -29,6 +29,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
+ #include <reinstall/tools/builder.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <vector>
@@ -47,27 +48,18 @@
           "Create customized installation image."
 	};
 
-	class Action : public Reinstall::Action {
+	class Action : public Reinstall::Action, private Reinstall::Builder {
 	private:
-		Udjat::Dialog output;
 		iso9660::Image::Settings imgdef;
-		vector<shared_ptr<Reinstall::DataSource>> sources;
-		vector<shared_ptr<Reinstall::Template>> templates;
 
 	public:
 
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, output{"select-device",node}, imgdef{node} {
+			: Reinstall::Action{parent,node}, Reinstall::Builder{*this,node}, imgdef{node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
 			}
-
-			// Load sources.
-			Reinstall::DataSource::load(node,sources);
-
-			// Load templates
-			Reinstall::Template::load(*this,node,templates);
 
 		}
 
@@ -76,18 +68,12 @@
 
 		int activate(Udjat::Dialog::Progress &progress) override {
 
-			progress = _("Getting required files");
+			debug("Action activated");
+
 			list<std::shared_ptr<DataSource>> files;
+			prepare(progress,files);
 
-			for(auto &source : sources) {
-				source->for_each(progress,templates,[&files](std::shared_ptr<DataSource> value){
-					files.push_back(value);
-					return false;
-				});
-			}
-
-			Logger::String{files.size()," files to download"}.trace(name());
-
+			/*
 			// Build image
 			iso9660::Image image{imgdef};
 
@@ -107,6 +93,7 @@
 			image.write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
 				writer.write(offset,contents,length);
 			});
+			*/
 
 			return 0;
 		}

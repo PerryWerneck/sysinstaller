@@ -38,7 +38,7 @@
 			Binary		= 0x04,		///< @brief Template is a binary file, just replace it.
 		};
 
-		Template(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, Type type = Template::Text);
+		Template(const Udjat::XML::Node &node, Type type = Template::Text);
 		virtual ~Template();
 
 		bool getProperty(const char *key, std::string &value) const override;
@@ -49,9 +49,6 @@
 		bool operator==(const char *path) const;
 
 	private:
-
-		/// @brief The parent object (for properties).
-		const Udjat::Abstract::Object &parent;
 
 		Type type = (Type) 0;
 		bool escape = false;
