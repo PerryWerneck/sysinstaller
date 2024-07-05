@@ -47,6 +47,7 @@
 
 		url.remote = PathFactory(node,"remote");
 		url.local = PathFactory(node,"local");
+		url.path = PathFactory(node,"destination");
 
 		if(url.remote[0] == '.' || url.local[0] == '.') {
 			repository = Repository::Factory(node);
@@ -73,6 +74,13 @@
 
 	const char * FileSource::remote() const {
 		return url.remote;
+	}
+
+	const char * FileSource::path() const {
+		if(url.path && *url.path) {
+			return url.path;
+		}
+		return DataSource::path();
 	}
 
 	void FileSource::save(Udjat::Dialog::Progress &progress, const char *path) {

@@ -87,8 +87,9 @@
 	class UDJAT_API FileSource : public DataSource {
 	protected:
 		struct {
-			const char *local = "";		///< @brief The URL for source in the local filesystem.
-			const char *remote = "";	///< @brief The URL for source in the remote server.
+			const char *local = "";			///< @brief The URL for source in the local filesystem.
+			const char *remote = "";		///< @brief The URL for source in the remote server.
+			const char *path = "";			///< @brief Path for the file inside the destination image.
 		} url;
 
 	public:
@@ -102,6 +103,7 @@
 		// DataSource
 		const char * local() const override;
 		const char * remote() const override;
+		const char * path() const override;
 		void save(Udjat::Dialog::Progress &progress, const char *path) override;
 		std::string save(Udjat::Dialog::Progress &progress) override;
 
