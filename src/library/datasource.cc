@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements Source repository..
+  * @brief Implements Source repository.
   */
 
  #include <config.h>

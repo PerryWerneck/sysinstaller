@@ -30,6 +30,7 @@
  #include <vector>
  #include <memory>
  #include <list>
+ #include <reinstall/image.h>
 
  namespace Reinstall {
 
@@ -52,6 +53,9 @@
 		const Udjat::Abstract::Object &parent;
 
 		bool getProperty(const char *key, std::string &value) const;
+
+		/// @brief Select device and write image to it.
+		void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
 
 	public:
 		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);

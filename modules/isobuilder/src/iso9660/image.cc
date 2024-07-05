@@ -61,7 +61,7 @@
 
 	};
 
-	Image::Image(const Settings &s) : settings{s} {
+	Image::Image(const Settings &s) : Reinstall::Abstract::Image{"iso-9660"}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 

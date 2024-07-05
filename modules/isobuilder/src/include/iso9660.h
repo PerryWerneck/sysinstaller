@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <reinstall/disk/abstract.h>
+ #include <reinstall/image.h>
  #include <udjat/tools/xml.h>
  #include <udjat/ui/progress.h>
  #include <efiboot.h>
@@ -78,19 +78,29 @@
 		Image(const Settings &settings);
 		virtual ~Image();
 
+		/*
 		inline void append(std::shared_ptr<Reinstall::DataSource> source) {
 			Reinstall::Abstract::Image::append(source);
 		}
+		*/
 
 		void pre(Udjat::Abstract::Object &object);
 
 		void post(Udjat::Abstract::Object &object);
 
-		void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+		inline void write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
+			Reinstall::Abstract::Image::write(progress,settings);
+		}
+
+		inline void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+			Reinstall::Abstract::Image::append(progress,sources);
+		}
 
 	protected:
 		// Abstract::Image
 		void append(const char *from, const char *to) override;
+
+		void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) override;
 
 	private:
 		const Settings &settings;

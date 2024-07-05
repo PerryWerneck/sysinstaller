@@ -26,6 +26,10 @@
  #include <functional>
  #include <udjat/tools/url.h>
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/template.h>
+ #include <udjat/ui/progress.h>
+ #include <udjat/ui/dialog.h>
+ #include <list>
 
  namespace Reinstall {
 
@@ -45,16 +49,18 @@
 			/// @param to Destination file in the image.
 			virtual void append(const char *from, const char *to) = 0;
 
+			/// @brief Add sources to image.
+			void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &sources);
+
 		public:
 			virtual ~Image();
 
 			/// @brief Append data source to image, download file if needed.
-			void append(std::shared_ptr<DataSource> );
+			void append(std::shared_ptr<DataSource> source);
 
-			/// @brief Add URL to image.
-			/// @param url The URL of the file to append.
-			/// @param to Destination file in the image.
-			// void append(const Udjat::URL &url, const char *to);
+			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+
+			void write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings);
 
 		};
 

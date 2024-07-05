@@ -26,10 +26,14 @@
  #include <functional>
  #include <udjat/tools/url.h>
  #include <reinstall/tools/datasource.h>
- #include <reinstall/disk/abstract.h>
+ #include <reinstall/tools/writer.h>
+ #include <reinstall/image.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/intl.h>
+ #include <stdexcept>
 
  using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
@@ -37,8 +41,33 @@
  	}
 
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
-		debug(source->path());
 		append(source->save(Dialog::Progress::getInstance()).c_str(),source->path());
+	}
+
+	void Abstract::Image::write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) {
+		throw runtime_error(_("No write support on selected image"));
+	}
+
+	void Abstract::Image::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
+
+		progress = _("Writing image");
+		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
+		writer.open(progress,settings);
+
+		write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
+			writer.write(offset,contents,length);
+		});
+	}
+
+	void Abstract::Image::append(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &sources) {
+
+		size_t item = 0;
+		for(auto &source : sources) {
+			progress.item(++item,sources.size());
+			append(source);
+		}
+		progress.item();
+
 	}
 
  }

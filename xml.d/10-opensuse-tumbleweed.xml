@@ -38,7 +38,7 @@
 		<attribute name='local' value='file://${HOME}/tmp/suse/tumbleweed/update.dud' />
 	  <attribute name='destination' value='${boot-path}/update.dud' />	
 		<attribute name='kernel-parameter-name' value='dud' />
-	<driver-update-disk />
+	</driver-update-disk>
 
 	<!-- Path for the installation kernel (Full URL or repository path) -->
 	<kernel url='/boot/x86_64/loader/linux' repository='install' />

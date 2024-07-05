@@ -168,8 +168,8 @@
 		<Unit filename="src/include/private/mainwindow.h" />
 		<Unit filename="src/include/private/slpclient.h" />
 		<Unit filename="src/include/reinstall/action.h" />
-		<Unit filename="src/include/reinstall/disk/abstract.h" />
 		<Unit filename="src/include/reinstall/group.h" />
+		<Unit filename="src/include/reinstall/image.h" />
 		<Unit filename="src/include/reinstall/tools/builder.h" />
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
 		<Unit filename="src/include/reinstall/tools/kernelparameter.h" />

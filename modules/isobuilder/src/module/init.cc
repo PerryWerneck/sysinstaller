@@ -82,25 +82,15 @@
 			list<std::shared_ptr<DataSource>> files;
 			prepare(progress,files);
 
-			// Build image
+			// Build image ...
 			iso9660::Image image{imgdef};
 
 			image.pre(*this);
-			size_t item = 0;
-			for(auto &file : files) {
-				progress.item(++item,files.size());
-				image.append(file);
-			}
-			progress.item();
+			image.append(progress,files);
 			image.post(*this);
 
-			progress = _("Writing image");
-			Reinstall::Writer &writer = Reinstall::Writer::getInstance();
-			writer.open(progress,output);
-
-			image.write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
-				writer.write(offset,contents,length);
-			});
+			// ... and write it to device.
+			write(progress,image);
 
 			return 0;
 		}
