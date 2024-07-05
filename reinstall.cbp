@@ -172,6 +172,7 @@
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/tools/builder.h" />
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
+		<Unit filename="src/include/reinstall/tools/kernelparameter.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
 		<Unit filename="src/include/reinstall/tools/template.h" />
 		<Unit filename="src/include/reinstall/tools/writer.h" />
@@ -188,6 +189,7 @@
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/image.cc" />
+		<Unit filename="src/library/kernelparameter.cc" />
 		<Unit filename="src/library/os/linux/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/os/linux/writer.cc" />
 		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />

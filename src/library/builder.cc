@@ -66,6 +66,9 @@
 		// Load templates
 		Reinstall::Template::load(parent,node,templates);
 
+		// Load kernel parameters.
+		Reinstall::KernelParameter::load(node,kparms);
+
 	}
 
 	void Builder::push_back(std::list<std::shared_ptr<DataSource>> &files, std::shared_ptr<DataSource> value) {
@@ -140,6 +143,12 @@
 
 		if(!strcasecmp(key,"boot-label") && boot.label && *boot.label) {
 			value = boot.label;
+			return true;
+		}
+
+		if(!strcasecmp(key,"kernel-parameters")) {
+			value = KernelParameter::join(parent,kparms);
+			debug("Kernel parameters set to '",value.c_str(),"'");
 			return true;
 		}
 

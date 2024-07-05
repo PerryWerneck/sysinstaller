@@ -55,42 +55,6 @@
 		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(update_from_remote);
 #endif // DEBUG
 
-		/*
-
-		url.remote = String{node,"remote"}.expand(node).expand().as_quark();
-		if(!url.remote[0]) {
-			url.remote = XML::QuarkFactory(node,"url",url.remote);
-			if(url.remote[0]) {
-				Logger::String{"Getting '",url.remote,"' from 'url' attribute"}.trace(name());
-			} else {
-				Logger::String{"No remote URL"}.warning(name());
-			}
-		}
-
-		url.local = String{node,"local"}.expand(node).expand().as_quark();
-		if(!url.local[0] && url.remote[0] == '.') {
-			url.local = url.remote;
-			Logger::String{"Using relative path '",url.local,"' for local url"}.trace(name());
-		}
-
-		if(url.local[0] == '.' || url.remote[0] == '.') {
-			// Relative URLs, search for repository
-			Logger::String{"Relative path, searching for repository '",XML::StringFactory(node,"repository","install"),"'"}.trace(name());
-			repository = Repository::Factory(node);
-		}
-
-		url.image = String{node,"image-path"}.expand(node).expand().as_quark();
-		if(!url.image[0]) {
-			if(url.local[0] == '.') {
-				url.image = url.local;
-				Logger::String{"Using relative path '",url.image,"' for image path"}.trace(name());
-			} else if(url.remote[0] == '.') {
-				url.image = url.remote;
-				Logger::String{"Using relative path '",url.image,"' for image path"}.trace(name());
-			}
-		}
-		*/
-
 	}
 
 	DataSource::~DataSource() {
@@ -112,49 +76,6 @@
 
 		return path;
 	}
-
-	/*
-	Udjat::URL DataSource::local() const {
-
-		if(url.local[0] == '.') {
-			if(!repository) {
-				throw logic_error("Unable to use relative URLs without repository");
-			}
-			URL value{repository->local()};
-			value += url.local;
-			return value;
-		}
-
-		return URL{url.local};
-
-	}
-	*/
-
-	/*
-	const char * DataSource::image_path() const {
-		if(url.local[0] != '.') {
-			throw logic_error("Unable to handle non relative path");
-		}
-		return url.local+1;
-	}
-	*/
-
-	/*
-	Udjat::URL DataSource::remote() const {
-
-		if(url.remote[0] == '.') {
-			if(!repository) {
-				throw logic_error("Unable to use relative URLs without repository");
-			}
-			URL value{repository->remote()};
-			value += url.remote;
-			return value;
-		}
-
-		return URL{url.remote};
-
-	}
-	*/
 
 	const char * DataSource::path() const {
 		const char *path = local();

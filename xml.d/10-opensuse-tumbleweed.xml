@@ -28,7 +28,7 @@
 		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
-		<attribute name='slp-kernel-parameter' value='slp:/' />
+		<attribute name='kernel-parameter-name' value='install' allow-slp='yes' />
 	</repository>
 
 	<!-- Path for the driver update (Full URL or repository path) -->
@@ -49,9 +49,6 @@
 	
 	<!-- Path for EFI boot-image -->
 	<efi-boot-image path='/boot/x86_64/efi' repository='install' />
-
-	<!-- Setup the kernel parameter based on repository 'install' settings, can be an URL or 'slp:/' for automatic detection -->
-	<kernel-parameter name='install' repository='install' />
 
 	<group name='TumbleWeed' >
 

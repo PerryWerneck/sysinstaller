@@ -26,6 +26,7 @@
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/kernelparameter.h>
  #include <vector>
  #include <memory>
  #include <list>
@@ -36,6 +37,7 @@
 	private:
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
 		std::vector<std::shared_ptr<Reinstall::Template>> templates;
+		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
 
 		/// @brief Append datasource in list, check for tempalte.
 		void push_back(std::list<std::shared_ptr<DataSource>> &files, std::shared_ptr<DataSource> value);
