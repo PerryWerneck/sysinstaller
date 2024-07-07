@@ -40,14 +40,13 @@
 		/// @brief Abstract disk image.
 		class UDJAT_API Image {
 		protected:
+			const Udjat::Dialog &dialog;
 			Reinstall::Builder &builder;
-
-			const char *name;
 
 			/// @brief EFI boot partition image file.
 			std::string efibootpart;
 
-			inline Image(Reinstall::Builder &b, const char *n = "disk") : builder{b}, name{n} {
+			inline Image(const Udjat::Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
 			}
 
 			/// @brief Add file to image.
@@ -68,7 +67,7 @@
 
 			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			void write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings);
+			void write(Udjat::Dialog::Progress &progress);
 
 		};
 

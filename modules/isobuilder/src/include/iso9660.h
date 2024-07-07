@@ -72,15 +72,15 @@
 
 		};
 
-		Image(Reinstall::Builder &builder, const Settings &settings);
+		Image(const Udjat::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
 
 		void post(Udjat::Abstract::Object &object);
 
-		inline void write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
-			Reinstall::Abstract::Image::write(progress,settings);
+		inline void write(Udjat::Dialog::Progress &progress) {
+			Reinstall::Abstract::Image::write(progress);
 		}
 
 		inline void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {

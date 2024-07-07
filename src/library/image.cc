@@ -109,11 +109,11 @@
 		throw runtime_error(_("No write support on selected image"));
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
+	void Abstract::Image::write(Udjat::Dialog::Progress &progress) {
 
 		progress = _("Writing image");
 		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
-		writer.open(progress,settings);
+		writer.open(progress,dialog);
 
 		write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
 			writer.write(offset,contents,length);

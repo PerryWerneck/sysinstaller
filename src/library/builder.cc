@@ -249,7 +249,7 @@
 	}
 
 	void Builder::write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image) {
-		image.write(progress, output);
+		image.write(progress);
 	}
 
  }

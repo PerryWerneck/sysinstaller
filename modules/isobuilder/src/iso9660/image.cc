@@ -64,7 +64,7 @@
 
 	};
 
-	Image::Image(Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{builder,"iso-9660"}, settings{s} {
+	Image::Image(const Udjat::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,builder}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 
