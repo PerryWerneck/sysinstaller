@@ -33,15 +33,21 @@
 
  namespace Reinstall {
 
+	class Builder;
+
 	namespace Abstract {
 
 		/// @brief Abstract disk image.
 		class UDJAT_API Image {
 		protected:
+			Reinstall::Builder &builder;
 
 			const char *name;
 
-			constexpr Image(const char *n = "disk") : name{n} {
+			/// @brief EFI boot partition image file.
+			std::string efibootpart;
+
+			inline Image(Reinstall::Builder &b, const char *n = "disk") : builder{b}, name{n} {
 			}
 
 			/// @brief Add file to image.
@@ -54,6 +60,8 @@
 
 		public:
 			virtual ~Image();
+
+			static const char * application_id() noexcept;
 
 			/// @brief Append data source to image, download file if needed.
 			void append(std::shared_ptr<DataSource> source);

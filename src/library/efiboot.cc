@@ -20,23 +20,19 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <memory>
- #include <efiboot.h>
+ #include <reinstall/tools/efiboot.h>
 
  #include <udjat/tools/xml.h>
 
  using namespace std;
  using namespace Udjat;
 
- namespace iso9660 {
-
-	std::shared_ptr<EFIBootImage> EFIBootImage::factory(const XML::Node &node) {
-		return make_shared<EFIBootImage>(node);
-	}
+ namespace Reinstall {
 
 	EFIBootImage::EFIBootImage(const pugi::xml_node &node) : NamedObject{node} {
 
-		options.enabled = XML::AttributeFactory(node,"efi-boot-image").as_bool(options.enabled);
-		options.path = XML::QuarkFactory(node,"efi-boot-image",options.path);
+		options.enabled = XML::AttributeFactory(node,"enabled").as_bool(options.enabled);
+		options.path = XML::QuarkFactory(node,"path",options.path);
 
 	}
 

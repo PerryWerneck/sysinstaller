@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([reinstall], [5.1.0], [perry.werneck@gmail.com])
+AC_INIT([reinstall], [6.0.0], [perry.werneck@gmail.com])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
@@ -244,6 +244,15 @@ PKG_CHECK_MODULES( [GTK], [gtkmm-4.0], AC_DEFINE(HAVE_GTK,,[ "Do we have GTK++?"
 
 AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
+dnl Check for fatfs
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [FATFS], [libfatfs-static], AC_DEFINE(HAVE_FATFS,,[ Do we have fatfs? ]), AC_MSG_ERROR([fatfs not present.]))
+
+AC_SUBST(FATFS_LIBS)
+AC_SUBST(FATFS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for zlib

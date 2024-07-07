@@ -26,7 +26,6 @@
  #include <reinstall/image.h>
  #include <udjat/tools/xml.h>
  #include <udjat/ui/progress.h>
- #include <efiboot.h>
 
  typedef struct Iso_Image IsoImage;
  typedef struct iso_write_opts IsoWriteOpts;
@@ -67,22 +66,14 @@
 
 				} eltorito;
 
-				std::shared_ptr<EFIBootImage> efi;
-
 			} boot;
 
 			Settings(const Udjat::XML::Node &node);
 
 		};
 
-		Image(const Settings &settings);
+		Image(Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
-
-		/*
-		inline void append(std::shared_ptr<Reinstall::DataSource> source) {
-			Reinstall::Abstract::Image::append(source);
-		}
-		*/
 
 		void pre(Udjat::Abstract::Object &object);
 
@@ -106,7 +97,6 @@
 		const Settings &settings;
 		IsoImage *image = nullptr;
 		IsoWriteOpts *opts = nullptr;
-		std::string efibootpart;
 
 	};
 

@@ -3,6 +3,9 @@
 /* The gettext package name. */
 #undef GETTEXT_PACKAGE
 
+/* Do we have fatfs? */
+#undef HAVE_FATFS
+
 /* Define to 1 if gmtime_r is available. */
 #undef HAVE_GMTIME_R
 

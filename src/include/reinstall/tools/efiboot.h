@@ -25,7 +25,7 @@
  #include <udjat/tools/object.h>
  #include <memory>
 
- namespace iso9660 {
+ namespace Reinstall {
 
 	/// @brief The EFI Boot Image;
 	class UDJAT_API EFIBootImage : public Udjat::NamedObject {
@@ -44,9 +44,13 @@
 
 	public:
 
+		constexpr EFIBootImage() {
+		}
+
 		EFIBootImage(const Udjat::XML::Node &node);
 
-		static std::shared_ptr<EFIBootImage> factory(const pugi::xml_node &node);
+		/// @brief Set source image.
+		// static std::shared_ptr<EFIBootImage> factory(const pugi::xml_node &node);
 
 		inline operator bool() const noexcept {
 			return options.enabled;

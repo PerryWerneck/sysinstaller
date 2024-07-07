@@ -43,6 +43,24 @@
 	Builder::Builder(const Udjat::Abstract::Object &p, const Udjat::XML::Node &node)
 		: output{"select-device",node}, parent{p} {
 
+		{
+			// Search for EFI Boot definitions
+			for(auto parent = node;(parent && !boot.efi); parent = parent.parent()) {
+
+				for(auto child = node.child("efi-boot-image");child;child = child.next_sibling("efi-boot-image")) {
+					boot.efi = make_shared<EFIBootImage>(child);
+					break;
+				}
+			}
+
+			if(!boot.efi) {
+				Logger::String{"Using default EFI Boot image"}.trace(parent.name());
+				boot.efi = make_shared<EFIBootImage>();
+			} else {
+				Logger::String{"Using customized EFI Boot image"}.trace(parent.name());
+			}
+		}
+
 		boot.theme = XML::StringFactory(node,"boot-theme");
 
 		static const char *labels[] = {
@@ -69,6 +87,20 @@
 		// Load kernel parameters.
 		Reinstall::KernelParameter::load(node,kparms);
 
+	}
+
+	Builder::~Builder() {
+	}
+
+	std::shared_ptr<Reinstall::Template> Builder::tmplt(const char *filename) {
+
+		for(auto &tmplt : templates) {
+			if(*tmplt == filename) {
+				return tmplt;
+			}
+		}
+
+		return std::shared_ptr<Reinstall::Template>();
 	}
 
 	void Builder::push_back(std::list<std::shared_ptr<DataSource>> &files, std::shared_ptr<DataSource> value) {

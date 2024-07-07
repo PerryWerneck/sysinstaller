@@ -31,6 +31,7 @@
  #include <memory>
  #include <list>
  #include <reinstall/image.h>
+ #include <reinstall/tools/efiboot.h>
 
  namespace Reinstall {
 
@@ -46,6 +47,7 @@
 		struct {
 			const char *label = nullptr;
 			std::string theme;
+			std::shared_ptr<EFIBootImage> efi;	///> @brief EFI boot image settings.
 		} boot;
 
 	protected:
@@ -54,11 +56,25 @@
 
 		bool getProperty(const char *key, std::string &value) const;
 
+
 		/// @brief Select device and write image to it.
 		void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
 
 	public:
 		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		virtual ~Builder();
+
+		inline const char *name() const {
+			return parent.name();
+		}
+
+		inline std::shared_ptr<EFIBootImage> efi() {
+			return boot.efi;
+		}
+
+		/// @brief Find template from filename.
+		/// @return Valid template ptr if filename should be replaced.
+		std::shared_ptr<Reinstall::Template> tmplt(const char *filename);
 
 		void prepare(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &files);
 

@@ -168,10 +168,12 @@
 		<Unit filename="src/include/private/mainwindow.h" />
 		<Unit filename="src/include/private/slpclient.h" />
 		<Unit filename="src/include/reinstall/action.h" />
+		<Unit filename="src/include/reinstall/disk/fat.h" />
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/image.h" />
 		<Unit filename="src/include/reinstall/tools/builder.h" />
 		<Unit filename="src/include/reinstall/tools/datasource.h" />
+		<Unit filename="src/include/reinstall/tools/efiboot.h" />
 		<Unit filename="src/include/reinstall/tools/kernelparameter.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
 		<Unit filename="src/include/reinstall/tools/template.h" />
@@ -185,6 +187,7 @@
 		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/builder.cc" />
 		<Unit filename="src/library/datasource.cc" />
+		<Unit filename="src/library/fatdisk.cc" />
 		<Unit filename="src/library/filesource.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/gtkremovabledevicedialog.cc" />

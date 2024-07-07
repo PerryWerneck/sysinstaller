@@ -83,7 +83,7 @@
 			prepare(progress,files);
 
 			// Build image ...
-			iso9660::Image image{imgdef};
+			iso9660::Image image{*this,imgdef};
 
 			image.pre(*this);
 			image.append(progress,files);

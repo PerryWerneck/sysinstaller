@@ -48,17 +48,6 @@
 		boot.eltorito.image = XML::QuarkFactory(node,"eltorito-boot-image",boot.eltorito.image);
 		boot.catalog = XML::QuarkFactory(node,"boot-catalog",(boot.eltorito.enabled ? boot.catalog : ""));
 
-		{
-			auto bootnode = node.child("efi-boot-image");
-			if(bootnode) {
-				Logger::String{"Using customized EFI Boot image"}.trace(name.c_str());
-				boot.efi = EFIBootImage::factory(bootnode);
-			} else {
-				Logger::String{"Using default EFI Boot image"}.trace(name.c_str());
-				boot.efi = make_shared<EFIBootImage>(node);
-			}
-		}
-
 	}
 
  }

@@ -161,10 +161,12 @@
 					info.response = rsp;
 					info.devdescr = dialog->description();
 					info.devname = dialog->device();
-					debug("Response=",info.response," (",info.devdescr,")");
+					Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
 					sem_post(&info.semaphore);
 					delete dialog;
 				});
+#else
+				#error Needs implementation
 #endif // USE_MESSAGE_DIALOG
 
 				dialog->present();

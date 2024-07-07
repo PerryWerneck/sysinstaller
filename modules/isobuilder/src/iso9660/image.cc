@@ -31,6 +31,9 @@
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
 
+ #include <reinstall/disk/fat.h>
+ #include <reinstall/tools/builder.h>
+
  #define LIBISOFS_WITHOUT_LIBBURN
  #include <libisofs/libisofs.h>
 
@@ -61,7 +64,7 @@
 
 	};
 
-	Image::Image(const Settings &s) : Reinstall::Abstract::Image{"iso-9660"}, settings{s} {
+	Image::Image(Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{builder,"iso-9660"}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 
@@ -163,7 +166,7 @@
 			if(settings.application_id && *settings.application_id) {
 				iso_image_set_application_id(image,settings.application_id);
 			} else {
-				iso_image_set_application_id(image,Config::Value<string>("iso9660","application-id",Application::Name().c_str()).c_str());;
+				iso_image_set_application_id(image,Config::Value<string>("iso9660","application-id",Reinstall::Abstract::Image::application_id()).c_str());;
 			}
 		}
 
@@ -262,7 +265,11 @@
 			to++;
 		}
 
+		/*
+		#error Move EFI adjustments to Abstract::Image
 		if(settings.boot.efi->enabled() && strcmp(to,settings.boot.efi->path()) == 0) {
+
+			debug("------------------------------------------------- EFIBOOT");
 
 			// Copy contents to temporary file.
 			if(!empty(efibootpart)) {
@@ -273,9 +280,21 @@
 			Udjat::File::copy(from,efibootpart.c_str());
 			from = efibootpart.c_str();
 
-			// TODO: Apply templates in efibootpart
+			// Apply templates in efibootpart
+			{
+				std::vector<string> files;
+
+				Reinstall::Disk::Fat32 disk{from};
+
+				disk.for_each("/",[&files](const char *filename){
+					files.push_back(filename);
+					return false;
+				});
+
+			}
 
 		}
+		*/
 
 		add_new_node(image,from,to);
 
@@ -344,10 +363,10 @@
 
 		}
 
-		if(settings.boot.efi->enabled()) {
+		if(!empty(efibootpart)) {
 
 			// Add EFI boot image
-			Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image"}.trace("iso9660");
+			Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image"}.write(Logger::Debug,"iso9660");
 
 			// set_efi_boot_image(const char *boot_image, bool like_iso_hybrid)
 			// set_efi_boot_image(settings.boot.efi->path().c_str());
@@ -364,12 +383,12 @@
 					throw runtime_error(msg);
 				}
 
-				Logger::String{"EFI partition set from '",efibootpart.c_str(),"'"}.trace("iso9660");
+				// Logger::String{"EFI partition set from '",efibootpart.c_str(),"'"}.trace("iso9660");
 
 			} else {
 
 				// Not isohybrid.
-				int rc = iso_write_opts_set_efi_bootp(opts,(char *) settings.boot.efi->path(),0);
+				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder.efi()->path(),0);
 
 				if(rc != ISO_SUCCESS) {
 					string msg{iso_error_to_msg(rc)};
@@ -377,16 +396,16 @@
 					throw runtime_error(msg);
 				}
 
-				Logger::String{"EFI bootp set from '",settings.boot.efi->path(),"'"}.trace("iso9660");
+				Logger::String{"EFI bootp set from '",builder.efi()->path(),"'"}.write(Logger::Debug,"iso9660");
 
 			}
 
 			if(settings.boot.catalog && *settings.boot.catalog) {
 
-				Logger::String{"Adding ",settings.boot.efi->path()," as boot image"}.trace("iso9660");
+				Logger::String{"Adding ",builder.efi()->path()," as boot image"}.write(Logger::Debug,"iso9660");
 
                 ElToritoBootImage *bootimg = NULL;
-                int rc = iso_image_add_boot_image(image,settings.boot.efi->path(),ELTORITO_NO_EMUL,0,&bootimg);
+                int rc = iso_image_add_boot_image(image,builder.efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);
                 if(rc < 0) {
  					string msg{iso_error_to_msg(rc)};
 					Logger::String{"Cant add EFI boot image: ",msg.c_str()}.error("iso9660");
@@ -396,8 +415,14 @@
 				el_torito_set_boot_platform_id(bootimg, 0xEF);
 
 			} else {
-				Logger::String{"No boot catalog, ",settings.boot.efi->path()," was not added as boot image"}.warning("iso9660");
+
+				Logger::String{"No boot catalog, ",builder.efi()->path()," was not added as boot image"}.warning("iso9660");
+
 			}
+
+		} else if(builder.efi()->enabled()) {
+
+			throw runtime_error("EFI boot image not available");
 
 		}
 
