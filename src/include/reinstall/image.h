@@ -67,7 +67,7 @@
 
 			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			void write(Udjat::Dialog::Progress &progress);
+			virtual void write(Udjat::Dialog::Progress &progress);
 
 		};
 
