@@ -79,9 +79,7 @@
 
 		void post(Udjat::Abstract::Object &object);
 
-		inline void write(Udjat::Dialog::Progress &progress) {
-			Reinstall::Abstract::Image::write(progress);
-		}
+		void write(Udjat::Dialog::Progress &progress) override;
 
 		inline void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
 			Reinstall::Abstract::Image::append(progress,sources);
@@ -91,7 +89,7 @@
 		// Abstract::Image
 		void append(const char *from, const char *to) override;
 
-		void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) override;
+		//void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) override;
 
 	private:
 		const Settings &settings;

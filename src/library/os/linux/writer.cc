@@ -80,8 +80,10 @@
 
 				struct stat st;
 
-				if(fstat(fd,&st) != 0) {
+				if(fstat(dfd,&st) != 0) {
+
 					throw system_error(errno, system_category(), device_name);
+
 				} else if((st.st_mode & S_IFMT) == S_IFBLK) {
 
 					Logger::String{device_name," is a block device"}.trace("writer");
@@ -139,6 +141,7 @@
 	void Writer::close() {
 
 		if(fd > 0) {
+			debug("Output device was closed");
 			::close(fd);
 			fd = -1;
 		}
@@ -146,6 +149,8 @@
 	}
 
 	void Writer::allocate() {
+
+		debug("fd=",fd);
 
 		if(!length) {
 			Logger::String{"No pre-defined size, will not check it"}.trace("writer");
@@ -177,7 +182,7 @@
 				if(fallocate(fd,0,0,length) != 0) {
 					throw system_error(errno,system_category(),_("Cant allocate space for output file"));
 				} else {
-					Logger::String{"Allocated ",String{}.set_byte(length).c_str()," bytes for output file"}.info("writer");
+					Logger::String{"Allocated ",String{}.set_byte(length).c_str()," for output file"}.info("writer");
 				}
 
 			}

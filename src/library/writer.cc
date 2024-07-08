@@ -187,6 +187,7 @@
 
 				try {
 
+					debug("Opening ",info.devname.c_str());
 					Writer::open(info.devname.c_str());
 
 				} catch(const std::exception &e) {

@@ -90,7 +90,7 @@
 			image.post(*this);
 
 			// ... and write it to device.
-			write(progress,image);
+			image.write(progress);
 
 			return 0;
 		}

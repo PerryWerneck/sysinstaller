@@ -51,7 +51,6 @@
 		<Unit filename="modules/isobuilder/src/include/config.h" />
 		<Unit filename="modules/isobuilder/src/include/efiboot.h" />
 		<Unit filename="modules/isobuilder/src/include/iso9660.h" />
-		<Unit filename="modules/isobuilder/src/iso9660/efiboot.cc" />
 		<Unit filename="modules/isobuilder/src/iso9660/image.cc" />
 		<Unit filename="modules/isobuilder/src/iso9660/settings.cc" />
 		<Unit filename="modules/isobuilder/src/module/init.cc" />

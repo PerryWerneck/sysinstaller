@@ -169,6 +169,8 @@
 
 			debug("Selected device='",device->description.c_str(),"'");
 
+			writer.close();
+
 			switch(device->type) {
 			case DeviceHolder::AutoDetect:
 				apply.set_sensitive(false);

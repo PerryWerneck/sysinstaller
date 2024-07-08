@@ -56,9 +56,8 @@
 
 		bool getProperty(const char *key, std::string &value) const;
 
-
 		/// @brief Select device and write image to it.
-		void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
+		//void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
 
 	public:
 		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
