@@ -45,6 +45,9 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
+/* "Do we have udisk" */
+#undef HAVE_UDISK
+
 /* Do we have udjat? */
 #undef HAVE_UDJAT
 

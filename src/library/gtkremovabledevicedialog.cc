@@ -44,7 +44,7 @@
 #ifdef USE_MESSAGE_DIALOG
 
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Udjat::Dialog &dialog, bool allow_output_to_file)
- : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, writer{w} {
+ : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, volume_monitor{Gio::VolumeMonitor::get()}, writer{w} {
 
 	setup(allow_output_to_file);
 
@@ -55,6 +55,18 @@
 
 	set_message(dialog.message(_("Insert an storage device <b>NOW</b>")),true);
 	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
+
+	volume_monitor->signal_drive_connected().connect([&](const Glib::RefPtr<Gio::Drive> drive){
+		if(drive->is_removable()) {
+			device_added(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+		}
+	});
+
+	volume_monitor->signal_drive_disconnected().connect([&](const Glib::RefPtr<Gio::Drive> drive){
+		if(drive->is_removable()) {
+			device_removed(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+		}
+	});
 
 #ifdef USE_DROPDOWN
 	dropdown.get_style_context()->add_class("device-selector");
@@ -262,4 +274,17 @@
 #endif // USE_DROPDOWN
 
 	return "";
+ }
+
+ void GtkRemovableDeviceDialog::device_added(const char *devname, const char *description) {
+
+	Logger::String("Device '",description,"' was inserted (",devname,")").info("dialog");
+
+ }
+
+ void GtkRemovableDeviceDialog::device_removed(const char *devname, const char *description) {
+
+ 	Logger::String("Device '",description,"' was removed (",devname,")").info("dialog");
+
+
  }

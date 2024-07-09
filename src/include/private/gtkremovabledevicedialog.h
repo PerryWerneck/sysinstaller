@@ -72,6 +72,9 @@
 
  #endif // USE_DROPDOWN
 
+	/// Watch Storage devices.
+	Glib::RefPtr<Gio::VolumeMonitor> volume_monitor;
+
 	/// @brief Cancel button.
 	Gtk::Button cancel{"_Cancel",true};
 	Gtk::Button apply{"C_ontinue",true};
@@ -84,6 +87,12 @@
 
 	/// @brief The writer
 	Reinstall::Writer &writer;
+
+	/// @brief Device was added.
+	void device_added(const char *devname, const char *description);
+
+	/// @brief Device was removed.
+	void device_removed(const char *devname, const char *description);
 
  public:
 	GtkRemovableDeviceDialog(Reinstall::Writer &writer, const Udjat::Dialog &dialog, bool allow_output_to_file = true);
