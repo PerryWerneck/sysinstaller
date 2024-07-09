@@ -81,7 +81,6 @@
 
 	void setup(bool allow_output_to_file);
 
-
 	/// @brief Select filename for output.
 	void select_file();
 

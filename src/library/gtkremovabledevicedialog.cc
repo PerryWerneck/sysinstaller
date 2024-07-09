@@ -285,6 +285,7 @@
  void GtkRemovableDeviceDialog::device_added(const char *devname, const char *description) {
 
 	Logger::String("Device '",description,"' was inserted (",devname,")").info("dialog");
+	store->append(DeviceHolder::create(DeviceHolder::Device,devname,description));
 
  }
 
