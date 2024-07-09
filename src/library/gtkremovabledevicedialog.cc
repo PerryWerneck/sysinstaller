@@ -46,15 +46,14 @@
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Udjat::Dialog &dialog, bool allow_output_to_file)
  : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, volume_monitor{Gio::VolumeMonitor::get()}, writer{w} {
 
-	setup(allow_output_to_file);
-
-	add_action_widget(cancel,ECANCELED);
+ 	add_action_widget(cancel,ECANCELED);
 	add_action_widget(apply,0);
-
 	apply.set_sensitive(false);
 
-	set_message(dialog.message(_("Insert an storage device <b>NOW</b>")),true);
+	set_message(dialog.message(_("Insert an storage device")),true);
 	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
+
+	setup(allow_output_to_file);
 
 	volume_monitor->signal_drive_connected().connect([&](const Glib::RefPtr<Gio::Drive> drive){
 		if(drive->is_removable()) {
@@ -308,7 +307,7 @@
 	switch(device->type) {
 	case DeviceHolder::FileDialog:
 		apply.set_label("C_ontinue");
-		apply.set_sensitive(false);
+//		apply.set_sensitive(false);
 		select_file();
 		break;
 
@@ -324,11 +323,13 @@
 
 			writer.open(device->device_name.c_str());
 			apply.set_label("C_ontinue");
-			apply.set_sensitive(true);
+			apply.set_sensitive((bool) writer);
 
 		} catch(const std::system_error &e) {
 
 			int err = e.code().value();
+
+			debug("System error ",err);
 
 			Logger::String{device->device_name.c_str(),": ",e.what()," (",err,")"}.warning("dialog");
 			apply.set_sensitive(false);
@@ -348,6 +349,8 @@
 			}
 
 		} catch(const std::exception &e) {
+
+			debug("Exception");
 
 			Logger::String{device->device_name.c_str(),": ",e.what()}.warning("dialog");
 			apply.set_sensitive(false);

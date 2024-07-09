@@ -170,7 +170,7 @@
 				}
 
 				if(devlen < length) {
-					throw runtime_error(_( "Not enough space on device"));
+					throw system_error(ENOSPC, system_category());
 				} else {
 					Logger::String{"Device is bigger than ",String{}.set_byte(length).c_str()," bytes"}.info("writer");
 				}
