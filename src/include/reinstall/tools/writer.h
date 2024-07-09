@@ -50,9 +50,6 @@
 		/// @brief Device set from command-line option.
 		static std::string selected;
 
-		/// @brief Open device
-		void open(const char *device_name);
-
 		/// @brief Allocate required space, exception if not enough.
 		void allocate();
 
@@ -63,6 +60,10 @@
 			return (bool) (fd != -1);
 		}
 
+		/// @brief Open device.
+		void open(const char *device_name);
+
+		/// @brief Close device.
 		void close();
 
 		/// @brief Set output from comand-line

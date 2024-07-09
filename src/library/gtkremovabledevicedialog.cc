@@ -180,32 +180,7 @@
 		if (auto device = std::dynamic_pointer_cast<DeviceHolder>(dropdown.get_selected_item())) {
 
 			debug("Selected device='",device->description.c_str(),"'");
-
-			writer.close();
-
-			switch(device->type) {
-			case DeviceHolder::AutoDetect:
-				apply.set_sensitive(false);
-				break;
-
-			case DeviceHolder::Undefined:
-				apply.set_sensitive(false);
-				break;
-
-			case DeviceHolder::FileDialog:
-				apply.set_sensitive(false);
-				select_file();
-				break;
-
-			case DeviceHolder::File:
-				apply.set_sensitive(true);
-				break;
-
-			case DeviceHolder::Device:
-				apply.set_sensitive(false);
-				break;
-
-			}
+			device_selected(device);
 
 		} else {
 
@@ -303,13 +278,88 @@
 
 #ifdef USE_DROPDOWN
 	auto device = std::dynamic_pointer_cast<const DeviceHolder>(dropdown.get_selected_item());
-	if(device->type == DeviceHolder::Device && !strcmp(device->device_name.c_str(),devname)) {
+	if(device && device->type == DeviceHolder::Device && !strcmp(device->device_name.c_str(),devname)) {
 		debug("Selected device was removed, selecting auto-detect");
 		auto item = dropdown.get_selected();
 		dropdown.set_selected(0);
+		apply.set_label("C_ontinue");
+		apply.set_sensitive(false);
 		store->remove(item);
 		return;
 	}
+
+	for(guint item = 0; item < store->get_n_items(); item++) {
+		auto device = std::dynamic_pointer_cast<const DeviceHolder>(store->get_object(item));
+		if(device && device->type == DeviceHolder::Device && !strcmp(device->device_name.c_str(),devname)) {
+			store->remove(item);
+			return;
+		}
+	}
 #endif // USE_DROPDOWN
+
+ }
+
+ void GtkRemovableDeviceDialog::device_selected(Glib::RefPtr<DeviceHolder> device) {
+
+	debug("Selected device: ",device->description.c_str());
+
+ 	writer.close();
+
+	switch(device->type) {
+	case DeviceHolder::FileDialog:
+		apply.set_label("C_ontinue");
+		apply.set_sensitive(false);
+		select_file();
+		break;
+
+	case DeviceHolder::File:
+ 		apply.set_label("_Save image");
+		apply.set_sensitive(true);
+		break;
+
+	case DeviceHolder::Device:
+		debug("Checking ",device->device_name.c_str());
+
+		try {
+
+			writer.open(device->device_name.c_str());
+			apply.set_label("C_ontinue");
+			apply.set_sensitive(true);
+
+		} catch(const std::system_error &e) {
+
+			int err = e.code().value();
+
+			Logger::String{device->device_name.c_str(),": ",e.what()," (",err,")"}.warning("dialog");
+			apply.set_sensitive(false);
+
+			switch(err) {
+			case ENOSPC:
+				apply.set_label(_("Not enough space"));
+				break;
+
+			case EPERM:
+			case EACCES:
+				apply.set_label(_("Access Denied"));
+				break;
+
+			default:
+				apply.set_label(strerror(err));
+			}
+
+		} catch(const std::exception &e) {
+
+			Logger::String{device->device_name.c_str(),": ",e.what()}.warning("dialog");
+			apply.set_sensitive(false);
+			apply.set_label(_("Invalid device"));
+
+		}
+		break;
+
+	default:
+		apply.set_label("C_ontinue");
+		apply.set_sensitive(false);
+	}
+
 
  }
