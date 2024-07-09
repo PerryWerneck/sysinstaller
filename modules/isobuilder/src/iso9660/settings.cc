@@ -36,7 +36,12 @@
 		std::string name{XML::AttributeFactory(node,"name").as_string("iso-9660")};
 
 		system_area = XML::QuarkFactory(node,"system-area");
+
 		volume_id = XML::QuarkFactory(node,"volume-id");
+		if(!*volume_id) {
+			volume_id = XML::QuarkFactory(node,"system-name");
+		}
+
 		publisher_id = XML::QuarkFactory(node,"publisher-id");
 		data_preparer_id = XML::QuarkFactory(node,"data-preparer-id");
 		application_id = XML::QuarkFactory(node,"application-id");
