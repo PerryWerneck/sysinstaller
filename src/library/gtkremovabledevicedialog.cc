@@ -285,7 +285,15 @@
  void GtkRemovableDeviceDialog::device_added(const char *devname, const char *description) {
 
 	Logger::String("Device '",description,"' was inserted (",devname,")").info("dialog");
+
+#ifdef USE_DROPDOWN
 	store->append(DeviceHolder::create(DeviceHolder::Device,devname,description));
+	auto device = std::dynamic_pointer_cast<const DeviceHolder>(dropdown.get_selected_item());
+	if(device && device->type == DeviceHolder::AutoDetect) {
+		debug("Auto detect enabled select the new device");
+		dropdown.set_selected(store->get_n_items()-1);
+	}
+#endif // USE_DROPDOWN
 
  }
 
@@ -293,5 +301,15 @@
 
  	Logger::String("Device '",description,"' was removed (",devname,")").info("dialog");
 
+#ifdef USE_DROPDOWN
+	auto device = std::dynamic_pointer_cast<const DeviceHolder>(dropdown.get_selected_item());
+	if(device->type == DeviceHolder::Device && !strcmp(device->device_name.c_str(),devname)) {
+		debug("Selected device was removed, selecting auto-detect");
+		auto item = dropdown.get_selected();
+		dropdown.set_selected(0);
+		store->remove(item);
+		return;
+	}
+#endif // USE_DROPDOWN
 
  }
