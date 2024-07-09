@@ -37,6 +37,8 @@
 
  #include <iso9660.h>
 
+ #include <unistd.h>
+
  using namespace Udjat;
  using namespace std;
  using namespace Reinstall;
@@ -90,6 +92,7 @@
 			image.post(*this);
 
 			// ... and write it to device.
+			debug("Complete, writing...");
 			image.write(progress);
 
 			return 0;

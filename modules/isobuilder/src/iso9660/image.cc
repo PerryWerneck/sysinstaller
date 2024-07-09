@@ -431,6 +431,8 @@
 
 	void Image::write(Udjat::Dialog::Progress &progress) {
 
+		debug("Writing image");
+
 		progress = _( "Preparing to write" );
 
 		int rc = iso_image_update_sizes(image);
@@ -454,6 +456,7 @@
 
 			auto &writer = Reinstall::Writer::getInstance();
 			writer.size(total);
+
 			writer.open(progress,dialog);
 
 			progress = _( "Writing image" );
@@ -465,10 +468,11 @@
 			while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
 				writer.write(current, buffer, BUFLEN);
 				current += BUFLEN;
-				if(total) {
-					progress = ((double) total) / ((double) current);
-				}
+				progress.file_sizes(current,total);
 			}
+
+			progress = _( "Finalizing" );
+			writer.close();
 
 		} catch(...) {
 
@@ -481,58 +485,6 @@
 		burn_src->free_data(burn_src);
 		free(burn_src);
 	}
-
-	/*
-	void Image::write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &write) {
-
-		dialog = _( "Preparing to write" );
-
-		int rc = iso_image_update_sizes(image);
-		if (rc < 0) {
-			string msg{iso_error_to_msg(rc)};
-			Logger::String{"Error updating image size: ",msg.c_str()}.error("iso9660");
-			throw runtime_error(msg);
-		}
-
-		struct burn_source *burn_src = NULL;
-		rc = iso_image_create_burn_source(image, opts, &burn_src);
-		if (rc < 0) {
-			string msg{iso_error_to_msg(rc)};
-			Logger::String{"Error creating burn source: ",msg.c_str()}.error("iso9660");
-			throw runtime_error(msg);
-		}
-
-		dialog = _( "Writing image" );
-
-		try {
-
-			#define BUFLEN 2048
-			unsigned char buffer[BUFLEN];
-
-			unsigned long long current = 0;
-			unsigned long long total = burn_src->get_size(burn_src);
-
-			while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
-				write(current, buffer, BUFLEN);
-				current += BUFLEN;
-				if(total) {
-					dialog = ((double) total) / ((double) current);
-				}
-			}
-
-		} catch(...) {
-
-				burn_src->free_data(burn_src);
-				free(burn_src);
-				throw;
-
-		}
-
-		burn_src->free_data(burn_src);
-		free(burn_src);
-
-	}
-	*/
 
  }
 
