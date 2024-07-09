@@ -271,45 +271,14 @@
 			to++;
 		}
 
-		/*
-		#error Move EFI adjustments to Abstract::Image
-		if(settings.boot.efi->enabled() && strcmp(to,settings.boot.efi->path()) == 0) {
-
-			debug("------------------------------------------------- EFIBOOT");
-
-			// Copy contents to temporary file.
-			if(!empty(efibootpart)) {
-				throw runtime_error("EFI boot partition already set");
-			}
-			efibootpart = Udjat::File::Temporary::create();
-
-			Udjat::File::copy(from,efibootpart.c_str());
-			from = efibootpart.c_str();
-
-			// Apply templates in efibootpart
-			{
-				std::vector<string> files;
-
-				Reinstall::Disk::Fat32 disk{from};
-
-				disk.for_each("/",[&files](const char *filename){
-					files.push_back(filename);
-					return false;
-				});
-
-			}
-
-		}
-		*/
-
 		add_new_node(image,from,to);
 
 	}
 
-	void Image::pre(Udjat::Abstract::Object &object) {
+	void Image::pre(Udjat::Abstract::Object &) {
 	}
 
-	void Image::post(Udjat::Abstract::Object &object) {
+	void Image::post(Udjat::Abstract::Object &) {
 
 		iso_write_opts_set_rockridge(opts, settings.rockridge);
 		iso_write_opts_set_joliet(opts, settings.joliet);
@@ -348,14 +317,10 @@
 				memset(id_string,' ',sizeof(id_string));
 
 				if(settings.boot.eltorito.id && *settings.boot.eltorito.id) {
-					size_t len = strlen(settings.boot.eltorito.id);
-					if(len > 28) {
-						len = 28;
-					}
-					strncpy((char *) id_string,settings.boot.eltorito.id,len);
+					strncpy((char *) id_string,settings.boot.eltorito.id,std::min(28,(int) strlen(settings.boot.eltorito.id)));
 				} else {
 					Config::Value<string> defstring("iso9660","el-torito-id",Application::Name().c_str());
-					strncpy((char *) id_string,defstring,strlen(defstring));
+					strncpy((char *) id_string,defstring,std::min(28,(int) strlen(defstring)));
 				}
 
 				el_torito_set_id_string(bootimg,id_string);
@@ -371,13 +336,9 @@
 
 		if(!empty(efibootpart)) {
 
-			// Add EFI boot image
-			Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image"}.write(Logger::Debug,"iso9660");
-
-			// set_efi_boot_image(const char *boot_image, bool like_iso_hybrid)
-			// set_efi_boot_image(settings.boot.efi->path().c_str());
 			if(settings.like_iso_hybrid) {
 
+				Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image (ISO Hybrid)"}.trace("iso9660");
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
 
 				// Isohybrid, set partition
@@ -389,11 +350,12 @@
 					throw runtime_error(msg);
 				}
 
-				// Logger::String{"EFI partition set from '",efibootpart.c_str(),"'"}.trace("iso9660");
-
 			} else {
 
 				// Not isohybrid.
+				Logger::String{"Adding ",builder.efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
+				iso_write_opts_set_part_like_isohybrid(opts, 0);
+
 				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder.efi()->path(),0);
 
 				if(rc != ISO_SUCCESS) {
@@ -402,13 +364,11 @@
 					throw runtime_error(msg);
 				}
 
-				Logger::String{"EFI bootp set from '",builder.efi()->path(),"'"}.write(Logger::Debug,"iso9660");
-
 			}
 
 			if(settings.boot.catalog && *settings.boot.catalog) {
 
-				Logger::String{"Adding ",builder.efi()->path()," as boot image"}.write(Logger::Debug,"iso9660");
+				Logger::String{"Adding ",builder.efi()->path()," as boot image"}.trace("iso9660");
 
                 ElToritoBootImage *bootimg = NULL;
                 int rc = iso_image_add_boot_image(image,builder.efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);

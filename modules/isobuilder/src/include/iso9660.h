@@ -89,8 +89,6 @@
 		// Abstract::Image
 		void append(const char *from, const char *to) override;
 
-		//void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) override;
-
 	private:
 		const Settings &settings;
 		IsoImage *image = nullptr;
