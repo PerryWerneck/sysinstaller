@@ -130,27 +130,32 @@
 
 		// set publisher id
 		{
-			if(settings.publisher_id && *settings.publisher_id) {
-				iso_image_set_publisher_id(image, settings.publisher_id);
-			} else {
-				iso_image_set_publisher_id(image, Config::Value<string>{"iso9660","publisher-id",Application::Name().c_str()}.c_str());
-			}
-		}
+			string publisher_id{settings.publisher_id};
 
-		// set data preparer id
-		{
-			if(settings.data_preparer_id && *settings.data_preparer_id) {
+			if(publisher_id.empty()) {
 
-				iso_image_set_data_preparer_id(image, settings.data_preparer_id);
+				char buffer[255];
+				if(getlogin_r(buffer, 254) == 0) {
+					publisher_id = buffer;
+				}
 
-			} else {
-
-				char username[32];
-				if(getlogin_r(username, 32) == 0) {
-					iso_image_set_data_preparer_id(image, username);
+				if(gethostname(buffer,254) == 0) {
+					if(!publisher_id.empty()) {
+						publisher_id += " ";
+					}
+					publisher_id += buffer;
 				}
 
 			}
+
+			iso_image_set_publisher_id(image, publisher_id.c_str());
+		}
+
+		// set data preparer id
+		if(settings.data_preparer_id && *settings.data_preparer_id) {
+			iso_image_set_data_preparer_id(image, settings.data_preparer_id);
+		} else {
+			iso_image_set_data_preparer_id(image,Config::Value<string>("iso9660","data-preparer-id",PACKAGE_URL).c_str());;
 		}
 
 		// set system id

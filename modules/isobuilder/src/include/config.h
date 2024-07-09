@@ -23,22 +23,22 @@
 #define MODULE_PATH /usr/lib64/udjat/1.2/modules/
 
 /* Name of package */
-#define PACKAGE "isowriter"
+#define PACKAGE "isobuilder"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "perry.werneck@gmail.com"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "isowriter"
+#define PACKAGE_NAME "isobuilder"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "isowriter 5.1.0"
+#define PACKAGE_STRING "isobuilder 5.1.0"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "isowriter"
+#define PACKAGE_TARNAME "isobuilder"
 
 /* Define to the home page for this package. */
-#define PACKAGE_URL ""
+#define PACKAGE_URL "https://github.com/PerryWerneck/reinstall"
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "5.1.0"
@@ -47,7 +47,7 @@
 #define PRODUCT_ID "br.eti.werneck.udjat"
 
 /* The product name */
-#define PRODUCT_NAME "isowriter"
+#define PRODUCT_NAME "isobuilder"
 
 /* Version number of package */
 #define VERSION "5.1.0"
