@@ -105,7 +105,7 @@
 
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task) {
+	void Abstract::Image::write(Udjat::Dialog::Progress &, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
 		throw runtime_error(_("No write support on selected image"));
 	}
 

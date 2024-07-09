@@ -90,6 +90,9 @@
 		/// @param length Block length.
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
+		/// @brief Write file to device
+		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd);
+
 		/// @brief Write iso image to device.
 		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, const char *isoname);
 

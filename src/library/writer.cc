@@ -69,12 +69,30 @@
 		}
 	}
 
+
 	void Writer::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog, const char *isoname) {
 
 		int fd = ::open(isoname,O_RDONLY);
 		if(fd < 0) {
 			throw std::system_error(errno,std::system_category(),"Cant open source file");
 		}
+
+		try {
+
+			write(progress,dialog,fd);
+
+		} catch(...) {
+
+			::close(fd);
+			throw;
+
+		}
+
+		::close(fd);
+
+	}
+
+	void Writer::write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd) {
 
 		try {
 
@@ -98,6 +116,8 @@
 					throw runtime_error("Unexpected EOF on source file");
 				}
 
+				debug(offset,"/",st.st_size);
+
 				progress.file_sizes(offset,st.st_size);
 				Writer::write(offset,buffer,(unsigned long long) bytes);
 				offset += bytes;
@@ -107,12 +127,12 @@
 
 		} catch(...) {
 
-			::close(fd);
 			close();
 
 			throw;
 		}
 
+		progress = _("Finishing");
 		close();
 
 	}
