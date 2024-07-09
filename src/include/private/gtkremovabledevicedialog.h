@@ -80,7 +80,7 @@
 	Gtk::Button apply{"C_ontinue",true};
 
 	void setup(bool allow_output_to_file);
-	void load_devices();
+
 
 	/// @brief Select filename for output.
 	void select_file();

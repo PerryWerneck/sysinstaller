@@ -220,7 +220,13 @@
 		store->append(DeviceHolder::create(DeviceHolder::FileDialog,"",_("Save image to file")));
 	}
 
-	load_devices();
+	// Load devices
+	for(const auto &drive : volume_monitor->get_connected_drives()) {
+		if(drive->is_removable()) {
+			device_added(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+		}
+	}
+
 #endif // USE_DROPDOWN
 
  }

@@ -41,10 +41,4 @@
 
  using namespace Udjat;
 
- void GtkRemovableDeviceDialog::load_devices() {
-
- 	debug("Loading devices");
-
-
- }
 

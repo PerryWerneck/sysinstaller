@@ -36,7 +36,4 @@
 
  // libusb_hotplug_register_callback
 
- void GtkRemovableDeviceDialog::load_devices() {
-
- }
 
