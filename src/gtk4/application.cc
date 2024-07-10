@@ -137,7 +137,7 @@
 
 			debug("Running ",String{PRODUCT_ID,".",name().c_str()}.c_str()," in graphic mode");
 
-			g_log_set_default_handler(g_syslog,NULL);
+			g_log_set_default_handler(g_syslog,this);
 
 			if(Udjat::Application::setup(argc, argv, definitions)) {
 				return -1;
