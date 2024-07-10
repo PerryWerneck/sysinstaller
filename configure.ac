@@ -280,6 +280,7 @@ export REINSTALL_LIBS="-L$ac_pwd/.bin/Debug/libreinstall.so.$app_vrs_major.$app_
 
 AC_CONFIG_SUBDIRS( [modules/isowriter] )
 AC_CONFIG_SUBDIRS( [modules/isobuilder] )
+AC_CONFIG_SUBDIRS( [modules/grub2] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
