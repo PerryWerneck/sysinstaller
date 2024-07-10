@@ -172,6 +172,16 @@
 		return false;
 	}
 
+	const char * Repository::remote() const {
+
+		const char *url = slpclient->url();
+		if(url && *url) {
+			return url;
+		}
+
+		return FileSource::remote();
+	}
+
  }
 
 

@@ -220,7 +220,8 @@
 
 			Dialog::Progress & operator = (const double fraction) override {
 				values.fraction = fraction;
-				values.valid = values.changed = true;
+				values.valid = true;
+				values.changed = true;
 				return *this;
 			}
 

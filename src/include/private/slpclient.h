@@ -33,9 +33,19 @@
 		const char *service_type = "";
 		const char *scope_list = "";
 		const char *filter = "";
+		bool allow_local = false;
+
+		struct {
+			std::string url;
+			bool complete = false;
+		} query;
 
 	public:
 		SLPClient(const Udjat::XML::Node &node);
+
+		/// @brief Detect url.
+		/// @return URL from slp service, empty if not found.
+		const char *url();
 
 		static std::shared_ptr<SLPClient> Factory(const Udjat::XML::Node &node);
 

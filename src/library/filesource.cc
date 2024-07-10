@@ -57,15 +57,6 @@
 			url.local = url.remote;
 		}
 
-		if(Logger::enabled(Logger::Trace)) {
-			if(url.local[0]) {
-				Logger::String{"Using '",url_local().c_str(),"' for local files"}.trace(name());
-			}
-			if(url.remote[0]) {
-				Logger::String{"Using '",url_remote().c_str(),"' for remote files"}.trace(name());
-			}
-		}
-
 	}
 
 	const char * FileSource::local() const {

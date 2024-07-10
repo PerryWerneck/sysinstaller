@@ -54,6 +54,8 @@
 		/// @return true if the repository has an index.
 		bool index();
 
+		const char * remote() const override;
+
 		inline const auto begin() const noexcept {
 			return files.begin();
 		}
