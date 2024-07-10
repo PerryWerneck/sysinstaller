@@ -48,7 +48,7 @@
 	class UDJAT_PRIVATE IsoBuilderSingleTon {
 	private:
 		IsoBuilderSingleTon() {
-			cout << "iso9660\tStarting iso builder" << endl;
+			Logger::String{"Initializing libisofs"}.trace("iso9660");
 			iso_init();
 		}
 
@@ -59,8 +59,8 @@
 		}
 
 		~IsoBuilderSingleTon() {
+			Logger::String{"Deinitializing libisofs"}.trace("iso9660");
 			iso_finish();
-			cout << "iso9660\tIso builder was terminated" << endl;
 		}
 
 	};

@@ -47,17 +47,17 @@
  UDJAT_API Udjat::Module * udjat_module_init() {
 
 	static const Udjat::ModuleInfo moduleinfo{
-          "Create customized installation image."
+          "Build customized installation image."
 	};
 
-	class Action : public Reinstall::Action, private Reinstall::Builder {
-	private:
-		iso9660::Image::Settings imgdef;
+	/// @brief Base class for actions.
+	class Action : public Reinstall::Action, protected Reinstall::Builder {
+	protected:
+		virtual void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
 
 	public:
-
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, Reinstall::Builder{*this,node}, imgdef{node} {
+			: Reinstall::Action{parent,node}, Reinstall::Builder{*this,node} {
 
 			if(!(args.icon_name && *args.icon_name)) {
 				args.icon_name = "drive-harddisk-usb-symbolic";
@@ -65,7 +65,8 @@
 
 		}
 
-		~Action() {
+		inline const char *name() const noexcept {
+			return Reinstall::Action::name();
 		}
 
 		bool getProperty(const char *key, std::string &value) const override {
@@ -79,12 +80,28 @@
 
 		int activate(Udjat::Dialog::Progress &progress) override {
 
-			debug("Action activated");
-
 			list<std::shared_ptr<DataSource>> files;
 			prepare(progress,files);
 
+			build(progress,files);
+
+			return 0;
+		}
+
+	};
+
+#ifdef HAVE_ISOFS
+	/// @brief ISO9660 action.
+	class Iso9660Action : public Action {
+	private:
+		iso9660::Image::Settings imgdef;
+
+	protected:
+		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+
 			// Build image ...
+			Logger::String{"Building ISO-9660 Image"}.info(name());
+
 			iso9660::Image image{output,*this,imgdef};
 
 			image.pre(*this);
@@ -94,11 +111,17 @@
 			// ... and write it to device.
 			debug("Complete, writing...");
 			image.write(progress);
-
-			return 0;
 		}
 
+	public:
+
+		Iso9660Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+			: Action{parent,node}, imgdef{node} {
+		}
+
+
 	};
+#endif // HAVE_ISOFS
 
 	class Module : public Udjat::Module, public Udjat::Factory {
 	public:
@@ -107,7 +130,17 @@
 
 		// Udjat::Factory
 		std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
-			return make_shared<Action>(parent,node);
+
+			auto attr = XML::AttributeFactory(node,"filesystem");
+
+#ifdef HAVE_ISOFS
+			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
+				return make_shared<Iso9660Action>(parent,node);
+			}
+#endif // HAVE_ISOFS
+
+			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.warning(Factory::name());
+			return std::shared_ptr<Udjat::Abstract::Object>();
 		}
 
 	};
