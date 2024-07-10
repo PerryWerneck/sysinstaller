@@ -37,7 +37,7 @@
 
 		struct {
 			std::string url;
-			bool complete = false;
+			bool done = false;
 		} query;
 
 	public:

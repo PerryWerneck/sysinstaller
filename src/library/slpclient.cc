@@ -28,6 +28,10 @@
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
  #include <mutex>
+ #include <udjat/net/ip/address.h>
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netdb.h>
 
  #ifdef HAVE_LIBSLP
 	#include <slp.h>
@@ -64,7 +68,7 @@
 		list<String> responses;
 	};
 
-	static SLPBoolean slpcallback( SLPHandle, const char* srvurl, unsigned short lifetime, SLPError errcode, void *cookie ) {
+	static SLPBoolean slpcallback( SLPHandle, const char* srvurl, unsigned short, SLPError errcode, void *cookie ) {
 
 		// http://www.openslp.org/doc/html/ProgrammersGuide/SLPFindSrvs.html
 
@@ -110,7 +114,7 @@
 		lock_guard<mutex> lock(guard);
 
 #ifdef HAVE_LIBSLP
-		if(service_type && *service_type && !query.complete) {
+		if(service_type && *service_type && !query.done) {
 
 			Dialog::Progress &dialog = Dialog::Progress::getInstance();
 			dialog.url(service_type);
@@ -138,12 +142,137 @@
 						&cbinfo
 					);
 
+			size_t prefix_length = strlen(service_type);
+			cbinfo.responses.remove_if([this,prefix_length](String &url){
+
+				const char *str = url.c_str();
+				if(strncmp(str,service_type,prefix_length)) {
+					Logger::String{"Ignoring invalid response '",url,"'"}.warning("slp");
+					return true;
+				}
+
+				str += prefix_length;
+				if(*str != ':') {
+					Logger::String{"Ignoring unexpected response '",url,"'"}.warning("slp");
+					return true;
+				}
+
+				Logger::String{"Accepting valid response '",url,"'"}.trace("slp");
+
+				return false;
+			});
+
+			if(cbinfo.responses.empty()) {
+
+				Logger::String{"No valid SLP response for ",service_type}.warning("slp");
+
+			} else {
+
+				Logger::String{cbinfo.responses.size()," SLP response(s) for ",service_type}.info("slp");
+
+				if(err != SLP_OK) {
+
+					Logger::String{"SLPFindSrvs has failed"}.warning("slp");
+
+				} else if(!allow_local) {
+
+					// Ignore local addresses.
+					vector<IP::Addresses> addresses; ///< @brief IP Addresses.
+					IP::for_each([&addresses](const IP::Addresses &addr){
+						addresses.push_back(addr);
+						return false;
+					});
+
+					for(auto url=cbinfo.responses.begin(); url != cbinfo.responses.end() && this->query.url.empty(); url++) {
+
+						SLPSrvURL *parsedurl = NULL;
+						if(SLPParseSrvURL(url->c_str(),&parsedurl) != SLP_OK) {
+
+							Logger::String{"Cant parse ",url->c_str()}.error("slp");
+
+						} else if(parsedurl->s_pcHost && *parsedurl->s_pcHost) {
+
+							struct addrinfo *ai;
+							struct addrinfo hints;
+
+							memset(&hints,0,sizeof(hints));
+							hints.ai_family   = AF_UNSPEC;
+							hints.ai_socktype = SOCK_STREAM;
+							hints.ai_protocol = 0;
+							hints.ai_flags    = AI_NUMERICSERV;
+
+							string port;
+							if(parsedurl->s_iPort) {
+								port = std::to_string(parsedurl->s_iPort);
+							}
+
+							if(getaddrinfo(parsedurl->s_pcHost, port.c_str(), &hints, &ai)) {
+
+								Logger::String{"Error resolving ",parsedurl->s_pcHost}.error("slp");
+
+							} else {
+
+								for(auto rp = ai;rp != NULL && this->query.url.empty(); rp = rp->ai_next) {
+
+									sockaddr_storage addr{IP::Factory(rp->ai_addr)};
+									bool remote = true;
+
+									for(IP::Addresses &local : addresses) {
+										if(local.address == addr) {
+											remote = false;
+											Logger::String {"Ignoring response ",std::to_string(addr)}.trace("slpclient");
+										}
+									}
+
+									if(remote) {
+										extract_url_from_response(*url, this->query.url);
+									}
+								}
+
+								freeaddrinfo(ai);
+							}
+
+							SLPFree(parsedurl);
+
+						} else {
+
+							Logger::String{"Ignoring response '",*url,"'"}.info("slp");
+
+						}
+
+					}
 
 
+				} else {
 
+					// Get first address.
+					for(String &response : cbinfo.responses) {
+
+						SLPSrvURL *parsedurl = NULL;
+						if(SLPParseSrvURL(response.c_str(),&parsedurl) != SLP_OK) {
+
+							Logger::String{"Cant parse ",response.c_str()}.error("slp");
+
+						} else {
+
+							extract_url_from_response(response, this->query.url);
+
+							SLPFree(parsedurl);
+
+							if(!this->query.url.empty()) {
+								break;
+							}
+						}
+
+					}
+
+				}
+
+			}
 
 			SLPClose(hSlp);
-			query.complete = true;
+			query.done = true;
+
 		}
 #endif // HAVE_LIBSLP
 
