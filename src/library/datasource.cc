@@ -61,7 +61,7 @@
 	DataSource::~DataSource() {
 	}
 
-	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname) const {
+	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required) const {
 
 		const char *path = String{node,attrname}.expand(node).expand().as_quark();
 		debug(node.name(),"(",attrname,") = '",path,"'");
@@ -70,7 +70,7 @@
 			path = String{node,"url"}.expand(node).expand().as_quark();
 			if(path[0]) {
 				Logger::String{"Getting '",attrname,"' from 'url' attribute"}.trace(name());
-			} else {
+			} else if(required) {
 				Logger::String{"Attribute '",attrname,"' is missing"}.warning(name());
 			}
 		}

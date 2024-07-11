@@ -79,8 +79,6 @@
 				url.local = ::PathFactory(object,node,"kernel","file://${boot.path.mount}${boot.path.relative}/${filename}");
 				url.path = ::PathFactory(object,node,"kernel","${boot.path.relative}/${filename}");
 
-				Logger::String{"Source from ",url.remote}.trace(name());
-
 				if(!(message && *message)) {
 					message = _("Getting installation kernel");
 				}
@@ -92,8 +90,6 @@
 			Init(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"init"} {
 				url.local = ::PathFactory(object,node,"initrd","file://${boot.path.mount}${boot.path.relative}/${filename}");
 				url.path = ::PathFactory(object,node,"initrd","${boot.path.relative}/${filename}");
-
-				Logger::String{"Source from ",url.remote}.trace(name());
 
 				if(!(message && *message)) {
 					message = _("Getting init system");
