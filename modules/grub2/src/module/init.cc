@@ -21,6 +21,7 @@
  #include <udjat/defs.h>
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
+ #include <udjat/tools/string.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/configuration.h>
@@ -36,6 +37,31 @@
  using namespace std;
  using namespace Reinstall;
 
+ static const char * PathFactory(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node, const char *name, const char *text) {
+
+	String str{text};
+
+	str.expand('$',[&](const char *key, std::string &value){
+
+		if(!strcasecmp(key,"name")) {
+			value = name;
+			return true;
+		}
+
+		if(!strcasecmp(key,"filename")) {
+			value = Config::Value<string>("app-defaults",(string{name}+"-name").c_str(),"${name}.reinstall");
+			return true;
+		}
+
+		return false;
+	});
+
+	str.expand(node);
+	str.expand(object);
+
+	return str.as_quark();
+ }
+
  /// @brief Register udjat module.
  UDJAT_API Udjat::Module * udjat_module_init() {
 
@@ -48,9 +74,9 @@
 
 		class Kernel : public Reinstall::FileSource {
 		public:
-			Kernel(const Udjat::XML::Node &node) : FileSource{node,"kernel"} {
-				url.local = "file://${boot-mountpoint}${boot-path}/${kernel-name}";
-				url.path = "${boot-path}/${kernel-name}";
+			Kernel(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"kernel"} {
+				url.local = ::PathFactory(object,node,"kernel","file://${boot.path.mount}${boot.path.relative}/${filename}");
+				url.path = ::PathFactory(object,node,"kernel","${boot.path.relative}/${filename}");
 
 				Logger::String{"Source from ",url.remote}.trace(name());
 
@@ -62,9 +88,9 @@
 
 		class Init : public Reinstall::FileSource {
 		public:
-			Init(const Udjat::XML::Node &node) : FileSource{node,"init"} {
-				url.local = "file://${boot-mountpoint}${boot-path}${init-name}";
-				url.path = "${boot-path}/${init-name}";
+			Init(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"init"} {
+				url.local = ::PathFactory(object,node,"initrd","file://${boot.path.mount}${boot.path.relative}/${filename}");
+				url.path = ::PathFactory(object,node,"initrd","${boot.path.relative}/${filename}");
 
 				Logger::String{"Source from ",url.remote}.trace(name());
 
@@ -80,8 +106,8 @@
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
 			: Reinstall::Action{parent,node} {
 
-			sources.push_back(make_shared<Kernel>(node));
-			sources.push_back(make_shared<Init>(node));
+			sources.push_back(make_shared<Kernel>(*this,node));
+			sources.push_back(make_shared<Init>(*this,node));
 
 		}
 
@@ -89,7 +115,7 @@
 
 			progress = _("Getting required files");
 			for(const auto &source : sources) {
-				source->save(progress);
+				source->save(*this,progress);
 			}
 
 

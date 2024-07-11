@@ -28,6 +28,7 @@
  #include <udjat/ui/progress.h>
  #include <udjat/ui/dialog.h>
  #include <udjat/tools/exception.h>
+ #include <udjat/tools/configuration.h>
 
  #include <stdexcept>
 
@@ -150,7 +151,17 @@
 
 	bool Action::getProperty(const char *key, std::string &value) const {
 
-		debug("----> getProperty(",key,")");
+		/*
+		if(!strcasecmp(key,"kernel-name")) {
+			value = Config::Value<string>("app-defaults","kernel-name","kernel.reinstall");
+			return true;
+		}
+
+		if(!strcasecmp(key,"init-name")) {
+			value = Config::Value<string>("app-defaults","kernel-name","initrd.reinstall");
+			return true;
+		}
+		*/
 
 		if(Udjat::NamedObject::getProperty(key,value)) {
 			return true;

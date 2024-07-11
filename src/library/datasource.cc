@@ -90,6 +90,10 @@
 		throw logic_error("Abstract datasource is unable to save to file");
 	}
 
+	std::string DataSource::save(const Udjat::Abstract::Object &, Udjat::Dialog::Progress &progress) {
+		return save(progress);
+	}
+
 	std::string DataSource::save(Udjat::Dialog::Progress &) {
 		throw logic_error("Abstract datasource is unable to save");
 	}

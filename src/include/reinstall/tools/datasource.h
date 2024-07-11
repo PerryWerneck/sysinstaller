@@ -71,6 +71,11 @@
 		virtual const char * path() const;
 
 		virtual void save(Udjat::Dialog::Progress &progress, const char *path);
+
+		/// @brief Save source, expand URL properties.
+		virtual std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress);
+
+		/// @brief Save source.
 		virtual std::string save(Udjat::Dialog::Progress &progress);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
@@ -107,6 +112,7 @@
 		const char * local() const override;
 		const char * remote() const override;
 		const char * path() const override;
+		std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
 		void save(Udjat::Dialog::Progress &progress, const char *path) override;
 		std::string save(Udjat::Dialog::Progress &progress) override;
 
