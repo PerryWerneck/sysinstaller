@@ -114,15 +114,17 @@
 
 			} catch(const std::logic_error &e) {
 
-				popup.message = _("Configuration error");
+				popup.message = _("Configuration or logic error");
 				popup.details = e.what();
 				Logger::String{e.what()}.error(name());
 
 			} catch(const std::system_error &e) {
 
+				Logger::String details{e.what()," (rc=",e.code().value(),")"};
+				details.error(name());
+
 				popup.message = _("System error");
-				popup.details = e.what();
-				Logger::String{e.what()," (rc=",e.code().value(),")"}.error(name());
+				popup.details = details;
 
 			} catch(const std::exception &e) {
 
