@@ -151,7 +151,7 @@
 
 		}
 
-		if((type && Template::Script) != 0) {
+		if((type & Template::Script) != 0) {
 			if(chmod(path,0755) < 0) {
 					throw system_error(errno,system_category(),_("Cant update template permissions"));
 			}

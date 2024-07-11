@@ -179,7 +179,8 @@
 
 		const char *path = remote();
 
-		if(path[0] == '.') {
+		if(path[0] == '.' || path[0] == '/') {
+
 			if(!repository) {
 				throw logic_error("Unable to use relative URLs without repository");
 			}

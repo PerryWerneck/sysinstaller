@@ -49,7 +49,7 @@
 		url.local = PathFactory(node,"local");
 		url.path = PathFactory(node,"destination");
 
-		if(url.remote[0] == '.' || url.local[0] == '.') {
+		if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
 			repository = Repository::Factory(node);
 		}
 

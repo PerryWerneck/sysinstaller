@@ -85,6 +85,17 @@
 
 		}
 
+		int activate(Udjat::Dialog::Progress &progress) override {
+
+			progress = _("Getting required files");
+			for(const auto &source : sources) {
+				source->save(progress);
+			}
+
+
+			return -1;
+		}
+
 	};
 
 	class Module : public Udjat::Module, public Udjat::Factory {
