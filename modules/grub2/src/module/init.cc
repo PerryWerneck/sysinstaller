@@ -32,6 +32,7 @@
  #include <reinstall/tools/writer.h>
  #include <udjat/ui/dialog.h>
  #include <vector>
+ #include <reinstall/tools/kernelparameter.h>
 
  using namespace Udjat;
  using namespace std;
@@ -101,14 +102,52 @@
 		};
 
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
+		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
+
+		const char *boot_label = _("Reinstall workstation");
 
 	public:
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
 			: Reinstall::Action{parent,node} {
 
+			static const char *labels[] = {
+				"grub-label",
+				"boot-label",
+				"system-name",
+				"label",
+				"title"
+			};
+
+			for(const char *label : labels) {
+				const char *ptr = XML::QuarkFactory(node,label);
+				if(*ptr) {
+					boot_label = ptr;
+					break;
+				}
+			}
+
 			sources.push_back(make_shared<Kernel>(*this,node));
 			sources.push_back(make_shared<Init>(*this,node));
 
+			// Load kernel parameters.
+			Reinstall::KernelParameter::load(node,kparms);
+
+		}
+
+		bool getProperty(const char *key, std::string &value) const {
+
+			if(!strcasecmp(key,"boot-label") && boot_label && *boot_label) {
+				value = boot_label;
+				return true;
+			}
+
+			if(!strcasecmp(key,"kernel-parameters")) {
+				value = KernelParameter::join(*this,kparms);
+				debug("Kernel parameters set to '",value.c_str(),"'");
+				return true;
+			}
+
+			return Reinstall::Action::getProperty(key,value);
 		}
 
 		int activate(Udjat::Dialog::Progress &progress) override {
@@ -117,7 +156,6 @@
 			for(const auto &source : sources) {
 				source->save(*this,progress);
 			}
-
 
 			return -1;
 		}

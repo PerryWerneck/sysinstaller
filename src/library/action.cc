@@ -241,17 +241,6 @@
 			return false;
 		}
 
-		/*
-		if(!strcasecmp(key,"kernel-name")) {
-			value = Config::Value<string>("app-defaults","kernel-name","kernel.reinstall");
-			return true;
-		}
-
-		if(!strcasecmp(key,"init-name")) {
-			value = Config::Value<string>("app-defaults","kernel-name","initrd.reinstall");
-			return true;
-		}
-		*/
 
 		if(Udjat::NamedObject::getProperty(key,value)) {
 			return true;
