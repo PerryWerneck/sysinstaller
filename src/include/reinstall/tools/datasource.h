@@ -40,6 +40,8 @@
 	class UDJAT_API DataSource : public Udjat::NamedObject {
 	protected:
 
+		const char *message = "";
+
 		std::shared_ptr<Repository> repository;
 
 		/// @brief When true allways check file timestamp with remote server.
@@ -95,6 +97,7 @@
 	public:
 		FileSource(const char *path);
 		FileSource(const Udjat::XML::Node &node);
+		FileSource(const Udjat::XML::Node &node, const char *nodename,bool required = true);
 
 		inline bool has_local() const noexcept {
 			return url.local && *url.local;

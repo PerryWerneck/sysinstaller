@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<config>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<config xml:lang="en">
 
 	<!-- HTTP is required for file download -->
 	<module name='http' required='yes' />
 	
 	<!-- 
 	
-		URL for the installation repositóry 
+		URL for the installation repository 
 		
 		Repository attributes:
 		
@@ -16,9 +16,9 @@
 		Optional attributes for automatic repository detection using SLP (http://www.openslp.org/):
 		
 			slp-service-type:	The service type string, including the authority string (if any) for the request.
-			slp-scope-list:		A pointer to a comma separated list of scope names.
-			slp-filter:			A query formulated of attribute pattern matching expressions in the form of an LDAPv3 search filter.
-			slp-url:			The URL for the kernel parameter when SLP is available.
+			slp-scope-list:   A pointer to a comma separated list of scope names.
+			slp-filter:       A query formulated of attribute pattern matching expressions in the form of an LDAPv3 search filter.
+			slp-url:			    The URL for the kernel parameter when SLP is available.
 		
 	-->
 	<repository name='install'>
@@ -77,7 +77,7 @@
 
 	 		<attribute name='title' value='Reinstall this workstation'/>
 	 		<attribute name='sub-title' value='Do a complete network based reinstall on this workstation withot any external boot device' />
-	 		<attribute name='icon-name' value='computer' />
+	 		<attribute name='icon-name' value='computer-symbolic' />
 		
 			<!-- Save configuration for the new boot option (use '%' as marker) -->
 			<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/51_reinstall' script='yes' marker='%' />

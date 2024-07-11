@@ -142,28 +142,6 @@
 
 	});
 
-	/*
-	auto action = dynamic_cast<Reinstall::Action *>(a.get());
-
-	if(action) {
-		ThreadPool::getInstance().push([this,action](){
-			try {
-				if(action->initialize()) {
-					action->info() << "Initialization complete, enabling item" << endl;
-					Glib::signal_idle().connect([this](){
-						set_sensitive(true);
-						return 0;
-					});
-				} else {
-					action->warning() << "Initialization has failed, item will be disabled" << endl;
-				}
-			} catch(const exception &e) {
-				action->error() << e.what() << endl;
-			}
-		});
-	}
-	*/
-
  }
 
  MainWindow::Item::~Item() {

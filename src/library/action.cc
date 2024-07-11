@@ -94,6 +94,11 @@
 		dialog->body(_("Initializing"));
 		dialog->icon_name(args.icon_name);
 
+		struct {
+			string message;
+			string details;
+		} popup;
+
 		auto rc = dialog->run([&](Udjat::Dialog::Progress &progress){
 
 			try {
@@ -103,20 +108,29 @@
 
 			} catch(const Udjat::Exception &e) {
 
-				failed.message(e.title());
-				failed.details(e.body());
+				popup.message = e.title();
+				popup.details = e.body();
+				Logger::String{e.body()}.error(name());
 
 			} catch(const std::exception &e) {
 
-				failed.message(_("Operation failed"));
-				failed.details(e.what());
+				popup.message = _("Operation failed");
+				popup.details = e.what();
+				Logger::String{e.what()}.error(name());
 
 			}
 
 			return -1;
 		});
 
-		complete(rc);
+		if(rc) {
+			failed.present(popup.message.c_str(),popup.details.c_str());
+		} else if(success) {
+			Logger::String{success.details()}.info(name());
+			success.present(popup.message.c_str(),popup.details.c_str());
+		} else {
+			Logger::String{"Completed, no success dialog"}.info(name());
+		}
 
 	}
 
@@ -133,19 +147,6 @@
 		return false;
 	}
 
-	void Action::complete(int rc) {
-
-		if(rc) {
-			Logger::String{failed.details()}.error(name());
-			failed.present();
-		} else if(success) {
-			Logger::String{success.details()}.info(name());
-			success.present();
-		} else {
-			Logger::String{"Completed, no success dialog"}.info(name());
-		}
-
-	}
 
  }
 

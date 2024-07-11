@@ -120,7 +120,7 @@
 
 	}
 
-	std::string Template::save(Udjat::Dialog::Progress &progress) {
+	std::string Template::save(Udjat::Dialog::Progress &) {
 
 		Udjat::URL url{this->url};
 

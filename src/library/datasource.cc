@@ -45,6 +45,7 @@
 
 	DataSource::DataSource(const DataSource &src)
 		: Udjat::NamedObject{src.name()}, repository{src.repository}, update_from_remote{src.update_from_remote} {
+		this->message = src.message;
 	}
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
@@ -115,6 +116,10 @@
 	}
 
 	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+
+		if(message && *message) {
+			progress = message;
+		}
 
 		const char * required_prefix = local();
 		if(required_prefix[0] != '.') {

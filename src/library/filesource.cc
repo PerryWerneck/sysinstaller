@@ -59,6 +59,31 @@
 
 	}
 
+	Udjat::XML::Node find(Udjat::XML::Node node, const char *nodename, bool required) {
+
+		while(node) {
+			if(!strcasecmp(node.name(),nodename)) {
+				return node;
+			}
+			auto child = node.child(nodename);
+			if(child) {
+				return child;
+			}
+			node = node.parent();
+		}
+
+		if(required) {
+			throw runtime_error(Logger::String{"Required node '",nodename,"' is missing"});
+		}
+
+		return Udjat::XML::Node{};
+
+	}
+
+	FileSource::FileSource(const Udjat::XML::Node &node, const char *nodename, bool required)
+		: FileSource{find(node,nodename,required)} {
+	}
+
 	const char * FileSource::local() const {
 		return url.local;
 	}

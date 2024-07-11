@@ -165,6 +165,11 @@ $(BINDBG)/modules/isobuilder.@DLLEXT@:
 	@echo $< ...
 	@$(MAKE) BINDBG=$(BINDBG) -C modules/isobuilder Debug
 
+$(BINDBG)/modules/grub2.@DLLEXT@:
+
+	@echo $< ...
+	@$(MAKE) BINDBG=$(BINDBG) -C modules/grub2 Debug
+
 #---[ Release Rules ]--------------------------------------------------------------------
 
 $(OBJRLS)/%.o: \
@@ -405,7 +410,8 @@ install-data:
 Debug: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
 	$(BINDBG)/modules/isowriter.@DLLEXT@ \
-	$(BINDBG)/modules/isobuilder.@DLLEXT@
+	$(BINDBG)/modules/isobuilder.@DLLEXT@ \
+	$(BINDBG)/modules/grub2.@DLLEXT@
 
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \

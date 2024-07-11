@@ -108,7 +108,7 @@
 
 			virtual std::shared_ptr<Popup> PopupFactory() = 0;
 			virtual std::shared_ptr<Progress> ProgressFactory() = 0;
-			virtual void present(const Dialog &dialog) = 0;
+			virtual void present(const Dialog &dialog, const char *message, const char *details) = 0;
 			virtual int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept = 0;
 
 		};
@@ -122,8 +122,8 @@
 
 		int select(int cancel, const char *button, ...) const __attribute__ ((sentinel));
 
-		inline void present() const noexcept {
-			Dialog::Controller::getInstance().present(*this);
+		inline void present(const char *message = nullptr, const char *details = nullptr) const noexcept {
+			Dialog::Controller::getInstance().present(*this,message,details);
 		}
 
 	};

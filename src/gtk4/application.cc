@@ -293,17 +293,33 @@
 
 	}
 
-	void Gtk::Application::present(const Dialog &settings) {
+	void Gtk::Application::present(const Dialog &settings, const char *message, const char *details) {
 
-		Glib::signal_idle().connect([settings](){
+		struct {
+			std::string message;
+			std::string details;
+		} text;
+
+		if(message && *message) {
+			text.message = message;
+		} else {
+			text.message = settings.message();
+		}
+
+		if(details && *details) {
+			text.details = details;
+		} else {
+			text.details = settings.details();
+		}
+
+		Glib::signal_idle().connect([text,settings](){
 
 			auto dialog = ::Gtk::AlertDialog::create();
 			dialog->set_modal();
-			dialog->set_message(settings.message());
+			dialog->set_message(text.message);
 
-			auto details = settings.details();
-			if(!details.empty()) {
-				dialog->set_detail(details);
+			if(!text.details.empty()) {
+				dialog->set_detail(text.details);
 			}
 
 			static const struct {
