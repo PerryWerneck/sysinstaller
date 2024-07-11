@@ -68,7 +68,7 @@
 	}
 
 	int Action::activate(Udjat::Dialog::Progress &) {
-		throw runtime_error("Invalid action");
+		throw logic_error(_("The selected action cant be activated"));
 	}
 
 	bool Action::initialize() {
@@ -111,6 +111,18 @@
 				popup.message = e.title();
 				popup.details = e.body();
 				Logger::String{e.body()}.error(name());
+
+			} catch(const std::logic_error &e) {
+
+				popup.message = _("Configuration error");
+				popup.details = e.what();
+				Logger::String{e.what()}.error(name());
+
+			} catch(const std::system_error &e) {
+
+				popup.message = _("System error");
+				popup.details = e.what();
+				Logger::String{e.what()," (rc=",e.code().value(),")"}.error(name());
 
 			} catch(const std::exception &e) {
 
