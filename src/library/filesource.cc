@@ -105,6 +105,10 @@
 
 		info() << "Downloading " << url.c_str() << endl;
 
+		if(message && *message) {
+			progress = message;
+		}
+
 		debug("Downloading '",url.c_str(),"' to '",path,"'");
 
 		{
@@ -171,38 +175,7 @@
 	}
 
 	std::string FileSource::save(Udjat::Dialog::Progress &progress) {
-
 		return save(Udjat::Abstract::Object{},progress);
-
-		/*
-		auto url = url_local();
-		auto components = url.ComponentsFactory();
-
-		if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
-			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
-			return components.path.c_str();
-		}
-
-		const char *filename = components.path.c_str();
-
-		try {
-
-			save(progress,filename);
-
-		} catch(...) {
-
-			struct stat sb;
-			if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
-				error() << "Download error, cached file '" << filename << "' not available" << endl;
-				throw;
-			}
-
-			warning() << "Download error, using cached file '" << filename << "'" << endl;
-		}
-
-		return components.path;
-		*/
-
 	}
 
  }
