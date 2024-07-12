@@ -30,6 +30,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/tools/template.h>
  #include <udjat/ui/dialog.h>
  #include <vector>
  #include <reinstall/tools/kernelparameter.h>
@@ -99,6 +100,7 @@
 
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
 		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
+		std::vector<std::shared_ptr<Reinstall::Template>> templates;
 
 		const char *boot_label = _("Reinstall workstation");
 
@@ -127,6 +129,9 @@
 
 			// Load kernel parameters.
 			Reinstall::KernelParameter::load(node,kparms);
+
+			// Load templates
+			Reinstall::Template::load(*this,node,templates);
 
 		}
 
