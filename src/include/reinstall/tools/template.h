@@ -39,7 +39,7 @@
 			Binary		= 0x04,		///< @brief Template is a binary file, just replace it.
 		};
 
-		Template(const Udjat::XML::Node &node, Type type = Template::Text);
+		Template(const Udjat::XML::Node &node);
 		virtual ~Template();
 
 		bool getProperty(const char *key, std::string &value) const override;
@@ -55,6 +55,8 @@
 
 		/// @brief Apply object on template, save to file
 		void save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &parent, const char *path);
+
+		void save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress);
 
 	private:
 

@@ -27,6 +27,7 @@
  #include <udjat/tools/object.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/application.h>
+ #include <udjat/tools/configuration.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/quark.h>
  #include <udjat/tools/url.h>
@@ -40,8 +41,24 @@
 
  namespace Reinstall {
 
-	Template::Template(const Udjat::XML::Node &node, Type t)
-		: Udjat::NamedObject{node}, type{t} {
+	Template::Template(const Udjat::XML::Node &node)
+		: Udjat::NamedObject{node} {
+
+		// Get marker.
+		{
+			const char *sMarker = node.attribute("marker").as_string(((std::string) Config::Value<String>("template","marker","$")).c_str());
+
+			if(strlen(sMarker) > 1 || !sMarker[0]) {
+				throw runtime_error("Marker attribute is invalid");
+			}
+
+			this->marker = sMarker[0];
+		}
+
+		// Get Type
+		if(XML::AttributeFactory(node,"script").as_bool()) {
+			type = (Type) (type|Template::Script);
+		}
 
 		// Get URL
 		{
@@ -130,6 +147,37 @@
 		}
 
 		throw runtime_error("Unable to handle remote template");
+
+	}
+
+	void Template::save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress) {
+
+		Udjat::URL url{this->url};
+		url.expand(parent);
+		url.expand(*this);
+
+		String filename{this->path};
+		filename.expand(parent);
+		filename.expand(*this);
+
+		debug("Source URL: ",url.c_str());
+
+		if(type & Type::Binary) {
+
+			throw system_error(ENOTSUP, system_category(), _("Cant handle binary template"));
+
+		} else {
+
+			String text = url.get();
+			text.expand(marker,parent);
+			text.expand(marker,*this);
+			debug("marker='",string{marker}.c_str(),"'");
+
+
+		}
+
+
+
 
 	}
 

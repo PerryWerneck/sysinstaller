@@ -135,16 +135,45 @@
 
 		}
 
-		bool getProperty(const char *key, std::string &value) const {
+		bool getProperty(const char *key, std::string &value) const override {
 
-			if(!strcasecmp(key,"boot-label") && boot_label && *boot_label) {
-				value = boot_label;
+/*
+17/07/2024 00:47:11 tw-local       Unable to expand property 'kernel-file'
+17/07/2024 00:47:11 tw-local       Unable to expand property 'initrd-file'
+17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
+*/
+
+			if(!(strcasecmp(key,"boot-label") && strcasecmp(key,"install-label"))) {
+				if(boot_label && *boot_label) {
+					value = boot_label;
+				} else {
+					value = _("Reinstall this workstation");
+				}
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-kloading")) {
+				value = _("Loading kernel...");
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-iloading")) {
+				value = _("Loading installer...");
 				return true;
 			}
 
 			if(!strcasecmp(key,"kernel-parameters")) {
 				value = KernelParameter::join(*this,kparms);
 				debug("Kernel parameters set to '",value.c_str(),"'");
+				return true;
+			}
+
+			if(!strcasecmp(key,"grub-conf-dir")) {
+				value = Config::Value<string>("grub","conf-dir","/etc/grub.d");
+#ifdef DEBUG
+				debug("Grub config was set to '",value.c_str(),"'");
+				value = "/tmp/" + value;
+#endif // DEBUG
 				return true;
 			}
 
@@ -156,6 +185,11 @@
 			progress = _("Getting required files");
 			for(const auto &source : sources) {
 				source->save(*this,progress);
+			}
+
+			progress = _("Applying templates");
+			for(const auto &tmplt : templates) {
+				tmplt->save(*this,progress);
 			}
 
 			return -1;

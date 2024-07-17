@@ -63,10 +63,7 @@
 
 		// Udjat::Abstract::Object
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
-
-		inline const char *title() const noexcept {
-			return dialog_title;
-		}
+		bool getProperty(const char *key, std::string &value) const override;
 
 	};
 

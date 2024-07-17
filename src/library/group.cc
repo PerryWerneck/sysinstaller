@@ -82,5 +82,13 @@
 	void Group::push_back(const Udjat::XML::Node &, std::shared_ptr<Udjat::Abstract::Object>) {
 	}
 
+	bool Group::getProperty(const char *key, std::string &value) const {
+		if(!strcasecmp(key,"title")) {
+			value = dialog_title;
+			return true;
+		}
+		return Udjat::NamedObject::getProperty(key,value);
+	}
+
  }
 

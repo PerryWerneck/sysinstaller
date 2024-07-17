@@ -33,10 +33,9 @@
  	class Group;
 
 	class UDJAT_API Action : public Udjat::NamedObject {
-	private:
-		const Group *parent;
-
 	protected:
+
+		const Udjat::Abstract::Object &parent;
 
 		struct Args {
 			const char *icon_name = nullptr;
@@ -77,11 +76,6 @@
 		}
 
 		virtual int activate(Udjat::Dialog::Progress &progress);
-
-		/// @brief Get action croup
-		inline const Group & group() const noexcept {
-			return *parent;
-		}
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();

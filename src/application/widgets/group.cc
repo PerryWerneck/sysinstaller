@@ -36,10 +36,10 @@
 
  MainWindow::Group::Group(const XML::Node &node) :
 	Reinstall::Group{node},
-	title{ Reinstall::Group::title(), Gtk::Align::START },
+	title{ (*this)["title"], Gtk::Align::START },
 	sub_title{ XML::AttributeFactory(node,"sub-title").as_string(), Gtk::Align::START } {
 
-	debug("Building group '",Reinstall::Group::title(),"'");
+	debug("Building group '",title.get_text().c_str(),"'");
 
 	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Grid.html
 

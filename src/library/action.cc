@@ -49,15 +49,12 @@
  namespace Reinstall {
 
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
-		: NamedObject{node}, parent{dynamic_cast<const Group *>(&object)},
+		: NamedObject{node}, parent{object},
 		 args{node}, confirmation{"confirmation",Dialog::Option::None,node},
 		 success{"success",Dialog::Option::AllowQuitContinue,node},
 		 failed{"failed",Dialog::Option::AllowQuitContinue,node} {
 
-		debug("Building action '",name(),"' on group '",object.name(),"'");
-		if(!parent) {
-			throw logic_error("Action parent should be a group controller");
-		}
+		debug("Building action '",name(),"' on group '",parent.name(),"'");
 
 		if(!confirmation) {
 			Logger::String{"Confirmation dialog is not defined, disabling it"}.trace(name());
@@ -99,20 +96,33 @@
 
 		info() << "Starting activity" << endl;
 
-		dialog->title(group().title());
-		dialog->message(args.title);
+		dialog->title(parent["title"].c_str());
+
+		debug("Setting title");
+		if(args.title && *args.title) {
+			dialog->message(args.title);
+		} else {
+			Logger::String{"Empty dialog title"}.warning(name());
+		}
+
 		dialog->body(_("Initializing"));
-		dialog->icon_name(args.icon_name);
+
+		debug("Setting icon name");
+		if(args.icon_name && *args.icon_name) {
+			dialog->icon_name(args.icon_name);
+		}
 
 		struct {
 			string message;
 			string details;
 		} popup;
 
+		debug("Running background thread");
 		auto rc = dialog->run([&](Udjat::Dialog::Progress &progress){
 
 			try {
 
+				debug("Calling action");
 				activate(progress);
 				return 0;
 
