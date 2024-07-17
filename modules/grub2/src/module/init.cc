@@ -169,10 +169,10 @@
 			}
 
 			if(!strcasecmp(key,"grub-conf-dir")) {
-				value = Config::Value<string>("grub","conf-dir","/etc/grub.d");
+				value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
 #ifdef DEBUG
 				debug("Grub config was set to '",value.c_str(),"'");
-				value = "/tmp/" + value;
+				value = "/tmp/";
 #endif // DEBUG
 				return true;
 			}

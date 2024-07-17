@@ -29,6 +29,7 @@
  #include <udjat/ui/dialog.h>
  #include <udjat/tools/exception.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/quark.h>
 
  #include <stdexcept>
  #include <fcntl.h>
@@ -49,12 +50,14 @@
  namespace Reinstall {
 
 	Action::Action(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node)
-		: NamedObject{node}, parent{object},
+		: NamedObject{node},
 		 args{node}, confirmation{"confirmation",Dialog::Option::None,node},
 		 success{"success",Dialog::Option::AllowQuitContinue,node},
 		 failed{"failed",Dialog::Option::AllowQuitContinue,node} {
 
-		debug("Building action '",name(),"' on group '",parent.name(),"'");
+		args.dialog_title = Quark{object["title"]}.c_str();
+
+		debug("Building action '",name(),"' on group '",object.name(),"'");
 
 		if(!confirmation) {
 			Logger::String{"Confirmation dialog is not defined, disabling it"}.trace(name());
@@ -96,7 +99,7 @@
 
 		info() << "Starting activity" << endl;
 
-		dialog->title(parent["title"].c_str());
+		dialog->title(args.dialog_title);
 
 		debug("Setting title");
 		if(args.title && *args.title) {
@@ -250,7 +253,6 @@
 			throw runtime_error(Logger::Message{_("Required attribute '{}' not found"),key});
 			return false;
 		}
-
 
 		if(Udjat::NamedObject::getProperty(key,value)) {
 			return true;

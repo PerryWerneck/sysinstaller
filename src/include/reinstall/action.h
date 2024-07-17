@@ -35,12 +35,11 @@
 	class UDJAT_API Action : public Udjat::NamedObject {
 	protected:
 
-		const Udjat::Abstract::Object &parent;
-
 		struct Args {
 			const char *icon_name = nullptr;
 			const char *title = nullptr;
 			const char *sub_title = nullptr;
+			const char *dialog_title = "";
 
 			Args(const Udjat::XML::Node &node)
 				: icon_name{Udjat::XML::QuarkFactory(node,"icon-name")},

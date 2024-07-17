@@ -173,7 +173,7 @@
 			text.expand(marker,*this);
 			debug("marker='",string{marker}.c_str(),"'");
 
-
+			Udjat::File::Path::save(filename.c_str(),text.c_str());
 		}
 
 
