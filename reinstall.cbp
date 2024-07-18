@@ -111,6 +111,7 @@
 		<Unit filename="src/include/reinstall/tools/efiboot.h" />
 		<Unit filename="src/include/reinstall/tools/kernelparameter.h" />
 		<Unit filename="src/include/reinstall/tools/repository.h" />
+		<Unit filename="src/include/reinstall/tools/script.h" />
 		<Unit filename="src/include/reinstall/tools/template.h" />
 		<Unit filename="src/include/reinstall/tools/writer.h" />
 		<Unit filename="src/include/udjat/ui/dialog.h" />
@@ -132,6 +133,7 @@
 		<Unit filename="src/library/os/linux/writer.cc" />
 		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/repository.cc" />
+		<Unit filename="src/library/script.cc" />
 		<Unit filename="src/library/slpclient.cc" />
 		<Unit filename="src/library/template.cc" />
 		<Unit filename="src/library/ui/dialog.cc" />

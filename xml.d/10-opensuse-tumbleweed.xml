@@ -83,21 +83,14 @@
 			<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/51_reinstall' script='yes' marker='%' />
 			
 			<!-- Add new boot option to grub.cfg -->
-			<!-- script name='grub2-mkconfig' type='post' 
-			  user='root' 
-			  group='root' 
-			  login='yes'
-			  shell='yes'
-        save-stdout-to='/boot/grub2/grub.cfg'
-        extract-backslash-from-kernel-parameters='yes'
-			  cmdline='/usr/sbin/grub2-mkconfig' 
-			/ -->
-			
-			<!-- Set the new boot option as default -->
-			<script name='setdefault' type='post' user='root' cmdline='echo /usr/sbin/grub2-set-default "${install-label}"' />
-			
-			<!-- Set the new boot option as active for next reboot -->
-			<!-- script name='reboot' type='post' user='root' cmdline='echo /usr/sbin/grub2-reboot "${install-label}"' / -->
+			<script name='mkconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>
+			<![CDATA[
+        #!/usr/bin/env -S /usr/bin/sudo --login -- /bin/bash
+        /usr/sbin/grub2-mkconfig -o "%{grub-config}"
+        echo /usr/sbin/grub2-set-default "%{install-label}"
+        echo /usr/sbin/grub2-reboot "%{install-label}"
+      ]]>
+      </script>
 			
 			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
 			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?' destructive='yes'>

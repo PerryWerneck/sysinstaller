@@ -99,10 +99,13 @@
 			const char *path = "";			///< @brief Path for the file inside the destination image.
 		} url;
 
+		FileSource() {
+		}
+
 	public:
 		FileSource(const char *path);
 		FileSource(const Udjat::XML::Node &node);
-		FileSource(const Udjat::XML::Node &node, const char *nodename,bool required = true);
+		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
 
 		inline bool has_local() const noexcept {
 			return url.local && *url.local;

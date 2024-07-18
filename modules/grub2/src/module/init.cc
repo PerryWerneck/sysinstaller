@@ -31,6 +31,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
+ #include <reinstall/tools/script.h>
  #include <udjat/ui/dialog.h>
  #include <vector>
  #include <reinstall/tools/kernelparameter.h>
@@ -101,6 +102,7 @@
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
 		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
 		std::vector<std::shared_ptr<Reinstall::Template>> templates;
+		std::vector<std::shared_ptr<Reinstall::Script>> scripts;
 
 		const char *boot_label = _("Reinstall workstation");
 
@@ -133,15 +135,25 @@
 			// Load templates
 			Reinstall::Template::load(*this,node,templates);
 
+			// Load scripts.
+			Reinstall::Script::load(*this,node,scripts);
+
 		}
 
 		bool getProperty(const char *key, std::string &value) const override {
 
 /*
-17/07/2024 00:47:11 tw-local       Unable to expand property 'kernel-file'
-17/07/2024 00:47:11 tw-local       Unable to expand property 'initrd-file'
 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
 */
+
+			if(!strcasecmp(key,"grub-config")) {
+#ifdef DEBUG
+				value = "/tmp/grub.cfg";
+#else
+				value = "/boot/grub2/grub.cfg";
+#endif // DEBUG
+				return true;
+			}
 
 			if(!(strcasecmp(key,"kernel-file") && strcasecmp(key,"kernel-filename"))) {
 
