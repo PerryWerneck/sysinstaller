@@ -28,6 +28,7 @@
  #include <udjat/tools/string.h>
  #include <vector>
  #include <unordered_map>
+ #include <udjat/tools/quark.h>
 
  #include <reinstall/tools/kernelparameter.h>
 
@@ -35,6 +36,12 @@
  using namespace Udjat;
 
  namespace Reinstall {
+
+	std::vector<KernelParameter::Value> KernelParameter::default_values;
+
+	KernelParameter::Value::Value(const char *n, const char *v)
+		: name{Quark{n}.c_str()},value{Quark{v}.c_str()} {
+	}
 
 	KernelParameter::KernelParameter(const Udjat::XML::Node &node, const char *attrname)
 		: Udjat::NamedObject{node}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
@@ -51,8 +58,26 @@
 
 		// Use map to avoid add of the same key more than one time.
 		std::unordered_map<std::string, std::shared_ptr<KernelParameter>> keys;
-		for(auto kparm : kparms) {
-			keys[kparm->name()] = kparm;
+
+		if(kparms.empty()) {
+
+			for(const auto &value : default_values) {
+
+				if(keys.find(value.name) == keys.end()) {
+					auto kparm = make_shared<KernelParameter>(value.name);
+					kparm->refvalue = value.value;
+					keys[value.name] = kparm;
+					kparms.push_back(kparm);
+				}
+
+			}
+
+		} else {
+
+			for(auto kparm : kparms) {
+				keys[kparm->name()] = kparm;
+			}
+
 		}
 
 		for(auto parent = node;parent;parent = parent.parent()) {
@@ -88,6 +113,20 @@
 		}
 
 		return result;
+	}
+
+	void KernelParameter::insert_default(const char *arg) {
+		const char *ptr = strchr(arg,'=');
+
+		if(!ptr) {
+			ptr = strchr(arg,':');
+		}
+
+		if(!ptr) {
+			throw runtime_error("Invalid kernel parameter definition");
+		}
+
+		insert_default(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
 	}
 
  }

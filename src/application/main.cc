@@ -28,6 +28,7 @@
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/tools/factory.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/tools/kernelparameter.h>
 
  #include <private/mainwindow.h>
 
@@ -58,6 +59,10 @@
 			if(value && (strcasecmp(name,"usb-output-device") == 0 || strcasecmp(name,"output") == 0)) {
 				Reinstall::Writer::set_output(value);
 				return true;
+			}
+
+			if(value && (strcasecmp(name,"kernel-parameter") == 0 || strcasecmp(name,"kparm") == 0)) {
+				Reinstall::KernelParameter::insert_default(value);
 			}
 
 			return Udjat::Gtk::Application::argument(name,value);

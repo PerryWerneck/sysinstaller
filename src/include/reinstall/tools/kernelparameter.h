@@ -31,12 +31,34 @@
  namespace Reinstall {
 
 	class UDJAT_API KernelParameter  : public Udjat::NamedObject {
+	private:
+
+		struct Value {
+			const char *name;
+			const char *value;
+
+			Value(const char *name, const char *value);
+
+		};
+
+		static std::vector<Value> default_values;
+
 	protected:
 		const char *refvalue = nullptr;
 
 	public:
+		constexpr KernelParameter(const char *name) : Udjat::NamedObject{name} {
+		}
+
 		KernelParameter(const Udjat::XML::Node &node, const char *attrname = "value");
 		virtual ~KernelParameter();
+
+		/// @brief Override xml defined kernel parameters.
+		static inline void insert_default(const char *name, const char *value) {
+			default_values.emplace_back(name,value);
+		}
+
+		static void insert_default(const char *arg);
 
 		/// @brief Apply properties
 		/// @return The parameter value with object properties applied.
