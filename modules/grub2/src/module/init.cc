@@ -238,6 +238,15 @@
 				tmplt->save(*this,progress);
 			}
 
+			progress = _("Configuring boot loader");
+			for(auto &script : scripts) {
+				script->run(*this,Script::Pre,progress);
+			}
+
+			for(auto &script : scripts) {
+				script->run(*this,Script::Post,progress);
+			}
+
 			return -1;
 		}
 

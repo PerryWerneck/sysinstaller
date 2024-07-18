@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/ui/progress.h>
  #include <reinstall/tools/datasource.h>
 
  namespace Reinstall {
@@ -33,6 +34,7 @@
 	public:
 
 		Script(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		~Script();
 
 		enum RunTime : uint8_t {
 			Pre,
@@ -41,11 +43,16 @@
 
 		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts);
 
-		void run(const Udjat::Abstract::Object &object);
+		void run(const Udjat::Abstract::Object &object, const RunTime rtime, Udjat::Dialog::Progress &progress);
 
 	private:
 
 		RunTime rtime = Post;
+		char marker = '$';
+		int uid = -1;
+		int gid = -1;
+
+		std::string tempfilename;
 		const char *code = nullptr;	///< @brief The contents from xml, parsed and 'quarked'
 
 	};
