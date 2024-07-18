@@ -143,6 +143,40 @@
 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
 */
 
+			if(!(strcasecmp(key,"kernel-file") && strcasecmp(key,"kernel-filename"))) {
+
+				for(const auto &source : sources) {
+
+					const Kernel *object = dynamic_cast<Kernel *>(source.get());
+					if(object) {
+
+						const char *ptr = strrchr(object->local(),'/');
+						if(ptr) {
+							value = ptr+1;
+							debug(key,"='",value.c_str(),"'");
+							return true;
+						}
+					}
+				}
+			}
+
+			if(!(strcasecmp(key,"initrd-file") && strcasecmp(key,"initrd-filename"))) {
+
+				for(const auto &source : sources) {
+
+					const Init *object = dynamic_cast<Init *>(source.get());
+					if(object) {
+
+						const char *ptr = strrchr(object->local(),'/');
+						if(ptr) {
+							value = ptr+1;
+							debug(key,"='",value.c_str(),"'");
+							return true;
+						}
+					}
+				}
+			}
+
 			if(!(strcasecmp(key,"boot-label") && strcasecmp(key,"install-label"))) {
 				if(boot_label && *boot_label) {
 					value = boot_label;
