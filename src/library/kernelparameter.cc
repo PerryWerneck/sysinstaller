@@ -37,9 +37,9 @@
 
  namespace Reinstall {
 
-	std::vector<KernelParameter::Value> KernelParameter::default_values;
+	std::vector<KernelParameter::Preset> KernelParameter::presets;
 
-	KernelParameter::Value::Value(const char *n, const char *v)
+	KernelParameter::Preset::Preset(const char *n, const char *v)
 		: name{Quark{n}.c_str()},value{Quark{v}.c_str()} {
 	}
 
@@ -61,7 +61,7 @@
 
 		if(kparms.empty()) {
 
-			for(const auto &value : default_values) {
+			for(const auto &value : presets) {
 
 				if(keys.find(value.name) == keys.end()) {
 					auto kparm = make_shared<KernelParameter>(value.name);
@@ -115,7 +115,7 @@
 		return result;
 	}
 
-	void KernelParameter::insert_default(const char *arg) {
+	void KernelParameter::preset(const char *arg) {
 		const char *ptr = strchr(arg,'=');
 
 		if(!ptr) {
@@ -126,7 +126,7 @@
 			throw runtime_error("Invalid kernel parameter definition");
 		}
 
-		insert_default(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
+		preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
 	}
 
  }

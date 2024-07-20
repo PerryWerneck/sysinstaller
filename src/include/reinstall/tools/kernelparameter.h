@@ -33,15 +33,14 @@
 	class UDJAT_API KernelParameter  : public Udjat::NamedObject {
 	private:
 
-		struct Value {
+		/// @brief Command-line preset.
+		struct Preset {
 			const char *name;
 			const char *value;
-
-			Value(const char *name, const char *value);
-
+			Preset(const char *name, const char *value);
 		};
 
-		static std::vector<Value> default_values;
+		static std::vector<Preset> presets;
 
 	protected:
 		const char *refvalue = nullptr;
@@ -54,11 +53,11 @@
 		virtual ~KernelParameter();
 
 		/// @brief Override xml defined kernel parameters.
-		static inline void insert_default(const char *name, const char *value) {
-			default_values.emplace_back(name,value);
+		static inline void preset(const char *name, const char *value) {
+			presets.emplace_back(name,value);
 		}
 
-		static void insert_default(const char *arg);
+		static void preset(const char *arg);
 
 		/// @brief Apply properties
 		/// @return The parameter value with object properties applied.

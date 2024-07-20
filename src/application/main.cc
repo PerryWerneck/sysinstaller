@@ -62,7 +62,7 @@
 			}
 
 			if(value && (strcasecmp(name,"kernel-parameter") == 0 || strcasecmp(name,"kparm") == 0)) {
-				Reinstall::KernelParameter::insert_default(value);
+				Reinstall::KernelParameter::preset(value);
 			}
 
 			return Udjat::Gtk::Application::argument(name,value);
