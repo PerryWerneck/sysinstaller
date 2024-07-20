@@ -37,22 +37,54 @@
 
  namespace Reinstall {
 
+	class UDJAT_PRIVATE KParm : public KernelParameter {
+	private:
+		const char *val;
+
+	public:
+		KParm(const char *name, const char *value) : KernelParameter{name}, val{value} {
+		}
+
+		KParm(const Udjat::XML::Node &node) : KernelParameter{node}, val{expand(node,"value")} {
+		}
+
+		std::string value(const Udjat::Abstract::Object &object) const override {
+			return KernelParameter::value(object,val);
+		}
+
+	};
+
+
 	std::vector<KernelParameter::Preset> KernelParameter::presets;
 
 	KernelParameter::Preset::Preset(const char *n, const char *v)
-		: name{Quark{n}.c_str()},value{Quark{v}.c_str()} {
+		: name{Udjat::Quark{n}.c_str()}, value{Quark{v}.c_str()} {
 	}
 
+	/*
 	KernelParameter::KernelParameter(const Udjat::XML::Node &node, const char *attrname)
-		: name{XML::QuarkFactory(node,"name")}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
+		: KernelParameter{XML::QuarkFactory(node,"name")}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
 	}
+	*/
 
 	KernelParameter::~KernelParameter() {
 	}
 
+	const char * KernelParameter::expand(const Udjat::XML::Node &node, const char *attrname) {
+		return String{node,attrname}.expand(node).expand().as_quark();
+	}
+
+	std::string KernelParameter::value(const Udjat::Abstract::Object &object, const char *str) {
+		String expanded{str};
+		expanded.expand(object);
+		return expanded;
+	}
+
+	/*
 	std::string KernelParameter::value(const Udjat::Abstract::Object &object) const {
 		return String{refvalue}.expand(object);
 	}
+	*/
 
 	void KernelParameter::load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &kparms) {
 
@@ -64,8 +96,7 @@
 			for(const auto &value : presets) {
 
 				if(keys.find(value.name) == keys.end()) {
-					auto kparm = make_shared<KernelParameter>(value.name);
-					kparm->refvalue = value.value;
+					auto kparm = make_shared<KParm>(value.name,value.value);
 					keys[value.name] = kparm;
 					kparms.push_back(kparm);
 				}
@@ -75,7 +106,7 @@
 		} else {
 
 			for(auto kparm : kparms) {
-				keys[kparm->name] = kparm;
+				keys[kparm->parameter_name()] = kparm;
 			}
 
 		}
@@ -84,9 +115,9 @@
 
 			// First search for 'kernel-parameter' nodes.
 			for(auto child = parent.child("kernel-parameter");child;child = child.next_sibling("kernel-parameter")) {
-				auto kparm = make_shared<KernelParameter>(child);
-				if(keys.find(kparm->name) == keys.end()) {
-					keys[kparm->name] = kparm;
+				auto kparm = make_shared<KParm>(child);
+				if(keys.find(kparm->parameter_name()) == keys.end()) {
+					keys[kparm->parameter_name()] = kparm;
 					kparms.push_back(kparm);
 				}
 			}
@@ -107,7 +138,7 @@
 			if(!result.empty()) {
 				result += " ";
 			}
-			result += kparm->name;
+			result += kparm->parameter_name();
 			result += "=";
 			result += kparm->value(object);
 		}

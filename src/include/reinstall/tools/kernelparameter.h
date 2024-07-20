@@ -40,18 +40,20 @@
 			Preset(const char *name, const char *value);
 		};
 
-		const char *name;
+		const char *object_name;
 		static std::vector<Preset> presets;
 
-	protected:
-		const char *refvalue = nullptr;
-
 	public:
-		constexpr KernelParameter(const char *n) : name{n} {
+		constexpr KernelParameter(const char *n) : object_name{n} {
 		}
 
-		KernelParameter(const Udjat::XML::Node &node, const char *attrname = "value");
+		KernelParameter(const Udjat::XML::Node &node) : KernelParameter{Udjat::XML::QuarkFactory(node,"name")} {
+		}
+
 		virtual ~KernelParameter();
+
+		/// @brief Convenience method to expand values when building object.
+		static const char * expand(const Udjat::XML::Node &node, const char *attrname);
 
 		/// @brief Override xml defined kernel parameters.
 		static inline void preset(const char *name, const char *value) {
@@ -60,9 +62,17 @@
 
 		static void preset(const char *arg);
 
+		/// @brief Get Parameter name.
+		inline const char *parameter_name() const noexcept {
+			return object_name;
+		}
+
+		/// @brief Convenience method to apply properties.
+		static std::string value(const Udjat::Abstract::Object &object, const char *str);
+
 		/// @brief Apply properties
 		/// @return The parameter value with object properties applied.
-		virtual std::string value(const Udjat::Abstract::Object &object) const;
+		virtual std::string value(const Udjat::Abstract::Object &object) const = 0;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &parameters);
 		static std::string join(const Udjat::Abstract::Object &object, const std::vector<std::shared_ptr<KernelParameter>> &parameters);
