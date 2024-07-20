@@ -44,7 +44,7 @@
 	}
 
 	KernelParameter::KernelParameter(const Udjat::XML::Node &node, const char *attrname)
-		: Udjat::NamedObject{node}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
+		: name{XML::QuarkFactory(node,"name")}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
 	}
 
 	KernelParameter::~KernelParameter() {
@@ -75,7 +75,7 @@
 		} else {
 
 			for(auto kparm : kparms) {
-				keys[kparm->name()] = kparm;
+				keys[kparm->name] = kparm;
 			}
 
 		}
@@ -85,8 +85,8 @@
 			// First search for 'kernel-parameter' nodes.
 			for(auto child = parent.child("kernel-parameter");child;child = child.next_sibling("kernel-parameter")) {
 				auto kparm = make_shared<KernelParameter>(child);
-				if(keys.find(kparm->name()) == keys.end()) {
-					keys[kparm->name()] = kparm;
+				if(keys.find(kparm->name) == keys.end()) {
+					keys[kparm->name] = kparm;
 					kparms.push_back(kparm);
 				}
 			}
@@ -107,7 +107,7 @@
 			if(!result.empty()) {
 				result += " ";
 			}
-			result += kparm->name();
+			result += kparm->name;
 			result += "=";
 			result += kparm->value(object);
 		}

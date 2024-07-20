@@ -30,7 +30,7 @@
 
  namespace Reinstall {
 
-	class UDJAT_API KernelParameter  : public Udjat::NamedObject {
+	class UDJAT_API KernelParameter {
 	private:
 
 		/// @brief Command-line preset.
@@ -40,13 +40,14 @@
 			Preset(const char *name, const char *value);
 		};
 
+		const char *name;
 		static std::vector<Preset> presets;
 
 	protected:
 		const char *refvalue = nullptr;
 
 	public:
-		constexpr KernelParameter(const char *name) : Udjat::NamedObject{name} {
+		constexpr KernelParameter(const char *n) : name{n} {
 		}
 
 		KernelParameter(const Udjat::XML::Node &node, const char *attrname = "value");
