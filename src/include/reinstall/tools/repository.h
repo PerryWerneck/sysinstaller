@@ -30,13 +30,22 @@
  #include <vector>
 
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/kernelparameter.h>
 
  namespace Reinstall {
 
 	class SLPClient;
 
-	class UDJAT_API Repository : public FileSource {
+	class UDJAT_API Repository : public FileSource, public KernelParameter {
 	private:
+
+		struct KParm {
+			const char *name = nullptr;
+			bool allow_slp = true;
+
+			KParm(const Udjat::XML::Node &node);
+
+		} kparm;
 
 		std::shared_ptr<SLPClient> slpclient;
 
@@ -49,6 +58,9 @@
 
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
+
+		// KernelParameter
+		std::string value(const Udjat::Abstract::Object &object) const override;
 
 		/// @brief Load repository index (INDEX.gz)
 		/// @return true if the repository has an index.

@@ -83,7 +83,16 @@
 
 	}
 
-	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, slpclient{SLPClient::Factory(node)} {
+	Repository::KParm::KParm(const Udjat::XML::Node &node) {
+		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
+			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
+				name = String{child,"value"}.as_quark();
+				allow_slp = child.attribute("allow-slp").as_bool(allow_slp);
+			}
+		}
+	}
+
+	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
 	}
 
 	Repository::~Repository() {
