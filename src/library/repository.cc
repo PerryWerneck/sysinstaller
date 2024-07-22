@@ -28,6 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/file.h>
+ #include <udjat/tools/configuration.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -87,12 +88,29 @@
 		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
 			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
 				name = String{child,"value"}.as_quark();
-				allow_slp = child.attribute("allow-slp").as_bool(allow_slp);
+				slp = XML::QuarkFactory(node,"slp-value");
+				enabled = child.attribute("allow-slp").as_bool(true);
 			}
 		}
 	}
 
 	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+
+		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
+
+			// Build SLP value.
+
+			const char *srvc = slpclient->service();
+			if(!(srvc && *srvc)) {
+				throw logic_error("SLP service name is not defined");
+			}
+
+			Logger::Message url{Config::Value<string>{"kernel-parameters","slp","slp://?{}&auto=1"}.c_str(),srvc};
+
+			kparm.slp = url.as_quark();
+
+		}
+
 	}
 
 	Repository::~Repository() {
@@ -189,6 +207,18 @@
 		}
 
 		return FileSource::remote();
+	}
+
+	std::string Repository::value(const Udjat::Abstract::Object &object) const {
+
+		if(kparm.slp && *kparm.slp) {
+			const char *url = slpclient->url();
+			if(url && *url) {
+				return kparm.slp;
+			}
+		}
+
+		return remote();
 	}
 
  }

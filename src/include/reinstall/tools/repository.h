@@ -40,8 +40,9 @@
 	private:
 
 		struct KParm {
+			bool enabled = true;
 			const char *name = nullptr;
-			bool allow_slp = true;
+			const char *slp = nullptr;
 
 			KParm(const Udjat::XML::Node &node);
 
@@ -58,6 +59,10 @@
 
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
+
+		inline bool is_kernel_parameter() const noexcept {
+			return kparm.name && *kparm.name;
+		}
 
 		// KernelParameter
 		std::string value(const Udjat::Abstract::Object &object) const override;

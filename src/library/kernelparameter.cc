@@ -31,6 +31,7 @@
  #include <udjat/tools/quark.h>
 
  #include <reinstall/tools/kernelparameter.h>
+ #include <reinstall/tools/repository.h>
 
  using namespace std;
  using namespace Udjat;
@@ -122,9 +123,21 @@
 				}
 			}
 
+			// Then search for repositories.
+			for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
+
+				auto kparm = Repository::Factory(child);
+				auto name = kparm->parameter_name();
+
+				if(name && *name && keys.find(name) == keys.end()) {
+					keys[name] = kparm;
+					kparms.push_back(kparm);
+				}
+
+			}
+
 			// Then search for driver-update-disks
 
-			// Then search for repositories.
 
 		}
 
