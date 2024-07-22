@@ -54,6 +54,12 @@
 			}
 		}
 
+		void help(std::ostream &out) const noexcept override {
+			Udjat::Gtk::Application::help(out);
+			cout	<< "  --output=img\tWrite resulting image to file 'img' instead of usb" << endl
+					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl;
+		}
+
 		bool argument(const char *name, const char *value) override {
 
 			if(value && (strcasecmp(name,"usb-output-device") == 0 || strcasecmp(name,"output") == 0)) {
@@ -72,6 +78,11 @@
 
 			if(value && name == 'O') {
 				Reinstall::Writer::set_output(value);
+				return true;
+			}
+
+			if(value && name == 'K') {
+				Reinstall::KernelParameter::preset(value);
 				return true;
 			}
 

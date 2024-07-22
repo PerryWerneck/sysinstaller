@@ -56,6 +56,9 @@
 			/// @brief GUI is shutting down.
 			virtual void shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
 
+			// Udjat::Application
+			void help(std::ostream &out) const noexcept override;
+
 			// Udjat::Dialog::Controller
 			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
 			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;

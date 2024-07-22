@@ -259,15 +259,19 @@
 		protected:
 
 			void pre() override {
-				if(uid != -1) {
-					if(setuid(uid) != 0) {
-						throw system_error(errno,system_category(),"Cant set subprocess user id");
-					}
+				if(uid != -1 && setuid(uid) != 0) {
+#ifdef DEBUG
+					Logger::String{"Cant set subprocess user id"}.error("subprocess");
+#else
+					throw system_error(errno,system_category(),"Cant set subprocess user id");
+#endif // DEBUG
 				}
-				if(gid != -1) {
-					if(setgid(gid) != 0) {
-						throw system_error(errno,system_category(),"Cant set subprocess group id");
-					}
+				if(gid != -1 && setgid(gid) != 0) {
+#ifdef DEBUG
+					Logger::String{"Cant set subprocess group id"}.error("subprocess");
+#else
+					throw system_error(errno,system_category(),"Cant set subprocess group id");
+#endif // DEBUG
 				}
 			}
 

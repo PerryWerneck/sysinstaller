@@ -115,6 +115,11 @@
 
 	}
 
+	void Gtk::Application::help(std::ostream &out) const noexcept {
+		Udjat::Application::help(out);
+		out << "  --text\tRun in text mode" << endl;
+	}
+
 	/// @param definitions Path to a single xml file or a folder with xml files.
 	int Gtk::Application::run(int argc, char **argv, const char *definitions) {
 
