@@ -56,7 +56,17 @@
 		}
 
 		// Get Type
+		if(XML::AttributeFactory(node,"binary").as_bool(false)) {
+			type = (Type) (type|Template::Binary);
+		} else {
+			type = (Type) (type|Template::Text);
+		}
+
 		if(XML::AttributeFactory(node,"script").as_bool()) {
+			type = (Type) (type|Template::Script);
+		}
+
+		if(XML::AttributeFactory(node,"executable").as_bool()) {
 			type = (Type) (type|Template::Script);
 		}
 

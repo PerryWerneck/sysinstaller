@@ -68,7 +68,6 @@
 			set_valign(::Gtk::Align::START);
 			set_halign(::Gtk::Align::FILL);
 			set_ellipsize(Pango::EllipsizeMode::END);
-
 		}
 
 		~ProgressBar() {
@@ -117,7 +116,7 @@
 				view.set_hexpand(true);
 				view.set_vexpand(true);
 				view.set_column_spacing(3);
-				view.set_row_spacing(6);
+				view.set_row_spacing(3);
 				view.set_row_homogeneous(false);
 				view.set_column_homogeneous(false);
 				view.set_margin(12);
@@ -292,7 +291,6 @@
 				if(strcmp(label.c_str(),values.label.c_str())) {
 					values.changed |= 2;
 					values.label = label;
-//					debug(label);
 				}
 
 				values.changed |= 1;
