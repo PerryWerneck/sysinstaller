@@ -23,6 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
+ #include <udjat/version.h>
  #include <gtkmm.h>
 
  #include <widgets/sidebar.h>
@@ -35,6 +36,14 @@
  #include <reinstall/tools/writer.h>
 
  #include <list>
+
+ #if ! UDJAT_CHECK_VERSION(1,2,1)
+ namespace Udjat {
+	namespace XML {
+		UDJAT_PRIVATE bool test(const XML::Node &node, const char *attrname, bool defvalue = true);
+	}
+ }
+ #endif // UDJAT 1.2.1
 
  class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Reinstall::Group::Controller, private Reinstall::GtkWriter {
  private:

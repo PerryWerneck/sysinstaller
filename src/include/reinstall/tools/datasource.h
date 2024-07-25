@@ -83,7 +83,7 @@
 		bool for_each(const std::function<bool(const char *filename)> &func) const;
 		bool for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
-		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources);
+		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 
 		Udjat::URL url_local() const;
 		Udjat::URL url_remote() const;
@@ -122,3 +122,22 @@
 	};
 
  }
+
+ namespace std {
+
+	template <>
+	struct hash<Reinstall::DataSource> {
+		inline size_t operator()(const Reinstall::DataSource &obj) const {
+			return std::hash<const char *>{}(obj.name());
+		}
+	};
+
+	template <>
+	struct equal_to<Reinstall::DataSource> {
+		inline int operator()(const Reinstall::DataSource &lhs,const Reinstall::DataSource &rhs) const {
+			return strcasecmp(lhs.name(),rhs.name()) == 0;
+		}
+	};
+
+ }
+

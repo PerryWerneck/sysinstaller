@@ -98,12 +98,19 @@
 		throw logic_error("Abstract datasource is unable to save");
 	}
 
-	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources) {
-		for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
-			for(Udjat::XML::Node child = nd.child("source"); child; child = child.next_sibling("source")) {
-				sources.push_back(make_shared<FileSource>(child));
+	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {
+
+		if(nodename) {
+			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
+				for(Udjat::XML::Node child = nd.child(nodename); child; child = child.next_sibling(nodename)) {
+					sources.push_back(make_shared<FileSource>(child));
+				}
 			}
+		} else {
+			load(node,sources,"source");
+			load(node,sources,"driver-installation-disk");
 		}
+
 	}
 
 	bool DataSource::for_each(const std::function<bool(const char *filename)> &func) const {

@@ -31,6 +31,15 @@
 
  #include <memory>
 
+ #if ! UDJAT_CHECK_VERSION(1,2,1)
+	#include <udjat/tools/url.h>
+	#ifndef _WIN32
+		#include <grp.h>
+		#include <sys/types.h>
+		#include <pwd.h>
+	#endif // _WIN32
+ #endif // !UDJAT 1.2.1
+
  using namespace Udjat;
  using namespace std;
 
@@ -83,7 +92,84 @@
 
  }
 
+ #if ! UDJAT_CHECK_VERSION(1,2,1)
+ bool Udjat::XML::test(const XML::Node &node, const char *attrname, bool defvalue) {
+
+	XML::Attribute attr{AttributeFactory(node,attrname)};
+	if(!attr) {
+		return defvalue;
+	}
+
+	const char *str = attr.as_string("");
+	if(str && *str && strstr(str,"://")) {
+		// It's an URL, test it.
+		return URL{str}.test();
+	}
+
+#ifdef _WIN32
+	if(!strcasecmp(str,"only-on-windows")) {
+		return true;
+	}
+	if(!strcasecmp(str,"only-on-linux")) {
+		return false;
+	}
+#else
+	if(!strcasecmp(str,"only-on-windows")) {
+		return false;
+	}
+	if(!strcasecmp(str,"only-on-linux")) {
+		return true;
+	}
+
+	if(!strncasecmp(str,"groups:",6)) {
+
+		auto allowed=String{ (const char *) (str+6) }.split(",");
+
+		struct passwd *pw = getpwuid(getuid());
+		if(!pw) {
+			Logger::String{"Cant get current user groups"}.warning(PACKAGE_NAME);
+			return false;
+		}
+
+		int ngroups = 0;
+		getgrouplist(pw->pw_name, pw->pw_gid, NULL, &ngroups);
+		if(!ngroups) {
+			Logger::String{"User group list is empty"}.warning(PACKAGE_NAME);
+			return false;
+		}
+
+		gid_t groups[ngroups];
+		getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
+
+		for (int i = 0; i < ngroups; i++){
+			struct group* gr = getgrgid(groups[i]);
+			if(gr == NULL){
+				Logger::String{"getgrgid error: ",strerror(errno)}.warning(PACKAGE_NAME);
+				continue;
+			}
+			for(const auto &name : allowed) {
+				if(!strcasecmp(name.c_str(),gr->gr_name)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+#endif // _WIN32
+
+	return attr.as_bool(defvalue);
+ }
+#endif
+
  void MainWindow::Group::push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) {
+
+	// Só insere o ítem se 'visible' for true.
+	if(!XML::test(node,"visible",true)) {
+		Logger::String("Ignoring '",node.attribute("name").as_string(),"' by test result").trace(name());
+		return;
+	}
 
 	debug("-------------------> ",child->name());
 
