@@ -120,19 +120,31 @@
 		out << "  --text\tRun in text mode" << endl;
 	}
 
+	static bool text_mode() noexcept {
+
+#ifndef _WIN32
+		const char *session_type = getenv("XDG_SESSION_TYPE");
+		if(session_type) {
+			Logger::String{"Detected '",session_type,"' session"}.trace("application");
+			return session_type[0] == 0;
+		}
+#endif // _WIN32
+
+		return false;
+	}
+
 	/// @param definitions Path to a single xml file or a folder with xml files.
 	int Gtk::Application::run(int argc, char **argv, const char *definitions) {
 
 		debug("---------------------------------Definitions='",definitions,"'");
 
-		if(get_argument(argc,argv,'t',"text") || get_argument(argc,argv,'t',"console") ) {
+		if(text_mode() || get_argument(argc,argv,'t',"text") || get_argument(argc,argv,'t',"console") ) {
 
 			debug("Running in console mode");
 
 			if(Udjat::Application::setup(argc, argv, definitions)) {
 				return -1;
 			}
-
 
 		} else {
 
