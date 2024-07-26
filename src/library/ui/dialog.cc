@@ -84,16 +84,6 @@
 			{ AllowReboot,			"allow-reboot"	}
 		};
 
-		for(const auto &option : options) {
-			bool current = (this->options & option.value) != 0; // (options & option.option) != 0;
-			if(XML::AttributeFactory(node,option.attrname).as_bool(current)) {
-				this->options = (Dialog::Option) (this->options | option.value);
-			} else {
-				this->options = (Dialog::Option) (this->options & ~option.value);
-			}
-		}
-
-
 		args.name = Quark{name}.c_str();
 
 		for(auto parent = node;parent;parent = parent.parent()) {
@@ -102,6 +92,19 @@
 
 				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
 					continue;
+				}
+
+				for(const auto &option : options) {
+					bool current = (this->options & option.value) != 0;
+					auto attr = XML::AttributeFactory(child,option.attrname);
+					if(attr) {
+						debug("Found ",option.attrname);
+						if(attr.as_bool(current)) {
+							this->options = (Dialog::Option) (this->options | option.value);
+						} else {
+							this->options = (Dialog::Option) (this->options & ~option.value);
+						}
+					}
 				}
 
 				// Load dialog properties.

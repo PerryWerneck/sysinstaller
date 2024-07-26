@@ -71,7 +71,7 @@
  				This allow reinstall of the workstation without use of any external midia.
  		
  		-->
- 		<local-installer name='tw-local' default='yes' allow-reboot-when-success='yes' visible='only-on-linux'>
+ 		<local-installer name='tw-local' default='yes' visible='only-on-linux'>
 
 			<attribute name='slp-allow-local' value='no' />
 
@@ -83,14 +83,14 @@
 			<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/09_reinstall' script='yes' marker='%' />
 			
 			<!-- Add new boot option to grub.cfg -->
-			<script name='mkconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>
+			<!-- script name='grubconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>
 			<![CDATA[
         #!/usr/bin/env -S /usr/bin/sudo --login -- /bin/bash
         /usr/sbin/grub2-mkconfig -o "%{grub-config}"
         echo /usr/sbin/grub2-set-default "%{install-label}"
         echo /usr/sbin/grub2-reboot "%{install-label}"
       ]]>
-      </script>
+      </script -->
 			
 			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
 			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?' destructive='yes'>
@@ -98,8 +98,8 @@
 			</dialog>
 
 			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='success' title='Success message' icon='dialog-information' message='Operation complete' allow-reboot='yes'>
-				This is the secondary text of success message.
+			<dialog name='success' title='Configuration complete' icon='dialog-information' message='Operation complete' allow-reboot='yes'>
+				Bootloader was set, the system will reinstall in the next reboot.
 			</dialog>
 
 		</local-installer>

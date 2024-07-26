@@ -247,7 +247,7 @@
 				script->run(*this,Script::Post,progress);
 			}
 
-			return -1;
+			return 0;
 		}
 
 	};
