@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-13 15:20-0300\n"
+"POT-Creation-Date: 2024-07-26 15:46-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,316 +17,219 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gui/main.cc:77
-msgid ""
-"\n"
-"Select option: "
+#: src/library/gtkremovabledevicedialog.cc:344
+msgid "Access Denied"
 msgstr ""
 
-#: src/gui/apply.cc:209
-msgid "Action completed"
+#: src/library/gtkremovabledevicedialog.cc:169
+msgid "Auto detect"
 msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:378
-msgid "Action has failed"
+#: src/gtk4/application.cc:393
+msgid "C_ontinue"
 msgstr ""
 
-#: src/library/builders/iso9660.cc:196
-msgid "Adding EFI boot image"
-msgstr ""
-
-#: src/library/builders/iso9660.cc:177
-msgid "Adding el-torito boot image"
-msgstr ""
-
-#: src/library/action/action.cc:543 src/library/action/action.cc:547
-msgid "Building"
-msgstr ""
-
-#: src/library/source/efiboot.cc:80
-msgid "Building EFI Boot image"
-msgstr ""
-
-#: src/library/os/linux/loop.cc:50
-msgid "Can't get an available loop device"
-msgstr ""
-
-#: src/library/os/linux/usbstorage.cc:298
+#: src/library/action.cc:90
 msgid "Cancel"
 msgstr ""
 
-#: src/gui/main.cc:86
-msgid "Cancelled by user"
+#: src/library/fatdisk.cc:56
+msgid "Cant allocate FAT32 image"
 msgstr ""
 
-#: src/library/os/linux/source.cc:75
-msgid "Cant find valid mountpoint"
+#: src/library/os/linux/writer.cc:183
+msgid "Cant allocate space for output file"
 msgstr ""
 
-#: src/library/iso9660/builder.cc:213
-msgid "Cant read system area definition file"
+#: src/library/fatdisk.cc:60
+msgid "Cant bind fatfs to disk image"
 msgstr ""
 
-#: src/library/action/template.cc:104
+#: src/library/action.cc:218
+msgid "Cant find mountpoint for '{}'"
+msgstr ""
+
+#: src/library/os/linux/writer.cc:169
+msgid "Cant get device length"
+msgstr ""
+
+#: src/library/template.cc:177
+msgid "Cant handle binary template"
+msgstr ""
+
+#: src/library/fatdisk.cc:52
+msgid "Cant open FAT32 device/file"
+msgstr ""
+
+#: src/library/repository.cc:197
+msgid "Cant parse server file list"
+msgstr ""
+
+#: src/library/template.cc:214
 msgid "Cant update template permissions"
 msgstr ""
 
-#: src/library/action/action.cc:488
-msgid "Checking for templates"
+#: src/library/action.cc:140
+msgid "Configuration or logic error"
 msgstr ""
 
-#: src/library/os/linux/usbstorage.cc:302
+#: src/library/action.cc:90
 msgid "Continue"
 msgstr ""
 
-#: src/library/action/action.cc:188
-msgid "DUD Definition requires path or url attribute."
+#: src/library/action.cc:188
+msgid "Error getting boot path info"
 msgstr ""
 
-#: src/library/source/apache_mirror.cc:40
-msgid "Empty response from {}"
+#: src/library/action.cc:199
+msgid "Error opening /etc/mtab"
 msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:187
-msgid "Error"
+#: src/library/action.cc:232
+msgid "Error readlink boot link"
 msgstr ""
 
-#: src/library/iso9660/builder.cc:72
-msgid "Error creating iso image"
+#: src/library/writer.cc:135
+msgid "Finishing"
 msgstr ""
 
-#: src/library/iso9660/builder.cc:207
-msgid "Error loading system area"
-msgstr ""
-
-#: src/library/iso9660/builder.cc:457 src/library/builders/fat.cc:212
-#: src/library/os/linux/fsbuilder.cc:167
-msgid "Finalizing"
-msgstr ""
-
-#: src/gui/apply.cc:60
-msgid "First step has failed"
-msgstr ""
-
-#: src/gui/widgets/mainwindow.cc:143
-msgid "Getting configuration"
-msgstr ""
-
-#: src/library/action/action.cc:483
-msgid "Getting file lists"
-msgstr ""
-
-#: src/library/source/initrd.cc:37
-msgid "Getting init system"
-msgstr ""
-
-#: src/library/source/kernel.cc:37
-msgid "Getting installation kernel"
-msgstr ""
-
-#: src/library/action/action.cc:290 src/library/action/action.cc:530
+#: src/library/builder.cc:238
 msgid "Getting required files"
 msgstr ""
 
-#: src/library/os/linux/abstract_writer.cc:38
-msgid "I/O error writing image"
+#: src/library/group.cc:47
+msgid "Group controller is already active"
 msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:179
-msgid "Initialization has failed"
-msgstr ""
-
-#: src/library/action/action.cc:478 src/gui/dialogs/progress.cc:324
+#: src/library/action.cc:111
 msgid "Initializing"
 msgstr ""
 
-#: src/library/os/linux/usbstorage.cc:292
+#: src/library/gtkremovabledevicedialog.cc:53
+msgid "Insert an storage device"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:96
 msgid "Insert an storage device <b>NOW</b> "
 msgstr ""
 
-#: src/library/action/action.cc:217
-msgid "Invalid 'type' attribute"
+#: src/library/gtkremovabledevicedialog.cc:357
+msgid "Invalid device"
 msgstr ""
 
-#: src/gui/main.cc:147
-msgid "Invalid action id"
+#: src/library/group.cc:60
+msgid "No active group controller"
 msgstr ""
 
-#: src/library/group.cc:76
-msgid "Invalid group ID"
+#: src/library/image.cc:109
+msgid "No write support on selected image"
 msgstr ""
 
-#: src/library/kernelparameter.cc:70
-msgid "Invalid kernel parameter value type"
+#: src/library/gtkremovabledevicedialog.cc:339
+msgid "Not enough space"
 msgstr ""
 
-#: src/library/action/action.cc:380
-msgid "Loading installation kernel ..."
+#: src/library/action.cc:154
+msgid "Operation failed"
 msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:144
-msgid "Loading option list"
+#: src/library/action.cc:253
+msgid "Required attribute '{}' not found"
 msgstr ""
 
-#: src/library/action/action.cc:387
-msgid "Loading system installer ..."
+#: src/library/repository.cc:83
+msgid "Required repository '{}' not found"
 msgstr ""
 
-#: src/library/dialogs/popup.cc:39
-msgid "More info"
+#: src/library/gtkremovabledevicedialog.cc:194
+msgid "Save image to file"
 msgstr ""
 
-#: src/library/action/action.cc:71
-msgid "No action"
+#: src/library/gtkremovabledevicedialog.cc:214
+msgid "Select output file"
 msgstr ""
 
-#: src/library/dialogs/progress.cc:39
-msgid "No active progress dialog"
+#: src/library/action.cc:149
+msgid "System error"
 msgstr ""
 
-#: src/library/dialogs/window.cc:52
-msgid "No active window"
-msgstr ""
-
-#: src/library/action/action.cc:236
-msgid "No available image builder"
-msgstr ""
-
-#: src/library/action/action.cc:251
-msgid "No installation media"
-msgstr ""
-
-#: src/library/action/action.cc:352
-msgid "No repositories on this action"
-msgstr ""
-
-#: src/gui/apply.cc:220
-msgid "Ok"
-msgstr ""
-
-#: src/library/action/action.cc:560
-msgid "Post script has failed"
-msgstr ""
-
-#: src/library/action/action.cc:473
-msgid "Preparing"
-msgstr ""
-
-#: src/library/iso9660/builder.cc:408 src/library/os/linux/fsbuilder.cc:106
-msgid "Preparing to write"
-msgstr ""
-
-#: src/gui/apply.cc:225 src/gui/widgets/mainwindow.cc:390
-msgid "Quit application"
-msgstr ""
-
-#: src/gui/apply.cc:235
-msgid "Reboot now"
-msgstr ""
-
-#: src/library/builders/iso9660.cc:141 src/library/builders/iso9660.cc:166
-msgid "Rejecting invalid action pointer"
-msgstr ""
-
-#: src/library/os/linux/source.cc:40
-msgid "Required attribute 'path' is missing"
-msgstr ""
-
-#: src/library/action/action.cc:558
-msgid "Running post scripts"
-msgstr ""
-
-#: src/library/repository/slpclient.cc:110
-msgid "Searching for server"
-msgstr ""
-
-#: src/library/action/action.cc:403
-msgid "Selected installation has no label"
-msgstr ""
-
-#: src/library/builders/iso9660.cc:144 src/library/builders/iso9660.cc:169
-msgid "Setting up ISO image"
-msgstr ""
-
-#: src/library/os/linux/usbstorage.cc:231
-msgid "Storage device is unavailable"
-msgstr ""
-
-#: src/gui/widgets/mainwindow.cc:54
+#: src/application/mainwindow.cc:62
 msgid "System reinstallation"
 msgstr ""
 
-#: src/library/action/template.cc:133
-msgid "Template was not loaded"
+#: src/library/writer.cc:55
+msgid "The device writer is not available"
 msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:188
-msgid "The initialization procedure has failed, the application cant continue"
+#: src/library/action.cc:81
+msgid "The selected action cant be activated"
 msgstr ""
 
-#: src/library/action/action.cc:412
-msgid "The kernel parameters list is empty"
-msgstr ""
-
-#: src/library/script.cc:111
-msgid "The required attribute 'cmdline' is missing"
-msgstr ""
-
-#: src/library/os/linux/usbstorage.cc:294
+#: src/library/gtkremovabledevicedialog.cc:54
+#: src/library/gtkremovabledevicedialog.cc:110
 msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
 msgstr ""
 
-#: src/library/source/save.cc:58 src/library/source/save.cc:92
-#: src/library/source/save.cc:142
-msgid "Unable to get source with an empty URL"
+#: src/library/os/linux/writer.cc:124
+msgid "Unable to access output device"
 msgstr ""
 
-#: src/library/source/save.cc:63 src/library/source/save.cc:97
-#: src/library/source/save.cc:147
-msgid "Unable to get source with relative URL"
+#: src/library/os/linux/writer.cc:131
+msgid "Unable to lock output device"
 msgstr ""
 
-#: src/library/source/apache_mirror.cc:48
-msgid "Unable to parse file list from {}"
+#: src/library/fatdisk.cc:155
+msgid "Unable to open fat://{}"
 msgstr ""
 
-#: src/library/iso9660/builder.cc:159
-msgid "Unexpanded path in source list"
+#: src/library/fatdisk.cc:109
+msgid "Unable to open fat://{}/"
 msgstr ""
 
-#: src/library/builders/iso9660.cc:201
-msgid "Unexpected filename on EFI boot image"
+#: src/library/fatdisk.cc:196
+msgid "Unable to write fat://{}"
 msgstr ""
 
-#: src/library/builders/iso9660.cc:182
-msgid "Unexpected filename on el-torito boot image"
+#: src/library/fatdisk.cc:73
+msgid "Unexpected error '{}' on f_mkfs"
 msgstr ""
 
-#: src/library/kernelparameter.cc:40
-msgid "Unnamed kernel parameter"
+#: src/library/fatdisk.cc:87 src/library/fatdisk.cc:100
+msgid "Unexpected error '{}' on f_mount"
 msgstr ""
 
-#: src/library/action/action.cc:421
-msgid "Unnamed kernel parameter, possible misconfiguration"
+#: src/library/writer.cc:61
+msgid "Writer is already available"
 msgstr ""
 
-#: src/library/dialogs/window.cc:42
-msgid "Window stack mismatch"
-msgstr ""
-
-#: src/library/iso9660/builder.cc:426 src/library/builders/fat.cc:204
+#: src/library/image.cc:114
 msgid "Writing image"
 msgstr ""
 
-#: src/library/os/linux/fsbuilder.cc:144
-msgid "Writing system image"
-msgstr ""
-
-#: src/gui/widgets/mainwindow.cc:299
+#: src/gtk4/application.cc:392
 msgid "_Cancel"
 msgstr ""
 
-#: src/library/dialogs/progress.cc:58 src/gui/main.cc:236
-#: src/gui/dialogs/progress.cc:113
+#: src/library/ui/dialog.cc:190
+msgid "_No"
+msgstr ""
+
+#: src/gtk4/application.cc:391
+msgid "_Quit application"
+msgstr ""
+
+#: src/gtk4/application.cc:390
+msgid "_Reboot"
+msgstr ""
+
+#: src/library/ui/dialog.cc:190
+msgid "_Yes"
+msgstr ""
+
+#: src/library/action.cc:192
+msgid "{} is not a directory"
+msgstr ""
+
+#: src/gtk4/progress.cc:249 src/gtk4/progress.cc:281
 msgid "{} of {}"
 msgstr ""

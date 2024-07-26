@@ -36,6 +36,8 @@ LIBRARY_NAME="lib@PACKAGE_NAME@"
 MODULES=@MODULES@
 SONAME=@SONAME@
 
+MODULES=grub2 isobuilder isowriter
+
 LIBRARY_SOURCES = \
 	$(wildcard $(srcdir)/src/library/*.cc) \
 	$(wildcard $(srcdir)/src/library/ui/*.cc) \
@@ -266,13 +268,12 @@ install-module-%: \
 
 all: \
 	$(BINRLS)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(BINRLS)/$(SONAME) \
 	$(foreach MODULE, $(MODULES), $(BINRLS)/modules/$(MODULE)@DLLEXT@) \
 	locale/$(PACKAGE_NAME).pot
 
 Release: \
 	$(BINRLS)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(foreach MODULE, $(MODULES), $(BINRLS)/modules/$(MODULE)@DLLEXT@)
+	$(foreach MODULE, $(MODULES), $(BINRLS)/modules/$(MODULE)@DLLEXT@) \
 
 locale/$(PACKAGE_NAME).pot: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES) $(GUI_SOURCES)), $(POTDIR)/$(SRC).pot)
@@ -298,10 +299,9 @@ $(BINRLS)/$(PRODUCT_NAME)@EXEEXT@: \
 		$(LIBS)
 
 $(BINRLS)/modules/%@DLLEXT@: \
-	$(BINRLS)/$(SONAME) \
-	src/modules/%/* \
+	$(BINRLS)/$(SONAME)
 
-	@$(MAKE) -C src/modules/$(notdir $(basename $@)) Release
+	@$(MAKE) -C modules/$(notdir $(basename $@)) Debug
 
 $(BINRLS)/$(SONAME): \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
@@ -409,10 +409,8 @@ install-data:
 
 Debug: \
 	$(BINDBG)/$(PRODUCT_NAME)@EXEEXT@ \
-	$(BINDBG)/modules/isowriter.@DLLEXT@ \
-	$(BINDBG)/modules/isobuilder.@DLLEXT@ \
-	$(BINDBG)/modules/grub2.@DLLEXT@
-
+	$(foreach MODULE, $(MODULES), $(BINDBG)/modules/$(MODULE).@DLLEXT@)
+	
 $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(GUI_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/$(SONAME)
@@ -428,8 +426,7 @@ $(BINDBG)/$(PRODUCT_NAME)@EXEEXT@: \
 		$(LIBS)
 
 $(BINDBG)/modules/%@DLLEXT@: \
-	$(BINDBG)/$(SONAME) \
-	src/modules/%/* \
+	$(BINDBG)/$(SONAME)
 
 	@$(MAKE) -C src/modules/$(notdir $(basename $@)) Debug
 
@@ -484,6 +481,7 @@ cleanDebug:
 
 	@$(MAKE) -C modules/isowriter cleanDebug
 	@$(MAKE) -C modules/isobuilder cleanDebug
+	@$(MAKE) -C modules/grub2 cleanDebug
 	@rm -fr $(OBJDBG)
 	@rm -fr $(BINDBG)
 
@@ -491,6 +489,7 @@ cleanRelease:
 
 	@$(MAKE) -C modules/isowriter cleanRelease
 	@$(MAKE) -C modules/isobuilder cleanRelease
+	@$(MAKE) -C modules/grub2 cleanRelease
 	@rm -fr $(OBJRLS)
 	@rm -fr $(BINRLS)
 

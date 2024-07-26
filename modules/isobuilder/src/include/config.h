@@ -2,7 +2,7 @@
 /* src/include/config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Do we have libburn? */
-/* #undef HAVE_BURN */
+#define HAVE_BURN /**/
 
 /* Define if you have the iconv() function and it works. */
 #define HAVE_ICONV 1

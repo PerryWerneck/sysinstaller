@@ -30,6 +30,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/threadpool.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/tools/application.h>
  #include <string>
 
  #include <gtkmm.h>
