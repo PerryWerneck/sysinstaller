@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-13 15:20-0300\n"
+"POT-Creation-Date: 2024-07-26 15:46-0300\n"
 "PO-Revision-Date: 2023-07-13 15:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -22,330 +22,265 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "X-Generator: Gtranslator 40.0\n"
 
-#: src/gui/main.cc:77
-msgid ""
-"\n"
-"Select option: "
+#: src/library/gtkremovabledevicedialog.cc:344
+msgid "Access Denied"
 msgstr ""
-"\n"
-"Selecione opção: "
 
-#: src/gui/apply.cc:209
-msgid "Action completed"
-msgstr "Operação concluída"
+#: src/library/gtkremovabledevicedialog.cc:169
+msgid "Auto detect"
+msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:378
-msgid "Action has failed"
-msgstr "Operação falhou"
+#: src/gtk4/application.cc:393
+#, fuzzy
+msgid "C_ontinue"
+msgstr "Continuar"
 
-#: src/library/builders/iso9660.cc:196
-msgid "Adding EFI boot image"
-msgstr "Adicionando imagem de boot EFI"
-
-#: src/library/builders/iso9660.cc:177
-msgid "Adding el-torito boot image"
-msgstr "Adicionando imagem de boot el-torito"
-
-#: src/library/action/action.cc:543 src/library/action/action.cc:547
-msgid "Building"
-msgstr "Construindo"
-
-#: src/library/source/efiboot.cc:80
-msgid "Building EFI Boot image"
-msgstr "Criando imagem de boot EFI"
-
-#: src/library/os/linux/loop.cc:50
-msgid "Can't get an available loop device"
-msgstr "Nenhum dispositivo loop disponível"
-
-#: src/library/os/linux/usbstorage.cc:298
+#: src/library/action.cc:90
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/gui/main.cc:86
-msgid "Cancelled by user"
-msgstr "Cancelado pelo usuário"
+#: src/library/fatdisk.cc:56
+#, fuzzy
+msgid "Cant allocate FAT32 image"
+msgstr "Sem acesso á imagem baixada"
 
-#: src/library/os/linux/source.cc:75
-msgid "Cant find valid mountpoint"
+#: src/library/os/linux/writer.cc:183
+msgid "Cant allocate space for output file"
+msgstr ""
+
+#: src/library/fatdisk.cc:60
+msgid "Cant bind fatfs to disk image"
+msgstr ""
+
+#: src/library/action.cc:218
+#, fuzzy
+msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem válido"
 
-#: src/library/iso9660/builder.cc:213
-msgid "Cant read system area definition file"
-msgstr "Não foi possível ler o arquivo de definição de área do sistema"
+#: src/library/os/linux/writer.cc:169
+#, fuzzy
+msgid "Cant get device length"
+msgstr "Não foi possível obter estado do dispositivo de loop"
 
-#: src/library/action/template.cc:104
+#: src/library/template.cc:177
+#, fuzzy
+msgid "Cant handle binary template"
+msgstr "Verificando templates"
+
+#: src/library/fatdisk.cc:52
+msgid "Cant open FAT32 device/file"
+msgstr ""
+
+#: src/library/repository.cc:197
+#, fuzzy
+msgid "Cant parse server file list"
+msgstr "Incapaz de processar lista de arquivos em {}"
+
+#: src/library/template.cc:214
 msgid "Cant update template permissions"
 msgstr "Erro ao atualizar permissões de modelo"
 
-#: src/library/action/action.cc:488
-msgid "Checking for templates"
-msgstr "Verificando templates"
+#: src/library/action.cc:140
+msgid "Configuration or logic error"
+msgstr ""
 
-#: src/library/os/linux/usbstorage.cc:302
+#: src/library/action.cc:90
 msgid "Continue"
 msgstr "Continuar"
 
-#: src/library/action/action.cc:188
-msgid "DUD Definition requires path or url attribute."
-msgstr "Definição de imagem DUD requer atributos 'path' ou 'url'"
+#: src/library/action.cc:188
+msgid "Error getting boot path info"
+msgstr ""
 
-#: src/library/source/apache_mirror.cc:40
-msgid "Empty response from {}"
-msgstr "Resposta vazia de {}"
+#: src/library/action.cc:199
+msgid "Error opening /etc/mtab"
+msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:187
-msgid "Error"
-msgstr "Erro"
-
-#: src/library/iso9660/builder.cc:72
-msgid "Error creating iso image"
+#: src/library/action.cc:232
+#, fuzzy
+msgid "Error readlink boot link"
 msgstr "Erro criando imagem iso"
 
-#: src/library/iso9660/builder.cc:207
-msgid "Error loading system area"
-msgstr "Erro lendo área de sistema"
+#: src/library/writer.cc:135
+msgid "Finishing"
+msgstr ""
 
-#: src/library/iso9660/builder.cc:457 src/library/builders/fat.cc:212
-#: src/library/os/linux/fsbuilder.cc:167
-msgid "Finalizing"
-msgstr "Finalizando"
-
-#: src/gui/apply.cc:60
-msgid "First step has failed"
-msgstr "Primeira etapa falhou"
-
-#: src/gui/widgets/mainwindow.cc:143
-msgid "Getting configuration"
-msgstr "Obtendo a configuração"
-
-#: src/library/action/action.cc:483
-msgid "Getting file lists"
-msgstr "Obtendo lista de arquivos"
-
-#: src/library/source/initrd.cc:37
-msgid "Getting init system"
-msgstr "Obtendo inicializador"
-
-#: src/library/source/kernel.cc:37
-msgid "Getting installation kernel"
-msgstr "Obtendo kernel de instalação"
-
-#: src/library/action/action.cc:290 src/library/action/action.cc:530
+#: src/library/builder.cc:238
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
-#: src/library/os/linux/abstract_writer.cc:38
-msgid "I/O error writing image"
-msgstr "Erro de I/O gravando imagem"
+#: src/library/group.cc:47
+msgid "Group controller is already active"
+msgstr ""
 
-#: src/gui/widgets/mainwindow.cc:179
-msgid "Initialization has failed"
-msgstr "Inicialização falhou"
-
-#: src/library/action/action.cc:478 src/gui/dialogs/progress.cc:324
+#: src/library/action.cc:111
 msgid "Initializing"
 msgstr "Inicializando"
 
-#: src/library/os/linux/usbstorage.cc:292
+#: src/library/gtkremovabledevicedialog.cc:53
+#, fuzzy
+msgid "Insert an storage device"
+msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
+
+#: src/library/gtkremovabledevicedialog.cc:96
 msgid "Insert an storage device <b>NOW</b> "
 msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
 
-#: src/library/action/action.cc:217
-msgid "Invalid 'type' attribute"
-msgstr "Atributo 'type' é inválido"
+#: src/library/gtkremovabledevicedialog.cc:357
+msgid "Invalid device"
+msgstr ""
 
-#: src/gui/main.cc:147
-msgid "Invalid action id"
-msgstr "Identificador de ação inválida"
+#: src/library/group.cc:60
+#, fuzzy
+msgid "No active group controller"
+msgstr "Controlador de alertas"
 
-#: src/library/group.cc:76
-msgid "Invalid group ID"
-msgstr "Identificador de grupo inválido"
+#: src/library/image.cc:109
+msgid "No write support on selected image"
+msgstr ""
 
-#: src/library/kernelparameter.cc:70
-msgid "Invalid kernel parameter value type"
-msgstr "Tipo inválido para parâmetro de kernel"
+#: src/library/gtkremovabledevicedialog.cc:339
+msgid "Not enough space"
+msgstr ""
 
-#: src/library/action/action.cc:380
-msgid "Loading installation kernel ..."
-msgstr "Obtendo kernel de instalação ..."
+#: src/library/action.cc:154
+#, fuzzy
+msgid "Operation failed"
+msgstr "Operação falhou"
 
-#: src/gui/widgets/mainwindow.cc:144
-msgid "Loading option list"
-msgstr "Lendo lista de opções"
-
-#: src/library/action/action.cc:387
-msgid "Loading system installer ..."
-msgstr "Obtendo instalador ..."
-
-#: src/library/dialogs/popup.cc:39
-msgid "More info"
-msgstr "Mais informações"
-
-#: src/library/action/action.cc:71
-msgid "No action"
-msgstr "Nenhuma ação"
-
-#: src/library/dialogs/progress.cc:39
-msgid "No active progress dialog"
-msgstr "Nenhum diálogo de progresso ativo"
-
-#: src/library/dialogs/window.cc:52
-msgid "No active window"
-msgstr "Nenhuma janela ativa"
-
-#: src/library/action/action.cc:236
-msgid "No available image builder"
-msgstr "Nenhum construtor de imagem disponível"
-
-#: src/library/action/action.cc:251
-msgid "No installation media"
-msgstr "Nenhuma mídia de instalação"
-
-#: src/library/action/action.cc:352
-msgid "No repositories on this action"
-msgstr "Nenhum repositório nesta ação"
-
-#: src/gui/apply.cc:220
-msgid "Ok"
-msgstr "Ok"
-
-#: src/library/action/action.cc:560
-msgid "Post script has failed"
-msgstr "Script de finalização falhou"
-
-#: src/library/action/action.cc:473
-msgid "Preparing"
-msgstr "Preparando"
-
-#: src/library/iso9660/builder.cc:408 src/library/os/linux/fsbuilder.cc:106
-msgid "Preparing to write"
-msgstr "Preparando para gravar"
-
-#: src/gui/apply.cc:225 src/gui/widgets/mainwindow.cc:390
-msgid "Quit application"
-msgstr "Sair da aplicação"
-
-#: src/gui/apply.cc:235
-msgid "Reboot now"
-msgstr "Reiniciar agora"
-
-#: src/library/builders/iso9660.cc:141 src/library/builders/iso9660.cc:166
-msgid "Rejecting invalid action pointer"
-msgstr "Rejeitando ponteiro de ação inválido"
-
-#: src/library/os/linux/source.cc:40
-msgid "Required attribute 'path' is missing"
+#: src/library/action.cc:253
+#, fuzzy
+msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário 'path' não foi encontrado"
 
-#: src/library/action/action.cc:558
-msgid "Running post scripts"
-msgstr "Executando scripts de finalização"
+#: src/library/repository.cc:83
+msgid "Required repository '{}' not found"
+msgstr ""
 
-#: src/library/repository/slpclient.cc:110
-msgid "Searching for server"
-msgstr "Procurando servidor"
+#: src/library/gtkremovabledevicedialog.cc:194
+#, fuzzy
+msgid "Save image to file"
+msgstr "Selecione arquivo de imagem"
 
-#: src/library/action/action.cc:403
-msgid "Selected installation has no label"
-msgstr "Instalação selecionada não tem nome"
+#: src/library/gtkremovabledevicedialog.cc:214
+#, fuzzy
+msgid "Select output file"
+msgstr "Selecione arquivo de imagem"
 
-#: src/library/builders/iso9660.cc:144 src/library/builders/iso9660.cc:169
-msgid "Setting up ISO image"
-msgstr "Configurando imagem ISO"
+#: src/library/action.cc:149
+#, fuzzy
+msgid "System error"
+msgstr "Erro de servidor"
 
-#: src/library/os/linux/usbstorage.cc:231
-msgid "Storage device is unavailable"
-msgstr "Dispositivo de armazenamento indisponível"
-
-#: src/gui/widgets/mainwindow.cc:54
+#: src/application/mainwindow.cc:62
 msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
-#: src/library/action/template.cc:133
-msgid "Template was not loaded"
-msgstr "Template não foi carregado"
+#: src/library/writer.cc:55
+#, fuzzy
+msgid "The device writer is not available"
+msgstr "Dispositivo de armazenamento indisponível"
 
-#: src/gui/widgets/mainwindow.cc:188
-msgid "The initialization procedure has failed, the application cant continue"
-msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
+#: src/library/action.cc:81
+msgid "The selected action cant be activated"
+msgstr ""
 
-#: src/library/action/action.cc:412
-msgid "The kernel parameters list is empty"
-msgstr "A lista de parâmetros do kernel está vazia"
-
-#: src/library/script.cc:111
-msgid "The required attribute 'cmdline' is missing"
-msgstr "Atributo necessário 'cmdline' não foi encontrado"
-
-#: src/library/os/linux/usbstorage.cc:294
+#: src/library/gtkremovabledevicedialog.cc:54
+#: src/library/gtkremovabledevicedialog.cc:110
 msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
 msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
 
-#: src/library/source/save.cc:58 src/library/source/save.cc:92
-#: src/library/source/save.cc:142
-msgid "Unable to get source with an empty URL"
-msgstr "Não é possível obter uma fonte com URL vazia"
+#: src/library/os/linux/writer.cc:124
+msgid "Unable to access output device"
+msgstr ""
 
-#: src/library/source/save.cc:63 src/library/source/save.cc:97
-#: src/library/source/save.cc:147
-msgid "Unable to get source with relative URL"
-msgstr "Não é possível obter fonte com URL relativa"
+#: src/library/os/linux/writer.cc:131
+msgid "Unable to lock output device"
+msgstr ""
 
-#: src/library/source/apache_mirror.cc:48
-msgid "Unable to parse file list from {}"
+#: src/library/fatdisk.cc:155
+#, fuzzy
+msgid "Unable to open fat://{}"
 msgstr "Incapaz de processar lista de arquivos em {}"
 
-#: src/library/iso9660/builder.cc:159
-msgid "Unexpanded path in source list"
-msgstr "Caminho incorreto na lista de fontes"
+#: src/library/fatdisk.cc:109
+msgid "Unable to open fat://{}/"
+msgstr ""
 
-#: src/library/builders/iso9660.cc:201
-msgid "Unexpected filename on EFI boot image"
-msgstr "Nome de arquivo inesperado na imagem de boot EFI"
+#: src/library/fatdisk.cc:196
+#, fuzzy
+msgid "Unable to write fat://{}"
+msgstr "Incapaz de obter o valor de '{}'"
 
-#: src/library/builders/iso9660.cc:182
-msgid "Unexpected filename on el-torito boot image"
-msgstr "Nome de arquivo inesperado na imagem de boot el-torito"
+#: src/library/fatdisk.cc:73
+#, fuzzy
+msgid "Unexpected error '{}' on f_mkfs"
+msgstr "Código de erro HTTP inesperado"
 
-#: src/library/kernelparameter.cc:40
-msgid "Unnamed kernel parameter"
-msgstr "Parametro de kernel sem nome"
+#: src/library/fatdisk.cc:87 src/library/fatdisk.cc:100
+#, fuzzy
+msgid "Unexpected error '{}' on f_mount"
+msgstr "Código de erro HTTP inesperado"
 
-#: src/library/action/action.cc:421
-msgid "Unnamed kernel parameter, possible misconfiguration"
-msgstr "Parametro de kernel sem nome, possível erro de configuração"
+#: src/library/writer.cc:61
+msgid "Writer is already available"
+msgstr ""
 
-#: src/library/dialogs/window.cc:42
-msgid "Window stack mismatch"
-msgstr "Divergência na pilha de janelas"
-
-#: src/library/iso9660/builder.cc:426 src/library/builders/fat.cc:204
+#: src/library/image.cc:114
 msgid "Writing image"
 msgstr "Gravando imagem"
 
-#: src/library/os/linux/fsbuilder.cc:144
-msgid "Writing system image"
-msgstr "Gravando imagem de sistema"
-
-#: src/gui/widgets/mainwindow.cc:299
+#: src/gtk4/application.cc:392
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/library/dialogs/progress.cc:58 src/gui/main.cc:236
-#: src/gui/dialogs/progress.cc:113
+#: src/library/ui/dialog.cc:190
+msgid "_No"
+msgstr ""
+
+#: src/gtk4/application.cc:391
+#, fuzzy
+msgid "_Quit application"
+msgstr "Sair da aplicação"
+
+#: src/gtk4/application.cc:390
+#, fuzzy
+msgid "_Reboot"
+msgstr "Reiniciar agora"
+
+#: src/library/ui/dialog.cc:190
+msgid "_Yes"
+msgstr ""
+
+#: src/library/action.cc:192
+msgid "{} is not a directory"
+msgstr ""
+
+#: src/gtk4/progress.cc:249 src/gtk4/progress.cc:281
 msgid "{} of {}"
 msgstr "{} de {}"
+
+#~ msgid ""
+#~ "\n"
+#~ "Select option: "
+#~ msgstr ""
+#~ "\n"
+#~ "Selecione opção: "
+
+#~ msgid "Action completed"
+#~ msgstr "Operação concluída"
+
+#~ msgid "Adding EFI boot image"
+#~ msgstr "Adicionando imagem de boot EFI"
+
+#~ msgid "Adding el-torito boot image"
+#~ msgstr "Adicionando imagem de boot el-torito"
 
 #~ msgid "Agent controller"
 #~ msgstr "Controlador de agentes"
 
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
-
-#~ msgid "Alert controller"
-#~ msgstr "Controlador de alertas"
 
 #~ msgid ""
 #~ "Authentication is required and has failed or has not yet been provided."
@@ -357,17 +292,26 @@ msgstr "{} de {}"
 #~ msgid "Bad gateway"
 #~ msgstr "Gateway inválido"
 
-#~ msgid "Can't get loop device status"
-#~ msgstr "Não foi possível obter estado do dispositivo de loop"
+#~ msgid "Building"
+#~ msgstr "Construindo"
+
+#~ msgid "Building EFI Boot image"
+#~ msgstr "Criando imagem de boot EFI"
+
+#~ msgid "Can't get an available loop device"
+#~ msgstr "Nenhum dispositivo loop disponível"
 
 #~ msgid "Can't update loop device status"
 #~ msgstr "Não foi possível atualizar estado do dispositivo de loop"
 
-#~ msgid "Cant access downloaded image"
-#~ msgstr "Sem acesso á imagem baixada"
+#~ msgid "Cancelled by user"
+#~ msgstr "Cancelado pelo usuário"
 
 #~ msgid "Cant read from image file"
 #~ msgstr "Não foi possível der do arquivo de imagem"
+
+#~ msgid "Cant read system area definition file"
+#~ msgstr "Não foi possível ler o arquivo de definição de área do sistema"
 
 #~ msgid "Cant resolve hostname"
 #~ msgstr "Não foi possivel resolver nome do host"
@@ -375,8 +319,26 @@ msgstr "{} de {}"
 #~ msgid "Client error"
 #~ msgstr "Erro de cliente"
 
+#~ msgid "DUD Definition requires path or url attribute."
+#~ msgstr "Definição de imagem DUD requer atributos 'path' ou 'url'"
+
 #~ msgid "Downloading ISO image"
 #~ msgstr "Baixando imagem ISO"
+
+#~ msgid "Empty response from {}"
+#~ msgstr "Resposta vazia de {}"
+
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "Error loading system area"
+#~ msgstr "Erro lendo área de sistema"
+
+#~ msgid "Finalizing"
+#~ msgstr "Finalizando"
+
+#~ msgid "First step has failed"
+#~ msgstr "Primeira etapa falhou"
 
 #~ msgid "Forbidden"
 #~ msgstr "Proibido"
@@ -387,8 +349,20 @@ msgstr "{} de {}"
 #~ msgid "Gb"
 #~ msgstr "Gb"
 
+#~ msgid "Getting configuration"
+#~ msgstr "Obtendo a configuração"
+
+#~ msgid "Getting file lists"
+#~ msgstr "Obtendo lista de arquivos"
+
+#~ msgid "Getting init system"
+#~ msgstr "Obtendo inicializador"
+
 #~ msgid "Getting install loader"
 #~ msgstr "Obtendo carregador de instalação"
+
+#~ msgid "Getting installation kernel"
+#~ msgstr "Obtendo kernel de instalação"
 
 #~ msgid "HTTP Version Not Supported"
 #~ msgstr "Versão HTTP não suportada"
@@ -396,17 +370,44 @@ msgstr "{} de {}"
 #~ msgid "I dont know how to execute '{}'"
 #~ msgstr "Não sei como executar '{}'"
 
+#~ msgid "I/O error writing image"
+#~ msgstr "Erro de I/O gravando imagem"
+
 #~ msgid "Image file name"
 #~ msgstr "Nome do arquivo de imagem"
 
+#~ msgid "Initialization has failed"
+#~ msgstr "Inicialização falhou"
+
 #~ msgid "Internal error"
 #~ msgstr "Erro interno"
+
+#~ msgid "Invalid 'type' attribute"
+#~ msgstr "Atributo 'type' é inválido"
+
+#~ msgid "Invalid action id"
+#~ msgstr "Identificador de ação inválida"
+
+#~ msgid "Invalid group ID"
+#~ msgstr "Identificador de grupo inválido"
+
+#~ msgid "Invalid kernel parameter value type"
+#~ msgstr "Tipo inválido para parâmetro de kernel"
 
 #~ msgid "Kb"
 #~ msgstr "Kb"
 
 #~ msgid "Less than one minute"
 #~ msgstr "Menos de um minuto"
+
+#~ msgid "Loading installation kernel ..."
+#~ msgstr "Obtendo kernel de instalação ..."
+
+#~ msgid "Loading option list"
+#~ msgstr "Lendo lista de opções"
+
+#~ msgid "Loading system installer ..."
+#~ msgstr "Obtendo instalador ..."
 
 #~ msgid "Local file protocol"
 #~ msgstr "Protocol de arquivo local"
@@ -420,11 +421,32 @@ msgstr "{} de {}"
 #~ msgid "Missing required entry <kernel> with the URL for installation kernel"
 #~ msgstr "Faltando entrada <kernel> com a URL do kernel de instalação"
 
+#~ msgid "More info"
+#~ msgstr "Mais informações"
+
 #~ msgid "More sources than module expects"
 #~ msgstr "Mais fontes do que o módulo esperava"
 
 #~ msgid "No abnormal state was detected"
 #~ msgstr "Nenhum estado anormal foi reportado"
+
+#~ msgid "No action"
+#~ msgstr "Nenhuma ação"
+
+#~ msgid "No active progress dialog"
+#~ msgstr "Nenhum diálogo de progresso ativo"
+
+#~ msgid "No active window"
+#~ msgstr "Nenhuma janela ativa"
+
+#~ msgid "No available image builder"
+#~ msgstr "Nenhum construtor de imagem disponível"
+
+#~ msgid "No installation media"
+#~ msgstr "Nenhuma mídia de instalação"
+
+#~ msgid "No repositories on this action"
+#~ msgstr "Nenhum repositório nesta ação"
 
 #~ msgid "Normal"
 #~ msgstr "Normal"
@@ -435,20 +457,41 @@ msgstr "{} de {}"
 #~ msgid "Not found"
 #~ msgstr "Não encontrado"
 
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Post script has failed"
+#~ msgstr "Script de finalização falhou"
+
+#~ msgid "Preparing"
+#~ msgstr "Preparando"
+
+#~ msgid "Preparing to write"
+#~ msgstr "Preparando para gravar"
+
 #~ msgid "Proxy Authentication Required"
 #~ msgstr "Proxy exige autenticação"
 
 #~ msgid "Redirected"
 #~ msgstr "Redirecionado"
 
+#~ msgid "Rejecting invalid action pointer"
+#~ msgstr "Rejeitando ponteiro de ação inválido"
+
 #~ msgid "Request Timeout"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid "Select target image file"
-#~ msgstr "Selecione arquivo de imagem"
+#~ msgid "Running post scripts"
+#~ msgstr "Executando scripts de finalização"
 
-#~ msgid "Server error"
-#~ msgstr "Erro de servidor"
+#~ msgid "Searching for server"
+#~ msgstr "Procurando servidor"
+
+#~ msgid "Selected installation has no label"
+#~ msgstr "Instalação selecionada não tem nome"
+
+#~ msgid "Setting up ISO image"
+#~ msgstr "Configurando imagem ISO"
 
 #~ msgid ""
 #~ "Something is making your server work too hard, and it just can’t keep up"
@@ -469,6 +512,9 @@ msgstr "{} de {}"
 #~ msgid "Tb"
 #~ msgstr "Tb"
 
+#~ msgid "Template was not loaded"
+#~ msgstr "Template não foi carregado"
+
 #~ msgid "The HTTP error code is unknown"
 #~ msgstr "Código de erro HTTP desconhecido"
 
@@ -477,6 +523,13 @@ msgstr "{} de {}"
 
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
+
+#~ msgid ""
+#~ "The initialization procedure has failed, the application cant continue"
+#~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
+
+#~ msgid "The kernel parameters list is empty"
+#~ msgstr "A lista de parâmetros do kernel está vazia"
 
 #~ msgid ""
 #~ "The request contained valid data and was understood by the server, but "
@@ -499,6 +552,9 @@ msgstr "{} de {}"
 
 #~ msgid "The request was redirected to another URL."
 #~ msgstr "Requisição foi redirecionada para outra URL."
+
+#~ msgid "The required attribute 'cmdline' is missing"
+#~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
 #~ msgid ""
 #~ "The server has encountered a situation it does not know how to handle."
@@ -527,23 +583,44 @@ msgstr "{} de {}"
 #~ msgid "Unable to get image size"
 #~ msgstr "Não foi possível obter o tamanho da imagem"
 
-#~ msgid "Unable to get value for '{}'"
-#~ msgstr "Incapaz de obter o valor de '{}'"
+#~ msgid "Unable to get source with an empty URL"
+#~ msgstr "Não é possível obter uma fonte com URL vazia"
+
+#~ msgid "Unable to get source with relative URL"
+#~ msgstr "Não é possível obter fonte com URL relativa"
 
 #~ msgid "Unauthorized"
 #~ msgstr "Não autorizado"
 
+#~ msgid "Unexpanded path in source list"
+#~ msgstr "Caminho incorreto na lista de fontes"
+
 #~ msgid "Unexpected EOF reading image file"
 #~ msgstr "Fim de arquivo inesperado ao ler arquivo de imagem"
-
-#~ msgid "Unexpected HTTP error code"
-#~ msgstr "Código de erro HTTP inesperado"
 
 #~ msgid "Unexpected error activating state"
 #~ msgstr "Erro inesperado ao ativar estado"
 
+#~ msgid "Unexpected filename on EFI boot image"
+#~ msgstr "Nome de arquivo inesperado na imagem de boot EFI"
+
+#~ msgid "Unexpected filename on el-torito boot image"
+#~ msgstr "Nome de arquivo inesperado na imagem de boot el-torito"
+
+#~ msgid "Unnamed kernel parameter"
+#~ msgstr "Parametro de kernel sem nome"
+
+#~ msgid "Unnamed kernel parameter, possible misconfiguration"
+#~ msgstr "Parametro de kernel sem nome, possível erro de configuração"
+
+#~ msgid "Window stack mismatch"
+#~ msgstr "Divergência na pilha de janelas"
+
 #~ msgid "Writing ISO image"
 #~ msgstr "Gravando imagem ISO"
+
+#~ msgid "Writing system image"
+#~ msgstr "Gravando imagem de sistema"
 
 #~ msgid "\\StringFileInfo\\080904B0\\FileDescription"
 #~ msgstr "\\StringFileInfo\\041604B0\\FileDescription"

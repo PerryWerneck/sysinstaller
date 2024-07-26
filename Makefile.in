@@ -324,6 +324,10 @@ install: \
 	$(foreach MODULE, $(MODULES), install-module-$(MODULE)) \
 	install-data
 
+instal-module-%: \
+	$(BINRLS)/$(SONAME)
+	$(MAKE) -C modules/$(notdir $(basename $@)) DESTDIR=$(DESTDIR) install
+
 install-linux: \
 	$(BINRLS)/$(PRODUCT_NAME)@EXEEXT@ \
 	locale/$(PACKAGE_NAME).pot
@@ -350,7 +354,14 @@ install-linux: \
 	@$(INSTALL_DATA) \
 		sysconf/launcher.desktop \
 		$(APPLICATION_ID).desktop
+		
+	@$(MKDIR) \
+		$(DESTDIR)/usr/share/icons
 
+	@$(INSTALL_DATA) \
+		icons/logo.svg \
+		$(DESTDIR)/usr/share/icons/$(APPLICATION_ID).svg
+		
 	@$(INSTALL_DESKTOP) \
 		--mode 644 \
 		--delete-original \
@@ -361,8 +372,8 @@ install-linux: \
 		$(DESTDIR)$(datarootdir)/icons
 
 	@$(INSTALL_DATA) \
-		icon.svg \
-		$(DESTDIR)$(datarootdir)/icons/$(APPLICATION_ID).svg
+		icons/*.svg \
+		$(DESTDIR)$(datarootdir)/icons
 		
 install-windows: \
 	$(BINRLS)/@SONAME@
@@ -387,17 +398,9 @@ install-data:
 		$(DESTDIR)$(datarootdir)/$(PRODUCT_NAME)/templates
 		
 	@$(INSTALL_PROGRAM) \
-		templates/grub2 \
+		templates/* \
 		$(DESTDIR)$(datarootdir)/$(PRODUCT_NAME)/templates
 
-	@$(INSTALL_DATA) \
-		templates/grub.cfg \
-		$(DESTDIR)$(datarootdir)/$(PRODUCT_NAME)/templates
-
-	@$(INSTALL_DATA) \
-		templates/isolinux.cfg \
-		$(DESTDIR)$(datarootdir)/$(PRODUCT_NAME)/templates
-		
 	@$(MKDIR) \
 		$(DESTDIR)/etc/$(PRODUCT_NAME).conf.d
 
