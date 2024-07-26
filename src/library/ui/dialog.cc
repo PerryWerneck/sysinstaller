@@ -31,11 +31,18 @@
  #include <stdexcept>
  #include <udjat/tools/configuration.h>
 
+ #ifdef HAVE_UDJAT_DBUS
+	#include <udjat/tools/dbus/connection.h>
+	#include <udjat/tools/dbus/message.h>
+ #endif // HAVE_UDJAT_DBUS
+
  using namespace std;
 
  namespace Udjat {
 
 	static Dialog::Controller *instance = nullptr;
+
+	Dialog::Option Dialog::defoptions = Dialog::None;
 
 	Dialog::Controller::Controller() {
 		if(instance) {
@@ -81,10 +88,14 @@
 			const char * attrname;
 		} options[] {
 			{ AllowQuitApplication,	"allow-quit" 	},
-			{ AllowReboot,			"allow-reboot"	}
+			{ AllowReboot,			"allow-reboot"	},
+			{ NonInteractiveQuit,	"force-quit" 	},
+			{ NonInteractiveReboot,	"force-reboot" 	},
 		};
 
 		args.name = Quark{name}.c_str();
+
+		this->options = (Dialog::Option) (this->options | defoptions);
 
 		for(auto parent = node;parent;parent = parent.parent()) {
 
@@ -139,16 +150,45 @@
 		return *instance;
 	}
 
-	bool Dialog::confirm() const noexcept {
+	void Dialog::quit() const noexcept {
+		Logger::String{"Unable to quit application: ",strerror(ENOTSUP)}.error("dialog");
+	}
 
+	void Dialog::reboot() const noexcept {
+#if defined(HAVE_UDJAT_DBUS)
+		try {
+			// Ask logind for reboot
+			DBus::SystemBus{}.call(
+				DBus::Message{
+					"org.freedesktop.login1",
+					"/org/freedesktop/login1",
+					"org.freedesktop.login1.Manager",
+					"Reboot",
+					true
+				},
+				[this](Udjat::DBus::Message &response){
+					if(response) {
+						Logger::String{"Reboot request sent to logind"}.info("dialog");
+						quit();
+					} else {
+						Logger::String{"Error '",response.error_message(),"' sending reboot request to logind"}.error("dialog");
+					}
+				}
+			);
+
+		} catch(const std::exception &e) {
+			Logger::String{"Error '",e.what(),"' sending reboot request to logind"}.warning("dialog");
+		}
+#else
+		Logger::String{"Unable to reboot system: ",strerror(ENOTSUP)}.error("dialog");
+#endif // HAVE_UDJAT_DBUS
+
+	}
+
+	bool Dialog::confirm() const noexcept {
 		if(*this) {
 			return select(1, _("_No"),_("_Yes"),nullptr) == 0;
 		}
-		/*
-		if(*this) {
-			return Controller::getInstance().ask_for_confirmation(args.icon_name,args.message,args.details);
-		}
-		*/
 		return true; // Dialog is invalid, always return 'true'
 	}
 

@@ -40,8 +40,16 @@
 			AllowCancel				= 0x0004,
 			AllowContinue			= 0x0008,
 
-			AllowQuitContinue		= (AllowQuitApplication|AllowContinue)
+			NonInteractiveReboot	= 0x0010,
+			NonInteractiveQuit		= 0x0020,
+
+			AllowQuitContinue		= (AllowQuitApplication|AllowContinue),
+			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
 		};
+
+	private:
+
+		static Option defoptions;
 
 	protected:
 
@@ -64,6 +72,7 @@
 
 		} args;
 
+
 	public:
 
 		constexpr Dialog(const char *name) {
@@ -74,6 +83,10 @@
 		Dialog(const char *name, Option options, const XML::Node &node);
 
 		Dialog(const char *name, const XML::Node &node) : Dialog{name,Dialog::AllowContinue,node} {
+		}
+
+		static inline void set_default(const Option option) {
+			defoptions = (Dialog::Option) (defoptions | option);
 		}
 
 		inline void message(const char *message) noexcept {
@@ -95,6 +108,12 @@
 		inline operator bool() const noexcept {
 			return (bool) args.message && *args.message;
 		}
+
+		/// @brief Ask for system reboot.
+		void reboot() const noexcept;
+
+		/// @brief Ask application to quit.
+		void quit() const noexcept;
 
 		class Popup;
 		class Progress;

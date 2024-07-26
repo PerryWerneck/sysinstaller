@@ -63,7 +63,7 @@
 			std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
 			std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
 			int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept override;
-			void present(const Dialog &dialog, const char *message, const char *details) override;
+			void present(const Dialog &dialog, const char *message, const char *details) noexcept override;
 
 		};
 

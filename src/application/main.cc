@@ -26,6 +26,7 @@
  #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
+ #include <udjat/ui/dialog.h>
  #include <udjat/tools/factory.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/kernelparameter.h>
@@ -57,7 +58,9 @@
 		void help(std::ostream &out) const noexcept override {
 			Udjat::Gtk::Application::help(out);
 			cout	<< "  --output=img\tWrite resulting image to file 'img' instead of usb" << endl
-					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl;
+					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl
+					<< "  --quit\tNon interactive exit" << endl
+					<< "  --reboot\tNon interactive reboot" << endl;
 		}
 
 		bool argument(const char *name, const char *value) override {
@@ -69,6 +72,22 @@
 
 			if(value && (strcasecmp(name,"kernel-parameter") == 0 || strcasecmp(name,"kparm") == 0)) {
 				Reinstall::KernelParameter::preset(value);
+				return true;
+			}
+
+			if(strcasecmp(name,"quit") == 0) {
+				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveQuit);
+				return true;
+			}
+
+			if(strcasecmp(name,"reboot") == 0) {
+				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveReboot);
+				return true;
+			}
+
+			if(strcasecmp(name,"non-interactive") == 0) {
+				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractive);
+				return true;
 			}
 
 			return Udjat::Gtk::Application::argument(name,value);

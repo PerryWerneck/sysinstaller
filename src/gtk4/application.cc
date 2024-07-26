@@ -33,13 +33,13 @@
  #include <udjat/tools/application.h>
  #include <udjat/tools/threadpool.h>
 
+ #include <gtkmm.h>
+ #include <vector>
+
  #ifdef HAVE_UDJAT_DBUS
 	#include <udjat/tools/dbus/connection.h>
 	#include <udjat/tools/dbus/message.h>
  #endif // HAVE_UDJAT_DBUS
-
- #include <gtkmm.h>
- #include <vector>
 
  using namespace std;
 
@@ -298,7 +298,41 @@
 
 	}
 
-	void Gtk::Application::present(const Dialog &settings, const char *message, const char *details) {
+	static void reboot(const Dialog &settings) {
+#if defined(HAVE_UDJAT_DBUS)
+		try {
+			// Ask gnome for reboot.
+			//
+			// http://askubuntu.com/questions/15428/reboot-without-sudoer-privileges
+			//
+			// Logout: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Logout uint32:1
+			//
+			// Reboot: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Reboot
+			//
+			// Shutdown: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Shutdown
+			//
+			DBus::SessionBus{}.call(
+				"org.gnome.SessionManager",
+				"/org/gnome/SessionManager",
+				"org.gnome.SessionManager",
+				"Shutdown",
+				[](Udjat::DBus::Message &response){
+					if(response) {
+						Logger::String{"Reboot request sent to gnome session manager"}.info("dialog");
+						Gio::Application::get_default()->quit();
+					} else {
+						Logger::String{"Error '",response.error_message(),"' sending reboot request to gnome"}.error("dialog");
+					}
+				}
+			);
+		} catch(const std::exception &e) {
+			Logger::String{"Error '",e.what(),"' sending reboot request to gnome"}.warning("dialog");
+		}
+#endif // HAVE_UDJAT_DBUS
+		settings.reboot();
+	}
+
+	void Gtk::Application::present(const Dialog &settings, const char *message, const char *details) noexcept {
 
 		struct {
 			std::string message;
@@ -318,6 +352,16 @@
 		}
 
 		Glib::signal_idle().connect([text,settings](){
+
+			if(settings.test(Dialog::NonInteractiveReboot)) {
+				reboot(settings);
+				return 0;
+			}
+
+			if(settings.test(Dialog::NonInteractiveQuit)) {
+				Gio::Application::get_default()->quit();
+				return 0;
+			}
 
 			auto dialog = ::Gtk::AlertDialog::create();
 			dialog->set_modal();
@@ -357,42 +401,14 @@
 				dialog->set_cancel_button(cancel_button);
 			}
 
-			dialog->choose(get_active_window(),[dialog,values](Glib::RefPtr<Gio::AsyncResult> result){
+			dialog->choose(get_active_window(),[dialog,&settings,values](Glib::RefPtr<Gio::AsyncResult> result){
 
 				auto rc = values[dialog->choose_finish(result)];
 				Logger::String{"User selected option '",buttons[rc].label,"'"}.info("Dialog");
 
 				switch(rc) {
 				case 0: // Dialog::AllowReboot
-#if defined(HAVE_UDJAT_DBUS)
-					try {
-						// Ask gnome for reboot.
-						//
-						// http://askubuntu.com/questions/15428/reboot-without-sudoer-privileges
-						//
-						// Logout: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Logout uint32:1
-						//
-						// Reboot: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Reboot
-						//
-						// Shutdown: dbus-send --session --type=method_call --print-reply --dest=org.gnome.SessionManager /org/gnome/SessionManager org.gnome.SessionManager.Shutdown
-						//
-						DBus::SessionBus{}.call(
-							"org.gnome.SessionManager",
-							"/org/gnome/SessionManager",
-							"org.gnome.SessionManager",
-							"Shutdown",
-							[](Udjat::DBus::Message &response){
-								if(response) {
-									Logger::String{"Reboot request sent to gnome session manager"}.info("dialog");
-								} else {
-									Logger::String{"Error '",response.error_message(),"' sending reboot request to gnome"}.error("dialog");
-								}
-							}
-						);
-					} catch(const std::exception &e) {
-						Logger::String{"Error '",e.what(),"' sending reboot request to gnome"}.error("dialog");
-					}
-#endif // HAVE_UDJAT_DBUS
+					reboot(settings);
 					break;
 
 				case 1: // Dialog::AllowQuitApplication
