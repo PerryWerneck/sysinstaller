@@ -2,6 +2,7 @@
 #---[ Library configuration ]------------------------------------------------------------
 
 PACKAGE_NAME=@PACKAGE_NAME@
+PRODUCT_NAME="reinstall"
 SONAME=grub2
 
 SOURCES= \
@@ -140,7 +141,14 @@ $(BINRLS)/$(SONAME)@LIBEXT@: \
 
 #---[ Install Targets ]------------------------------------------------------------------
 
-	
+install: \
+	$(BINRLS)/$(SONAME)@LIBEXT@
+
+	@$(MKDIR) $(DESTDIR)/$(libdir)/$(PRODUCT_NAME)-modules
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/$(SONAME)@LIBEXT@ \
+		$(DESTDIR)/$(libdir)/$(PRODUCT_NAME)-modules
+		
 #---[ Uninstall Targets ]----------------------------------------------------------------
 
 #---[ Debug Targets ]--------------------------------------------------------------------

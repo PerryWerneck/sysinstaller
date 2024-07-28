@@ -316,17 +316,16 @@ $(BINRLS)/$(SONAME): \
 		$^ \
 		$(LIBS)
 
+$(DESTDIR)/$(libdir)/$(PRODUCT_NAME)-modules/%.so:
+	@$(MAKE) -C modules/$(notdir $(basename $@)) DESTDIR=$(DESTDIR) install
+
 #---[ Install Targets ]------------------------------------------------------------------
 
 install: \
 	install-@OSNAME@ \
 	install-locale \
-	$(foreach MODULE, $(MODULES), install-module-$(MODULE)) \
+	$(foreach MODULE, $(MODULES), $(DESTDIR)/$(libdir)/$(PRODUCT_NAME)-modules/$(MODULE)@DLLEXT@) \
 	install-data
-
-instal-module-%: \
-	$(BINRLS)/$(SONAME)
-	$(MAKE) -C modules/$(notdir $(basename $@)) DESTDIR=$(DESTDIR) install
 
 install-linux: \
 	$(BINRLS)/$(PRODUCT_NAME)@EXEEXT@ \

@@ -83,6 +83,8 @@ dnl ---------------------------------------------------------------------------
 dnl Check for OS specifics
 dnl ---------------------------------------------------------------------------
 
+app_cv_modules="isobuilder isowriter"
+
 case "$host" in
 	*-mingw32|*-pc-msys)
 		EXEEXT=".exe"
@@ -126,6 +128,7 @@ dnl		AC_CONFIG_FILES(win/userinfo.nsi)
 		DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
 		AC_SUBST(SONAME,libreinstall.so.$app_vrs_major.$app_vrs_minor)
 		AC_CONFIG_FILES(sysconf/launcher.desktop)
+		app_cv_modules="grub2 $app_cv_modules"
 
 esac
 
@@ -134,6 +137,7 @@ AC_SUBST(EXEEXT)
 AC_SUBST(DLLEXT)
 AC_SUBST(OSNAME)
 AC_SUBST(DLL_LDFLAGS)
+AC_SUBST(MODULES,$app_cv_modules)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for other programs
