@@ -173,11 +173,18 @@
 			Udjat::Application::info() << "Building main window" << endl;
 			window = new MainWindow(app);
 			debug("Definitions='",definitions,"'");
+
+			{
+				Application::LibDir path{"modules"};
 #ifdef DEBUG
-			Udjat::Module::load(Udjat::File::Path{".bin/Debug/isowriter.so"});
-			Udjat::Module::load(Udjat::File::Path{".bin/Debug/isobuilder.so"});
-			Udjat::Module::load(Udjat::File::Path{".bin/Debug/grub2.so"});
+				path.assign(".bin/Debug/");
 #endif // DEBUG
+				Logger::String{"Loading application modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
+
+				Udjat::Module::load(path);
+
+			}
+
 			super::startup(app,definitions);
 		}
 
