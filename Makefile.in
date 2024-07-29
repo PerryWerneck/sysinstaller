@@ -83,9 +83,9 @@ POTDIR=.pot
 
 #---[ Rules ]----------------------------------------------------------------------------
 
-CXXFLAGS= \
+CPPFLAGS= \
 	-fPIC \
-	@CXXFLAGS@ \
+	@CPPFLAGS@ \
 	-Isrc/include \
 	-Isubmodules/libudjatui/src/include \
 	-DBUILD_DATE=`date +%Y%m%d` \
@@ -121,12 +121,12 @@ $(OBJDBG)/%.o: \
 	@$(MKDIR) $(@D)
 
 	@$(CXX) \
-		$(CXXFLAGS) \
+		$(CPPFLAGS) \
 		-DDEBUG=1 \
 		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 
 	@$(CXX) \
-		$(CXXFLAGS) \
+		$(CPPFLAGS) \
 		-Wall -Wextra -fstack-check \
 		-DDEBUG=1 \
 		-o $@ \
@@ -182,12 +182,12 @@ $(OBJRLS)/%.o: \
 	@$(MKDIR) $(@D)
 
 	@$(CXX) \
-		$(CXXFLAGS) \
+		$(CPPFLAGS) \
 		-DNDEBUG=1 \
 		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 
 	@$(CXX) \
-		$(CXXFLAGS) \
+		$(CPPFLAGS) \
 		-DNDEBUG=1 \
 		-o $@ \
 		-c $<
