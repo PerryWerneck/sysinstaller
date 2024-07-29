@@ -30,7 +30,10 @@
 
  #include <memory>
  #include <gtkmm.h>
- #include <gtkmm/alertdialog.h>
+
+ #ifdef USE_GTK_ALERT_DIALOG
+	#include <gtkmm/alertdialog.h>
+ #endif // USE_GTK_ALERT_DIALOG
 
  using namespace std;
 
@@ -40,6 +43,7 @@
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 
+#ifdef USE_GTK_ALERT_DIALOG
 		class Popup : public Udjat::Dialog::Popup, private ::Gtk::AlertDialog {
 		public:
 			Popup() {
@@ -113,8 +117,83 @@
 
 		};
 
-		return make_shared<Popup>();
+#else
+		class Popup : public Udjat::Dialog::Popup, private ::Gtk::MessageDialog {
+		public:
+			Popup() : ::Gtk::MessageDialog{""} {
+				gtk_window_set_transient_for(
+					GTK_WINDOW(gobj()),
+					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+				);
+				set_modal(true);
+			}
 
+			~Popup() {
+			}
+
+			Popup & message(const char *message) override {
+				string str{message};
+				Glib::signal_idle().connect([this,str](){
+					set_message(str,true);
+					return 0;
+				});
+				return *this;
+			}
+
+			Popup & detail(const char *text) override {
+				string str{text};
+				Glib::signal_idle().connect([this,str](){
+					set_secondary_text(str,true);
+					return 0;
+				});
+				return *this;
+			}
+
+			int run(const std::function<int(Udjat::Dialog::Popup &popup)> &task) noexcept override {
+
+				int rc = -1;
+				auto mainloop = Glib::MainLoop::create();
+
+				Udjat::ThreadPool::getInstance().push([this,&task,&rc,mainloop](){
+
+					int rc = -1;
+
+					try {
+
+						rc = task(*this);
+
+					} catch(const std::exception &e) {
+
+						// TODO: Show error popup
+
+						rc = -1;
+						Logger::String{e.what()}.error("gtk");
+
+					} catch(...) {
+
+						// TODO: Show error popup
+
+						rc = -1;
+						Logger::String{"Unexpected error running background task"}.error("gtk");
+
+					}
+
+					Glib::signal_idle().connect([this,&rc,mainloop](){
+						mainloop->quit();
+						return 0;
+					});
+
+				});
+
+				mainloop->run();
+				return rc;
+
+			}
+
+		};
+#endif // USE_GTK_ALERT_DIALOG
+
+		return make_shared<Popup>();
 	}
 
 
