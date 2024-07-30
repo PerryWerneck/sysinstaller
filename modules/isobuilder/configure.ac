@@ -157,6 +157,15 @@ AC_SUBST(REINSTALL_LIBS)
 AC_SUBST(REINSTALL_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
+dnl Check for fatfs
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [FATFS], [libfatfs-static], AC_DEFINE(HAVE_FATFS,,[ Do we have fatfs? ]), AC_MSG_NOTICE([fatfs not present.]))
+
+AC_SUBST(FATFS_LIBS)
+AC_SUBST(FATFS_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
 dnl Check for libburn
 dnl ---------------------------------------------------------------------------
 

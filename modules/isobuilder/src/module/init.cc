@@ -35,7 +35,13 @@
  #include <vector>
  #include <list>
 
- #include <iso9660.h>
+ #ifdef HAVE_ISOFS
+	#include <iso9660.h>
+ #endif // HAVE_ISOFS
+
+ #ifdef HAVE_FATFS
+	#include <fatfs.h>
+ #endif // HAVE_FATFS
 
  #include <unistd.h>
 
@@ -51,7 +57,7 @@
 	};
 
 	/// @brief Base class for actions.
-	class Action : public Reinstall::Action, protected Reinstall::Builder {
+	class UDJAT_PRIVATE Action : public Reinstall::Action, protected Reinstall::Builder {
 	protected:
 		virtual void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
 
@@ -91,8 +97,8 @@
 	};
 
 #ifdef HAVE_ISOFS
-	/// @brief ISO9660 action.
-	class Iso9660Action : public Action {
+	/// @brief ISO9660 builder.
+	class UDJAT_PRIVATE Iso9660Builder : public Action {
 	private:
 		iso9660::Image::Settings imgdef;
 
@@ -115,13 +121,41 @@
 
 	public:
 
-		Iso9660Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+		Iso9660Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
 			: Action{parent,node}, imgdef{node} {
 		}
 
 
 	};
 #endif // HAVE_ISOFS
+
+#ifdef HAVE_FATFS
+	/// @brief Fat builder.
+	class UDJAT_PRIVATE FatBuilder : public Action {
+	private:
+		FatFS::Image::Settings imgdef;
+
+	protected:
+		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+
+			// Build image ...
+			Logger::String{"Building Fat Image"}.info(name());
+
+			// ... and write it to device.
+			debug("Complete, writing...");
+
+			throw runtime_error("FAT image is incomplete");
+		}
+
+	public:
+
+		FatBuilder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+			: Action{parent,node}, imgdef{node} {
+		}
+
+
+	};
+#endif // HAVE_FATFS
 
 	class Module : public Udjat::Module, public Udjat::Factory {
 	public:
@@ -135,9 +169,15 @@
 
 #ifdef HAVE_ISOFS
 			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
-				return make_shared<Iso9660Action>(parent,node);
+				return make_shared<Iso9660Builder>(parent,node);
 			}
 #endif // HAVE_ISOFS
+
+#ifdef HAVE_FATFS
+			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
+				return make_shared<FatBuilder>(parent,node);
+			}
+#endif // HAVE_FATFS
 
 			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.warning(Factory::name());
 			return std::shared_ptr<Udjat::Abstract::Object>();

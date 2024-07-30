@@ -3,6 +3,9 @@
 /* Do we have libburn? */
 #undef HAVE_BURN
 
+/* Do we have fatfs? */
+#undef HAVE_FATFS
+
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 

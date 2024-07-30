@@ -35,14 +35,17 @@
  #include <reinstall/tools/builder.h>
  #include <reinstall/tools/writer.h>
 
- #define LIBISOFS_WITHOUT_LIBBURN
- #include <libisofs/libisofs.h>
+ #ifdef HAVE_ISOFS
+	#define LIBISOFS_WITHOUT_LIBBURN
+	#include <libisofs/libisofs.h>
+ #endif // HAVE_ISOFS
 
  #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
 
+ #ifdef HAVE_ISOFS
  namespace iso9660 {
 
 	class UDJAT_PRIVATE IsoBuilderSingleTon {
@@ -452,5 +455,6 @@
 	}
 
  }
+ #endif // HAVE_ISOFS
 
 

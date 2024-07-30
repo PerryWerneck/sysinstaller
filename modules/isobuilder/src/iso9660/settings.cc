@@ -22,9 +22,12 @@
   */
 
  #include <config.h>
- #include <iso9660.h>
  #include <udjat/tools/xml.h>
  #include <memory>
+
+ #ifdef HAVE_ISOFS
+
+ #include <iso9660.h>
 
  using namespace Udjat;
  using namespace std;
@@ -56,3 +59,5 @@
 	}
 
  }
+ #endif // HAVE_ISOFS
+
