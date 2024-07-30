@@ -161,12 +161,12 @@
 	private:
 
 		/// @brief Proxy for legacy config files.
-		class Legacy : public Udjat::Factory {
+		class Proxy : public Udjat::Factory {
 		private:
 			Udjat::Factory &target ;
 
 		public:
-			Legacy(Udjat::Factory *t) : Udjat::Factory("network-installer",moduleinfo), target{*t} {
+			Proxy(Udjat::Factory *t) : Udjat::Factory("network-installer",moduleinfo), target{*t} {
 			}
 
 			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
@@ -176,7 +176,7 @@
 
 		};
 
-		Legacy legacy;
+		Proxy legacy;
 
 	public:
 		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo), legacy{this} {
