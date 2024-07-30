@@ -158,8 +158,28 @@
 #endif // HAVE_FATFS
 
 	class Module : public Udjat::Module, public Udjat::Factory {
+	private:
+
+		/// @brief Proxy for legacy config files.
+		class Legacy : public Udjat::Factory {
+		private:
+			Udjat::Factory &target ;
+
+		public:
+			Legacy(Udjat::Factory *t) : Udjat::Factory("network-installer",moduleinfo), target{*t} {
+			}
+
+			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
+				Logger::String{"Parsing obsolete node '",node.name(),"'"}.warning(node.attribute("name").as_string("node"));
+				return target.ObjectFactory(parent,node);
+			}
+
+		};
+
+		Legacy legacy;
+
 	public:
-		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
+		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo), legacy{this} {
 		};
 
 		// Udjat::Factory
