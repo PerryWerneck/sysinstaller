@@ -63,6 +63,7 @@
 
 	contents.set_vexpand(false);
 	contents.set_valign(Gtk::Align::START);
+	contents.get_style_context()->add_class("item-box");
 
 	get_style_context()->add_class("group-box");
 
@@ -77,11 +78,19 @@
 		margin = 1;
 
 		Gtk::Image image;
-		image.set_icon_size(Gtk::IconSize::LARGE);
+		//image.set_icon_size(Gtk::IconSize::LARGE);
+		image.set_pixel_size(32);
 		image.get_style_context()->add_class("group-icon");
 		image.set_from_icon_name(icon.as_string("image-missing"));
 
 		attach(image,0,0,1,2);
+		contents.get_style_context()->add_class("item-box-no-icon");
+
+	} else {
+
+		contents.set_margin_start(35);
+		contents.get_style_context()->add_class("item-box-icon");
+
 	}
 
 	attach(title,margin,0);
@@ -170,8 +179,6 @@
 		Logger::String("Ignoring '",node.attribute("name").as_string(),"' by test result").trace(name());
 		return;
 	}
-
-	debug("-------------------> ",child->name());
 
 	auto item = make_shared<MainWindow::Item>(node,child);
 

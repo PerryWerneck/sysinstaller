@@ -27,6 +27,9 @@
 
  #ifdef HAVE_FATFS
 
+ #include <fatfs.h>
+ #include <fatfs/ff.h>
+
  using namespace Udjat;
  using namespace std;
 
@@ -35,13 +38,13 @@
 	// Reference: http://elm-chan.org/fsw/ff/doc/mkfs.html
 
 	Image::Settings::Settings(const Udjat::XML::Node &node)
-		: type{FM_ANY}, n_fats{XML::AttributeFactory{"n_fats"}.as_uint(1)}, align{XML::AttributeFactory{"align"}.as_uint(0)}, n_root{XML::AttributeFactory{"n_root"}.as_uint(0)}, au_size{XML::AttributeFactory{"au_size"}.as_uint(0)} {
+		: type{FM_ANY}, n_fats{(uint8_t) XML::AttributeFactory(node,"n_fats").as_uint(1)}, align{XML::AttributeFactory(node,"align").as_uint(0)}, n_root{XML::AttributeFactory(node,"n_root").as_uint(0)}, au_size{XML::AttributeFactory(node,"au_size").as_uint(0)} {
 	}
 
 	size_t Image::Settings::fat_length() const noexcept {
 
 		// Reference: http://elm-chan.org/fsw/ff/res/mkfs.xlsx
-		csize = 512; // TODO: Get the real value.
+		unsigned int csize = 512; // TODO: Get the real value.
 
 		if(type == FM_ANY) {
 			if(au_size == 4096) {

@@ -124,6 +124,9 @@
 			// Not text, get from URLs.
 
 			URL attr{XML::StringFactory(node,"url")};
+			if(attr.empty()) {
+				throw runtime_error("Required attribute 'url' is missing or invalid");
+			}
 
 			url.remote = XML::QuarkFactory(node,"remote");
 			url.local = XML::QuarkFactory(node,"local");

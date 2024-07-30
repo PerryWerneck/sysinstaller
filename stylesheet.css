@@ -81,6 +81,11 @@
   margin: 12px;
 }
 
+.item-box {
+  margin-top: 3px;
+	margin-bottom: 12px;
+}
+
 .group-box {
 	margin-left: 6px;
 }
