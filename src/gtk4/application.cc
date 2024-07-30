@@ -276,6 +276,7 @@
 
 		auto mainloop = Glib::MainLoop::create();
 
+#ifdef USE_GTK_ALERT_DIALOG
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 		auto dialog = ::Gtk::AlertDialog::create();
 		dialog->set_modal();
@@ -304,7 +305,32 @@
 			debug("Selected button=",rc);
 			mainloop->quit();
 		});
+#else
+		::Gtk::MessageDialog dialog{get_active_window(),settings.message(),true,::Gtk::MessageType::INFO,::Gtk::ButtonsType::NONE};
+		dialog.set_modal();
 
+		auto details = settings.details();
+		if(!details.empty()) {
+			dialog.set_secondary_text(details,true);
+		}
+
+		if(button) {
+
+			int id = 0;
+			while(button) {
+				dialog.add_button(button,id++);
+				button = va_arg(args, const char *);
+			}
+
+		}
+
+		dialog.signal_response().connect([this,mainloop,&rc](int response){
+			rc = response;
+			mainloop->quit();
+		});
+
+		dialog.present();
+#endif
 		mainloop->run();
 		return rc;
 
