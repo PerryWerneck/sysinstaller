@@ -40,6 +40,7 @@ MODULES=grub2 isobuilder isowriter
 
 LIBRARY_SOURCES = \
 	$(wildcard $(srcdir)/src/library/*.cc) \
+	$(wildcard $(srcdir)/src/library/repository/*.cc) \
 	$(wildcard $(srcdir)/src/library/ui/*.cc) \
 	$(wildcard $(srcdir)/src/library/os/@OSNAME@/*.cc) \
 	$(wildcard $(srcdir)/src/library/ui/@OSNAME@/*.cc)

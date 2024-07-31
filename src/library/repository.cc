@@ -44,73 +44,6 @@
 
  namespace Reinstall {
 
-	std::vector<Repository::Preset> Repository::presets;
-
-	Repository::Preset::Preset(const char *n, const char *v)
-		: name{Udjat::Quark{n}.c_str()}, value{Quark{v}.c_str()} {
-	}
-
-	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
-
-		static mutex guard;
-		lock_guard<mutex> lock(guard);
-
-		const char * name = XML::StringFactory(node,"repository","install");
-
-		static list<std::shared_ptr<Repository>> repositories;
-
-		for(auto repository : repositories) {
-			if(!strcasecmp(repository->name(),name)) {
-				return repository;
-			}
-		}
-
-		for(auto parent = node;parent;parent = parent.parent()) {
-
-			for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
-
-				if(strcasecmp(child.attribute("name").as_string(),name)) {
-					continue;
-				}
-
-				if(!strcasecmp(XML::StringFactory(child,"repository",""),name)) {
-					Logger::String{"Ignoring circular dependency"}.warning("repository");
-					continue;
-				}
-
-				auto repo = make_shared<Repository>(child);
-				repositories.push_back(repo);
-
-				for(const auto preset : presets) {
-
-					if(!strcasecmp(repo->name(),preset.name)) {
-						// Found preset.
-						repo->url.remote = preset.value;
-						Logger::String{"Using '",repo->url.remote,"' as remote URL"}.info(repo->name());
-						repo->slpclient->clear();
-					}
-
-				}
-
-				return repo;
-			}
-
-		}
-
-		throw runtime_error(Logger::Message{_("Required repository '{}' not found"),name});
-
-	}
-
-	Repository::KParm::KParm(const Udjat::XML::Node &node) {
-		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
-			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
-				name = String{child,"value"}.as_quark();
-				slp = XML::QuarkFactory(node,"slp-value");
-				enabled = child.attribute("allow-slp").as_bool(true);
-			}
-		}
-	}
-
 	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
 
 		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
@@ -215,6 +148,7 @@
 
 		return false;
 	}
+
 
 	const char * Repository::remote() const {
 

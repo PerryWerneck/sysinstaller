@@ -124,6 +124,7 @@
 		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/builder.cc" />
 		<Unit filename="src/library/datasource.cc" />
+		<Unit filename="src/library/efiboot.cc" />
 		<Unit filename="src/library/fatdisk.cc" />
 		<Unit filename="src/library/filesource.cc" />
 		<Unit filename="src/library/group.cc" />
@@ -134,6 +135,8 @@
 		<Unit filename="src/library/os/linux/writer.cc" />
 		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/repository.cc" />
+		<Unit filename="src/library/repository/factory.cc" />
+		<Unit filename="src/library/repository/kparm.cc" />
 		<Unit filename="src/library/script.cc" />
 		<Unit filename="src/library/slpclient.cc" />
 		<Unit filename="src/library/template.cc" />
