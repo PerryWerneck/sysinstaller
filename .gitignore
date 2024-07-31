@@ -61,4 +61,4 @@ vgcore.*
 *.desktop
 *.cscope_file_list
 notes.txt
-50-*.xml
+5[0-9]-*.xml
