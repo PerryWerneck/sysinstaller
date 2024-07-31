@@ -30,6 +30,7 @@
  #include <udjat/tools/factory.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/kernelparameter.h>
+ #include <reinstall/tools/repository.h>
 
  #include <private/mainwindow.h>
 
@@ -59,6 +60,7 @@
 			Udjat::Gtk::Application::help(out);
 			cout	<< "  --output=img\tWrite resulting image to file 'img' instead of usb" << endl
 					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl
+					<< "  --repo=r=u\tSet url for repository 'r' to 'u', disable slp" << endl
 					<< "  --quit\tNon interactive exit" << endl
 					<< "  --reboot\tNon interactive reboot" << endl;
 		}
@@ -72,6 +74,11 @@
 
 			if(value && (strcasecmp(name,"kernel-parameter") == 0 || strcasecmp(name,"kparm") == 0)) {
 				Reinstall::KernelParameter::preset(value);
+				return true;
+			}
+
+			if(value && (strcasecmp(name,"repository") == 0 || strcasecmp(name,"repo") == 0)) {
+				Reinstall::Repository::preset(value);
 				return true;
 			}
 

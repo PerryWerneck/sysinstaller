@@ -44,6 +44,12 @@
 
  namespace Reinstall {
 
+	std::vector<Repository::Preset> Repository::presets;
+
+	Repository::Preset::Preset(const char *n, const char *v)
+		: name{Udjat::Quark{n}.c_str()}, value{Quark{v}.c_str()} {
+	}
+
 	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
 
 		static mutex guard;
@@ -74,6 +80,17 @@
 
 				auto repo = make_shared<Repository>(child);
 				repositories.push_back(repo);
+
+				for(const auto preset : presets) {
+
+					if(!strcasecmp(repo->name(),preset.name)) {
+						// Found preset.
+						repo->url.remote = preset.value;
+						Logger::String{"Using '",repo->url.remote,"' as remote URL"}.info(repo->name());
+						repo->slpclient->clear();
+					}
+
+				}
 
 				return repo;
 			}
@@ -219,6 +236,20 @@
 		}
 
 		return remote();
+	}
+
+	void Repository::preset(const char *arg) {
+		const char *ptr = strchr(arg,'=');
+
+		if(!ptr) {
+			ptr = strchr(arg,':');
+		}
+
+		if(!ptr) {
+			throw runtime_error("Invalid repository parameter definition");
+		}
+
+		preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
 	}
 
  }

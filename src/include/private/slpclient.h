@@ -43,6 +43,8 @@
 	public:
 		SLPClient(const Udjat::XML::Node &node);
 
+		void clear() noexcept;
+
 		/// @brief Detect url.
 		/// @return URL from slp service, empty if not found.
 		const char *url();
@@ -50,7 +52,6 @@
 		inline const char * service() const noexcept {
 			return service_type;
 		}
-
 
 		static std::shared_ptr<SLPClient> Factory(const Udjat::XML::Node &node);
 

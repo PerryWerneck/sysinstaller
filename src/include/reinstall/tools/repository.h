@@ -39,6 +39,15 @@
 	class UDJAT_API Repository : public FileSource, public KernelParameter {
 	private:
 
+		/// @brief Command-line preset.
+		struct Preset {
+			const char *name;
+			const char *value;
+			Preset(const char *name, const char *value);
+		};
+
+		static std::vector<Preset> presets;
+
 		struct KParm {
 			bool enabled = true;
 			const char *name = nullptr;
@@ -63,6 +72,13 @@
 		inline bool is_kernel_parameter() const noexcept {
 			return kparm.name && *kparm.name;
 		}
+
+		/// @brief Override xml defined remote URL.
+		static inline void preset(const char *name, const char *value) {
+			presets.emplace_back(name,value);
+		}
+
+		static void preset(const char *arg);
 
 		// KernelParameter
 		std::string value(const Udjat::Abstract::Object &object) const override;

@@ -61,6 +61,17 @@
 		return std::make_shared<SLPClient>(node);
 	}
 
+	void SLPClient::clear() noexcept {
+		if(service_type && *service_type) {
+			Logger::String{"Search for '",service_type,"' was disabled"}.info("slpclient");
+		}
+		service_type = "";
+		scope_list = "";
+		filter = "";
+		query.url.clear();
+		query.done = true;
+	}
+
  #ifdef HAVE_LIBSLP
 
 	struct SRV_URL_CB_INFO  {

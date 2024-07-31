@@ -62,12 +62,6 @@
 		: name{Udjat::Quark{n}.c_str()}, value{Quark{v}.c_str()} {
 	}
 
-	/*
-	KernelParameter::KernelParameter(const Udjat::XML::Node &node, const char *attrname)
-		: KernelParameter{XML::QuarkFactory(node,"name")}, refvalue{String{node,attrname}.expand(node).expand().as_quark()} {
-	}
-	*/
-
 	KernelParameter::~KernelParameter() {
 	}
 
