@@ -27,6 +27,7 @@
 .main-title {
 	font-size: 140%;
 	font-weight: bolder;
+	margin-bottom: 3px;
 }
 
 .main-window {
@@ -97,6 +98,10 @@
 .group-title-box {
 	margin-top: 12px;
 	margin-bottom: 0px;
+}
+
+.button-box {
+  margin-top: 6px;
 }
 
 .group-title {

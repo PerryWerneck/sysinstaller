@@ -82,6 +82,7 @@
 
 	layout.swindow.set_hexpand(true);
 	layout.swindow.set_vexpand(true);
+	layout.swindow.get_style_context()->add_class("content-box");
 
 	layout.swindow.set_child(layout.contents);
 
@@ -89,7 +90,7 @@
 
 	layout.box.append(layout.sidebar);
 
-	button.box.get_style_context()->add_class("buttons");
+	button.box.get_style_context()->add_class("button-box");
 	button.box.set_homogeneous();
 	button.box.append(button.cancel);
 	button.box.append(button.apply);
