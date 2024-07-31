@@ -166,6 +166,15 @@ AC_SUBST(FATFS_LIBS)
 AC_SUBST(FATFS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
+dnl Check for libguestfs
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [GUESTFS], [libguestfs], AC_DEFINE(HAVE_GUESTFS,,[ Do we have libguestfs? ]), AC_MSG_NOTICE([libguestfs not present.]))
+
+AC_SUBST(GUESTFS_LIBS)
+AC_SUBST(GUESTFS_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
 dnl Check for libburn
 dnl ---------------------------------------------------------------------------
 

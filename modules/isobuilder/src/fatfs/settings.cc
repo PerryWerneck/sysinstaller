@@ -37,8 +37,58 @@
 
 	// Reference: http://elm-chan.org/fsw/ff/doc/mkfs.html
 
+	static uint64_t image_length(const Udjat::XML::Node &node) {
+
+		const char *ptr = XML::StringFactory(node,"size");
+		if(!(ptr && *ptr)) {
+			ptr = XML::StringFactory(node,"length");
+		}
+
+		if(!(ptr && *ptr)) {
+			return 0LL;
+		}
+
+		uint64_t imagesize = 0LL;
+
+		while(*ptr && isdigit(*ptr)) {
+			imagesize *= 10;
+			imagesize += (*ptr - '0');
+			ptr++;
+		}
+
+		while(*ptr && isspace(*ptr)) {
+			ptr++;
+		}
+
+		if(*ptr) {
+			static const char *units[] = { "B", "KB", "MB", "GB" };
+
+			bool found = false;
+			for(const char *unit : units) {
+				if(!strcasecmp(ptr,unit)) {
+					found = true;
+					break;
+				}
+				imagesize *= 1024;
+			}
+
+			if(!found) {
+				throw runtime_error(Logger::String{"Unexpected size unit: '",ptr,"'"});
+			}
+
+		}
+
+		return imagesize;
+
+	}
+
 	Image::Settings::Settings(const Udjat::XML::Node &node)
-		: type{FM_ANY}, n_fats{(uint8_t) XML::AttributeFactory(node,"n_fats").as_uint(1)}, align{XML::AttributeFactory(node,"align").as_uint(0)}, n_root{XML::AttributeFactory(node,"n_root").as_uint(0)}, au_size{XML::AttributeFactory(node,"au_size").as_uint(0)} {
+		: type{FM_ANY}, n_fats{(uint8_t)
+			XML::AttributeFactory(node,"n_fats").as_uint(1)},
+			align{XML::AttributeFactory(node,"align").as_uint(0)},
+			n_root{XML::AttributeFactory(node,"n_root").as_uint(0)},
+			au_size{XML::AttributeFactory(node,"au_size").as_uint(0)},
+			imglen{image_length(node)} {
 	}
 
 	size_t Image::Settings::fat_length() const noexcept {

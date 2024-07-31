@@ -6,6 +6,9 @@
 /* Do we have fatfs? */
 #undef HAVE_FATFS
 
+/* Do we have libguestfs? */
+#undef HAVE_GUESTFS
+
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 

@@ -97,7 +97,7 @@
 	attach(sub_title,margin,1);
 	attach(contents,margin,2);
 
-	set_visible();
+	set_visible(false);
 
  }
 
@@ -183,7 +183,10 @@
 	auto item = make_shared<MainWindow::Item>(node,child);
 
 	MainWindow::getInstance().itens.push_back(item);
+	contents.set_visible(true);
 	contents.append(*item);
+
+	set_visible();
 	item->set_visible();
 
 	Reinstall::Group::push_back(node,child);

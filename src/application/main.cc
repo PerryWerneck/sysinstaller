@@ -188,7 +188,7 @@
 #endif // DEBUG
 				Logger::String{"Loading application modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
 
-				Udjat::Module::load(path);
+				Udjat::Module::load(path,false);
 
 			}
 

@@ -63,7 +63,7 @@
 			static const char * application_id() noexcept;
 
 			/// @brief Append data source to image, download file if needed.
-			void append(std::shared_ptr<DataSource> source);
+			virtual void append(std::shared_ptr<DataSource> source);
 
 			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 

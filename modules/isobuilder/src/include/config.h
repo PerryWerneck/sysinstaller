@@ -7,6 +7,9 @@
 /* Do we have fatfs? */
 #define HAVE_FATFS /**/
 
+/* Do we have libguestfs? */
+#define HAVE_GUESTFS /**/
+
 /* Define if you have the iconv() function and it works. */
 #define HAVE_ICONV 1
 

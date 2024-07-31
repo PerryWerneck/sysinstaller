@@ -140,6 +140,7 @@
 
 			// Build image ...
 			Logger::String{"Building Fat Image"}.info(name());
+			FatFS::Image image{output,*this,imgdef};
 
 			// ... and write it to device.
 			debug("Complete, writing...");
@@ -185,21 +186,30 @@
 		// Udjat::Factory
 		std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
 
-			auto attr = XML::AttributeFactory(node,"filesystem");
+			try {
+
+				auto attr = XML::AttributeFactory(node,"filesystem");
 
 #ifdef HAVE_ISOFS
-			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
-				return make_shared<Iso9660Builder>(parent,node);
-			}
+				if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
+					return make_shared<Iso9660Builder>(parent,node);
+				}
 #endif // HAVE_ISOFS
 
 #ifdef HAVE_FATFS
-			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
-				return make_shared<FatBuilder>(parent,node);
-			}
+				if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
+					return make_shared<FatBuilder>(parent,node);
+				}
 #endif // HAVE_FATFS
 
-			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.warning(Factory::name());
+				Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(Factory::name());
+
+			} catch(const std::exception &e) {
+
+				Logger::String{e.what()}.error(Factory::name());
+
+			}
+
 			return std::shared_ptr<Udjat::Abstract::Object>();
 		}
 

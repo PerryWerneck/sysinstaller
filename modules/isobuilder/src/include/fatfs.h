@@ -39,6 +39,7 @@
 			uint32_t align = 0;		///< @brief Specifies alignment of the volume data area (file allocation pool, usually erase block boundary of flash memory media) in unit of sector.
 			uint32_t n_root = 0;	///< @brief Specifies number of root directory entries on the FAT volume.
 			uint32_t au_size = 0;	///< @brief Specifies size of the cluster (allocation unit) in unit of byte.
+			uint64_t imglen = 0LL;	///< @brief The image length.
 
 			Settings(const Udjat::XML::Node &node);
 
@@ -56,12 +57,14 @@
 
 		void write(Udjat::Dialog::Progress &progress) override;
 
-		inline void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+		void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
 			Reinstall::Abstract::Image::append(progress,sources);
 		}
 
 	protected:
+
 		// Abstract::Image
+		void append(std::shared_ptr<Reinstall::DataSource> source) override;
 		void append(const char *from, const char *to) override;
 
 	private:

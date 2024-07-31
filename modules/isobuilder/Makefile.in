@@ -57,16 +57,14 @@ CFLAGS= \
 	@CPPFLAGS@ \
 	-Isrc/include \
 	-DBUILD_DATE=`date +%Y%m%d` \
-	@UDJAT_CFLAGS@ \
-	@REINSTALL_CFLAGS@ @ISOFS_CFLAGS@ @FATFS_CFLAGS@
+	@UDJAT_CFLAGS@ @REINSTALL_CFLAGS@ @ISOFS_CFLAGS@ @FATFS_CFLAGS@ @GUESTFS_CFLAGS@
 
 LDFLAGS=\
 	@LDFLAGS@
 
 LIBS= \
 	@LIBS@ \
-	@UDJAT_LIBS@ \
-	@REINSTALL_LIBS@ @ISOFS_LIBS@ @FATFS_LIBS@
+	@UDJAT_LIBS@ @REINSTALL_LIBS@ @ISOFS_LIBS@ @GUESTFS_LIBS@
 
 #---[ Debug Rules ]----------------------------------------------------------------------
 

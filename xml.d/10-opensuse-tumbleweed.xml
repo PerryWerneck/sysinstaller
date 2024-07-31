@@ -104,7 +104,7 @@
 
 		</local-installer>
  		
- 		<iso-builder name='tw-mini' default='no'>
+ 		<iso-builder name='tw-mini' default='no' filesystem='fat32' size='2GB'>
 
 			<attribute name='slp-allow-local' value='yes' />
 
