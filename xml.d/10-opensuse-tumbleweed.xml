@@ -71,7 +71,7 @@
  				This allow reinstall of the workstation without use of any external midia.
  		
  		-->
- 		<local-installer name='tw-local' default='yes' visible='only-on-linux'>
+ 		<local-installer name='tw-local' default='yes'>
 
 			<attribute name='slp-allow-local' value='no' />
 
@@ -104,7 +104,7 @@
 
 		</local-installer>
  		
- 		<iso-builder name='tw-mini' default='no' filesystem='fat32' size='2GB'>
+ 		<iso-builder name='tw-mini' default='no' filesystem='iso9660' size='2GB'>
 
 			<attribute name='slp-allow-local' value='yes' />
 

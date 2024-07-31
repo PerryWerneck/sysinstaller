@@ -65,6 +65,7 @@
 		<Unit filename="modules/isobuilder/intl/vasnwprintf.h" />
 		<Unit filename="modules/isobuilder/intl/wprintf-parse.h" />
 		<Unit filename="modules/isobuilder/intl/xsize.h" />
+		<Unit filename="modules/isobuilder/src/fatfs/image.cc" />
 		<Unit filename="modules/isobuilder/src/fatfs/settings.cc" />
 		<Unit filename="modules/isobuilder/src/include/config.h" />
 		<Unit filename="modules/isobuilder/src/include/fatfs.h" />
