@@ -27,7 +27,7 @@
  #include <udjat/ui/progress.h>
 
  #include <reinstall/image.h>
- #include <reinstall/disk/fat.h>
+ #include <reinstall/disk/abstract.h>
 
  namespace FatFS {
 
@@ -71,6 +71,13 @@
 
 	private:
 		const Settings &settings;
+
+		/// @brief The FAT disk image on temporary file.
+		class Disk;
+
+		std::shared_ptr<Disk> disk;
+
+
 
 	};
 

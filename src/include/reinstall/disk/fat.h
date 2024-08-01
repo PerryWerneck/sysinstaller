@@ -34,6 +34,7 @@
 
 		class UDJAT_API Fat32 : Abstract::Disk {
 		private:
+			int fd;
 			FATFS fs;
 
 		public:

@@ -31,11 +31,12 @@
 	namespace Abstract {
 
 		class UDJAT_API Disk {
-		protected:
-			int fd = -1;
-
 		public:
+
+			/// @brief Open device/file as disk image.
 			Disk(int fd, unsigned long long szimage = 0);
+
+			/// @brief Destroy disk, dont close the handle.
 			virtual ~Disk();
 
 

@@ -43,31 +43,19 @@
 
  namespace Reinstall {
 
-	Abstract::Disk::Disk(int f, unsigned long long szimage)
-		: fd{f} {
+	Abstract::Disk::Disk(int fd, unsigned long long szimage) {
 
-		try {
+		if(fd < 0) {
+			throw system_error(errno, system_category(), _("Cant open disk device/file"));
+		}
 
-			if(fd < 0) {
-				throw system_error(errno, system_category(), _("Cant open disk device/file"));
-			}
-
-			if(szimage && fallocate(fd,0,0,szimage)) {
-				throw system_error(errno,system_category(), _("Cant allocate disk image"));
-			}
-
-
-		} catch(...) {
-
-			::close(fd);
-			throw;
-
+		if(szimage && fallocate(fd,0,0,szimage)) {
+			throw system_error(errno,system_category(), _("Cant allocate disk image"));
 		}
 
 	}
 
 	Abstract::Disk::~Disk() {
-		::close(fd);
 	}
 
 

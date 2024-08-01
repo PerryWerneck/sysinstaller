@@ -89,6 +89,10 @@
 			n_root{XML::AttributeFactory(node,"n_root").as_uint(0)},
 			au_size{XML::AttributeFactory(node,"au_size").as_uint(0)},
 			imglen{image_length(node)} {
+
+		if(!imglen) {
+			throw runtime_error("Required attribute 'size' is missing or invalid");
+		}
 	}
 
 	size_t Image::Settings::fat_length() const noexcept {
