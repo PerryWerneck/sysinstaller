@@ -71,7 +71,7 @@
  				This allow reinstall of the workstation without use of any external midia.
  		
  		-->
- 		<local-installer name='tw-local' default='yes'>
+ 		<local-installer name='tw-local' default='yes' visible='only-on-linux'>
 
 			<attribute name='slp-allow-local' value='no' />
 

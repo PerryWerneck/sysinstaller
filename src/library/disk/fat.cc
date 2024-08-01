@@ -43,47 +43,29 @@
 
  namespace Reinstall {
 
-	Disk::Fat32::Fat32(int f, unsigned long long szimage)
-		: fd{f} {
+	Disk::Fat32::Fat32(int fd, unsigned long long szimage) : Abstract::Disk{fd,szimage} {
 
-		try {
+		if(disk_ioctl(0, CTRL_FORMAT, &fd) != RES_OK) {
+			throw runtime_error(_("Cant bind fatfs to disk image"));
+		}
 
-			if(fd < 0) {
-				throw system_error(errno, system_category(), _("Cant open FAT32 device/file"));
+		if(szimage) {
+
+			// Format
+			static const MKFS_PARM parm = {FM_FAT32, 0, 0, 0, 0};
+
+			BYTE work[FF_MAX_SS];
+			memset(work,0,sizeof(work));
+			auto rc = f_mkfs("0:", &parm, work, sizeof work);
+
+			if(rc != FR_OK) {
+				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mkfs"), rc});
 			}
 
-			if(szimage && fallocate(fd,0,0,szimage)) {
-				throw system_error(errno,system_category(), _("Cant allocate FAT32 image"));
-			}
-
-			if(disk_ioctl(0, CTRL_FORMAT, &fd) != RES_OK) {
-				throw runtime_error(_("Cant bind fatfs to disk image"));
-			}
-
-			if(szimage) {
-
-				// Format
-				static const MKFS_PARM parm = {FM_FAT32, 0, 0, 0, 0};
-
-				BYTE work[FF_MAX_SS];
-				memset(work,0,sizeof(work));
-				auto rc = f_mkfs("0:", &parm, work, sizeof work);
-
-				if(rc != FR_OK) {
-					throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mkfs"), rc});
-				}
-
-			}
-
-		} catch(...) {
-
-			::close(fd);
-			throw;
 		}
 
 		auto rc = f_mount(&fs, "0:", 1);
 		if(rc != FR_OK) {
-			::close(fd);
 			throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mount"), rc});
 		}
 
@@ -99,7 +81,6 @@
 		if(rc != FR_OK) {
 			Logger::Message{ _("Unexpected error '{}' on f_mount"), rc}.error("fatfs");
 		}
-		::close(fd);
 	}
 
 	bool Disk::Fat32::for_each(const char *dirname, const std::function<bool(const char *filename)> &task) const {

@@ -105,6 +105,7 @@
 		<Unit filename="src/include/private/mainwindow.h" />
 		<Unit filename="src/include/private/slpclient.h" />
 		<Unit filename="src/include/reinstall/action.h" />
+		<Unit filename="src/include/reinstall/disk/abstract.h" />
 		<Unit filename="src/include/reinstall/disk/fat.h" />
 		<Unit filename="src/include/reinstall/group.h" />
 		<Unit filename="src/include/reinstall/image.h" />
@@ -124,6 +125,8 @@
 		<Unit filename="src/include/widgets/sidebar.h" />
 		<Unit filename="src/library/action.cc" />
 		<Unit filename="src/library/builder.cc" />
+		<Unit filename="src/library/disk/abstract.cc" />
+		<Unit filename="src/library/disk/fat.cc" />
 		<Unit filename="src/library/efiboot.cc" />
 		<Unit filename="src/library/fatdisk.cc" />
 		<Unit filename="src/library/group.cc" />

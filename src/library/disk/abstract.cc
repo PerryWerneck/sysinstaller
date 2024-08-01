@@ -18,42 +18,57 @@
  */
 
  /**
-  * @brief Declare fat 32 disk image.
+  * @brief Implements fat disk.
   */
 
- #pragma once
+ #include <config.h>
  #include <udjat/defs.h>
- #include <fatfs/ff.h>
- #include <functional>
+ #include <udjat/tools/intl.h>
+ #include <reinstall/disk/fat.h>
+ #include <udjat/tools/logger.h>
+ #include <system_error>
+ #include <sys/stat.h>
 
- #include <reinstall/disk/abstract.h>
+ #include <fcntl.h>
+
+ #include <fatfs/ff.h>
+ #include <fatfs/diskio.h>
+
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
+
+ using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
-	namespace Disk {
+	Abstract::Disk::Disk(int f, unsigned long long szimage)
+		: fd{f} {
 
-		class UDJAT_API Fat32 : Abstract::Disk {
-		private:
-			FATFS fs;
+		try {
 
-		public:
+			if(fd < 0) {
+				throw system_error(errno, system_category(), _("Cant open disk device/file"));
+			}
 
-			Fat32(int fd, unsigned long long szimage = 0);
+			if(szimage && fallocate(fd,0,0,szimage)) {
+				throw system_error(errno,system_category(), _("Cant allocate disk image"));
+			}
 
-			/// @brief Open FAT disk image, create it if szimage != 0.
-			Fat32(const char *filename, unsigned long long szimage = 0);
-			~Fat32();
 
-			bool for_each(const char *dirname, const std::function<bool(const char *filename)> &task) const;
+		} catch(...) {
 
-			/// @brief Replace file on fat disk.
-			/// @param from	The path for file in local filesystem.
-			/// @param to The path for file in fat disk.
-			void replace(const char *from, const char *to);
+			::close(fd);
+			throw;
 
-		};
-
+		}
 
 	}
+
+	Abstract::Disk::~Disk() {
+		::close(fd);
+	}
+
 
  }

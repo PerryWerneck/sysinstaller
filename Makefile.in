@@ -42,6 +42,7 @@ LIBRARY_SOURCES = \
 	$(wildcard $(srcdir)/src/library/*.cc) \
 	$(wildcard $(srcdir)/src/library/repository/*.cc) \
 	$(wildcard $(srcdir)/src/library/source/*.cc) \
+	$(wildcard $(srcdir)/src/library/disk/*.cc) \
 	$(wildcard $(srcdir)/src/library/ui/*.cc) \
 	$(wildcard $(srcdir)/src/library/os/@OSNAME@/*.cc) \
 	$(wildcard $(srcdir)/src/library/ui/@OSNAME@/*.cc)

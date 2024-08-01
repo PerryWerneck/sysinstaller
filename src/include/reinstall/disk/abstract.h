@@ -26,30 +26,18 @@
  #include <fatfs/ff.h>
  #include <functional>
 
- #include <reinstall/disk/abstract.h>
-
  namespace Reinstall {
 
-	namespace Disk {
+	namespace Abstract {
 
-		class UDJAT_API Fat32 : Abstract::Disk {
-		private:
-			FATFS fs;
+		class UDJAT_API Disk {
+		protected:
+			int fd = -1;
 
 		public:
+			Disk(int fd, unsigned long long szimage = 0);
+			virtual ~Disk();
 
-			Fat32(int fd, unsigned long long szimage = 0);
-
-			/// @brief Open FAT disk image, create it if szimage != 0.
-			Fat32(const char *filename, unsigned long long szimage = 0);
-			~Fat32();
-
-			bool for_each(const char *dirname, const std::function<bool(const char *filename)> &task) const;
-
-			/// @brief Replace file on fat disk.
-			/// @param from	The path for file in local filesystem.
-			/// @param to The path for file in fat disk.
-			void replace(const char *from, const char *to);
 
 		};
 

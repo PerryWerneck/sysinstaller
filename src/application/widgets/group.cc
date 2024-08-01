@@ -104,73 +104,104 @@
  #if ! UDJAT_CHECK_VERSION(1,2,1)
  bool Udjat::XML::test(const XML::Node &node, const char *attrname, bool defvalue) {
 
-	XML::Attribute attr{AttributeFactory(node,attrname)};
-	if(!attr) {
-		return defvalue;
-	}
+		bool allow = true;
 
-	const char *str = attr.as_string("");
-	if(str && *str && strstr(str,"://")) {
-		// It's an URL, test it.
-		return URL{str}.test();
-	}
+		XML::Attribute attr{AttributeFactory(node,attrname)};
+		if(!attr) {
+			return defvalue;
+		}
+
+		const char *str = attr.as_string("");
+		if(!str && *str) {
+			Logger::String{"Invalid XML filter on attribute '",attrname,"', ignoring"}.warning(PACKAGE_NAME);
+			return defvalue;
+		}
+
+		if(*str == '!') {
+			str++;
+			allow = !allow;
+		} else if(!strncasecmp(str,"not ",4)) {
+			str += 4;
+			allow = !allow;
+			while(*str && isspace(*str)) {
+				str++;
+			}
+		}
+
+		if(strstr(str,"://")) {
+			// It's an URL, test it.
+			return (URL{str}.test() == 200) ? allow : !allow;
+		}
+
+		if(!(strcasecmp(str,"only-on-virtual-machine") && strcasecmp(str,"virtual-machine"))) {
+#ifdef HAVE_VMDETECT
+			return VirtualMachine{Logger::enabled(Logger::Debug)} ? allow : !allow;
+#else
+			Logger::String{"Library built without virtual machine support, ignoring '",str,"' attribute"}.warning(PACKAGE_NAME);
+			return defvalue;
+#endif
+		}
 
 #ifdef _WIN32
-	if(!strcasecmp(str,"only-on-windows")) {
-		return true;
-	}
-	if(!strcasecmp(str,"only-on-linux")) {
-		return false;
-	}
+		if(!(strcasecmp(str,"only-on-windows") && strcasecmp(str,"windows"))) {
+			debug("Got windows filter (",(allow ? "allow" : "deny"));
+			return allow;
+		}
+		if(!(strcasecmp(str,"only-on-linux") && strcasecmp(str,"linux"))){
+			debug("Got linux filter (",(allow ? "allow" : "deny"));
+			return !allow;
+		}
 #else
-	if(!strcasecmp(str,"only-on-windows")) {
-		return false;
-	}
-	if(!strcasecmp(str,"only-on-linux")) {
-		return true;
-	}
-
-	if(!strncasecmp(str,"groups:",6)) {
-
-		auto allowed=String{ (const char *) (str+6) }.split(",");
-
-		struct passwd *pw = getpwuid(getuid());
-		if(!pw) {
-			Logger::String{"Cant get current user groups"}.warning(PACKAGE_NAME);
-			return false;
+		if(!(strcasecmp(str,"only-on-windows") && strcasecmp(str,"windows"))) {
+			debug("Got windows filter (",(allow ? "allow" : "deny"));
+			return !allow;
+		}
+		if(!(strcasecmp(str,"only-on-linux") && strcasecmp(str,"linux"))){
+			debug("Got linux filter (",(allow ? "allow" : "deny"));
+			return allow;
 		}
 
-		int ngroups = 0;
-		getgrouplist(pw->pw_name, pw->pw_gid, NULL, &ngroups);
-		if(!ngroups) {
-			Logger::String{"User group list is empty"}.warning(PACKAGE_NAME);
-			return false;
-		}
+		if(!strncasecmp(str,"groups:",6)) {
 
-		gid_t groups[ngroups];
-		getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
+			auto names=String{str+6}.split(",");
 
-		for (int i = 0; i < ngroups; i++){
-			struct group* gr = getgrgid(groups[i]);
-			if(gr == NULL){
-				Logger::String{"getgrgid error: ",strerror(errno)}.warning(PACKAGE_NAME);
-				continue;
+			struct passwd *pw = getpwuid(getuid());
+			if(!pw) {
+				Logger::String{"Cant get current user groups"}.warning(PACKAGE_NAME);
+				return false;
 			}
-			for(const auto &name : allowed) {
-				if(!strcasecmp(name.c_str(),gr->gr_name)) {
-					return true;
+
+			int ngroups = 0;
+			getgrouplist(pw->pw_name, pw->pw_gid, NULL, &ngroups);
+			if(!ngroups) {
+				Logger::String{"User group list is empty"}.warning(PACKAGE_NAME);
+				return false;
+			}
+
+			gid_t groups[ngroups];
+			getgrouplist(pw->pw_name, pw->pw_gid, groups, &ngroups);
+
+			for (int i = 0; i < ngroups; i++){
+				struct group* gr = getgrgid(groups[i]);
+				if(gr == NULL){
+					Logger::String{"getgrgid error: ",strerror(errno)}.warning(PACKAGE_NAME);
+					continue;
+				}
+				for(const auto &name : names) {
+					if(!strcasecmp(name.c_str(),gr->gr_name)) {
+						return allow;
+					}
 				}
 			}
-		}
 
-		return false;
-	}
+			return !allow;
+		}
 
 #endif // _WIN32
 
-	return attr.as_bool(defvalue);
+		return attr.as_bool(defvalue);
  }
-#endif
+#endif // UDJAT(1,2,1)
 
  void MainWindow::Group::push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) {
 
