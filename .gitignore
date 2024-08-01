@@ -62,3 +62,5 @@ vgcore.*
 *.cscope_file_list
 notes.txt
 5[0-9]-*.xml
+.vale.ini
+styles
