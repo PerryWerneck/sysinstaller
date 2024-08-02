@@ -73,7 +73,9 @@
 		virtual void save(Udjat::Dialog::Progress &progress, const char *path);
 
 		/// @brief Save source, expand URL properties.
+		/// @return Path to local file.
 		virtual std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress);
+		virtual void save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		/// @brief Save source.
 		virtual std::string save(Udjat::Dialog::Progress &progress);
@@ -116,8 +118,8 @@
 		const char * remote() const override;
 		const char * path() const override;
 		std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
+
 		void save(Udjat::Dialog::Progress &progress, const char *path) override;
-		std::string save(Udjat::Dialog::Progress &progress) override;
 
 	};
 

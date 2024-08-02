@@ -90,12 +90,16 @@
 		throw logic_error("Abstract datasource is unable to save to file");
 	}
 
-	std::string DataSource::save(const Udjat::Abstract::Object &, Udjat::Dialog::Progress &progress) {
-		return save(progress);
+	std::string DataSource::save(const Udjat::Abstract::Object &, Udjat::Dialog::Progress &) {
+		throw logic_error("Abstract datasource is unable to save");
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &) {
-		throw logic_error("Abstract datasource is unable to save");
+	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
+		return save(Udjat::Abstract::Object{},progress);
+	}
+
+	void DataSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+		Udjat::File::Handler{save(object,progress).c_str()}.write(writer);
 	}
 
 	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {

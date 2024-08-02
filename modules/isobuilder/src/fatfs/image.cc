@@ -28,6 +28,7 @@
  #include <memory>
  #include <fcntl.h>
  #include <sys/stat.h>
+ #include <reinstall/tools/datasource.h>
 
 // #ifdef HAVE_UNISTD_U
 	#include <unistd.h>
@@ -95,6 +96,9 @@
 	}
 
 	void Image::append(std::shared_ptr<Reinstall::DataSource> source) {
+
+		#error aqui
+
 	}
 
 	void Image::append(const char *from, const char *to) {

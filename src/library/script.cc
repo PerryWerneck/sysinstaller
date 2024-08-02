@@ -222,7 +222,7 @@
 				if(url.local && *url.local) {
 
 					// Save to local path.
-					filename = save(progress);
+					filename = DataSource::save(progress);
 
 				} else if(tempfilename.empty()) {
 

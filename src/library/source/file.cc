@@ -174,10 +174,6 @@
 
 	}
 
-	std::string FileSource::save(Udjat::Dialog::Progress &progress) {
-		return save(Udjat::Abstract::Object{},progress);
-	}
-
  }
 
 
