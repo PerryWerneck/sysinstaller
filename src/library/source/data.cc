@@ -99,7 +99,22 @@
 	}
 
 	void DataSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
-		Udjat::File::Handler{save(object,progress).c_str()}.write(writer);
+
+		const char *local_filename = this->local();
+
+		if(local_filename && *local_filename) {
+
+			// Has local (cache) file, try to use it.
+			Udjat::File::Handler{save(object,progress).c_str()}.write(writer);
+			return;
+		}
+
+		// No cache, download it directly.
+		auto url = url_remote();
+		url.expand(object);
+
+		url.get(writer);
+
 	}
 
 	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {
