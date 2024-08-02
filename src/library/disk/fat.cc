@@ -132,7 +132,6 @@
 	void Disk::Fat32::replace(const char *from, const char *to) {
 
 		FIL fdst;
-
 		if(f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
 			throw runtime_error(Logger::Message{_("Unable to open fat://{}"),to});
 		}

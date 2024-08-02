@@ -29,6 +29,7 @@
  #include <fcntl.h>
  #include <sys/stat.h>
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/image.h>
 
 // #ifdef HAVE_UNISTD_U
 	#include <unistd.h>
@@ -97,7 +98,61 @@
 
 	void Image::append(std::shared_ptr<Reinstall::DataSource> source) {
 
-		#error aqui
+		const char *to = source->path();
+
+		FIL fdst;
+		{
+			int rc;
+
+			// Create directories
+			{
+				const char *last = strrchr(to,'/');
+				const char *ptr = to;
+				while(ptr < last) {
+					const char *next = strchr(ptr+1,'/');
+					string path{to,(size_t)(next-to)};
+
+					rc = f_mkdir(path.c_str());
+					if(rc != FR_OK && rc != FR_EXIST) {
+						throw runtime_error(Logger::Message{_("Unable to create path fat://{} (rc={})"),path.c_str(),rc});
+					}
+
+					ptr = next;
+				}
+			}
+
+			// Open file
+			rc = f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS);
+			if(rc != FR_OK) {
+				throw runtime_error(Logger::Message{_("Unable to open fat://{} (rc={})"),to,rc});
+			}
+
+		}
+
+		try {
+
+			source->save(Udjat::Dialog::Progress::getInstance(),[&fdst,to](unsigned long long, unsigned long long, const void *buffer, size_t len){
+
+				unsigned int wrote = 0;
+				const BYTE *ptr = (const BYTE *) buffer;
+
+				while(len > 0) {
+					if(f_write(&fdst, ptr, (unsigned int) len, &wrote) != FR_OK) {
+						throw runtime_error(Logger::Message{_("Unable to write fat://{}"),to});
+					}
+					len -= wrote;
+					ptr += wrote;
+				}
+
+				return true;
+			});
+
+		} catch(...) {
+			f_close(&fdst);
+			throw;
+		}
+
+		f_close(&fdst);
 
 	}
 
@@ -178,6 +233,8 @@
 	}
 
 	void Image::write(Udjat::Dialog::Progress &progress) {
+
+		debug("Writing");
 
 	}
 

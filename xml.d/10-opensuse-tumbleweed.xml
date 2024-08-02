@@ -104,11 +104,11 @@
 
 		</local-installer>
  		
- 		<iso-builder name='tw-mini' default='no' filesystem='iso9660' size='2GB'>
+ 		<iso-builder name='tw-mini' default='no' filesystem='fat' size='2GB'>
 
 			<attribute name='slp-allow-local' value='yes' />
 
-	 		<attribute name='title' value='Build a simple network install image'/>
+	 		<attribute name='title' value='Build a simple network install image [FAT]'/>
 	 		<attribute name='sub-title' value='Build an small usb based boot device for network install' />
 	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
 

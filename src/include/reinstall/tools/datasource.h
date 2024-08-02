@@ -75,10 +75,10 @@
 		/// @brief Save source, expand URL properties.
 		/// @return Path to local file.
 		virtual std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress);
-		virtual void save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		/// @brief Save source.
 		virtual std::string save(Udjat::Dialog::Progress &progress);
+		virtual void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 

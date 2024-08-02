@@ -62,7 +62,7 @@
 		int activate(Udjat::Dialog::Progress &progress) override {
 
 			progress = _("Getting ISO image");
-			auto path = iso.save(progress);
+			auto path = iso.save(*this,progress);
 
 			progress = _("Writing ISO image");
 			Reinstall::Writer::getInstance().write(progress,output,path.c_str());

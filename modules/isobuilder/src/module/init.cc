@@ -142,6 +142,10 @@
 			Logger::String{"Building Fat Image"}.info(name());
 			FatFS::Image image{output,*this,imgdef};
 
+			image.pre(*this);
+			image.append(progress,files);
+			image.post(*this);
+
 			// ... and write it to device.
 			debug("Complete, writing...");
 
