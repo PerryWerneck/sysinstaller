@@ -49,6 +49,7 @@
 	class Image::Disk : private Udjat::File::Temporary, public Reinstall::Abstract::Disk {
 	private:
 		FATFS fs;
+		bool mounted = false;
 
 	public:
 		Disk(const Settings &settings) : Reinstall::Abstract::Disk{Udjat::File::Handler::fd, settings.imglen} {
@@ -72,17 +73,31 @@
 
 			}
 
+		}
+
+		void mount() {
 			auto rc = f_mount(&fs, "0:", 1);
 			if(rc != FR_OK) {
 				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mount"), rc});
 			}
+			mounted = true;
+		}
 
+		void unmount() {
+			auto rc = f_unmount("0:");
+			if(rc != FR_OK) {
+				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_umount"), rc});
+			}
+			mounted = false;
 		}
 
 		virtual ~Disk() {
-			auto rc = f_mount(NULL, "", 0);
-			if(rc != FR_OK) {
-				Logger::Message{ _("Unexpected error '{}' on f_mount"), rc}.error("fatfs");
+			if(mounted) {
+				Logger::Message{"Forcing unmount of FAT image"}.warning("fatfs");
+				auto rc = f_unmount("0:");
+				if(rc != FR_OK) {
+					Logger::Message{ _("Unexpected error '{}' on f_umount"), rc}.error("fatfs");
+				}
 			}
 		}
 
@@ -226,10 +241,11 @@
 	}
 
 	void Image::pre(Udjat::Abstract::Object &) {
+		disk->mount();
 	}
 
 	void Image::post(Udjat::Abstract::Object &) {
-
+		disk->unmount();
 	}
 
 	void Image::write(Udjat::Dialog::Progress &progress) {
