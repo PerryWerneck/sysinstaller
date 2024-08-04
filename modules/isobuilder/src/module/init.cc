@@ -148,8 +148,8 @@
 
 			// ... and write it to device.
 			debug("Complete, writing...");
+			image.write(progress);
 
-			throw runtime_error("FAT image is incomplete");
 		}
 
 	public:

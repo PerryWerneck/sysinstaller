@@ -29,7 +29,9 @@
  #include <fcntl.h>
  #include <sys/stat.h>
  #include <reinstall/tools/datasource.h>
+ #include <reinstall/disk/abstract.h>
  #include <reinstall/image.h>
+ #include <reinstall/tools/writer.h>
 
 // #ifdef HAVE_UNISTD_U
 	#include <unistd.h>
@@ -89,6 +91,18 @@
 				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_umount"), rc});
 			}
 			mounted = false;
+		}
+
+		inline unsigned long long length() const {
+			return File::Handler::length();
+		}
+
+		inline size_t block_size() const {
+			return File::Handler::block_size();
+		}
+
+		inline size_t read(unsigned long long offset, void *contents, size_t length) {
+			return File::Handler::read(offset,contents,length);
 		}
 
 		virtual ~Disk() {
@@ -241,16 +255,68 @@
 	}
 
 	void Image::pre(Udjat::Abstract::Object &) {
+		Logger::String{"Opening disk image"}.info("fat");
 		disk->mount();
 	}
 
 	void Image::post(Udjat::Abstract::Object &) {
+		Logger::String{"Closing disk image"}.info("fat");
 		disk->unmount();
 	}
 
 	void Image::write(Udjat::Dialog::Progress &progress) {
 
-		debug("Writing");
+		Logger::String{"Preparing to write image"}.info("fat");
+		progress = _( "Preparing to write" );
+
+		unsigned long long total = disk->length();
+		size_t buflen = disk->block_size();
+
+		auto &writer = Reinstall::Writer::getInstance();
+		writer.size(total);
+
+		writer.open(progress,dialog);
+
+		progress = _( "Writing image" );
+		char buffer[buflen];
+
+		unsigned long long current = 0;
+		while(current < total) {
+
+			progress.file_sizes(current,total);
+
+			auto length = (total - current);
+			if(length > buflen) {
+				length = buflen;
+			}
+
+			auto bytes = disk->read(current,buffer,length);
+			if(bytes == 0) {
+				throw runtime_error("Unexpected EOF reading fat image");
+			}
+
+			writer.write(current, buffer, bytes);
+
+			current += bytes;
+		}
+
+		progress.file_sizes(current,total);
+
+		/*
+		#define BUFLEN 2048
+		unsigned char buffer[BUFLEN];
+
+		unsigned long long current = 0;
+		while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
+			writer.write(current, buffer, BUFLEN);
+			current += BUFLEN;
+			progress.file_sizes(current,total);
+		}
+		*/
+
+		progress = _( "Finalizing" );
+		writer.close();
+
 
 	}
 
