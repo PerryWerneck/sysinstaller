@@ -33,9 +33,9 @@
  #include <reinstall/image.h>
  #include <reinstall/tools/writer.h>
 
-// #ifdef HAVE_UNISTD_U
+ #ifdef HAVE_UNISTD_H
 	#include <unistd.h>
-// #endif // HAVE_UNISTD_U
+ #endif // HAVE_UNISTD_H
 
  #ifdef HAVE_FATFS
 
@@ -280,7 +280,7 @@
 		progress = _( "Writing image" );
 		char buffer[buflen];
 
-		unsigned long long current = 0;
+		unsigned long long current = 0LL;
 		while(current < total) {
 
 			progress.file_sizes(current,total);
@@ -301,18 +301,6 @@
 		}
 
 		progress.file_sizes(current,total);
-
-		/*
-		#define BUFLEN 2048
-		unsigned char buffer[BUFLEN];
-
-		unsigned long long current = 0;
-		while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
-			writer.write(current, buffer, BUFLEN);
-			current += BUFLEN;
-			progress.file_sizes(current,total);
-		}
-		*/
 
 		progress = _( "Finalizing" );
 		writer.close();
