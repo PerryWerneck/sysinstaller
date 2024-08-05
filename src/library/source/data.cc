@@ -26,11 +26,14 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/file.h>
+ #include <udjat/tools/file/handler.h>
+ #include <udjat/tools/file/temporary.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/ui/progress.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -94,7 +97,7 @@
 	const char * DataSource::path() const {
 		const char *path = local();
 		if(path[0] != '.') {
-			throw logic_error("Unable to handle non relative path");
+			throw logic_error(Logger::Message{"Unable to handle non relative path '{}'",path});
 		}
 		return path+1;
 	}
@@ -265,6 +268,7 @@
 
 		if(has_local()) {
 
+			// Has local path, using standard file source.
 			std::string required_prefix{local()};
 
 			// Setup local path.
@@ -290,6 +294,7 @@
 				}
 
 				auto source = make_shared<FileSource>(path.c_str());
+				source->message = this->message;
 				source->rename(this->name());
 				source->update_from_remote = this->update_from_remote;
 				source->repository = this->repository;
@@ -302,7 +307,101 @@
 
 		} else {
 
-			throw runtime_error("Incomplete");
+			// No local files, using temporary file datasource.
+			class TempFileSource : public DataSource {
+			private:
+				string filename;
+				const std::string url;		///< @brief The URL for source in the remote server.
+				const std::string filepath;	///< @brief Path for the file inside the destination image.
+
+			public:
+
+				TempFileSource(const char *n, const std::string &u, const std::string &p) : DataSource{n}, url{u}, filepath{p} {
+				}
+
+				~TempFileSource() {
+#ifndef DEBUG
+					if(!filename.empty()) {
+						unlink(filename.c_str());
+					}
+#endif // DEBUG
+				}
+
+				const char * local() const override {
+					return "";
+				}
+
+				const char * remote() const override {
+					return url.c_str();
+				}
+
+				const char * path() const override {
+					return filepath.c_str();
+				}
+
+				std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override {
+
+					if(!filename.empty()) {
+						return filename;
+					}
+
+					auto url = url_remote();
+					progress = url.c_str();
+					debug(url.c_str());
+
+					filename = Udjat::File::Temporary::create();
+
+					debug("Saving to ",filename.c_str());
+					Udjat::File::Handler file{filename.c_str(),true};
+					url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
+						progress.file_sizes(current,total);
+						file.write(buf,length);
+						return true;
+					});
+
+					return filename;
+
+				}
+
+				void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+
+					auto url = url_remote();
+					progress = url.c_str();
+
+					debug(url.c_str());
+
+					throw runtime_error("TempFileSource::save Incomplete ");
+
+				}
+
+
+			};
+
+			// Get reference file.
+			const char *prefix = path();
+			if(prefix[0] != '.') {
+				prefix = remote();
+			}
+			if(prefix[0] != '.') {
+				throw logic_error("Cant expand non relative repository");
+			}
+
+			size_t szprefix = strlen(prefix);
+			for(const auto &path : *repository) {
+
+				if(strncmp(prefix,path.c_str(),szprefix)) {
+					continue;
+				}
+
+				auto source = make_shared<TempFileSource>(name(),path,path);
+				source->message = this->message;
+				source->repository = this->repository;
+
+				if(func(source)) {
+					return true;
+				}
+
+			}
 
 		}
 
