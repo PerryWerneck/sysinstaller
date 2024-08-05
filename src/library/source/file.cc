@@ -64,6 +64,9 @@
 
 	}
 
+	FileSource::~FileSource() {
+	}
+
 	bool FileSource::has_local() const noexcept {
 
 		try {
@@ -72,13 +75,9 @@
 				return false;
 			}
 
-			debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa '",url.local,"'");
-
 			if(url.local[0] != '.') {
 				return true;
 			}
-
-			debug("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
 			// Check if repository has local.
 			if(repository && repository->has_local()) {
@@ -140,6 +139,7 @@
 		return DataSource::path();
 	}
 
+	/*
 	void FileSource::save(Udjat::Dialog::Progress &progress, const char *path) {
 
 		auto url = url_remote();
@@ -181,39 +181,50 @@
 		}
 
 	}
+	*/
 
+	/*
 	std::string FileSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
 
-		auto url = url_local();
-		url.expand(object);
+		if(has_local()) {
 
-		auto components = url.ComponentsFactory();
+			auto url = url_local();
+			url.expand(object);
 
-		if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
-			Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
-			return components.path.c_str();
-		}
+			auto components = url.ComponentsFactory();
 
-		const char *filename = components.path.c_str();
-
-		try {
-
-			save(progress,filename);
-
-		} catch(...) {
-
-			struct stat sb;
-			if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
-				error() << "Download error, cached file '" << filename << "' not available" << endl;
-				throw;
+			if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
+				Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
+				return components.path.c_str();
 			}
 
-			warning() << "Download error, using cached file '" << filename << "'" << endl;
+			const char *filename = components.path.c_str();
+
+			try {
+
+				DataSource::save(progress,filename);
+
+			} catch(...) {
+
+				struct stat sb;
+				if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+					error() << "Download error, cached file '" << filename << "' not available" << endl;
+					throw;
+				}
+
+				warning() << "Download error, using cached file '" << filename << "'" << endl;
+			}
+
+			return components.path;
+
+		} else {
+
+			throw runtime_error("Incomplete");
+
 		}
 
-		return components.path;
-
 	}
+	*/
 
  }
 

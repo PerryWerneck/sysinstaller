@@ -50,6 +50,25 @@
 		: name{Udjat::Quark{n}.c_str()}, value{Quark{v}.c_str()} {
 	}
 
+	static std::shared_ptr<Repository> cache(std::shared_ptr<Repository> repository) {
+
+		static mutex guard;
+		lock_guard<mutex> lock(guard);
+
+		static list<std::shared_ptr<Repository>> repositories;
+
+		for(auto cached : repositories) {
+			if(*cached == *repository) {
+				return cached;
+			}
+		}
+
+		repositories.push_back(repository);
+
+		return repository;
+
+	}
+
 	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
 
 		const char * name = XML::StringFactory(node,"repository","install");
@@ -98,7 +117,7 @@
 
 				}
 
-				return repo;
+				return cache(repo);
 			}
 
 		}

@@ -125,13 +125,13 @@ $(OBJDBG)/%.o: \
 
 	@$(CXX) \
 		$(CPPFLAGS) \
-		-DDEBUG=1 \
+		-ggdb -DDEBUG=1 \
 		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 
 	@$(CXX) \
 		$(CPPFLAGS) \
 		-Wall -Wextra -fstack-check \
-		-DDEBUG=1 \
+		-ggdb -DDEBUG=1 \
 		-o $@ \
 		-c $<
 

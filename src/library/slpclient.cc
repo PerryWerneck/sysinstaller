@@ -54,11 +54,31 @@
 		allow_local = XML::AttributeFactory(node,"slp-allow-local").as_bool(false);
 	}
 
+	bool SLPClient::operator==(const SLPClient &b) const noexcept {
+		return service_type == b.service_type && scope_list == b.scope_list && filter == b.filter && allow_local == b.allow_local;
+	}
+
+	static std::shared_ptr<SLPClient> cache(std::shared_ptr<SLPClient> client) {
+
+		static mutex guard;
+		lock_guard<mutex> lock(guard);
+
+		static list<std::shared_ptr<SLPClient>> clients;
+
+		for(auto cached : clients) {
+			if(*cached == *client) {
+				return cached;
+			}
+		}
+
+		clients.push_back(client);
+
+		return client;
+
+	}
+
 	std::shared_ptr<SLPClient> SLPClient::Factory(const Udjat::XML::Node &node) {
-
-		// TODO: Avoid duplicated objects.
-
-		return std::make_shared<SLPClient>(node);
+		return cache(std::make_shared<SLPClient>(node));
 	}
 
 	void SLPClient::clear() noexcept {

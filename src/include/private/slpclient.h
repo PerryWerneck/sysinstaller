@@ -43,6 +43,8 @@
 	public:
 		SLPClient(const Udjat::XML::Node &node);
 
+		bool operator==(const SLPClient &b) const noexcept;
+
 		void clear() noexcept;
 
 		/// @brief Detect url.

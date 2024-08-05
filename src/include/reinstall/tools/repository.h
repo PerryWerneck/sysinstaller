@@ -72,6 +72,8 @@
 		Repository(const Udjat::XML::Node &node);
 		virtual ~Repository();
 
+		bool operator==(const Repository &repo) const noexcept;
+
 		inline bool is_kernel_parameter() const noexcept {
 			return kparm.name && *kparm.name;
 		}

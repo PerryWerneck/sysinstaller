@@ -66,6 +66,23 @@
 	Repository::~Repository() {
 	}
 
+	bool Repository::operator==(const Repository &repo) const noexcept {
+
+		if(strcasecmp(name(),repo.name())) {
+			return false;
+		}
+
+		if(strcasecmp(url.remote,repo.url.remote)) {
+			return false;
+		}
+
+		if(slpclient.get() && repo.slpclient.get()) {
+			return *slpclient == *repo.slpclient;
+		}
+
+		return true;
+	}
+
 	bool Repository::index(const char *filename) {
 #ifdef HAVE_ZLIB
 		gzFile fd = gzopen(filename, "r");

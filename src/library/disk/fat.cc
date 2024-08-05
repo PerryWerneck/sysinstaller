@@ -43,7 +43,7 @@
 
  namespace Reinstall {
 
-	Disk::Fat32::Fat32(int f, unsigned long long szimage) : fd{f}, Abstract::Disk{fd,szimage} {
+	Disk::Fat32::Fat32(int f, unsigned long long szimage) : Abstract::Disk{f,szimage}, fd{f} {
 
 		if(disk_ioctl(0, CTRL_FORMAT, &fd) != RES_OK) {
 			throw runtime_error(_("Cant bind fatfs to disk image"));

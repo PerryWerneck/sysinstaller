@@ -228,7 +228,7 @@
 
 					// Save to temporary path.
 					filename = tempfilename = File::Temporary::create();
-					save(progress,filename.c_str());
+					DataSource::save(progress,filename.c_str());
 
 				} else {
 

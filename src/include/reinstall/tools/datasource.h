@@ -67,6 +67,8 @@
 		/// @brief Get path for source on remote filesystem.
 		virtual const char * remote() const = 0;
 
+		virtual bool has_local() const noexcept;
+
 		/// @brief Get path for source on target image.
 		virtual const char * path() const;
 
@@ -92,7 +94,7 @@
 
 	};
 
-	/// @brief Data source with remote and local URLs
+	/// @brief File based data source
 	class UDJAT_API FileSource : public DataSource {
 	protected:
 		struct {
@@ -109,15 +111,17 @@
 		FileSource(const Udjat::XML::Node &node);
 		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
 
-		bool has_local() const noexcept;
+		virtual ~FileSource();
+
+		bool has_local() const noexcept override;
 
 		// DataSource
 		const char * local() const override;
 		const char * remote() const override;
 		const char * path() const override;
-		std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
 
-		void save(Udjat::Dialog::Progress &progress, const char *path) override;
+		// std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
+		//void save(Udjat::Dialog::Progress &progress, const char *path) override;
 
 	};
 

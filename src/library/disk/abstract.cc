@@ -46,6 +46,7 @@
 	Abstract::Disk::Disk(int fd, unsigned long long szimage) {
 
 		if(fd < 0) {
+			debug("fd=",fd);
 			throw system_error(errno, system_category(), _("Cant open disk device/file"));
 		}
 

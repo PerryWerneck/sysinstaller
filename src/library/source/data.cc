@@ -30,6 +30,7 @@
  #include <udjat/tools/url.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/intl.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -71,6 +72,9 @@
 		}
 
 		if(value.empty()) {
+			if(required) {
+				throw runtime_error(Logger::String{"Required attribute '",attrname,"' is missing or invalid"});
+			}
 			return "";
 		}
 
@@ -95,12 +99,108 @@
 		return path+1;
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &, const char *) {
-		throw logic_error("Abstract datasource is unable to save to file");
+	bool DataSource::has_local() const noexcept {
+
+		try {
+
+			const char *ptr = local();
+
+			return (ptr && *ptr);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error(name());
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error checking local path"}.error(name());
+
+		}
+
+		return false;
 	}
 
-	std::string DataSource::save(const Udjat::Abstract::Object &, Udjat::Dialog::Progress &) {
-		throw logic_error("Abstract datasource is unable to save");
+	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
+
+		auto url = url_remote();
+
+		info() << "Downloading " << url.c_str() << endl;
+
+		if(message && *message) {
+			progress = message;
+		}
+
+		debug("Downloading '",url.c_str(),"' to '",path,"'");
+
+		{
+			string str{path};
+			auto pos = str.rfind('/');
+			if(pos == string::npos) {
+				throw runtime_error("Invalid local path");
+			}
+			str.resize(pos);
+			if(File::Path::mkdir(str.c_str())) {
+				info() << "New path made: " << str << endl;
+			}
+		}
+
+		try {
+
+			progress.url(url.c_str());
+			url.get(path,[&](uint64_t current, uint64_t total){
+
+				progress.file_sizes(current,total);
+
+				return true;
+			});
+
+		} catch(const std::exception &e) {
+
+			error() << url.c_str() << " -> " << path << ": " << e.what() << endl;
+			throw;
+		}
+
+	}
+
+	std::string DataSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
+
+		if(has_local()) {
+
+			auto url = url_local();
+			url.expand(object);
+
+			auto components = url.ComponentsFactory();
+
+			if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
+				Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
+				return components.path.c_str();
+			}
+
+			const char *filename = components.path.c_str();
+
+			try {
+
+				DataSource::save(progress,filename);
+
+			} catch(...) {
+
+				struct stat sb;
+				if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+					error() << "Download error, cached file '" << filename << "' not available" << endl;
+					throw;
+				}
+
+				warning() << "Download error, using cached file '" << filename << "'" << endl;
+			}
+
+			return components.path;
+
+		} else {
+
+			throw runtime_error("Incomplete: DataSource::save()");
+
+		}
+
 	}
 
 	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
@@ -159,6 +259,54 @@
 			progress = message;
 		}
 
+		if(!(repository.get() && repository->index())) {
+			throw runtime_error(_("Invalid repository"));
+		}
+
+		if(has_local()) {
+
+			std::string required_prefix{local()};
+
+			// Setup local path.
+			if(required_prefix[0] != '.') {
+				Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
+				if(Config::Value{"application","legacy",true}) {
+					const char *ptr = local();
+					if(ptr[0] == '/') {
+						required_prefix = ".";
+						required_prefix += ptr;
+						message.warning(name());
+					}
+				} else {
+					throw logic_error(message);
+				}
+			}
+
+			size_t szlocal = required_prefix.size();
+			for(const auto &path : *repository) {
+
+				if(strncmp(required_prefix.c_str(),path.c_str(),szlocal)) {
+					continue;
+				}
+
+				auto source = make_shared<FileSource>(path.c_str());
+				source->rename(this->name());
+				source->update_from_remote = this->update_from_remote;
+				source->repository = this->repository;
+
+				if(func(source)) {
+					return true;
+				}
+
+			}
+
+		} else {
+
+			throw runtime_error("Incomplete");
+
+		}
+
+		/*
 		std::string required_prefix{local()};
 		if(required_prefix[0] != '.') {
 			Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
@@ -198,10 +346,10 @@
 			}
 
 		}
-
-		// TODO: Parse index.html
+		*/
 
 		return false;
+
 	}
 
 	Udjat::URL DataSource::url_local() const {
