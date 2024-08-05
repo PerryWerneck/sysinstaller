@@ -62,6 +62,9 @@
 		/// @brief The repository files (from INDEX.gz)
 		std::vector<std::string> files;
 
+		/// @brief Load index from filename.
+		bool index(const char *filename);
+
 	public:
 
 		static std::shared_ptr<Repository> Factory(const Udjat::XML::Node &node);

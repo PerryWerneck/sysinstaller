@@ -128,7 +128,6 @@
 		<Unit filename="src/library/disk/abstract.cc" />
 		<Unit filename="src/library/disk/fat.cc" />
 		<Unit filename="src/library/efiboot.cc" />
-		<Unit filename="src/library/fatdisk.cc" />
 		<Unit filename="src/library/group.cc" />
 		<Unit filename="src/library/gtkremovabledevicedialog.cc" />
 		<Unit filename="src/library/image.cc" />

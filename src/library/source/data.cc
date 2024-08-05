@@ -29,6 +29,7 @@
  #include <udjat/tools/string.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/object.h>
+ #include <udjat/tools/configuration.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -63,19 +64,27 @@
 
 	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required) const {
 
-		const char *path = String{node,attrname}.expand(node).expand().as_quark();
-		debug(node.name(),"(",attrname,") = '",path,"'");
-
-		if(!path[0]) {
-			path = String{node,"url"}.expand(node).expand().as_quark();
-			if(path[0]) {
-				Logger::String{"Getting '",attrname,"' from 'url' attribute"}.trace(name());
-			} else if(required) {
-				Logger::String{"Attribute '",attrname,"' is missing"}.warning(name());
-			}
+		String value{node,attrname};
+		value.expand(node).expand();
+		if(value.empty()) {
+			value = String{node,"url"}.expand(node).expand();
 		}
 
-		return path;
+		if(value.empty()) {
+			return "";
+		}
+
+		if(value[0] != '/') {
+			return value.as_quark();
+		}
+
+		if(node.attribute("repository")) {
+			String relative{"."};
+			relative += value;
+			return relative.as_quark();
+		}
+
+		return value.as_quark();
 	}
 
 	const char * DataSource::path() const {
@@ -150,19 +159,29 @@
 			progress = message;
 		}
 
-		const char * required_prefix = local();
+		std::string required_prefix{local()};
 		if(required_prefix[0] != '.') {
-			throw logic_error("The source local path should be relative (starting with '.')");
+			Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
+			if(Config::Value{"application","legacy",true}) {
+				const char *ptr = local();
+				if(ptr[0] == '/') {
+					required_prefix = ".";
+					required_prefix += ptr;
+					message.warning(name());
+				}
+			} else {
+				throw logic_error(message);
+			}
 		}
 
 		if(repository.get() && repository->index()) {
 
 			Logger::String{"Using indexed repository"}.trace(name());
 
-			size_t szlocal = strlen(required_prefix);
+			size_t szlocal = required_prefix.size();
 			for(const auto &path : *repository) {
 
-				if(strncmp(required_prefix,path.c_str(),szlocal)) {
+				if(strncmp(required_prefix.c_str(),path.c_str(),szlocal)) {
 					continue;
 				}
 

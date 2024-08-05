@@ -49,6 +49,11 @@
 		url.local = PathFactory(node,"local");
 		url.path = PathFactory(node,"destination",false);
 
+		// Fixes loading of legacy control files.
+		if(!(strcmp(url.local,url.remote) || strncmp(url.local,"http:",5))) {
+			url.local = "";
+		}
+
 		if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
 			repository = Repository::Factory(node);
 		}
@@ -58,6 +63,42 @@
 		}
 
 	}
+
+	bool FileSource::has_local() const noexcept {
+
+		try {
+
+			if(!(url.local && *url.local)) {
+				return false;
+			}
+
+			debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa '",url.local,"'");
+
+			if(url.local[0] != '.') {
+				return true;
+			}
+
+			debug("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
+			// Check if repository has local.
+			if(repository && repository->has_local()) {
+				return true;
+			}
+
+			debug("No local repository defined to source");
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error(name());
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error"}.error(name());
+
+		}
+		return false;
+	}
+
 
 	Udjat::XML::Node find(Udjat::XML::Node node, const char *nodename, bool required) {
 

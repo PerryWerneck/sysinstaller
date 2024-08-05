@@ -52,10 +52,14 @@
 
 	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
 
+		const char * name = XML::StringFactory(node,"repository","install");
+
+		/*
+
+		Cant share repository definitions because we can have many 'installs'
 		static mutex guard;
 		lock_guard<mutex> lock(guard);
 
-		const char * name = XML::StringFactory(node,"repository","install");
 
 		static list<std::shared_ptr<Repository>> repositories;
 
@@ -64,6 +68,8 @@
 				return repository;
 			}
 		}
+
+		*/
 
 		for(auto parent = node;parent;parent = parent.parent()) {
 
@@ -79,7 +85,7 @@
 				}
 
 				auto repo = make_shared<Repository>(child);
-				repositories.push_back(repo);
+				// repositories.push_back(repo);
 
 				for(const auto preset : presets) {
 

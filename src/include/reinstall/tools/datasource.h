@@ -109,9 +109,7 @@
 		FileSource(const Udjat::XML::Node &node);
 		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
 
-		inline bool has_local() const noexcept {
-			return url.local && *url.local;
-		}
+		bool has_local() const noexcept;
 
 		// DataSource
 		const char * local() const override;

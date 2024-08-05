@@ -244,6 +244,10 @@
 			});
 		}
 
+		if(!files.size()) {
+			throw runtime_error( _("Cant find installation files"));
+		}
+
 		Logger::String{files.size()," files to download"}.trace(parent.name());
 
 	}

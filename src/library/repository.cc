@@ -66,6 +66,34 @@
 	Repository::~Repository() {
 	}
 
+	bool Repository::index(const char *filename) {
+#ifdef HAVE_ZLIB
+		gzFile fd = gzopen(filename, "r");
+		if(!fd) {
+			throw runtime_error("Error opening INDEX.gz");
+		}
+
+		char buffer[4096];
+		memset(buffer,0,4096);
+		while(gzgets(fd,buffer,4095)) {
+			for(size_t ix = 0; ix < 4096 && buffer[ix]; ix++) {
+				if(buffer[ix] < ' ') {
+					buffer[ix] = 0;
+				}
+			}
+			files.emplace_back(buffer);
+		}
+
+		gzclose(fd);
+
+		Logger::String{"Got ",files.size()," filenames from repository index."}.trace(name());
+
+		return true;
+#else
+		return false;
+#endif // HAVE_ZLIB
+	}
+
 	bool Repository::index() {
 
 		if(!files.empty()) {
@@ -74,14 +102,18 @@
 
 #ifdef HAVE_ZLIB
 		{
+			debug("Trying index.gz");
 
 			// Try INDEX.gz
 
 			auto &progress = Dialog::Progress::getInstance();
 
 			URL url = url_remote();
+
 			progress.url(url.c_str());
 			url += "INDEX.gz";
+
+			Logger::String{"Searching for ",url.c_str()}.trace(name());
 
 			try {
 
@@ -90,51 +122,43 @@
 				if(has_local()) {
 
 					// Has local path, update file.
+					debug("Using local file");
 
 					filename = url_local().ComponentsFactory().path;
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
+
+					debug("------------->",filename.c_str());
 
 					url.get(filename.c_str(),[&progress](double current, double total){
 						progress = (total/current);
 						return true;
 					});
 
+					return index(filename.c_str());
+
 				} else {
 
 					// No local path, use cache.
+					debug("Using remote file");
 
 					filename = url.filename([&progress](double current, double total){
 						progress = (total/current);
 						return true;
 					});
 
+					bool rc = index(filename.c_str());
+
+					unlink(filename.c_str());
+
+					return rc;
 				}
 
-				gzFile fd = gzopen(filename.c_str(), "r");
-				if(!fd) {
-					throw runtime_error("Error opening INDEX.gz");
-				}
-
-				char buffer[4096];
-				memset(buffer,0,4096);
-				while(gzgets(fd,buffer,4095)) {
-					for(size_t ix = 0; ix < 4096 && buffer[ix]; ix++) {
-						if(buffer[ix] < ' ') {
-							buffer[ix] = 0;
-						}
-					}
-					files.emplace_back(buffer);
-				}
-
-				gzclose(fd);
-
-				Logger::String{"Got ",files.size()," filenames from repository index."}.trace(name());
-				return true;
 
 			} catch(const std::exception &e) {
 
-				Logger::String{url.c_str(),": ",e.what()};
+				Logger::String{url.c_str(),": ",e.what()}.error(name());
+				return false;
 
 			}
 
