@@ -104,7 +104,7 @@
 		std::vector<std::shared_ptr<Reinstall::Template>> templates;
 		std::vector<std::shared_ptr<Reinstall::Script>> scripts;
 
-		const char *boot_label = _("Reinstall workstation");
+		const char *boot_label = nullptr;
 
 	public:
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
@@ -113,17 +113,24 @@
 			static const char *labels[] = {
 				"grub-label",
 				"boot-label",
-				"system-name",
 				"label",
-				"title"
+				"system-name"
 			};
 
 			for(const char *label : labels) {
 				const char *ptr = XML::QuarkFactory(node,label);
-				if(*ptr) {
+				if(ptr && *ptr) {
 					boot_label = ptr;
+					Logger::String{"Setting boot-label to '",boot_label,"' from attribute '",label,"'"}.trace(name());
 					break;
 				}
+			}
+
+			if(!(boot_label && *boot_label)) {
+				String label{Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")}.c_str()};
+				label.expand(node);
+				boot_label = label.as_quark();
+				Logger::String{"Required attribute boot-label is missing or invalid, using default '",boot_label,"'"}.warning(name());
 			}
 
 			sources.push_back(make_shared<Kernel>(*this,node));
@@ -190,10 +197,11 @@
 			}
 
 			if(!(strcasecmp(key,"boot-label") && strcasecmp(key,"install-label"))) {
+
 				if(boot_label && *boot_label) {
 					value = boot_label;
 				} else {
-					value = _("Reinstall this workstation");
+					value = Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")};
 				}
 				return true;
 			}

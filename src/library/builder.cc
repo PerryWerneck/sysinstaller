@@ -32,6 +32,7 @@
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/configuration.h>
  #include <vector>
  #include <unistd.h>
 
@@ -66,16 +67,24 @@
 		static const char *labels[] = {
 			"grub-label",
 			"boot-label",
-			"system-name",
 			"label",
-			"title"
+			"system-name"
 		};
 
 		for(const char *label : labels) {
-			boot.label = XML::QuarkFactory(node,label);
-			if(*boot.label) {
+			const char *ptr = XML::QuarkFactory(node,label);
+			if(ptr && *ptr) {
+				boot.label = ptr;
+				Logger::String{"Setting boot-label to '",boot.label,"' from attribute '",label,"'"}.trace(name());
 				break;
 			}
+		}
+
+		if(!(boot.label && *boot.label)) {
+			String label{Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")}.c_str()};
+			label.expand(node);
+			boot.label = label.as_quark();
+			Logger::String{"Required attribute boot-label is missing or invalid, using default '",boot.label,"'"}.warning(name());
 		}
 
 		// Load sources.
@@ -173,7 +182,7 @@
 
 	bool Builder::getProperty(const char *key, std::string &value) const {
 
-		if(!strcasecmp(key,"boot-label") && boot.label && *boot.label) {
+		if(boot.label && *boot.label && !(strcasecmp(key,"boot-label") && strcasecmp(key,"install-label"))) {
 			value = boot.label;
 			return true;
 		}
@@ -228,6 +237,11 @@
 			value = boot.theme;
 			return !empty(value);
 
+		}
+
+		value = Config::Value<string>{"defaults",key,""};
+		if(!value.empty()) {
+			return true;
 		}
 
 		return false;
