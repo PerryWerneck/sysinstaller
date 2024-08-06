@@ -61,6 +61,9 @@
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
 
+		/// @brief True if datasource is a directory (ends with '/').
+		bool dir() const;
+
 		/// @brief Get path for source on local filesystem.
 		virtual const char * local() const = 0;
 

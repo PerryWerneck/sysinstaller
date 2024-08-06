@@ -84,7 +84,9 @@
 				return true;
 			}
 
-			debug("No local repository defined to source");
+			if(url.local[strlen(url.local)-1] != '/') {
+				Logger::String{"Unable to determine local path for ",url.remote}.trace(name());
+			}
 
 		} catch(const std::exception &e) {
 

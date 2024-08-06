@@ -177,6 +177,7 @@
 			}
 		}
 
+		debug("Adding ",value->name()," data source with path ",value->path());
 		files.push_back(value);
 	}
 
@@ -252,10 +253,21 @@
 		progress = _("Getting required files");
 
 		for(auto &source : sources) {
-			source->for_each(progress,[this,&files](std::shared_ptr<DataSource> value){
-				push_back(files,value);
-				return false;
-			});
+
+			if(source->dir()) {
+
+				// It's a directory, push back children
+				source->for_each(progress,[this,&files](std::shared_ptr<DataSource> value){
+					push_back(files,value);
+					return false;
+				});
+
+			} else {
+
+				// It's a single file
+				push_back(files,source);
+
+			}
 		}
 
 		if(!files.size()) {

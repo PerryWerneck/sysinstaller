@@ -262,6 +262,11 @@
 		return false;
 	}
 
+	bool DataSource::dir() const {
+		const char *ptr = remote();
+		return (ptr && *ptr && ptr[strlen(ptr)-1] == '/');
+	}
+
 	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		if(message && *message) {
@@ -408,48 +413,6 @@
 			}
 
 		}
-
-		/*
-		std::string required_prefix{local()};
-		if(required_prefix[0] != '.') {
-			Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
-			if(Config::Value{"application","legacy",true}) {
-				const char *ptr = local();
-				if(ptr[0] == '/') {
-					required_prefix = ".";
-					required_prefix += ptr;
-					message.warning(name());
-				}
-			} else {
-				throw logic_error(message);
-			}
-		}
-
-		if(repository.get() && repository->index()) {
-
-			Logger::String{"Using indexed repository"}.trace(name());
-
-			size_t szlocal = required_prefix.size();
-			for(const auto &path : *repository) {
-
-				if(strncmp(required_prefix.c_str(),path.c_str(),szlocal)) {
-					continue;
-				}
-
-				//debug("path='",path.c_str(),"'");
-				auto source = make_shared<FileSource>(path.c_str());
-				source->rename(this->name());
-				source->update_from_remote = this->update_from_remote;
-				source->repository = this->repository;
-
-				if(func(source)) {
-					return true;
-				}
-
-			}
-
-		}
-		*/
 
 		return false;
 

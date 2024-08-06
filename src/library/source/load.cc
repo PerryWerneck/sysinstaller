@@ -58,12 +58,30 @@
 					sources.push_back(make_shared<FileSource>(child));
 				}
 			}
+
 		} else {
 
 			// No node name, load <source /> first...
 			load(node,sources,"source");
 
 			// ... then load <driver-update-disk />
+			class DUD : public Reinstall::FileSource {
+			public:
+				DUD(const Udjat::XML::Node &node, const char *path) : FileSource{node} {
+					url.path = path;
+				}
+
+			};
+
+			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
+				for(Udjat::XML::Node child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
+					auto path = XML::QuarkFactory(child,"path");
+					if(path && *path) {
+						auto source = make_shared<DUD>(child,path);
+						sources.push_back(source);
+					}
+				}
+			}
 
 		}
 
