@@ -55,9 +55,10 @@
 				throw logic_error("SLP service name is not defined");
 			}
 
-			Logger::Message url{Config::Value<string>{"kernel-parameters","slp","slp://?{}&auto=1"}.c_str(),srvc};
-
-			kparm.slp = url.as_quark();
+			if(!(kparm.slp && *kparm.slp)) {
+				Logger::Message url{Config::Value<string>{"kernel-parameters","slp","slp://?{}&auto=1"}.c_str(),srvc};
+				kparm.slp = url.as_quark();
+			}
 
 		}
 

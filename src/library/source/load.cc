@@ -18,50 +18,57 @@
  */
 
  /**
-  * @brief Implements Source repository.
+  * @brief Implements Datasource loader.
   */
 
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
+ #include <udjat/tools/file.h>
+ #include <udjat/tools/file/handler.h>
+ #include <udjat/tools/file/temporary.h>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/url.h>
+ #include <udjat/tools/object.h>
+ #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
- #include <udjat/tools/file.h>
- #include <udjat/tools/configuration.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
- #include <private/slpclient.h>
- #include <list>
+ #include <reinstall/tools/template.h>
+ #include <sys/stat.h>
 
- #ifdef HAVE_ZLIB
-	#include <zlib.h>
- #endif // HAVE_ZLIB
+ #include <stdexcept>
+ #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
 
  namespace Reinstall {
 
-	Repository::KParm::KParm(const Udjat::XML::Node &node) {
-		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
-			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
-				name = String{child,"value"}.as_quark();
-				slp = XML::QuarkFactory(node,"slp-value");
-				enabled = child.attribute("allow-slp").as_bool(true);
-			}
-		}
+	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {
 
-		if(!(slp && *slp) && Config::Value{"application","legacy",true}) {
-			slp = XML::QuarkFactory(node,"slp-kernel-parameter");
-			if(slp && *slp) {
-				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(node.attribute("name").as_string("repository"));
+		if(nodename) {
+
+			// Has node name, load it.
+			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
+				for(Udjat::XML::Node child = nd.child(nodename); child; child = child.next_sibling(nodename)) {
+					sources.push_back(make_shared<FileSource>(child));
+				}
 			}
+		} else {
+
+			// No node name, load <source /> first...
+			load(node,sources,"source");
+
+			// ... then load <driver-update-disk />
+
 		}
 
 	}
 
- }
 
+ }
 
