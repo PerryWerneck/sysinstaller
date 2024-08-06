@@ -76,12 +76,6 @@
 		return expanded;
 	}
 
-	/*
-	std::string KernelParameter::value(const Udjat::Abstract::Object &object) const {
-		return String{refvalue}.expand(object);
-	}
-	*/
-
 	void KernelParameter::load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &kparms) {
 
 		// Use map to avoid add of the same key more than one time.
@@ -111,11 +105,31 @@
 
 			// First search for 'kernel-parameter' nodes.
 			for(auto child = parent.child("kernel-parameter");child;child = child.next_sibling("kernel-parameter")) {
-				auto kparm = make_shared<KParm>(child);
-				if(keys.find(kparm->parameter_name()) == keys.end()) {
-					keys[kparm->parameter_name()] = kparm;
-					kparms.push_back(kparm);
+
+				const char *reponame = child.attribute("repository").as_string();
+
+				if(reponame && *reponame) {
+
+					// It's a repository
+					auto kparm = Repository::Factory(child);
+					if(keys.find(kparm->parameter_name()) == keys.end()) {
+						keys[kparm->parameter_name()] = kparm;
+						kparms.push_back(kparm);
+					}
+
+					Logger::String{"Repository declared as kernel parameter, using legacy mode"}.warning(kparm->parameter_name());
+
+				} else {
+
+					// It's a standard kernel parameter.
+					auto kparm = make_shared<KParm>(child);
+					if(keys.find(kparm->parameter_name()) == keys.end()) {
+						keys[kparm->parameter_name()] = kparm;
+						kparms.push_back(kparm);
+					}
+
 				}
+
 			}
 
 			// Then search for repositories.

@@ -203,14 +203,26 @@
 
 	std::string Repository::value(const Udjat::Abstract::Object &object) const {
 
+		String value;
+
 		if(kparm.slp && *kparm.slp) {
 			const char *url = slpclient->url();
 			if(url && *url) {
-				return kparm.slp;
+				value = kparm.slp;
 			}
 		}
 
-		return remote();
+		if(value.empty()) {
+			value = remote();
+		}
+
+		value.expand(object);
+
+		if(value.empty()) {
+			throw logic_error(Logger::Message{_("Kernel parameter for repository '{}' has an empty value"),name()});
+		}
+
+		return value;
 	}
 
 	void Repository::preset(const char *arg) {
