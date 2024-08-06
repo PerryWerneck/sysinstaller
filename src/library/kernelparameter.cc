@@ -26,6 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/string.h>
+ #include <udjat/tools/intl.h>
  #include <vector>
  #include <unordered_map>
  #include <udjat/tools/quark.h>
@@ -142,12 +143,20 @@
 		std::string result;
 
 		for(auto kparm : kparms) {
+
 			if(!result.empty()) {
 				result += " ";
 			}
+
 			result += kparm->parameter_name();
 			result += "=";
-			result += kparm->value(object);
+
+			string value = kparm->value(object);
+			if(value.empty()) {
+				throw logic_error(Logger::Message{_("Kernel parameter '{}' has an empty value"),kparm->parameter_name()});
+			}
+			result += value;
+
 		}
 
 		return result;
