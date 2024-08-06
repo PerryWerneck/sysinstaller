@@ -107,7 +107,7 @@
 			path = remote();
 
 			if(path[0] == '.' && Config::Value{"application","legacy",true}) {
-				Logger::Message msg{"Local path is empty, using remote '{}' for legacy mode",path};
+				Logger::Message{"Local path is empty, using remote '{}' for legacy mode",path}.trace(name());
 				return path+1;
 			}
 

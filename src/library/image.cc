@@ -33,6 +33,7 @@
  #include <reinstall/image.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/configuration.h>
  #include <reinstall/disk/fat.h>
  #include <stdexcept>
 
@@ -55,13 +56,20 @@
  		}
  	}
 
+ 	static const char *strip_dot(const char *str) {
+		if(*str == '.' && Config::Value{"application","legacy",true}) {
+			return str+1;
+		}
+		return str;
+ 	}
+
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
 
 		std::string from = source->save(Dialog::Progress::getInstance());
 		std::string to = source->path();
 		auto efi = builder.efi();
 
-		if(efi->enabled() && strcmp(to.c_str(),efi->path()) == 0) {
+		if(efi->enabled() && strcmp(strip_dot(to.c_str()),strip_dot(efi->path())) == 0) {
 
 			if(!efibootpart.empty()) {
 				throw logic_error("EFI Boot partition already set");
