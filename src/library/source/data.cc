@@ -95,11 +95,32 @@
 	}
 
 	const char * DataSource::path() const {
+
 		const char *path = local();
-		if(path[0] != '.') {
-			throw logic_error(Logger::Message{"Unable to handle non relative path '{}'",path});
+
+		if(path[0] == '.') {
+			return path+1;
 		}
-		return path+1;
+
+		if(path[0] == 0) {
+
+			path = remote();
+
+			if(path[0] == '.' && Config::Value{"application","legacy",true}) {
+				Logger::Message msg{"Local path is empty, using remote '{}' for legacy mode",path};
+				return path+1;
+			}
+
+			Logger::Message msg{"Unable to handle empty path for {}",remote()};
+			msg.error(name());
+			throw logic_error(msg);
+
+		}
+
+		Logger::Message msg{"Unable to handle non relative path '{}'",path};
+		msg.error(name());
+		throw logic_error(msg);
+
 	}
 
 	bool DataSource::has_local() const noexcept {
