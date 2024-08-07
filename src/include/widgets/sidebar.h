@@ -28,9 +28,9 @@
  #include <gtkmm.h>
 
  /// @brief Main window sidebar.
- class UDJAT_API SideBar : public Gtk::Box {
+ class UDJAT_API SideBar : public ::Gtk::Box {
  private:
- 	Gtk::Image logo;
+ 	::Gtk::Image logo;
 
  public:
 	SideBar();

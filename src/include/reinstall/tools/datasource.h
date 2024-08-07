@@ -128,6 +128,31 @@
 
 	};
 
+	/// @brief Save source on temporary file
+	class TempFileSource : public DataSource {
+	private:
+		std::string filename;
+		const std::string url;		///< @brief The URL for source in the remote server.
+		const std::string filepath;	///< @brief Path for the file inside the destination image.
+
+	public:
+
+		TempFileSource(const char *n, const std::string &u, const std::string &p);
+
+		~TempFileSource();
+
+		const char * local() const override;
+
+		const char * remote() const override;
+
+		const char * path() const override;
+
+		std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
+
+		void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
+
+	};
+
  }
 
  namespace std {

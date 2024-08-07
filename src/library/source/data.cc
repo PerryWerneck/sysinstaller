@@ -221,7 +221,7 @@
 
 		} else {
 
-			throw runtime_error("Incomplete: DataSource::save()");
+			throw logic_error("Standard data source is unable to save to without a local file path");
 
 		}
 
@@ -319,72 +319,6 @@
 		} else {
 
 			// No local files, using temporary file datasource.
-			class TempFileSource : public DataSource {
-			private:
-				string filename;
-				const std::string url;		///< @brief The URL for source in the remote server.
-				const std::string filepath;	///< @brief Path for the file inside the destination image.
-
-			public:
-
-				TempFileSource(const char *n, const std::string &u, const std::string &p) : DataSource{n}, url{u}, filepath{p} {
-				}
-
-				~TempFileSource() {
-#ifndef DEBUG
-					if(!filename.empty()) {
-						unlink(filename.c_str());
-					}
-#endif // DEBUG
-				}
-
-				const char * local() const override {
-					return "";
-				}
-
-				const char * remote() const override {
-					return url.c_str();
-				}
-
-				const char * path() const override {
-					return filepath.c_str();
-				}
-
-				std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override {
-
-					if(!filename.empty()) {
-						return filename;
-					}
-
-					auto url = url_remote();
-					progress = url.c_str();
-
-					filename = Udjat::File::Temporary::create();
-
-					Udjat::File::Handler file{filename.c_str(),true};
-					url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
-						progress.file_sizes(current,total);
-						file.write(buf,length);
-						return true;
-					});
-
-					return filename;
-
-				}
-
-				void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
-
-					auto url = url_remote();
-					progress = url.c_str();
-
-					debug(url.c_str());
-
-					throw runtime_error("TempFileSource::save Incomplete ");
-
-				}
-
-
-			};
 
 			// Get reference file.
 			const char *prefix = path();

@@ -142,6 +142,7 @@
 		<Unit filename="src/library/source/data.cc" />
 		<Unit filename="src/library/source/file.cc" />
 		<Unit filename="src/library/source/load.cc" />
+		<Unit filename="src/library/source/tempfile.cc" />
 		<Unit filename="src/library/template.cc" />
 		<Unit filename="src/library/ui/dialog.cc" />
 		<Unit filename="src/library/ui/popup.cc" />
