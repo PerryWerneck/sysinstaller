@@ -26,6 +26,7 @@
  #include <udjat/tools/application.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/string.h>
+ #include <udjat/tools/configuration.h>
 
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/gtk4/application.h>
@@ -411,12 +412,13 @@
 
 			static const struct {
 				Dialog::Option option;
+				const char *config;
 				const char *label;
 			} buttons[] = {
-				{ Dialog::AllowReboot,			N_("_Reboot")			},
-				{ Dialog::AllowQuitApplication,	N_("_Quit application")	},
-				{ Dialog::AllowCancel,			N_("_Cancel")			},
-				{ Dialog::AllowContinue,		N_("C_ontinue")			}
+				{ Dialog::AllowReboot,			"reboot-message", 	N_("_Reboot now")			},
+				{ Dialog::AllowQuitApplication,	"quit-message",		N_("_Quit application")		},
+				{ Dialog::AllowCancel,			"cancel-message",	N_("_Cancel")				},
+				{ Dialog::AllowContinue,		"continue-message",	N_("C_ontinue")				}
 			};
 
 			std::vector<Glib::ustring> labels;
@@ -426,7 +428,7 @@
 
 			for(int ix = 0; ix < (int) (sizeof(buttons)/sizeof(buttons[0])); ix++) {
 				if(settings.test(buttons[ix].option)) {
-					labels.push_back(gettext(buttons[ix].label));
+					labels.push_back(Config::Value<string>{"defaults",buttons[ix].config,gettext(buttons[ix].label)}.c_str());
 					values.push_back(ix);
 				}
 				if(buttons[ix].option == Dialog::AllowCancel) {

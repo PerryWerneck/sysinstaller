@@ -91,7 +91,7 @@
 		Gtk::Label label;
 		label.set_markup(
 			Config::Value<string>{
-				"messages",
+				"defaults",
 				"insert-device-message",
 				_("Insert an storage device <b>NOW</b> ")
 			}.c_str()
@@ -105,7 +105,7 @@
 		Gtk::Label label;
 		label.set_markup(
 			Config::Value<string>{
-				"messages",
+				"defaults",
 				"insert-device-body",
 				_("This action will <b>DELETE ALL CONTENT</b> on the device.")
 			}.c_str()
