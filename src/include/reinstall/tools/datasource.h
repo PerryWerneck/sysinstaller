@@ -137,6 +137,8 @@
 
 	public:
 
+		TempFileSource(const DataSource &src);
+
 		TempFileSource(const char *n, const std::string &u, const std::string &p);
 
 		~TempFileSource();

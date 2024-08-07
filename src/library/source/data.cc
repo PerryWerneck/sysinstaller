@@ -221,7 +221,7 @@
 
 		} else {
 
-			throw logic_error("Standard data source is unable to save to without a local file path");
+			throw logic_error("Standard data source is unable to save without a local file path");
 
 		}
 

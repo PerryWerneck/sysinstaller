@@ -129,28 +129,57 @@
 				activate(progress);
 				return 0;
 
+			} catch(const Udjat::HTTP::Exception &e) {
+
+				debug("Udjat::HTTP::exception");
+				popup.message = e.title();
+
+				const char *msg = e.body();
+				if(msg && *msg) {
+
+					Logger::String{e.body()}.error(name());
+					popup.details = e.body();
+
+				} else {
+
+					int code = e.code();
+					Logger::String message{"HTTP error ",code};
+					message.error(name());
+
+					if(code == 404) {
+						popup.details = _("A required file is not available");
+					} else {
+						popup.details = message;
+					}
+
+				}
+
+
 			} catch(const Udjat::Exception &e) {
 
+				debug("Udjat::exception");
 				popup.message = e.title();
 				popup.details = e.body();
 				Logger::String{e.body()}.error(name());
 
 			} catch(const std::logic_error &e) {
 
+				debug("std::logic_error");
 				popup.message = _("Configuration or logic error");
 				popup.details = e.what();
 				Logger::String{e.what()}.error(name());
 
 			} catch(const std::system_error &e) {
 
+				debug("std::system_error");
 				Logger::String details{e.what()," (rc=",e.code().value(),")"};
 				details.error(name());
-
 				popup.message = _("System error");
 				popup.details = details;
 
 			} catch(const std::exception &e) {
 
+				debug("std::exception");
 				popup.message = _("Operation failed");
 				popup.details = e.what();
 				Logger::String{e.what()}.error(name());

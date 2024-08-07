@@ -48,6 +48,9 @@
 
  namespace Reinstall {
 
+	TempFileSource::TempFileSource(const DataSource &src) : DataSource{src}, url{src.remote()}, filepath{src.path()} {
+	}
+
 	TempFileSource::TempFileSource(const char *n, const std::string &u, const std::string &p) : DataSource{n}, url{u}, filepath{p} {
 	}
 
@@ -80,14 +83,30 @@
 		auto url = url_remote();
 		progress = url.c_str();
 
-		filename = Udjat::File::Temporary::create();
+		debug("Downloading ",url.c_str());
 
-		Udjat::File::Handler file{filename.c_str(),true};
-		url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
-			progress.file_sizes(current,total);
-			file.write(buf,length);
-			return true;
-		});
+		try {
+
+			filename = Udjat::File::Temporary::create();
+
+			Udjat::File::Handler file{filename.c_str(),true};
+			url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
+				progress.file_sizes(current,total);
+				file.write(buf,length);
+				return true;
+			});
+
+		} catch(const std::exception &e) {
+
+			Logger::String{url.c_str(),": ",e.what()}.error(name());
+			throw;
+
+		} catch(...) {
+
+			Logger::String{url.c_str(),": Unexpected error"}.error(name());
+			throw;
+
+		}
 
 		return filename;
 

@@ -262,10 +262,15 @@
 					return false;
 				});
 
-			} else {
+			} else if(source->has_local()) {
 
 				// It's a single file
 				push_back(files,source);
+
+			} else {
+
+				// Single file without local path, insert a tempfile source.
+				push_back(files,std::make_shared<TempFileSource>(*source));
 
 			}
 		}
