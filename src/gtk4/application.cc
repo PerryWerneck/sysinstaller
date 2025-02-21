@@ -34,6 +34,7 @@
  #include <udjat/tools/application.h>
  #include <udjat/tools/threadpool.h>
 
+ #include <glib/gi18n-lib.h>
  #include <gtkmm.h>
  #include <vector>
 

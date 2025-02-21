@@ -210,7 +210,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libudjatdbus
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [DBUS], [udjat-dbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+PKG_CHECK_MODULES( [DBUS], [libudjatdbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
 AC_SUBST(DBUS_LIBS)
 AC_SUBST(DBUS_CFLAGS)
 

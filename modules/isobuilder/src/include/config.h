@@ -53,7 +53,7 @@
 #define ICONV_CONST 
 
 /* The path for module installation */
-#define MODULE_PATH /usr/lib64/udjat/1.2/modules/
+#define MODULE_PATH /usr/lib64/udjat/2.0/modules/
 
 /* Name of package */
 #define PACKAGE "isobuilder"

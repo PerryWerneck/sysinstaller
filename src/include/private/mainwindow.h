@@ -24,6 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/version.h>
+ #include <glib/gi18n-lib.h>
  #include <gtkmm.h>
 
  #include <widgets/sidebar.h>

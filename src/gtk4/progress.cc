@@ -30,6 +30,7 @@
  #include <udjat/tools/string.h>
 
  #include <memory>
+ #include <glib/gi18n-lib.h>
  #include <gtkmm.h>
 
  using namespace std;

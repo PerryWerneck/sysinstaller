@@ -30,6 +30,8 @@
  #include <udjat/tools/exception.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/quark.h>
+ #include <udjat/tools/http/exception.h>
+ #include <udjat/tools/intl.h>
 
  #include <stdexcept>
  #include <fcntl.h>
