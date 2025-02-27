@@ -24,6 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/module/abstract.h>
+ #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/ui/dialog.h>
@@ -33,6 +34,8 @@
  #include <reinstall/tools/repository.h>
 
  #include <private/mainwindow.h>
+
+ #include <reinstall/modules/isowriter.h>
 
  using namespace std;
  using namespace Udjat;
@@ -188,6 +191,7 @@
 #endif // DEBUG
 				Logger::String{"Loading application modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
 
+				Reinstall::IsoWriter::Module::Factory();
 				Udjat::Module::load(path,false);
 
 			}
@@ -218,6 +222,7 @@
  	};
 
 #ifdef DEBUG
+	Config::allow_user_homedir(true);
 	Logger::verbosity(9);
 	Logger::redirect();
 	Logger::console(true);

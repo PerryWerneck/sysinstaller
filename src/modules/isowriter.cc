@@ -29,18 +29,18 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <udjat/ui/dialog.h>
+ #include <reinstall/modules/isowriter.h>
 
  using namespace Udjat;
  using namespace std;
 
- /// @brief Register udjat module.
- UDJAT_API Udjat::Module * udjat_module_init() {
+ namespace Reinstall {
 
 	static const Udjat::ModuleInfo moduleinfo{
-          "Download and write an ISO file."
-	};
+		"Download and write an ISO file."
+  	};
 
-	class Action : public Reinstall::Action {
+	class UDJAT_PRIVATE IsoWriter::Module::Action : public Reinstall::Action {
 	private:
 		Reinstall::FileSource iso;
 		Udjat::Dialog output;
@@ -71,18 +71,21 @@
 		}
 
 	};
-
-	class Module : public Udjat::Module, public Udjat::Factory {
-	public:
-		Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
-		};
-
-		// Udjat::Factory
-		std::shared_ptr<Abstract::Object> ObjectFactory(const Abstract::Object &parent, const XML::Node &node) override {
-			return make_shared<Action>(parent,node);
-		}
-
+  
+	Udjat::Module * IsoWriter::Module::Factory() {
+		return new Module();
+	}
+	
+	IsoWriter::Module::Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
 	};
 
-	return new Module();
+	IsoWriter::Module::~Module() {
+	}
+
+	// Udjat::Factory
+	std::shared_ptr<Abstract::Object> IsoWriter::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
+		return make_shared<Action>(parent,node);
+	}
+
  }
+

@@ -17,8 +17,14 @@ subdir('po')
 #
 enable_debug = get_option('debug') or get_option('buildtype').contains('debug')
 
+time_epoch = run_command('sh', '-c', 'echo "$SOURCE_DATE_EPOCH"', check : true).stdout().strip()
+if time_epoch == ''
+  time_epoch = run_command('date','+%Y%m%d', check: true).stdout().strip()
+endif
+
 compiler_flags_common = [
-	]
+	'-DBUILD_DATE='+time_epoch,
+]
 
 if enable_debug
   compiler_flags_common += [
@@ -43,6 +49,7 @@ conf_data.set_quoted('PACKAGE_NAME', meson.project_name())
 conf_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf_data.set_quoted('PACKAGE_DESCRIPTION', project_description)
 conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), meson.project_version()))
+conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 
 conf_data.set('application_icon','br.com.bb.@0@'.format(meson.project_name()))
 conf_data.set('application_name', meson.project_name())
@@ -117,6 +124,7 @@ lib_src = [
 	'src/library/writer.cc',
 	'src/library/os/linux/gtkremovabledevicedialog.cc',
 	'src/library/os/linux/writer.cc',
+	'src/modules/isowriter.cc',
 ]
 
 executable(
