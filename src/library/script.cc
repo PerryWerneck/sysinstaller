@@ -125,7 +125,17 @@
 
 			URL attr{XML::StringFactory(node,"url")};
 			if(attr.empty()) {
-				throw runtime_error("Required attribute 'url' is missing or invalid");
+
+				// No URL, try legacy attribute.
+
+				String cmdline{XML::StringFactory(node,"cmdline")};
+
+				if(cmdline.empty()) {
+					throw runtime_error("Required attribute 'url' is missing or invalid");
+				}
+
+				attr = URL{"file://",cmdline.c_str()};
+
 			}
 
 			url.remote = XML::QuarkFactory(node,"remote");

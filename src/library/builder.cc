@@ -84,7 +84,7 @@
 			String label{Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")}.c_str()};
 			label.expand(node);
 			boot.label = label.as_quark();
-			Logger::String{"Required attribute boot-label is missing or invalid, using default '",boot.label,"'"}.warning(name());
+			Logger::String{"Required attribute 'boot-label' is missing or invalid, using default '",boot.label,"'"}.warning(name());
 		}
 
 		// Load sources.

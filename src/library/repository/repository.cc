@@ -30,11 +30,14 @@
  #include <udjat/tools/file/path.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/url.h>
+ #include <udjat/tools/url/handler.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
  #include <private/slpclient.h>
+ #include <private/html_parser.hpp>
  #include <list>
+ #include <vector>
 
  #ifdef HAVE_ZLIB
 	#include <zlib.h>
@@ -49,16 +52,17 @@
 
 		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
 
-			// Build SLP value.
-
 			const char *srvc = slpclient->service();
 			if(!(srvc && *srvc)) {
-				throw logic_error("SLP service name is not defined");
-			}
 
-			if(!(kparm.slp && *kparm.slp)) {
+				// No SLP for this repository.
+			 	Logger::String{"SLP service name is not defined, disabling it for this repository"}.warning(name());
+
+			} else if(!(kparm.slp && *kparm.slp)) {
+				
 				Logger::Message url{Config::Value<string>{"kernel-parameters","slp","slp://?{}&auto=1"}.c_str(),srvc};
 				kparm.slp = url.as_quark();
+
 			}
 
 		}
@@ -83,6 +87,49 @@
 		}
 
 		return true;
+	}
+
+	static void parse_index_html(const char *name, const char *root, const URL &url, std::vector<std::string> &files) {
+
+		debug("--------------------- ",url.c_str());
+		Logger::String{"Loading ",url.c_str()}.trace(name);
+
+		String response = url.get();
+
+		if(response.empty()) {
+			throw runtime_error("Empty response from server");
+		}
+
+		HtmlParser parser;
+		shared_ptr<HtmlDocument> doc = parser.Parse(response.c_str(), response.size());
+		if(!doc) {
+			throw runtime_error("Error parsing HTML");
+		}
+
+		std::vector<shared_ptr<HtmlElement>> elements = doc->GetElementByTagName("a");
+		for(auto &element : elements) {
+
+			String href = element->GetAttribute("href");
+			if(href.empty() || href[0] == '?' || href[0] == '/' || href.has_prefix("http://") || href.has_prefix("https://")) {	
+				continue;
+			}	
+
+			if(href[href.size()-1] == '/') {
+				parse_index_html(
+					name,
+					String{root,href.c_str()}.c_str(),
+					URL{url.c_str(),href.c_str()},
+					files
+				);
+			} else {
+
+				debug(String{root,href.c_str()}.c_str());
+				files.emplace_back(String{root,href.c_str()}.c_str());
+
+			}
+
+		}
+
 	}
 
 	bool Repository::index(const char *filename) {
@@ -173,23 +220,20 @@
 					return rc;
 				}
 
-
 			} catch(const std::exception &e) {
 
 				Logger::String{url.c_str(),": ",e.what()}.error(name());
-				return false;
 
 			}
 
-			return true;
 
 		}
 #endif // HAVE_ZLIB
 
-		// Parse html
-		throw system_error(ENOTSUP, system_category(), _("Cant parse server file list"));
+		// Parse index.html
+		parse_index_html(name(),"/",URL{url_remote().c_str(),"/"},files);
 
-		return false;
+		return true;
 	}
 
 
