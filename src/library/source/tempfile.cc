@@ -81,7 +81,7 @@
 		}
 
 		auto url = url_remote();
-		progress = url.c_str();
+		progress.url(url.c_str());
 
 		debug("Downloading ",url.c_str());
 

@@ -167,17 +167,17 @@
 			return true;
 		}
 
+		auto &progress = Dialog::Progress::getInstance();
+		progress.url(_("Loading repository index"));
+		progress.item();
+		
 #ifdef HAVE_ZLIB
 		{
 			debug("Trying index.gz");
 
 			// Try INDEX.gz
 
-			auto &progress = Dialog::Progress::getInstance();
-
 			URL url = url_remote();
-
-			progress.url(url.c_str());
 			url += "INDEX.gz";
 
 			Logger::String{"Searching for ",url.c_str()}.trace(name());
