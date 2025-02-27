@@ -41,7 +41,65 @@
  using namespace Udjat;
  using namespace std;
 
+ static const struct {
+	int code;
+	const char *message;
+ } errors[] = {
+
+	{ FR_OK, 					N_("Succeeded") },
+	{ FR_DISK_ERR, 				N_("A hard error occurred in the low level disk I/O layer") },
+	{ FR_INT_ERR, 				N_("Assertion failed") },
+	{ FR_NOT_READY, 			N_("The physical drive cannot work") },
+	{ FR_NO_FILE, 				N_("Could not find the file") },
+	{ FR_NO_PATH, 				N_("Could not find the path") },
+	{ FR_INVALID_NAME,			N_("The path name format is invalid") },
+	{ FR_DENIED, 				N_("Access denied due to prohibited access or directory full") },
+	{ FR_EXIST, 				N_("Access denied due to prohibited access") },
+	{ FR_INVALID_OBJECT, 		N_("The file/directory object is invalid") },
+	{ FR_WRITE_PROTECTED,		N_("The physical drive is write protected") },
+	{ FR_INVALID_DRIVE,			N_("The logical drive number is invalid") },
+	{ FR_NOT_ENABLED,			N_("The volume has no work area") },
+	{ FR_NO_FILESYSTEM,			N_("There is no valid FAT volume") },
+	{ FR_MKFS_ABORTED,			N_("The f_mkfs() aborted due to any problem") },
+	{ FR_TIMEOUT,				N_("Could not get a grant to access the volume within defined period") },
+	{ FR_LOCKED,				N_("The operation is rejected according to the file sharing policy") },
+	{ FR_NOT_ENOUGH_CORE,		N_("LFN working buffer could not be allocated") },
+	{ FR_TOO_MANY_OPEN_FILES, 	N_("Number of open files > FF_FS_LOCK") },
+	{ FR_INVALID_PARAMETER, 	N_("Given parameter is invalid") },
+ 	{ FR_DISK_ERR, 				N_("A hard error occurred in the low level disk I/O layer") },
+	{ FR_INT_ERR, 				N_("Assertion failed") },
+	{ FR_NOT_READY, 			N_("The physical drive cannot work") },
+	{ FR_NO_FILE, 				N_("Could not find the file") },
+	{ FR_NO_PATH, 				N_("Could not find the path") },
+	{ FR_INVALID_NAME,			N_("The path name format is invalid") },
+	{ FR_DENIED, 				N_("Access denied due to prohibited access or directory full") },
+	{ FR_EXIST, 				N_("Access denied due to prohibited access") },
+	{ FR_INVALID_OBJECT, 		N_("The file/directory object is invalid") },
+	{ FR_WRITE_PROTECTED,		N_("The physical drive is write protected") },
+	{ FR_INVALID_DRIVE,			N_("The logical drive number is invalid") },
+	{ FR_NOT_ENABLED,			N_("The volume has no work area") },
+	{ FR_NO_FILESYSTEM,			N_("There is no valid FAT volume") },
+	{ FR_MKFS_ABORTED,			N_("The f_mkfs() aborted due to any problem") },
+	{ FR_TIMEOUT,				N_("Could not get a grant to access the volume within defined period") },
+	{ FR_LOCKED,				N_("The operation is rejected according to the file sharing policy") },
+	{ FR_NOT_ENOUGH_CORE,		N_("LFN working buffer could not be allocated") },
+	{ FR_TOO_MANY_OPEN_FILES, 	N_("Number of open files > FF_FS_LOCK") },
+	{ FR_INVALID_PARAMETER, 	N_("Given parameter is invalid") },
+ };
+
+
  namespace Reinstall {
+
+	static const char * error_msg(int rc) {
+
+		for(const auto &error : errors) {
+			if(error.code == rc) {
+				return error.message;
+			}
+		}
+
+		return "Unexpected";
+	}
 
 	Disk::Fat32::Fat32(int f, unsigned long long szimage) : Abstract::Disk{f,szimage}, fd{f} {
 
@@ -59,14 +117,14 @@
 			auto rc = f_mkfs("0:", &parm, work, sizeof work);
 
 			if(rc != FR_OK) {
-				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mkfs"), rc});
+				throw runtime_error(Logger::Message{ _("f_mkfs has failed: {}"), error_msg(rc)});
 			}
 
 		}
 
 		auto rc = f_mount(&fs, "0:", 1);
 		if(rc != FR_OK) {
-			throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mount"), rc});
+			throw runtime_error(Logger::Message{ _("f_mount has failed: {}"), error_msg(rc)});
 		}
 
 	}
@@ -79,7 +137,7 @@
 	Disk::Fat32::~Fat32() {
 		auto rc = f_mount(NULL, "", 0);
 		if(rc != FR_OK) {
-			Logger::Message{ _("Unexpected error '{}' on f_mount"), rc}.error("fatfs");
+			Logger::Message{ _("f_mount has failed: "), error_msg(rc)}.error("fatfs");
 		}
 		::close(fd);
 	}
@@ -172,7 +230,7 @@
 				const BYTE *ptr = buffer;
 
 				while(len > 0) {
-					if(f_write(&fdst, ptr, (unsigned int) len, &wrote)  != FR_OK) {
+					if(f_write(&fdst, ptr, (unsigned int) len, &wrote) != FR_OK) {
 						::close(fd);
 						throw runtime_error(Logger::Message{_("Unable to write fat://{}"),to});
 					}

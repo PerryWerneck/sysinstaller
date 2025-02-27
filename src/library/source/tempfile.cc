@@ -88,7 +88,6 @@
 		try {
 
 			filename = Udjat::File::Temporary::create();
-
 			Udjat::File::Handler file{filename.c_str(),true};
 			url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
 				progress.file_sizes(current,total);
