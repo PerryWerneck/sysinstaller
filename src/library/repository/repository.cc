@@ -27,8 +27,9 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
- #include <udjat/tools/file.h>
+ #include <udjat/tools/file/path.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/url.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -142,7 +143,7 @@
 					// Has local path, update file.
 					debug("Using local file");
 
-					filename = url_local().ComponentsFactory().path;
+					filename = url_local().path();
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
 
@@ -150,7 +151,7 @@
 
 					url.get(filename.c_str(),[&progress](double current, double total){
 						progress = (total/current);
-						return true;
+						return false;
 					});
 
 					return index(filename.c_str());
@@ -160,7 +161,7 @@
 					// No local path, use cache.
 					debug("Using remote file");
 
-					filename = url.filename([&progress](double current, double total){
+					filename = url.tempfile([&progress](double current, double total){
 						progress = (total/current);
 						return true;
 					});

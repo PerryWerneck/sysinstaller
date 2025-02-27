@@ -54,6 +54,8 @@
 			/// @brief Is the mainloop active?
 			bool active() const noexcept override;
 
+			void post(Message *message) noexcept override;
+
 			inline operator bool() const noexcept {
 				return active();
 			}

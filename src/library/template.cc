@@ -31,7 +31,10 @@
  #include <udjat/tools/string.h>
  #include <udjat/tools/quark.h>
  #include <udjat/tools/url.h>
- #include <udjat/tools/file.h>
+ #include <udjat/tools/file/text.h>
+ #include <udjat/tools/file/path.h>
+ #include <udjat/tools/logger.h>
+ #include <udjat/tools/intl.h>
  #include <stdexcept>
 
  #include <unistd.h>
@@ -153,7 +156,7 @@
 
 		if(url.local()) {
 			debug("url=",url.c_str());
-			return url.ComponentsFactory().path;
+			return url.path();
 		}
 
 		throw runtime_error("Unable to handle remote template");

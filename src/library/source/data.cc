@@ -25,7 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
- #include <udjat/tools/file.h>
+ #include <udjat/tools/file/path.h>
  #include <udjat/tools/file/handler.h>
  #include <udjat/tools/file/temporary.h>
  #include <udjat/tools/string.h>
@@ -175,7 +175,7 @@
 
 				progress.file_sizes(current,total);
 
-				return true;
+				return false;
 			});
 
 		} catch(const std::exception &e) {
@@ -193,23 +193,26 @@
 			auto url = url_local();
 			url.expand(object);
 
-			auto components = url.ComponentsFactory();
+			std::string filename{url.path().c_str()};
 
-			if(!update_from_remote && access(components.path.c_str(),R_OK) == 0) {
-				Logger::String{components.path.c_str()," already exists"}.write(Logger::Debug,name());
-				return components.path.c_str();
+			debug("---> URL=",url.c_str());
+			debug("---> PATH=",url.path());
+			debug("---> FILENAME=",filename.c_str());
+
+			if(!update_from_remote && access(filename.c_str(),R_OK) == 0) {
+				Logger::String{filename.c_str()," already exists"}.write(Logger::Debug,name());
+				return filename.c_str();
 			}
-
-			const char *filename = components.path.c_str();
 
 			try {
 
-				DataSource::save(progress,filename);
+				Logger::String{"Downloading ",filename.c_str()}.write(Logger::Debug,name());
+				DataSource::save(progress,filename.c_str());
 
 			} catch(...) {
 
 				struct stat sb;
-				if(stat(filename,&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
+				if(stat(filename.c_str(),&sb) != 0 || sb.st_blocks == 0 || (sb.st_mode & S_IFMT) != S_IFREG) {
 					error() << "Download error, cached file '" << filename << "' not available" << endl;
 					throw;
 				}
@@ -217,7 +220,7 @@
 				warning() << "Download error, using cached file '" << filename << "'" << endl;
 			}
 
-			return components.path;
+			return filename;
 
 		} else {
 

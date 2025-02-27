@@ -27,7 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/string.h>
- #include <udjat/tools/file.h>
+ #include <udjat/tools/file/text.h>
  #include <udjat/tools/file/temporary.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/subprocess.h>
@@ -131,7 +131,7 @@
 			url.remote = XML::QuarkFactory(node,"remote");
 			url.local = XML::QuarkFactory(node,"local");
 
-			bool local = (strncmp(attr.ComponentsFactory().scheme.c_str(),"file://",7) == 0);
+			bool local = (strncmp(attr.scheme().c_str(),"file://",7) == 0);
 
 			if(!url.local[0] && local) {
 				url.local = attr.c_str();
@@ -238,7 +238,7 @@
 
 			} else if(url.local && *url.local) {
 
-				filename = Udjat::URL{url.local}.ComponentsFactory().path;
+				filename = Udjat::URL{url.local}.path();
 
 			} else {
 

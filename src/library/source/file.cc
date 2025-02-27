@@ -173,7 +173,7 @@
 
 				progress.file_sizes(current,total);
 
-				return true;
+				return false;
 			});
 
 		} catch(const std::exception &e) {

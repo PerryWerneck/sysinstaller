@@ -237,6 +237,10 @@
 		return true;
 	}
 
+	void Gtk::MainLoop::post(Message *message) noexcept {
+		g_idle_add_once((GSourceOnceFunc) on_posted_message, (gpointer) message);
+	}
+
 	//
 	// Timers
 	//
