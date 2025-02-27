@@ -32,13 +32,12 @@
 	</repository>
 
 	<!-- Path for the driver update (Full URL or repository path) -->
-	<driver-update-disk name='dud'>
+	<!-- driver-update-disk name='dud'>
 	  <attribute name='remote' value='http://localhost/update.dud' />
-		<!-- attribute name='local' value='file:///srv/www/suse/tumbleweed/update.dud' / -->
 		<attribute name='local' value='file://${HOME}/tmp/suse/tumbleweed/update.dud' />
-	  <attribute name='path' value='${boot-path}/update.dud' />	
+	    <attribute name='path' value='${boot-path}/update.dud' />	
 		<attribute name='kernel-parameter-name' value='dud' />
-	</driver-update-disk>
+	</driver-update-disk -->
 
 	<!-- Path for the installation kernel (Full URL or repository path) -->
 	<kernel url='/boot/x86_64/loader/linux' repository='install' />
