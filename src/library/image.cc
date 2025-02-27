@@ -77,6 +77,7 @@
 
 			// Copy contents to temporary file.
 			{
+				debug("Copying EFI boot partition from ",from.c_str()," to temporary file");
 				efibootpart = Udjat::File::Temporary::create();
 				Udjat::File::copy(from.c_str(),efibootpart.c_str());
 				from = efibootpart;
