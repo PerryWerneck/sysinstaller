@@ -123,7 +123,7 @@
 				);
 			} else {
 
-				debug(String{root,href.c_str()}.c_str());
+				debug("Adding file ",String{root,href.c_str()}.c_str());
 				files.emplace_back(String{root,href.c_str()}.c_str());
 
 			}
@@ -147,6 +147,7 @@
 					buffer[ix] = 0;
 				}
 			}
+			debug("Adding file ",buffer);
 			files.emplace_back(buffer);
 		}
 
@@ -231,7 +232,7 @@
 #endif // HAVE_ZLIB
 
 		// Parse index.html
-		parse_index_html(name(),"/",URL{url_remote().c_str(),"/"},files);
+		parse_index_html(name(),"./",URL{url_remote().c_str(),"/"},files);
 
 		return true;
 	}
