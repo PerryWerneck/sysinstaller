@@ -103,6 +103,17 @@
 
 	Disk::Fat32::Fat32(int f, unsigned long long szimage) : Abstract::Disk{f,szimage}, fd{f} {
 
+		debug("Opening fatfs on fd=",f);
+
+		struct stat st;
+		if(::fstat(fd,&st) != 0) {
+			throw system_error(errno, system_category(), "fstat");
+		}
+
+		if(!st.st_size) {
+			throw runtime_error(_("Empty disk image"));
+		}
+
 		if(disk_ioctl(0, CTRL_FORMAT, &fd) != RES_OK) {
 			throw runtime_error(_("Cant bind fatfs to disk image"));
 		}
