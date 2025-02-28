@@ -39,7 +39,7 @@
 
  #ifdef HAVE_FATFS
 
- #include <fatfs.h>
+ #include <reinstall/modules/fatfs.h>
  #include <fatfs/ff.h>
  #include <fatfs/diskio.h>
 

@@ -22,6 +22,7 @@
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
  #include <udjat/tools/factory.h>
+ #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
@@ -33,31 +34,24 @@
  #include <udjat/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <vector>
+ #include <reinstall/modules/isobuilder.h>
  #include <list>
-
- #ifdef HAVE_ISOFS
-	#include <iso9660.h>
- #endif // HAVE_ISOFS
-
- #ifdef HAVE_FATFS
-	#include <fatfs.h>
- #endif // HAVE_FATFS
+ #include <reinstall/modules/iso9660.h>
+ #include <reinstall/modules/fatfs.h>
 
  #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
- using namespace Reinstall;
 
- /// @brief Register udjat module.
- UDJAT_API Udjat::Module * udjat_module_init() {
+ namespace Reinstall {
 
 	static const Udjat::ModuleInfo moduleinfo{
           "Build customized installation image."
 	};
 
 	/// @brief Base class for actions.
-	class UDJAT_PRIVATE Action : public Reinstall::Action, protected Reinstall::Builder {
+	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Action, protected Reinstall::Builder {
 	protected:
 		virtual void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
 
@@ -96,9 +90,8 @@
 
 	};
 
-#ifdef HAVE_ISOFS
 	/// @brief ISO9660 builder.
-	class UDJAT_PRIVATE Iso9660Builder : public Action {
+	class UDJAT_PRIVATE Iso9660Builder : public IsoBuilder::Module::Action {
 	private:
 		iso9660::Image::Settings imgdef;
 
@@ -127,11 +120,9 @@
 
 
 	};
-#endif // HAVE_ISOFS
 
-#ifdef HAVE_FATFS
 	/// @brief Fat builder.
-	class UDJAT_PRIVATE FatBuilder : public Action {
+	class UDJAT_PRIVATE FatBuilder : public IsoBuilder::Module::Action {
 	private:
 		FatFS::Image::Settings imgdef;
 
@@ -160,64 +151,72 @@
 
 
 	};
-#endif // HAVE_FATFS
 
-	class Module : public Udjat::Module, public Udjat::Factory {
-	private:
+	Reinstall::IsoBuilder::Module::Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
+	}
 
-		/// @brief Proxy for legacy config files.
-		class Proxy : public Udjat::Factory {
-		private:
-			Udjat::Factory &target ;
+	Reinstall::IsoBuilder::Module::~Module() {
+	}
 
-		public:
-			Proxy(Udjat::Factory *t) : Udjat::Factory("network-installer",moduleinfo), target{*t} {
+	
+	std::shared_ptr<Udjat::Abstract::Object> Reinstall::IsoBuilder::Module::ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) {
+		try {
+
+			auto attr = XML::AttributeFactory(node,"filesystem");
+
+			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
+				return make_shared<Iso9660Builder>(parent,node);
 			}
 
+			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
+				return make_shared<FatBuilder>(parent,node);
+			}
+
+			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(Factory::name());
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error(Factory::name());
+
+		}
+
+		return std::shared_ptr<Udjat::Abstract::Object>();
+
+	}
+
+	Udjat::Module * Reinstall::IsoBuilder::Module::Factory() {
+
+		/// @brief Proxy for legacy config files.
+		class UDJAT_PRIVATE Proxy : public Udjat::Factory {
+		private:
+			Udjat::Factory &target ;
+	
+		public:
+			Proxy(const char *name, Udjat::Factory *t) : Udjat::Factory(name,moduleinfo), target{*t} {
+			}
+	
 			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
 				Logger::String{"Parsing obsolete node '",node.name(),"'"}.warning(node.attribute("name").as_string("node"));
 				return target.ObjectFactory(parent,node);
 			}
-
+	
 		};
+		
+	
+		class Module : public Reinstall::IsoBuilder::Module {
+		private:
+			Proxy legacy{"network-installer",this};
 
-		Proxy legacy;
-
-	public:
-		Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo), legacy{this} {
-		};
-
-		// Udjat::Factory
-		std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
-
-			try {
-
-				auto attr = XML::AttributeFactory(node,"filesystem");
-
-#ifdef HAVE_ISOFS
-				if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
-					return make_shared<Iso9660Builder>(parent,node);
-				}
-#endif // HAVE_ISOFS
-
-#ifdef HAVE_FATFS
-				if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
-					return make_shared<FatBuilder>(parent,node);
-				}
-#endif // HAVE_FATFS
-
-				Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(Factory::name());
-
-			} catch(const std::exception &e) {
-
-				Logger::String{e.what()}.error(Factory::name());
-
+		public:
+			Module() = default;
+			virtual ~Module() {
 			}
 
-			return std::shared_ptr<Udjat::Abstract::Object>();
-		}
+		};
 
-	};
+		return new Module();
 
-	return new Module();
+	}
+
+
  }

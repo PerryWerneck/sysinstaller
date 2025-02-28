@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <config xml:lang="en">
 
-	<!-- HTTP is required for file download -->
-	<module name='http' required='yes' />
-	
 	<!-- 
 	
 		URL for the installation repository 
