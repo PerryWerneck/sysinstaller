@@ -38,7 +38,7 @@
 			
 			static Udjat::Module * Factory();
 
-			Module();
+			Module(const char *name = "isobuilder");
 			virtual ~Module();
 			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
 	

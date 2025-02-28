@@ -152,7 +152,7 @@
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module() : Udjat::Module("isobuilder",moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
+	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
@@ -208,13 +208,15 @@
 			Proxy legacy{"network-installer",this};
 
 		public:
-			Module() = default;
+			Module(const char *name) : Reinstall::IsoBuilder::Module(name) {
+			}
+			
 			virtual ~Module() {
 			}
 
 		};
 
-		return new Module();
+		return new Module("netinstall");
 
 	}
 
