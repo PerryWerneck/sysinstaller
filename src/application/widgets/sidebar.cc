@@ -46,9 +46,9 @@
 	set_homogeneous(false);
 
 #ifdef DEBUG
-	Config::Value<string> path{"defaults","logo","./icons/logo.svg"};
+	Config::Value<string> path{"defaults","sidebar-logo","./icons/logo.svg"};
 #else
-	Config::Value<string> path{"defaults","logo",Application::DataFile("icons/logo.svg").c_str()};
+	Config::Value<string> path{"defaults","sidebar-logo",Application::DataFile("icons/logo.svg").c_str()};
 #endif // DEBUG
 
 	try {
