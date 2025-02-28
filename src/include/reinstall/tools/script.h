@@ -53,7 +53,9 @@
 		int gid = -1;
 
 		std::string tempfilename;
-		const char *code = nullptr;	///< @brief The contents from xml, parsed and 'quarked'
+
+		const char *cmdline = nullptr;	///< @brief The command line to be executed
+		const char *code = nullptr;		///< @brief The contents from xml, parsed and 'quarked'
 
 	};
 

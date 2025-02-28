@@ -112,7 +112,7 @@
 	Script::Script(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
 		: rtime{(Script::RunTime) String{XML::StringFactory(node,"type","post")}.select("pre","post",nullptr)},
 		marker{node.attribute("marker").as_string(((std::string) Config::Value<String>("string","marker","$")).c_str())[0]},
-		uid{getuid(node)}, gid{getgid(node)} {
+		uid{getuid(node)}, gid{getgid(node)}, cmdline{String{node,"cmdline"}.as_quark()} {
 
 		Udjat::NamedObject::set(node);
 
@@ -124,19 +124,6 @@
 			// Not text, get from URLs.
 
 			URL attr{XML::StringFactory(node,"url")};
-			if(attr.empty()) {
-
-				// No URL, try legacy attribute.
-
-				String cmdline{XML::StringFactory(node,"cmdline")};
-
-				if(cmdline.empty()) {
-					throw runtime_error("Required attribute 'url' is missing or invalid");
-				}
-
-				attr = URL{"file://",cmdline.c_str()};
-
-			}
 
 			url.remote = XML::QuarkFactory(node,"remote");
 			url.local = XML::QuarkFactory(node,"local");
@@ -144,13 +131,17 @@
 			bool local = (strncmp(attr.scheme().c_str(),"file://",7) == 0);
 
 			if(!url.local[0] && local) {
-				url.local = attr.c_str();
-				Logger::String{"Will get local script from",url.local}.trace(name());
+				url.local = attr.as_quark();
+				if(url.local[0]) {
+					Logger::String{"Will get local script from",url.local}.trace(name());
+				}
 			}
 
 			if(!(url.remote[0] || local)) {
-				url.remote = attr.c_str();
-				Logger::String{"Will get remote script from ",url.remote}.trace(name());
+				url.remote = attr.as_quark();
+				if(url.remote[0]) {
+					Logger::String{"Will get remote script from ",url.remote}.trace(name());
+				}
 			}
 
 		} else {
@@ -207,6 +198,36 @@
 
 	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime, Udjat::Dialog::Progress &progress) {
 
+		class SubProcess : public Udjat::SubProcess {
+		private:
+			int uid = -1;
+			int gid = -1;
+
+		protected:
+
+			void pre() override {
+				if(uid != -1 && setuid(uid) != 0) {
+#ifdef DEBUG
+					Logger::String{"Cant set subprocess user id"}.error("subprocess");
+#else
+					throw system_error(errno,system_category(),"Cant set subprocess user id");
+#endif // DEBUG
+				}
+				if(gid != -1 && setgid(gid) != 0) {
+#ifdef DEBUG
+					Logger::String{"Cant set subprocess group id"}.error("subprocess");
+#else
+					throw system_error(errno,system_category(),"Cant set subprocess group id");
+#endif // DEBUG
+				}
+			}
+
+		public:
+			SubProcess(int u, int g, const char *name, const Udjat::String &command)
+				: Udjat::SubProcess{name,command.c_str(),Logger::Info,Logger::Error}, uid{u}, gid{g} {
+			}
+		};
+		
 		if(rtime != this->rtime) {
 			return;
 		}
@@ -221,6 +242,20 @@
 
 			text = code;
 
+		} else if(cmdline[0]) {
+
+			// Execute command line.
+			debug("running ",cmdline);
+
+			SubProcess{
+				uid,
+				gid,
+				object.name(),
+				cmdline
+			}.run();
+
+			return;
+			
 		} else {
 
 			std::string filename;
@@ -263,37 +298,6 @@
 
 		text.expand(marker,object);
 		text.expand(marker,*this);
-
-		class SubProcess : public Udjat::SubProcess {
-		private:
-			int uid = -1;
-			int gid = -1;
-
-		protected:
-
-			void pre() override {
-				if(uid != -1 && setuid(uid) != 0) {
-#ifdef DEBUG
-					Logger::String{"Cant set subprocess user id"}.error("subprocess");
-#else
-					throw system_error(errno,system_category(),"Cant set subprocess user id");
-#endif // DEBUG
-				}
-				if(gid != -1 && setgid(gid) != 0) {
-#ifdef DEBUG
-					Logger::String{"Cant set subprocess group id"}.error("subprocess");
-#else
-					throw system_error(errno,system_category(),"Cant set subprocess group id");
-#endif // DEBUG
-				}
-			}
-
-		public:
-			SubProcess(int u, int g, const char *name, const Udjat::String &command)
-				: Udjat::SubProcess{name,command.c_str(),Logger::Info,Logger::Error}, uid{u}, gid{g} {
-			}
-		};
-
 
 		auto script	= File::Temporary::create();
 
