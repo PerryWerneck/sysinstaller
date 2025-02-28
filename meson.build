@@ -167,6 +167,11 @@ custom_target(
 )
 
 install_data(
+	'stylesheet.css',
+	install_dir:'/usr/share/reinstall'
+)
+
+install_data(
 configure_file(
         input: 'sysconf/launcher.desktop.in',
         output: '@0@.@1@.desktop'.format(project_domain,meson.project_name()), 
@@ -183,6 +188,11 @@ configure_file(
 	),
 	rename: meson.project_name(),
 	install_dir:'/etc/tmpfiles.d' 
+)
+
+install_data(
+	'templates/grub.cfg',
+	install_dir:'/usr/share/reinstall/templates'
 )
 
 install_data(
