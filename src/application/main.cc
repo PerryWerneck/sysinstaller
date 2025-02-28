@@ -189,40 +189,44 @@
 			debug("Definitions='",definitions,"'");
 
 			{
-				Application::LibDir path{"modules"};
-				path += MODULE_VERSION "/";
-				path.mkdir(0755);
-
 				// Load embedded modules
 				Logger::String{"Loading embedded modules"}.trace(Udjat::Application::name());
 
-				if(Config::Value<bool>{"embedded-modules","http",true}) {
+				if(Config::Value<bool>{"modules","http",true}) {
 					Udjat::HTTP::Module::Factory();
 				}
 
-				if(Config::Value<bool>{"embedded-modules","isowriter",true}) {
+				if(Config::Value<bool>{"modules","isowriter",true}) {
 					Reinstall::IsoWriter::Module::Factory();
 				}
 
-				if(Config::Value<bool>{"embedded-modules","isobuilder",true}) {
+				if(Config::Value<bool>{"modules","isobuilder",true}) {
 					Reinstall::IsoBuilder::Module::Factory();
 				}
 
-				if(Config::Value<bool>{"embedded-modules","grub2",true}) {
+				if(Config::Value<bool>{"modules","grub2",true}) {
 					Reinstall::Grub2::Module::Factory();
 				}
 
-				// Load external modules
-				Logger::String{"Loading external modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
-
-				try {
-
-					Udjat::Module::load(path,false);
-
-				} catch(const std::exception &e) {
-
-					Logger::String{"Error loading modules: ",e.what()}.error(Udjat::Application::name());
+				if(Config::Value<bool>{"modules","load-external",false}) {
 					
+					Application::LibDir path{"modules"};
+					path += MODULE_VERSION "/";
+					path.mkdir(0755);
+	
+					// Load external modules
+					Logger::String{"Loading external modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
+
+					try {
+
+						Udjat::Module::load(path,false);
+
+					} catch(const std::exception &e) {
+
+						Logger::String{"Error loading modules: ",e.what()}.error(Udjat::Application::name());
+
+					}
+	
 				}
 
 			}
