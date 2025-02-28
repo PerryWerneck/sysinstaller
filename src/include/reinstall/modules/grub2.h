@@ -37,9 +37,9 @@
 			class Action;
 
 		public:
-			static Udjat::Module * Factory();
+			static Udjat::Module * Factory(const char *name = "grub2");
 
-			Module();
+			Module(const char *name = "grub2");
 			virtual ~Module();
 			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
 	

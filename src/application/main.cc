@@ -204,7 +204,7 @@
 				}
 
 				if(Config::Value<bool>{"modules","grub2",true}) {
-					Reinstall::Grub2::Module::Factory();
+					Reinstall::Grub2::Module::Factory("grub");
 				}
 
 				if(Config::Value<bool>{"modules","load-external",false}) {

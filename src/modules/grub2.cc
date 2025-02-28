@@ -259,7 +259,7 @@
 	};
 	
 
-	Grub2::Module::Module() : Udjat::Module("grub2",moduleinfo), Udjat::Factory("local-installer",moduleinfo) {
+	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory("local-installer",moduleinfo) {
 	};
 
 	Grub2::Module::~Module() {
@@ -270,8 +270,8 @@
 		return make_shared<Action>(parent,node);
 	}
 
-	Udjat::Module * Grub2::Module::Factory() {
-		return new Grub2::Module();
+	Udjat::Module * Grub2::Module::Factory(const char *name) {
+		return new Grub2::Module(name);
 	}
 
  }
