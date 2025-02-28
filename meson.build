@@ -176,6 +176,16 @@ configure_file(
 )
 
 install_data(
+configure_file(
+        input: 'sysconf/tmpfiles.d.in',
+        output: 'tmpfiles', 
+        configuration: conf_data,
+	),
+	rename: meson.project_name(),
+	install_dir:'/etc/tmpfiles.d' 
+)
+
+install_data(
 	'templates/grub.cfg',
 	install_dir:'/usr/share/reinstall/templates'
 )

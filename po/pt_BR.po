@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 07:50-0300\n"
+"POT-Creation-Date: 2025-02-28 08:41-0300\n"
 "PO-Revision-Date: 2023-07-13 15:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -113,16 +113,16 @@ msgstr "Erro criando imagem iso"
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário 'path' não foi encontrado"
 
-#: src/library/builder.cc:84 src/modules/grub2.cc:130 src/modules/grub2.cc:202
+#: src/library/builder.cc:85 src/modules/grub2.cc:130 src/modules/grub2.cc:202
 #, fuzzy
 msgid "Reinstall workstation"
 msgstr "Reinstalar o sistema"
 
-#: src/library/builder.cc:253 src/modules/grub2.cc:237
+#: src/library/builder.cc:254 src/modules/grub2.cc:237
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
-#: src/library/builder.cc:279
+#: src/library/builder.cc:280
 #, fuzzy
 msgid "Cant find installation files"
 msgstr "Obtendo kernel de instalação"

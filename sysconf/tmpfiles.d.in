@@ -1,0 +1,3 @@
+# Cleanup do diretório temporário usado pelo @application_name@
+R /tmp/@application_name@
+
