@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <iso9660.h>
+ #include <reinstall/modules/iso9660.h>
  #include <string>
 
  #include <udjat/tools/application.h>
@@ -35,17 +35,14 @@
  #include <reinstall/tools/builder.h>
  #include <reinstall/tools/writer.h>
 
- #ifdef HAVE_ISOFS
-	#define LIBISOFS_WITHOUT_LIBBURN
-	#include <libisofs/libisofs.h>
- #endif // HAVE_ISOFS
+ #define LIBISOFS_WITHOUT_LIBBURN
+ #include <libisofs/libisofs.h>
 
  #include <unistd.h>
 
  using namespace Udjat;
  using namespace std;
 
- #ifdef HAVE_ISOFS
  namespace iso9660 {
 
 	class UDJAT_PRIVATE IsoBuilderSingleTon {
@@ -158,7 +155,7 @@
 		if(settings.data_preparer_id && *settings.data_preparer_id) {
 			iso_image_set_data_preparer_id(image, settings.data_preparer_id);
 		} else {
-			iso_image_set_data_preparer_id(image,Config::Value<string>("iso9660","data-preparer-id",PACKAGE_URL).c_str());;
+			iso_image_set_data_preparer_id(image,Config::Value<string>("iso9660","data-preparer-id",PACKAGE_NAME).c_str());;
 		}
 
 		// set system id
@@ -455,6 +452,5 @@
 	}
 
  }
- #endif // HAVE_ISOFS
-
+ 
 

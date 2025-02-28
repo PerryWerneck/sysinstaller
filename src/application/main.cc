@@ -36,6 +36,8 @@
  #include <private/mainwindow.h>
 
  #include <reinstall/modules/isowriter.h>
+ #include <reinstall/modules/isobuilder.h>
+
  #include <udjat/module/http.h>
 
  using namespace std;
@@ -192,8 +194,9 @@
 #endif // DEBUG
 				Logger::String{"Loading application modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
 
-				Reinstall::IsoWriter::Module::Factory();
 				Udjat::HTTP::Module::Factory();
+				Reinstall::IsoWriter::Module::Factory();
+				Reinstall::IsoBuilder::Module::Factory();
 
 				Udjat::Module::load(path,false);
 

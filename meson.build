@@ -54,6 +54,9 @@ conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 conf_data.set('application_icon','br.com.bb.@0@'.format(meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
+conf_data.set('HAVE_FATFS', 1)
+conf_data.set('HAVE_ISOFS', 1)
+
 if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   conf_data.set('HAVE_UNISTD_H', 1)
 endif
@@ -80,6 +83,7 @@ deps = [
 	dependency('libzip'),
 	dependency('libfatfs-static'),
 	dependency('zlib'),
+	dependency('libisofs-1'),
 	cxx.find_library('slp'),
 ]
 
@@ -125,6 +129,11 @@ lib_src = [
 	'src/library/os/linux/gtkremovabledevicedialog.cc',
 	'src/library/os/linux/writer.cc',
 	'src/modules/isowriter.cc',
+	'src/modules/isobuilder/fatfs/image.cc',
+	'src/modules/isobuilder/fatfs/settings.cc',
+	'src/modules/isobuilder/iso9660/image.cc',
+	'src/modules/isobuilder/iso9660/settings.cc',
+	'src/modules/isobuilder/module.cc',
 ]
 
 executable(

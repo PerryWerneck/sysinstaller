@@ -27,7 +27,7 @@
 
  #ifdef HAVE_ISOFS
 
- #include <iso9660.h>
+ #include <reinstall/modules/iso9660.h>
 
  using namespace Udjat;
  using namespace std;

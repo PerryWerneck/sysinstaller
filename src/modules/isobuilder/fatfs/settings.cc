@@ -27,7 +27,7 @@
 
  #ifdef HAVE_FATFS
 
- #include <fatfs.h>
+ #include <reinstall/modules/fatfs.h>
  #include <fatfs/ff.h>
 
  using namespace Udjat;
