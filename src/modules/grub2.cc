@@ -32,6 +32,7 @@
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
+ #include <reinstall/modules/grub2.h>
  #include <udjat/ui/dialog.h>
  #include <vector>
  #include <reinstall/tools/kernelparameter.h>
@@ -65,6 +66,218 @@
 	return str.as_quark();
  }
 
+ namespace Reinstall {
+
+	static const Udjat::ModuleInfo moduleinfo{
+		"Reinstallation without disk image."
+	};
+
+	class UDJAT_PRIVATE Grub2::Module::Action : public Reinstall::Action {
+	private:
+
+		class Kernel : public Reinstall::FileSource {
+		public:
+			Kernel(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"kernel"} {
+				url.local = ::PathFactory(object,node,"kernel","file://${boot.path.mount}${boot.path.relative}/${filename}");
+				url.path = ::PathFactory(object,node,"kernel","${boot.path.relative}/${filename}");
+
+				if(!(message && *message)) {
+					message = _("Getting installation kernel");
+				}
+			}
+		};
+
+		class Init : public Reinstall::FileSource {
+		public:
+			Init(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"init"} {
+				url.local = ::PathFactory(object,node,"initrd","file://${boot.path.mount}${boot.path.relative}/${filename}");
+				url.path = ::PathFactory(object,node,"initrd","${boot.path.relative}/${filename}");
+
+				if(!(message && *message)) {
+					message = _("Getting init system");
+				}
+			}
+		};
+
+		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
+		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
+		std::vector<std::shared_ptr<Reinstall::Template>> templates;
+		std::vector<std::shared_ptr<Reinstall::Script>> scripts;
+
+		const char *boot_label = nullptr;
+
+	public:
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+			: Reinstall::Action{parent,node} {
+
+			static const char *labels[] = {
+				"grub-label",
+				"boot-label",
+				"label",
+				"system-name"
+			};
+
+			for(const char *label : labels) {
+				const char *ptr = XML::QuarkFactory(node,label);
+				if(ptr && *ptr) {
+					boot_label = ptr;
+					Logger::String{"Setting boot-label to '",boot_label,"' from attribute '",label,"'"}.trace(name());
+					break;
+				}
+			}
+
+			if(!(boot_label && *boot_label)) {
+				String label{Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")}.c_str()};
+				label.expand(node);
+				boot_label = label.as_quark();
+				Logger::String{"Required attribute 'boot-label' is missing or invalid, using default '",boot_label,"'"}.warning(name());
+			}
+
+			sources.push_back(make_shared<Kernel>(*this,node));
+			sources.push_back(make_shared<Init>(*this,node));
+
+			// Load kernel parameters.
+			Reinstall::KernelParameter::load(node,kparms);
+
+			// Load templates
+			Reinstall::Template::load(*this,node,templates);
+
+			// Load scripts.
+			Reinstall::Script::load(*this,node,scripts);
+
+		}
+
+		bool getProperty(const char *key, std::string &value) const override {
+
+// 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
+
+			if(!strcasecmp(key,"grub-config")) {
+#ifdef DEBUG
+				value = "/tmp/grub.cfg";
+#else
+				value = "/boot/grub2/grub.cfg";
+#endif // DEBUG
+				return true;
+			}
+
+			if(!(strcasecmp(key,"kernel-file") && strcasecmp(key,"kernel-filename"))) {
+
+				for(const auto &source : sources) {
+
+					const Kernel *object = dynamic_cast<Kernel *>(source.get());
+					if(object) {
+
+						const char *ptr = strrchr(object->local(),'/');
+						if(ptr) {
+							value = ptr+1;
+							debug(key,"='",value.c_str(),"'");
+							return true;
+						}
+					}
+				}
+			}
+
+			if(!(strcasecmp(key,"initrd-file") && strcasecmp(key,"initrd-filename"))) {
+
+				for(const auto &source : sources) {
+
+					const Init *object = dynamic_cast<Init *>(source.get());
+					if(object) {
+
+						const char *ptr = strrchr(object->local(),'/');
+						if(ptr) {
+							value = ptr+1;
+							debug(key,"='",value.c_str(),"'");
+							return true;
+						}
+					}
+				}
+			}
+
+			if(!(strcasecmp(key,"boot-label") && strcasecmp(key,"install-label"))) {
+
+				if(boot_label && *boot_label) {
+					value = boot_label;
+				} else {
+					value = Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")};
+				}
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-kloading")) {
+				value = _("Loading kernel...");
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-iloading")) {
+				value = _("Loading installer...");
+				return true;
+			}
+
+			if(!strcasecmp(key,"kernel-parameters")) {
+				value = KernelParameter::join(*this,kparms);
+				debug("Kernel parameters set to '",value.c_str(),"'");
+				return true;
+			}
+
+			if(!strcasecmp(key,"grub-conf-dir")) {
+				value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
+#ifdef DEBUG
+				debug("Grub config was set to '",value.c_str(),"'");
+				value = "/tmp/";
+#endif // DEBUG
+				return true;
+			}
+
+			return Reinstall::Action::getProperty(key,value);
+		}
+
+		int activate(Udjat::Dialog::Progress &progress) override {
+
+			progress = _("Getting required files");
+			for(const auto &source : sources) {
+				source->save(*this,progress);
+			}
+
+			progress = _("Applying templates");
+			for(const auto &tmplt : templates) {
+				tmplt->save(*this,progress);
+			}
+
+			progress = _("Configuring boot loader");
+			for(auto &script : scripts) {
+				script->run(*this,Script::Pre,progress);
+			}
+
+			for(auto &script : scripts) {
+				script->run(*this,Script::Post,progress);
+			}
+
+			return 0;
+		}
+
+	};
+	
+
+	Grub2::Module::Module() : Udjat::Module("grub2",moduleinfo), Udjat::Factory("local-installer",moduleinfo) {
+	};
+
+	Grub2::Module::~Module() {
+	}	
+
+	// Udjat::Factory
+	std::shared_ptr<Abstract::Object> Grub2::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
+		return make_shared<Action>(parent,node);
+	}
+
+	Udjat::Module * Grub2::Module::Factory() {
+		return new Grub2::Module();
+	}
+
+ }
+
+
+ /*
  /// @brief Register udjat module.
  UDJAT_API Udjat::Module * udjat_module_init() {
 
@@ -149,9 +362,7 @@
 
 		bool getProperty(const char *key, std::string &value) const override {
 
-/*
-17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
-*/
+// 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
 
 			if(!strcasecmp(key,"grub-config")) {
 #ifdef DEBUG
@@ -274,3 +485,4 @@
 
 	return new Module();
  }
+*/
