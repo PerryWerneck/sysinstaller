@@ -93,7 +93,7 @@
 			Config::Value<string>{
 				"defaults",
 				"insert-device-message",
-				_("Insert an storage device <b>NOW</b> ")
+				_("Insert an storage device <b>NOW</b>")
 			}.c_str()
 		);
 		label.get_style_context()->add_class("dialog-title");
