@@ -7,6 +7,7 @@ project(
 )
 
 project_description = 'Instalar/reinstalar terminal'
+project_domain = 'bb.com.br'
 
 cxx = meson.get_compiler('cpp')
 
@@ -49,9 +50,10 @@ conf_data.set_quoted('PACKAGE_NAME', meson.project_name())
 conf_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf_data.set_quoted('PACKAGE_DESCRIPTION', project_description)
 conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), meson.project_version()))
+conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(project_domain,meson.project_name()))
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 
-conf_data.set('application_icon','br.com.bb.@0@'.format(meson.project_name()))
+conf_data.set('application_icon','@0@.@1@'.format(project_domain,meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
 conf_data.set('HAVE_FATFS', 1)
@@ -147,9 +149,17 @@ executable(
 
 custom_target(
 	input: 'icons/logo.svg',
-	output: 'br.com.bb.@0@.svg'.format(meson.project_name()),
+	output: '@0@.@1@.svg'.format(project_domain,meson.project_name()),
 	install: true,
 	install_dir: '/usr/share/icons/hicolor/scalable/apps',
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
 )
 
+install_data(
+configure_file(
+        input: 'sysconf/launcher.desktop.in',
+        output: '@0@.@1@.desktop'.format(project_domain,meson.project_name()), 
+        configuration: conf_data,
+	),
+	install_dir:'/usr/share/applications' 
+)
