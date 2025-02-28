@@ -180,7 +180,6 @@
 
 			return true;
 
-
 		}
 
 		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
@@ -209,7 +208,7 @@
 				}
 
 				if(Config::Value<bool>{"modules","load-external",false}) {
-					
+
 					Application::LibDir path{"modules"};
 					path += MODULE_VERSION "/";
 					path.mkdir(0755);
