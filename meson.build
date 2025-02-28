@@ -129,6 +129,7 @@ lib_src = [
 	'src/library/os/linux/gtkremovabledevicedialog.cc',
 	'src/library/os/linux/writer.cc',
 	'src/modules/isowriter.cc',
+	'src/modules/grub2.cc',
 	'src/modules/isobuilder/fatfs/image.cc',
 	'src/modules/isobuilder/fatfs/settings.cc',
 	'src/modules/isobuilder/iso9660/image.cc',
