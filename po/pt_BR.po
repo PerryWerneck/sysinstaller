@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 08:51-0300\n"
+"POT-Creation-Date: 2025-02-28 10:01-0300\n"
 "PO-Revision-Date: 2023-07-13 15:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -49,83 +49,6 @@ msgstr "Continuar"
 #, c++-format
 msgid "{} of {}"
 msgstr "{} de {}"
-
-#: src/library/action.cc:83
-msgid "The selected action cant be activated"
-msgstr ""
-
-#: src/library/action.cc:92
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/library/action.cc:92
-msgid "Continue"
-msgstr "Continuar"
-
-#: src/library/action.cc:113
-msgid "Initializing"
-msgstr "Inicializando"
-
-#: src/library/action.cc:152
-#, fuzzy
-msgid "A required file is not available"
-msgstr "Dispositivo de armazenamento indisponível"
-
-#: src/library/action.cc:170
-msgid "Configuration or logic error"
-msgstr ""
-
-#: src/library/action.cc:179
-#, fuzzy
-msgid "System error"
-msgstr "Erro de servidor"
-
-#: src/library/action.cc:185
-#, fuzzy
-msgid "Operation failed"
-msgstr "Operação falhou"
-
-#: src/library/action.cc:219
-msgid "Error getting boot path info"
-msgstr ""
-
-#: src/library/action.cc:223
-#, c++-format
-msgid "{} is not a directory"
-msgstr ""
-
-#: src/library/action.cc:230
-msgid "Error opening /etc/mtab"
-msgstr ""
-
-#: src/library/action.cc:249
-#, fuzzy, c++-format
-msgid "Cant find mountpoint for '{}'"
-msgstr "Não foi possível encontrar um ponto de montagem válido"
-
-#: src/library/action.cc:263
-#, fuzzy
-msgid "Error readlink boot link"
-msgstr "Erro criando imagem iso"
-
-#: src/library/action.cc:284
-#, fuzzy, c++-format
-msgid "Required attribute '{}' not found"
-msgstr "Atributo necessário 'path' não foi encontrado"
-
-#: src/library/builder.cc:85 src/modules/grub2.cc:130 src/modules/grub2.cc:202
-#, fuzzy
-msgid "Reinstall workstation"
-msgstr "Reinstalar o sistema"
-
-#: src/library/builder.cc:254 src/modules/grub2.cc:237
-msgid "Getting required files"
-msgstr "Obtendo arquivos necessários"
-
-#: src/library/builder.cc:280
-#, fuzzy
-msgid "Cant find installation files"
-msgstr "Obtendo kernel de instalação"
 
 #: src/library/disk/abstract.cc:50
 #, fuzzy
@@ -306,15 +229,6 @@ msgstr ""
 msgid "Invalid device"
 msgstr ""
 
-#: src/library/image.cc:118
-msgid "No write support on selected image"
-msgstr ""
-
-#: src/library/image.cc:123 src/modules/isobuilder/fatfs/image.cc:280
-#: src/modules/isobuilder/iso9660/image.cc:427
-msgid "Writing image"
-msgstr "Gravando imagem"
-
 #: src/library/kernelparameter.cc:170
 #, fuzzy, c++-format
 msgid "Kernel parameter '{}' has an empty value"
@@ -356,15 +270,6 @@ msgstr ""
 msgid "Invalid repository"
 msgstr ""
 
-#: src/library/template.cc:180
-#, fuzzy
-msgid "Cant handle binary template"
-msgstr "Verificando templates"
-
-#: src/library/template.cc:217
-msgid "Cant update template permissions"
-msgstr "Erro ao atualizar permissões de modelo"
-
 #: src/library/ui/dialog.cc:190
 msgid "_No"
 msgstr ""
@@ -385,6 +290,101 @@ msgstr ""
 #: src/library/writer.cc:135
 msgid "Finishing"
 msgstr ""
+
+#: src/library/action.cc:83
+msgid "The selected action cant be activated"
+msgstr ""
+
+#: src/library/action.cc:92
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/library/action.cc:92
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/library/action.cc:113
+msgid "Initializing"
+msgstr "Inicializando"
+
+#: src/library/action.cc:152
+#, fuzzy
+msgid "A required file is not available"
+msgstr "Dispositivo de armazenamento indisponível"
+
+#: src/library/action.cc:170
+msgid "Configuration or logic error"
+msgstr ""
+
+#: src/library/action.cc:179
+#, fuzzy
+msgid "System error"
+msgstr "Erro de servidor"
+
+#: src/library/action.cc:185
+#, fuzzy
+msgid "Operation failed"
+msgstr "Operação falhou"
+
+#: src/library/action.cc:219
+msgid "Error getting boot path info"
+msgstr ""
+
+#: src/library/action.cc:223
+#, c++-format
+msgid "{} is not a directory"
+msgstr ""
+
+#: src/library/action.cc:230
+msgid "Error opening /etc/mtab"
+msgstr ""
+
+#: src/library/action.cc:249
+#, fuzzy, c++-format
+msgid "Cant find mountpoint for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem válido"
+
+#: src/library/action.cc:263
+#, fuzzy
+msgid "Error readlink boot link"
+msgstr "Erro criando imagem iso"
+
+#: src/library/action.cc:284
+#, fuzzy, c++-format
+msgid "Required attribute '{}' not found"
+msgstr "Atributo necessário 'path' não foi encontrado"
+
+#: src/library/builder.cc:85 src/modules/grub2.cc:130 src/modules/grub2.cc:202
+#, fuzzy
+msgid "Reinstall workstation"
+msgstr "Reinstalar o sistema"
+
+#: src/library/builder.cc:254 src/modules/grub2.cc:237
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:280
+#, fuzzy
+msgid "Cant find installation files"
+msgstr "Obtendo kernel de instalação"
+
+#: src/library/image.cc:118
+msgid "No write support on selected image"
+msgstr ""
+
+#: src/library/image.cc:123 src/modules/isobuilder/fatfs/image.cc:280
+#: src/modules/isobuilder/iso9660/image.cc:427
+msgid "Writing image"
+msgstr "Gravando imagem"
+
+#: src/library/template.cc:180
+#, fuzzy
+msgid "Cant handle binary template"
+msgstr "Verificando templates"
+
+#: src/library/template.cc:217
+msgid "Cant update template permissions"
+msgstr "Erro ao atualizar permissões de modelo"
 
 #: src/modules/grub2.cc:85
 #, fuzzy

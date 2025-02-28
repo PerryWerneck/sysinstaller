@@ -168,7 +168,7 @@ custom_target(
 
 install_data(
 	'stylesheet.css',
-	install_dir:'/usr/share/reinstall'
+	install_dir:'/usr/share/@0@'.format(meson.project_name())
 )
 
 install_data(
@@ -191,21 +191,11 @@ configure_file(
 )
 
 install_data(
-	'templates/grub.cfg',
-	install_dir:'/usr/share/reinstall/templates'
+	[
+		'templates/grub.cfg',
+		'templates/grub2',
+		'templates/isolinux.cfg',
+	],
+	install_dir:'/usr/share/@0@/templates'.format(meson.project_name())
 )
 
-install_data(
-	'templates/grub.cfg',
-	install_dir:'/usr/share/reinstall/templates'
-)
-
-install_data(
-	'templates/grub2',
-	install_dir:'/usr/share/reinstall/templates'
-)
-
-install_data(
-	'templates/isolinux.cfg',
-	install_dir:'/usr/share/reinstall/templates'
-)
