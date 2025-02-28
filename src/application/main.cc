@@ -37,6 +37,7 @@
 
  #include <reinstall/modules/isowriter.h>
  #include <reinstall/modules/isobuilder.h>
+ #include <reinstall/modules/grub2.h>
 
  #include <udjat/module/http.h>
 
@@ -189,15 +190,29 @@
 
 			{
 				Application::LibDir path{"modules"};
-#ifdef DEBUG
-				path.assign(".bin/Debug/");
-#endif // DEBUG
-				Logger::String{"Loading application modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
+				path += MODULE_VERSION "/";
 
-				Udjat::HTTP::Module::Factory();
-				Reinstall::IsoWriter::Module::Factory();
-				Reinstall::IsoBuilder::Module::Factory();
+				// Load embedded modules
+				Logger::String{"Loading embedded modules"}.trace(Udjat::Application::name());
 
+				if(Config::Value<bool>{"embedded-modules","http",true}) {
+					Udjat::HTTP::Module::Factory();
+				}
+
+				if(Config::Value<bool>{"embedded-modules","isowriter",true}) {
+					Reinstall::IsoWriter::Module::Factory();
+				}
+
+				if(Config::Value<bool>{"embedded-modules","isobuilder",true}) {
+					Reinstall::IsoBuilder::Module::Factory();
+				}
+
+				if(Config::Value<bool>{"embedded-modules","grub2",true}) {
+					Reinstall::Grub2::Module::Factory();
+				}
+
+				// Load external modules
+				Logger::String{"Loading external modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
 				Udjat::Module::load(path,false);
 
 			}

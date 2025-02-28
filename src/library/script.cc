@@ -150,7 +150,7 @@
 
 			if(!(url.remote[0] || local)) {
 				url.remote = attr.c_str();
-				Logger::String{"Will get remote script from",url.remote}.trace(name());
+				Logger::String{"Will get remote script from ",url.remote}.trace(name());
 			}
 
 		} else {

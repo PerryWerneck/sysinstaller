@@ -362,6 +362,9 @@ while [ "x$list" != "x" ] ; do
   linux_entry "${OS}" "%{install-version}" reinstall \
               "${GRUB_CMDLINE_LINUX} %{kernel-parameters}"
 
+  linux_entry "${OS}" "%{install-version}" assistida \
+              "${GRUB_CMDLINE_LINUX} %{kernel-parameters} vnc=1"
+
   list=`echo $list | tr ' ' '\n' | fgrep -vx "$linux" | tr '\n' ' '`
 
 done

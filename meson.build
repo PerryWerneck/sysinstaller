@@ -7,7 +7,15 @@ project(
 )
 
 project_description = 'Instalar/reinstalar terminal'
-project_domain = 'bb.com.br'
+project_domain = 'br.com.bb'
+
+pkg_version = meson.project_version()
+version_array = pkg_version.split('.')
+pkg_major_version = version_array[0].to_int()
+pkg_minor_version = version_array[1].to_int()
+pkg_micro_version = version_array[2].to_int()
+
+libversion = '@0@.@1@'.format(pkg_major_version,pkg_minor_version)
 
 cxx = meson.get_compiler('cpp')
 
@@ -52,7 +60,10 @@ conf_data.set_quoted('PACKAGE_DESCRIPTION', project_description)
 conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), meson.project_version()))
 conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(project_domain,meson.project_name()))
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
+conf_data.set_quoted('MODULE_VERSION',libversion)
 
+
+conf_data.set('application_description',project_description)
 conf_data.set('application_icon','@0@.@1@'.format(project_domain,meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
@@ -162,4 +173,19 @@ configure_file(
         configuration: conf_data,
 	),
 	install_dir:'/usr/share/applications' 
+)
+
+install_data(
+	'templates/grub.cfg',
+	install_dir:'/usr/share/reinstall/templates'
+)
+
+install_data(
+	'templates/grub2',
+	install_dir:'/usr/share/reinstall/templates'
+)
+
+install_data(
+	'templates/isolinux.cfg',
+	install_dir:'/usr/share/reinstall/templates'
 )

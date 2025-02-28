@@ -68,11 +68,12 @@
 			"grub-label",
 			"boot-label",
 			"label",
-			"system-name"
+			"system-name",
+			"title"
 		};
 
 		for(const char *label : labels) {
-			const char *ptr = XML::QuarkFactory(node,label);
+			const char *ptr = String{node,label}.as_quark();
 			if(ptr && *ptr) {
 				boot.label = ptr;
 				Logger::String{"Setting boot-label to '",boot.label,"' from attribute '",label,"'"}.trace(name());
