@@ -166,6 +166,14 @@ custom_target(
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
 )
 
+custom_target(
+	input: 'icons/logo.svg',
+	output: 'logo.svg',
+	install: true,
+	install_dir:'/usr/share/@0@/icons'.format(meson.project_name()),
+	command: [ 'scour', '@INPUT@', '@OUTPUT@']
+)
+
 install_data(
 	'stylesheet.css',
 	install_dir:'/usr/share/@0@'.format(meson.project_name())
