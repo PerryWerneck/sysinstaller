@@ -225,7 +225,7 @@
 				debug("Grub config was set to '",value.c_str(),"'");
 				value = "/tmp/";
 #else
-value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
+				value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
 #endif // DEBUG
 				return true;
 			}
@@ -249,10 +249,12 @@ value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
 			}
 
 			progress = _("Configuring boot loader");
+			progress.url("Fase 1");
 			for(auto &script : scripts) {
 				script->run(*this,Script::Pre,progress);
 			}
 
+			progress.url("Fase 2");
 			for(auto &script : scripts) {
 				script->run(*this,Script::Post,progress);
 			}

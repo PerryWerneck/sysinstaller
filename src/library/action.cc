@@ -286,6 +286,11 @@
 			return false;
 		}
 
+		if(!strcasecmp(key,"install-version")) {
+			value = PACKAGE_VERSION;
+			return true;
+		}
+
 		if(Udjat::NamedObject::getProperty(key,value)) {
 			return true;
 		}
