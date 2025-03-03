@@ -69,7 +69,6 @@
 			"boot-label",
 			"label",
 			"system-name",
-			"title"
 		};
 
 		for(const char *label : labels) {

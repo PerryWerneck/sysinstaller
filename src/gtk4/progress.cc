@@ -68,7 +68,7 @@
 			set_vexpand(false);
 			set_valign(::Gtk::Align::START);
 			set_halign(::Gtk::Align::FILL);
-			set_ellipsize(Pango::EllipsizeMode::END);
+			set_ellipsize(Pango::EllipsizeMode::START);
 		}
 
 		~ProgressBar() {
