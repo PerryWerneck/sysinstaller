@@ -249,12 +249,12 @@
 			}
 
 			progress = _("Configuring boot loader");
-			progress.url("Fase 1");
+			progress.url(_("First stage"));
 			for(auto &script : scripts) {
 				script->run(*this,Script::Pre,progress);
 			}
 
-			progress.url("Fase 2");
+			progress.url(_("Second stage"));
 			for(auto &script : scripts) {
 				script->run(*this,Script::Post,progress);
 			}
