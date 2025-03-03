@@ -245,13 +245,17 @@
 		} else if(cmdline[0]) {
 
 			// Execute command line.
-			debug("running ",cmdline);
+			String cmd{cmdline};
+			cmd.expand(object);
+			cmd.expand(*this);
+	
+			debug("running ",cmd.c_str());
 
 			SubProcess{
 				uid,
 				gid,
 				object.name(),
-				cmdline
+				cmd
 			}.run();
 
 			return;
@@ -303,7 +307,11 @@
 
 		try {
 
-			File::Text{script.c_str()}.set(text.c_str()).save();
+			{
+				File::Handler out{script.c_str(),true};
+				out.truncate();
+				out.write(text.c_str(),text.size());
+			}
 
 			chmod(script.c_str(),0755);
 

@@ -168,6 +168,10 @@
 
 	void Template::save(const Udjat::Abstract::Object &parent, const char *path, const std::function<bool(uint64_t current, uint64_t total)> &progress) {
 
+		String filename{path};
+		filename.expand(parent);
+		filename.expand(*this);
+
 		Udjat::URL url{this->url};
 		url.expand(parent);
 		url.expand(*this);
@@ -185,9 +189,13 @@
 		}
 
 		// and save parsed contents.
-		File::Text{path}.set(text.c_str()).save();
+		{
+			File::Handler out{filename.c_str(),true};
+			out.truncate();
+			out.write(text.c_str(),text.size());
+		}
 
-		if(chmod(path,mode) < 0) {
+		if(chmod(filename.c_str(),mode) < 0) {
 			throw system_error(errno,system_category(),_("Cant update template permissions"));
 		}
 
