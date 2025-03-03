@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 13:19-0300\n"
-"PO-Revision-Date: 2025-02-28 13:19-0300\n"
+"POT-Creation-Date: 2025-03-03 15:47-0300\n"
+"PO-Revision-Date: 2025-03-03 15:53-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -20,51 +20,92 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/application/mainwindow.cc:62
-msgid "System reinstallation"
-msgstr "Reinstalar o sistema"
+#: src/library/action.cc:83
+msgid "The selected action cant be activated"
+msgstr "A ação selecionada não pode ser ativada"
 
-#: src/gtk4/application.cc:419
-#, fuzzy
-msgid "_Reboot now"
-msgstr "Reiniciar agora"
+#: src/library/action.cc:92
+msgid "Cancel"
+msgstr "Cancelar"
 
-#: src/gtk4/application.cc:420
-#, fuzzy
-msgid "_Quit application"
-msgstr "Sair da aplicação"
-
-#: src/gtk4/application.cc:421
-msgid "_Cancel"
-msgstr "_Cancelar"
-
-#: src/gtk4/application.cc:422
-#, fuzzy
-msgid "C_ontinue"
+#: src/library/action.cc:92
+msgid "Continue"
 msgstr "Continuar"
 
-#: src/gtk4/progress.cc:250 src/gtk4/progress.cc:282
+#: src/library/action.cc:113
+msgid "Initializing"
+msgstr "Inicializando"
+
+#: src/library/action.cc:153
+msgid "A required file is not available"
+msgstr "Um arquivo necessário não está disponível"
+
+#: src/library/action.cc:171
+msgid "Configuration or logic error"
+msgstr "Erro de configuração ou lógica"
+
+#: src/library/action.cc:180
+msgid "System error"
+msgstr "Erro de sistema"
+
+#: src/library/action.cc:186
+msgid "Operation failed"
+msgstr "Operação falhou"
+
+#: src/library/action.cc:220
+msgid "Error getting boot path info"
+msgstr "Erro ao obter informações sobre o caminho de boot"
+
+#: src/library/action.cc:224
 #, c++-format
-msgid "{} of {}"
-msgstr "{} de {}"
+msgid "{} is not a directory"
+msgstr "{} não é um diretório"
+
+#: src/library/action.cc:231
+msgid "Error opening /etc/mtab"
+msgstr "Erro ao abrir /etc/mtab"
+
+#: src/library/action.cc:250
+#, c++-format
+msgid "Cant find mountpoint for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem para {}"
+
+#: src/library/action.cc:264
+msgid "Error readlink boot link"
+msgstr "Erro ao ler link de boot"
+
+#: src/library/action.cc:285
+#, c++-format
+msgid "Required attribute '{}' not found"
+msgstr "Atributo necessário '{}' não foi encontrado"
+
+#: src/library/builder.cc:84 src/modules/grub2.cc:130 src/modules/grub2.cc:202
+msgid "Reinstall workstation"
+msgstr "Reinstalar estação de trabalho"
+
+#: src/library/builder.cc:256 src/modules/grub2.cc:238
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:282
+msgid "Cant find installation files"
+msgstr "Não encontrei arquivos de instalação"
 
 #: src/library/disk/abstract.cc:50
-#, fuzzy
 msgid "Cant open disk device/file"
-msgstr "Não foi possível obter estado do dispositivo de loop"
+msgstr "Não foi possível abrir imagem ou dispositivo de disco"
 
 #: src/library/disk/abstract.cc:54
-#, fuzzy
 msgid "Cant allocate disk image"
-msgstr "Sem acesso á imagem baixada"
+msgstr "Não foi possível alocar imagem de disco"
 
 #: src/library/disk/fat.cc:49
 msgid "Succeeded"
-msgstr ""
+msgstr "Concluído com sucesso"
 
 #: src/library/disk/fat.cc:50 src/library/disk/fat.cc:69
 msgid "A hard error occurred in the low level disk I/O layer"
-msgstr ""
+msgstr "Um erro físico aconteceu na camada de I/O de disco"
 
 #: src/library/disk/fat.cc:51 src/library/disk/fat.cc:70
 #, fuzzy
@@ -73,7 +114,7 @@ msgstr "Operação falhou"
 
 #: src/library/disk/fat.cc:52 src/library/disk/fat.cc:71
 msgid "The physical drive cannot work"
-msgstr ""
+msgstr "Disco físico não funciona"
 
 #: src/library/disk/fat.cc:53 src/library/disk/fat.cc:72
 msgid "Could not find the file"
@@ -85,39 +126,39 @@ msgstr "Não foi possível encontrar o diretório"
 
 #: src/library/disk/fat.cc:55 src/library/disk/fat.cc:74
 msgid "The path name format is invalid"
-msgstr ""
+msgstr "O formado do caminho de arquivo não é válido"
 
 #: src/library/disk/fat.cc:56 src/library/disk/fat.cc:75
 msgid "Access denied due to prohibited access or directory full"
-msgstr ""
+msgstr "Acesso negado ou diretório cheio"
 
 #: src/library/disk/fat.cc:57 src/library/disk/fat.cc:76
 msgid "Access denied due to prohibited access"
-msgstr ""
+msgstr "Acesso negado"
 
 #: src/library/disk/fat.cc:58 src/library/disk/fat.cc:77
 msgid "The file/directory object is invalid"
-msgstr ""
+msgstr "O objeto de arquivo ou diretório não é valido"
 
 #: src/library/disk/fat.cc:59 src/library/disk/fat.cc:78
 msgid "The physical drive is write protected"
-msgstr ""
+msgstr "O disco físico está protegido contra gravação"
 
 #: src/library/disk/fat.cc:60 src/library/disk/fat.cc:79
 msgid "The logical drive number is invalid"
-msgstr ""
+msgstr "O número de drive lógico não é válido"
 
 #: src/library/disk/fat.cc:61 src/library/disk/fat.cc:80
 msgid "The volume has no work area"
-msgstr ""
+msgstr "O volume não tem área de trabalho"
 
 #: src/library/disk/fat.cc:62 src/library/disk/fat.cc:81
 msgid "There is no valid FAT volume"
-msgstr ""
+msgstr "Não encontrei um volume FAT válido"
 
 #: src/library/disk/fat.cc:63 src/library/disk/fat.cc:82
 msgid "The f_mkfs() aborted due to any problem"
-msgstr ""
+msgstr "O comando f_mkfs() encerrou devido a um problema"
 
 #: src/library/disk/fat.cc:64 src/library/disk/fat.cc:83
 msgid "Could not get a grant to access the volume within defined period"
@@ -158,9 +199,8 @@ msgid "f_mount has failed: {}"
 msgstr ""
 
 #: src/library/disk/fat.cc:151
-#, fuzzy
 msgid "f_mount has failed: "
-msgstr "Script de finalização falhou"
+msgstr "f_mount falhou"
 
 #: src/library/disk/fat.cc:160
 #, c++-format
@@ -168,15 +208,15 @@ msgid "Unable to open fat://{}/"
 msgstr ""
 
 #: src/library/disk/fat.cc:205 src/modules/isobuilder/fatfs/image.cc:197
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unable to open fat://{}"
-msgstr "Incapaz de processar lista de arquivos em {}"
+msgstr "Não foi possível abrir fat://{}"
 
 #: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:170
 #: src/modules/isobuilder/fatfs/image.cc:238
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unable to write fat://{}"
-msgstr "Incapaz de obter o valor de '{}'"
+msgstr "Não foi possível escrever em fat://{}"
 
 #: src/library/group.cc:47
 msgid "Group controller is already active"
@@ -228,6 +268,15 @@ msgstr "Acesso negado"
 msgid "Invalid device"
 msgstr ""
 
+#: src/library/image.cc:129
+msgid "No write support on selected image"
+msgstr ""
+
+#: src/library/image.cc:134 src/modules/isobuilder/fatfs/image.cc:280
+#: src/modules/isobuilder/iso9660/image.cc:427
+msgid "Writing image"
+msgstr "Gravando imagem"
+
 #: src/library/kernelparameter.cc:170
 #, fuzzy, c++-format
 msgid "Kernel parameter '{}' has an empty value"
@@ -255,12 +304,12 @@ msgstr ""
 msgid "Required repository '{}' not found"
 msgstr ""
 
-#: src/library/repository/repository.cc:171
+#: src/library/repository/repository.cc:173
 #, fuzzy
 msgid "Loading repository index"
 msgstr "Lendo lista de opções"
 
-#: src/library/repository/repository.cc:269
+#: src/library/repository/repository.cc:271
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr ""
@@ -268,6 +317,10 @@ msgstr ""
 #: src/library/source/data.cc:280
 msgid "Invalid repository"
 msgstr ""
+
+#: src/library/template.cc:199
+msgid "Cant update template permissions"
+msgstr "Erro ao atualizar permissões de modelo"
 
 #: src/library/ui/dialog.cc:190
 msgid "_No"
@@ -290,100 +343,33 @@ msgstr ""
 msgid "Finishing"
 msgstr ""
 
-#: src/library/action.cc:83
-msgid "The selected action cant be activated"
-msgstr ""
-
-#: src/library/action.cc:92
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/library/action.cc:92
-msgid "Continue"
-msgstr "Continuar"
-
-#: src/library/action.cc:113
-msgid "Initializing"
-msgstr "Inicializando"
-
-#: src/library/action.cc:152
-#, fuzzy
-msgid "A required file is not available"
-msgstr "Dispositivo de armazenamento indisponível"
-
-#: src/library/action.cc:170
-msgid "Configuration or logic error"
-msgstr ""
-
-#: src/library/action.cc:179
-#, fuzzy
-msgid "System error"
-msgstr "Erro de servidor"
-
-#: src/library/action.cc:185
-#, fuzzy
-msgid "Operation failed"
-msgstr "Operação falhou"
-
-#: src/library/action.cc:219
-msgid "Error getting boot path info"
-msgstr ""
-
-#: src/library/action.cc:223
-#, c++-format
-msgid "{} is not a directory"
-msgstr ""
-
-#: src/library/action.cc:230
-msgid "Error opening /etc/mtab"
-msgstr ""
-
-#: src/library/action.cc:249
-#, fuzzy, c++-format
-msgid "Cant find mountpoint for '{}'"
-msgstr "Não foi possível encontrar um ponto de montagem válido"
-
-#: src/library/action.cc:263
-#, fuzzy
-msgid "Error readlink boot link"
-msgstr "Erro criando imagem iso"
-
-#: src/library/action.cc:284
-#, fuzzy, c++-format
-msgid "Required attribute '{}' not found"
-msgstr "Atributo necessário 'path' não foi encontrado"
-
-#: src/library/builder.cc:85 src/modules/grub2.cc:130 src/modules/grub2.cc:202
-#, fuzzy
-msgid "Reinstall workstation"
+#: src/application/mainwindow.cc:62
+msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
-#: src/library/builder.cc:254 src/modules/grub2.cc:237
-msgid "Getting required files"
-msgstr "Obtendo arquivos necessários"
-
-#: src/library/builder.cc:280
+#: src/gtk4/application.cc:419
 #, fuzzy
-msgid "Cant find installation files"
-msgstr "Obtendo kernel de instalação"
+msgid "_Reboot now"
+msgstr "Reiniciar agora"
 
-#: src/library/image.cc:118
-msgid "No write support on selected image"
-msgstr ""
-
-#: src/library/image.cc:123 src/modules/isobuilder/fatfs/image.cc:280
-#: src/modules/isobuilder/iso9660/image.cc:427
-msgid "Writing image"
-msgstr "Gravando imagem"
-
-#: src/library/template.cc:180
+#: src/gtk4/application.cc:420
 #, fuzzy
-msgid "Cant handle binary template"
-msgstr "Verificando templates"
+msgid "_Quit application"
+msgstr "Sair da aplicação"
 
-#: src/library/template.cc:217
-msgid "Cant update template permissions"
-msgstr "Erro ao atualizar permissões de modelo"
+#: src/gtk4/application.cc:421
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/gtk4/application.cc:422
+#, fuzzy
+msgid "C_ontinue"
+msgstr "Continuar"
+
+#: src/gtk4/progress.cc:251 src/gtk4/progress.cc:284
+#, c++-format
+msgid "{} of {}"
+msgstr "{} de {}"
 
 #: src/modules/grub2.cc:85
 #, fuzzy
@@ -404,11 +390,11 @@ msgstr "Obtendo kernel de instalação ..."
 msgid "Loading installer..."
 msgstr "Obtendo instalador ..."
 
-#: src/modules/grub2.cc:242
+#: src/modules/grub2.cc:243
 msgid "Applying templates"
 msgstr ""
 
-#: src/modules/grub2.cc:247
+#: src/modules/grub2.cc:251
 msgid "Configuring boot loader"
 msgstr ""
 
@@ -465,6 +451,16 @@ msgstr "Não foi possível ler o arquivo de definição de área do sistema"
 msgid "Unexpanded path in source list"
 msgstr "Caminho incorreto na lista de fontes"
 
+#: src/modules/isobuilder/module.cc:104
+#, fuzzy
+msgid "Building ISO-9660 Image"
+msgstr "Criando imagem de boot EFI"
+
+#: src/modules/isobuilder/module.cc:105
+#, fuzzy, c++-format
+msgid "Writing {} files"
+msgstr "Gravando imagem"
+
 #: src/modules/isowriter.cc:64
 #, fuzzy
 msgid "Getting ISO image"
@@ -473,6 +469,10 @@ msgstr "Configurando imagem ISO"
 #: src/modules/isowriter.cc:67
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
+
+#, fuzzy
+#~ msgid "Cant handle binary template"
+#~ msgstr "Verificando templates"
 
 #, fuzzy
 #~ msgid "Cant parse server file list"
@@ -500,8 +500,7 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -512,9 +511,6 @@ msgstr "Gravando imagem ISO"
 
 #~ msgid "Building"
 #~ msgstr "Construindo"
-
-#~ msgid "Building EFI Boot image"
-#~ msgstr "Criando imagem de boot EFI"
 
 #~ msgid "Can't get an available loop device"
 #~ msgstr "Nenhum dispositivo loop disponível"
@@ -675,8 +671,7 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -706,25 +701,17 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -735,25 +722,16 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
