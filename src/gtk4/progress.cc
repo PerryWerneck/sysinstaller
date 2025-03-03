@@ -190,6 +190,7 @@
 			}
 
 			~Progress() {
+				debug("-----------------> GTK4 progress dialog was destroyed");
 				timer->destroy();
 			}
 

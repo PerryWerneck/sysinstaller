@@ -92,7 +92,9 @@
 	static void parse_index_html(const char *name, const char *root, const URL &url, std::vector<std::string> &files) {
 
 		debug("--------------------- ",url.c_str());
+
 		Logger::String{"Loading ",url.c_str()}.trace(name);
+		Dialog::Progress::getInstance().url(url.c_str());
 
 		String response = url.get();
 

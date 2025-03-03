@@ -35,6 +35,9 @@
 		Progress();
 
 	public:
+		Progress(const Dialog::Progress &other) = delete;
+		Progress(Dialog::Progress *other) = delete;
+
 		static std::shared_ptr<Progress> Factory();
 
 		static Progress & getInstance();

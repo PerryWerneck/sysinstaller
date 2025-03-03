@@ -94,10 +94,12 @@
 	}
 
 	Dialog::Progress & Dialog::Progress::message(const char *) {
+		throw runtime_error("Not implemented: message");
 		return *this;
 	}
 
 	Dialog::Progress & Dialog::Progress::body(const char *) {
+		throw runtime_error("Not implemented: body");
 		return *this;
 	}
 
@@ -106,7 +108,7 @@
 	}
 
 	Dialog::Progress & Dialog::Progress::url(const char *) {
-		throw runtime_error("Not implemented");
+		throw runtime_error("Not implemented: url");
 		return *this;
 	}
 

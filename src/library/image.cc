@@ -66,7 +66,7 @@
 
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
 
-		auto progress = Dialog::Progress::getInstance();
+		auto &progress = Dialog::Progress::getInstance();
 		std::string from = source->save(progress);
 		std::string to = source->path();
 		auto efi = builder.efi();

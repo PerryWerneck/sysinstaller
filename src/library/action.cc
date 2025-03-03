@@ -129,6 +129,7 @@
 
 				debug("Calling action");
 				activate(progress);
+				debug("--------------------------------------------");
 				return 0;
 
 			} catch(const Udjat::HTTP::Exception &e) {

@@ -82,9 +82,10 @@
 
 			list<std::shared_ptr<DataSource>> files;
 			prepare(progress,files);
-
 			build(progress,files);
 
+			debug("IsoBuild action is complete");
+			
 			return 0;
 		}
 
@@ -100,6 +101,8 @@
 
 			// Build image ...
 			Logger::String{"Building ISO-9660 Image"}.info(name());
+			progress = _("Building ISO-9660 Image");
+			progress.url(Logger::Message{_("Writing {} files"),files.size()}.c_str());
 
 			iso9660::Image image{output,*this,imgdef};
 
