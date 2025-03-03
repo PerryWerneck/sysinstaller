@@ -241,7 +241,10 @@
 
 			progress = _("Applying templates");
 			for(const auto &tmplt : templates) {
-				tmplt->save(*this,progress);
+				tmplt->save(*this,[&progress](uint64_t current, uint64_t total) {
+					progress.set(current,total);
+					return false;
+				});
 			}
 
 			progress = _("Configuring boot loader");

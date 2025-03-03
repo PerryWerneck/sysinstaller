@@ -66,11 +66,12 @@
 		}
 
 		if(XML::AttributeFactory(node,"script").as_bool()) {
-			type = (Type) (type|Template::Script);
+			Logger::String{"Legacy atttribute 'script' is deprecated, use 'executable' instead"}.warning(name());
+			mode = 0755;
 		}
 
 		if(XML::AttributeFactory(node,"executable").as_bool()) {
-			type = (Type) (type|Template::Script);
+			mode = 0755;
 		}
 
 		// Get URL
@@ -150,6 +151,7 @@
 
 	}
 
+	/*
 	std::string Template::save(Udjat::Dialog::Progress &) {
 
 		Udjat::URL url{this->url};
@@ -162,7 +164,38 @@
 		throw runtime_error("Unable to handle remote template");
 
 	}
+	*/
 
+	void Template::save(const Udjat::Abstract::Object &parent, const char *path, const std::function<bool(uint64_t current, uint64_t total)> &progress) {
+
+		Udjat::URL url{this->url};
+		url.expand(parent);
+		url.expand(*this);
+
+		String text{url.get(progress)};
+		text.expand(marker,parent);
+		text.expand(marker,*this);
+
+		if(script) {
+
+			// Execute script, use stdout to set template result.
+
+			throw runtime_error("Script templates are not supported yet");
+
+		}
+
+		// and save parsed contents.
+		File::Text{path}.set(text.c_str()).save();
+
+		if(chmod(path,mode) < 0) {
+			throw system_error(errno,system_category(),_("Cant update template permissions"));
+		}
+
+		debug("Template '",name(),"' saved on file ",path);
+
+	}
+
+	/*
 	void Template::save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress) {
 
 		Udjat::URL url{this->url};
@@ -203,6 +236,11 @@
 			String contents{File::Text{from.c_str()}.c_str()};
 			contents.expand(marker,object,true,true);
 
+			if(script) {
+				// Execute script, get response.
+
+			}
+
 			// and save parsed contents.
 			File::Text{path}.set(contents.c_str()).save();
 
@@ -212,15 +250,14 @@
 
 		}
 
-		if((type & Template::Script) != 0) {
-			if(chmod(path,0755) < 0) {
-					throw system_error(errno,system_category(),_("Cant update template permissions"));
-			}
+		if(chmod(path,mode) < 0) {
+			throw system_error(errno,system_category(),_("Cant update template permissions"));
 		}
 
 		debug("Template '",name(),"' saved on file ",path);
 
 	}
+	*/
 
  }
 

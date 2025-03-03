@@ -155,7 +155,10 @@
 			}
 
 			void save(Udjat::Dialog::Progress &progress, const char *path) override {
-				tmplt->save(progress,parent,path);
+				tmplt->save(parent,path,[&progress](uint64_t current, uint64_t total){
+					progress.set(current,total);
+					return false;
+				});
 			}
 
 			std::string save(Udjat::Dialog::Progress &progress) override {

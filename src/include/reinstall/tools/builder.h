@@ -67,6 +67,12 @@
 			return parent.name();
 		}
 
+		/// @brief Get parent object for this builder to allow get properties.
+		/// @return The properties object.
+		inline const Udjat::Abstract::Object &properties() const {
+			return parent;
+		}
+
 		inline std::shared_ptr<EFIBootImage> efi() {
 			return boot.efi;
 		}

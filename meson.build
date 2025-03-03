@@ -69,6 +69,8 @@ conf_data.set('application_name', meson.project_name())
 
 conf_data.set('HAVE_FATFS', 1)
 conf_data.set('HAVE_ISOFS', 1)
+conf_data.set('HAVE_ZLIB', 1)
+conf_data.set('HAVE_LIBZIP', 1)
 
 if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   conf_data.set('HAVE_UNISTD_H', 1)

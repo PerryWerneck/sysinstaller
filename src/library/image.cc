@@ -30,6 +30,7 @@
  #include <reinstall/tools/builder.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/file.h>
+ #include <udjat/tools/file/temporary.h>
  #include <reinstall/image.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/intl.h>
@@ -65,12 +66,13 @@
 
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
 
-		std::string from = source->save(Dialog::Progress::getInstance());
+		auto progress = Dialog::Progress::getInstance();
+		std::string from = source->save(progress);
 		std::string to = source->path();
 		auto efi = builder.efi();
 
 		if(efi->enabled() && strcmp(strip_dot(to.c_str()),strip_dot(efi->path())) == 0) {
-
+		
 			if(!efibootpart.empty()) {
 				throw logic_error("EFI Boot partition already set");
 			}
@@ -90,6 +92,7 @@
 				std::vector<string> files;
 				Reinstall::Disk::Fat32 disk{from.c_str()};
 
+				// Load filename first to prevent changes.
 				disk.for_each("",[&files](const char *filename){
 					debug(filename);
 					files.push_back(filename);
@@ -97,11 +100,19 @@
 				});
 
 				for(auto file : files) {
+
 					auto tmplt = builder.tmplt(file.c_str());
 					if(tmplt) {
-						auto from = tmplt->save(Dialog::Progress::getInstance());
+						auto from = Udjat::File::Temporary::create();
+				
+						tmplt->save(builder.properties(),from.c_str(),[&progress](uint64_t current, uint64_t total){
+							progress.set(current,total);
+							return false;
+						});
+
 						Logger::String{"Using template '",tmplt->name(),"' for fat://",file.c_str()}.trace(builder.name());
 						disk.replace(from.c_str(),file.c_str());
+
 					}
 
 				}

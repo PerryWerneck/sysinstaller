@@ -35,7 +35,6 @@
 
 		enum Type : uint8_t {
 			Text		= 0x01,		///< @brief Template is a simple text file.
-			Script		= 0x02,		///< @brief Template is a script (set 'exec' attribute).
 			Binary		= 0x04,		///< @brief Template is a binary file, just replace it.
 		};
 
@@ -49,20 +48,26 @@
 		// Check if template match path.
 		bool operator==(const char *path) const;
 
-		/// @brief Save template to local file.
-		/// @return The local file with the 'raw' template
-		std::string save(Udjat::Dialog::Progress &progress);
+		/// @brief Parse template, save to file.
+		/// @param parent The parent object, get values from it.
+		/// @param path The target file path.
+		/// @param current callback for progress dialog.
+		void save(const Udjat::Abstract::Object &parent, const char *path, const std::function<bool(uint64_t current, uint64_t total)> &progress);
 
-		/// @brief Apply object on template, save to file
-		void save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &parent, const char *path);
-
-		void save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress);
+		/// @brief Parse template, save to defined path.
+		/// @param parent The parent object, get values from it.
+		/// @param current callback for progress dialog.
+		inline void save(const Udjat::Abstract::Object &parent, const std::function<bool(uint64_t current, uint64_t total)> &progress) {
+			save(parent,path,progress);
+		}
 
 	private:
 
 		Type type = (Type) 0;
 		bool escape = false;
+		bool script = false;	// True if this is a script template.
 		char marker = '$';
+		mode_t mode = 0644;
 
 		const char *url = nullptr;
 		const char *path = nullptr;

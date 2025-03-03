@@ -58,6 +58,8 @@
 		/// @brief Set progress bar value.
 		virtual Progress & operator = (const double fraction);
 
+		virtual void set(uint64_t current = 0, uint64_t total =  0);
+
 		inline Progress & operator = (const char *text) {
 			return body(text);
 		}

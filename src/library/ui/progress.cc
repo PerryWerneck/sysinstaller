@@ -59,6 +59,16 @@
 		return Controller::getInstance().ProgressFactory();
 	}
 
+	void Dialog::Progress::set(uint64_t current, uint64_t total) {
+
+		if(total && current) {
+			*this = ((double) current) / ((double) total);
+		} else {
+			*this = 0.0;
+		}
+
+	}
+
 	int Dialog::Progress::run(const std::function<int(Progress &progress)> &task) noexcept {
 
 		try {
