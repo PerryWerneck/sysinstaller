@@ -157,7 +157,7 @@
 
 		DIR dp;
 		if(f_opendir(&dp, dirname) != FR_OK) {
-			throw runtime_error(Logger::Message{_("Unable to open fat://{}/"),dirname});
+			throw runtime_error(Logger::Message{_("Unable to open fat://{}"),dirname});
 		}
 
 		try {

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 15:47-0300\n"
-"PO-Revision-Date: 2025-03-03 15:53-0300\n"
+"POT-Creation-Date: 2025-03-03 18:06-0300\n"
+"PO-Revision-Date: 2025-03-03 18:06-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -108,7 +108,6 @@ msgid "A hard error occurred in the low level disk I/O layer"
 msgstr "Um erro físico aconteceu na camada de I/O de disco"
 
 #: src/library/disk/fat.cc:51 src/library/disk/fat.cc:70
-#, fuzzy
 msgid "Assertion failed"
 msgstr "Operação falhou"
 
@@ -162,23 +161,23 @@ msgstr "O comando f_mkfs() encerrou devido a um problema"
 
 #: src/library/disk/fat.cc:64 src/library/disk/fat.cc:83
 msgid "Could not get a grant to access the volume within defined period"
-msgstr ""
+msgstr "Não foi possível conseguir acesso ao dispositivo no período definido"
 
 #: src/library/disk/fat.cc:65 src/library/disk/fat.cc:84
 msgid "The operation is rejected according to the file sharing policy"
-msgstr ""
+msgstr "Operação recusada pela policy de compartilhamento de arquivos"
 
 #: src/library/disk/fat.cc:66 src/library/disk/fat.cc:85
 msgid "LFN working buffer could not be allocated"
-msgstr ""
+msgstr "Buffer de trabalho LFN não pode ser alocado"
 
 #: src/library/disk/fat.cc:67 src/library/disk/fat.cc:86
 msgid "Number of open files > FF_FS_LOCK"
-msgstr ""
+msgstr "Número de arquivos abertos ultrapassa FF_FS_LOCK"
 
 #: src/library/disk/fat.cc:68 src/library/disk/fat.cc:87
 msgid "Given parameter is invalid"
-msgstr ""
+msgstr "Parâmetro informado não é válido"
 
 #: src/library/disk/fat.cc:114
 msgid "Empty disk image"
@@ -186,28 +185,24 @@ msgstr "Imagem de disco vazia"
 
 #: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:60
 msgid "Cant bind fatfs to disk image"
-msgstr ""
+msgstr "Não foi possível ligar imagem de disco ao fatfs"
 
 #: src/library/disk/fat.cc:131
 #, c++-format
 msgid "f_mkfs has failed: {}"
-msgstr ""
+msgstr "f_mkfs falhou: {}"
 
 #: src/library/disk/fat.cc:138
 #, c++-format
 msgid "f_mount has failed: {}"
-msgstr ""
+msgstr "f_mounf falhou: {}"
 
 #: src/library/disk/fat.cc:151
 msgid "f_mount has failed: "
-msgstr "f_mount falhou"
+msgstr "f_mount falhou: "
 
-#: src/library/disk/fat.cc:160
-#, c++-format
-msgid "Unable to open fat://{}/"
-msgstr ""
-
-#: src/library/disk/fat.cc:205 src/modules/isobuilder/fatfs/image.cc:197
+#: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
+#: src/modules/isobuilder/fatfs/image.cc:197
 #, c++-format
 msgid "Unable to open fat://{}"
 msgstr "Não foi possível abrir fat://{}"
@@ -220,17 +215,15 @@ msgstr "Não foi possível escrever em fat://{}"
 
 #: src/library/group.cc:47
 msgid "Group controller is already active"
-msgstr ""
+msgstr "Controlador de grupos já está ativo"
 
 #: src/library/group.cc:60
-#, fuzzy
 msgid "No active group controller"
-msgstr "Controlador de alertas"
+msgstr "Nenhum controlador de grupo ativo"
 
 #: src/library/gtkremovabledevicedialog.cc:53
-#, fuzzy
 msgid "Insert an storage device"
-msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
+msgstr "Insira um dispositivo de armazenamento"
 
 #: src/library/gtkremovabledevicedialog.cc:54
 #: src/library/gtkremovabledevicedialog.cc:110
@@ -238,7 +231,6 @@ msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
 msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
 
 #: src/library/gtkremovabledevicedialog.cc:96
-#, fuzzy
 msgid "Insert an storage device <b>NOW</b>"
 msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
 
@@ -247,14 +239,12 @@ msgid "Auto detect"
 msgstr "Detectar automaticamente"
 
 #: src/library/gtkremovabledevicedialog.cc:194
-#, fuzzy
 msgid "Save image to file"
-msgstr "Selecione arquivo de imagem"
+msgstr "Salvar imagem para arquivo"
 
 #: src/library/gtkremovabledevicedialog.cc:214
-#, fuzzy
 msgid "Select output file"
-msgstr "Selecione arquivo de imagem"
+msgstr "Selecione arquivo de saída"
 
 #: src/library/gtkremovabledevicedialog.cc:339
 msgid "Not enough space"
@@ -266,11 +256,11 @@ msgstr "Acesso negado"
 
 #: src/library/gtkremovabledevicedialog.cc:357
 msgid "Invalid device"
-msgstr ""
+msgstr "Dispositivo inválido"
 
 #: src/library/image.cc:129
 msgid "No write support on selected image"
-msgstr ""
+msgstr "Sem suporte para gravação na imagem selecionada"
 
 #: src/library/image.cc:134 src/modules/isobuilder/fatfs/image.cc:280
 #: src/modules/isobuilder/iso9660/image.cc:427
@@ -278,45 +268,43 @@ msgid "Writing image"
 msgstr "Gravando imagem"
 
 #: src/library/kernelparameter.cc:170
-#, fuzzy, c++-format
+#, c++-format
 msgid "Kernel parameter '{}' has an empty value"
-msgstr "A lista de parâmetros do kernel está vazia"
+msgstr "Parâmetro de kernel '{}' tem valor vazio"
 
 #: src/library/os/linux/writer.cc:124
 msgid "Unable to access output device"
-msgstr ""
+msgstr "Incapaz de acessar dispositivo de saída"
 
 #: src/library/os/linux/writer.cc:131
 msgid "Unable to lock output device"
-msgstr ""
+msgstr "Incapaz de bloquear dispositivo de saída"
 
 #: src/library/os/linux/writer.cc:169
-#, fuzzy
 msgid "Cant get device length"
-msgstr "Não foi possível obter estado do dispositivo de loop"
+msgstr "Não foi possível obter tamanho de dispositivo"
 
 #: src/library/os/linux/writer.cc:183
 msgid "Cant allocate space for output file"
-msgstr ""
+msgstr "Não foi possível alocar espaço para o arquivo de saída"
 
 #: src/library/repository/factory.cc:125
 #, c++-format
 msgid "Required repository '{}' not found"
-msgstr ""
+msgstr "Repositório '{}' não foi encontrado"
 
 #: src/library/repository/repository.cc:173
-#, fuzzy
 msgid "Loading repository index"
-msgstr "Lendo lista de opções"
+msgstr "Carregando índice do repositório"
 
 #: src/library/repository/repository.cc:271
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
-msgstr ""
+msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
 
 #: src/library/source/data.cc:280
 msgid "Invalid repository"
-msgstr ""
+msgstr "Repositório inválido"
 
 #: src/library/template.cc:199
 msgid "Cant update template permissions"
@@ -324,47 +312,43 @@ msgstr "Erro ao atualizar permissões de modelo"
 
 #: src/library/ui/dialog.cc:190
 msgid "_No"
-msgstr ""
+msgstr "_Não"
 
 #: src/library/ui/dialog.cc:190
 msgid "_Yes"
-msgstr ""
+msgstr "_Sim"
 
 #: src/library/writer.cc:55
-#, fuzzy
 msgid "The device writer is not available"
-msgstr "Dispositivo de armazenamento indisponível"
+msgstr "Gravador de dispositivo não está disponível"
 
 #: src/library/writer.cc:61
 msgid "Writer is already available"
-msgstr ""
+msgstr "Módulo de gravação já está disponível"
 
 #: src/library/writer.cc:135
 msgid "Finishing"
-msgstr ""
+msgstr "Finalizando"
 
 #: src/application/mainwindow.cc:62
 msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
 #: src/gtk4/application.cc:419
-#, fuzzy
 msgid "_Reboot now"
-msgstr "Reiniciar agora"
+msgstr "_Reiniciar agora"
 
 #: src/gtk4/application.cc:420
-#, fuzzy
 msgid "_Quit application"
-msgstr "Sair da aplicação"
+msgstr "_Encerrar aplicação"
 
 #: src/gtk4/application.cc:421
 msgid "_Cancel"
 msgstr "_Cancelar"
 
 #: src/gtk4/application.cc:422
-#, fuzzy
 msgid "C_ontinue"
-msgstr "Continuar"
+msgstr "_Continuar"
 
 #: src/gtk4/progress.cc:251 src/gtk4/progress.cc:284
 #, c++-format
@@ -372,57 +356,62 @@ msgid "{} of {}"
 msgstr "{} de {}"
 
 #: src/modules/grub2.cc:85
-#, fuzzy
 msgid "Getting installation kernel"
-msgstr "Obtendo kernel de instalação ..."
+msgstr "Obtendo kernel de instalação"
 
 #: src/modules/grub2.cc:97
 msgid "Getting init system"
 msgstr "Obtendo inicializador"
 
 #: src/modules/grub2.cc:208
-#, fuzzy
 msgid "Loading kernel..."
-msgstr "Obtendo kernel de instalação ..."
+msgstr "Carregando kernel..."
 
 #: src/modules/grub2.cc:213
-#, fuzzy
 msgid "Loading installer..."
-msgstr "Obtendo instalador ..."
+msgstr "Carregando instalador..."
 
 #: src/modules/grub2.cc:243
 msgid "Applying templates"
-msgstr ""
+msgstr "Aplicando templates"
 
 #: src/modules/grub2.cc:251
 msgid "Configuring boot loader"
-msgstr ""
+msgstr "Configurando carregador de boot"
+
+#: src/modules/grub2.cc:252
+msgid "First stage"
+msgstr "Primeiro estágio"
+
+#: src/modules/grub2.cc:257
+msgid "Second stage"
+msgstr "Segundo estágio"
 
 #: src/modules/isobuilder/fatfs/image.cc:73
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unexpected error '{}' on f_mkfs"
-msgstr "Código de erro HTTP inesperado"
+msgstr "Erro inesperado '{}' em f_mkfs"
 
 #: src/modules/isobuilder/fatfs/image.cc:83
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unexpected error '{}' on f_mount"
-msgstr "Código de erro HTTP inesperado"
+msgstr "Erro inesperado '{}' em f_mount"
 
 #: src/modules/isobuilder/fatfs/image.cc:91
 #: src/modules/isobuilder/fatfs/image.cc:113
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unexpected error '{}' on f_umount"
-msgstr "Código de erro HTTP inesperado"
+msgstr "Erro inesperado '{}' em f_umount"
 
 #: src/modules/isobuilder/fatfs/image.cc:146
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unable to create path fat://{} (rc={})"
-msgstr "Incapaz de obter o valor de '{}'"
+msgstr "Incapaz de criar o caminho fat://{} (rc={})"
 
 #: src/modules/isobuilder/fatfs/image.cc:156
-#, fuzzy, c++-format
+#, c++-format
 msgid "Unable to open fat://{} (rc={})"
-msgstr "Incapaz de processar lista de arquivos em {}"
+msgstr "Incapaz de abrir fat://{} (rc={})"
 
 #: src/modules/isobuilder/fatfs/image.cc:270
 #: src/modules/isobuilder/iso9660/image.cc:401
@@ -435,9 +424,8 @@ msgid "Finalizing"
 msgstr "Finalizando"
 
 #: src/modules/isobuilder/iso9660/image.cc:73
-#, fuzzy
 msgid "Error creating iso image"
-msgstr "Erro de I/O gravando imagem"
+msgstr "Erro ao criar imagem iso"
 
 #: src/modules/isobuilder/iso9660/image.cc:99
 msgid "Error loading system area"
@@ -452,23 +440,25 @@ msgid "Unexpanded path in source list"
 msgstr "Caminho incorreto na lista de fontes"
 
 #: src/modules/isobuilder/module.cc:104
-#, fuzzy
 msgid "Building ISO-9660 Image"
-msgstr "Criando imagem de boot EFI"
+msgstr "Gerando imagem ISO-9660"
 
 #: src/modules/isobuilder/module.cc:105
-#, fuzzy, c++-format
+#, c++-format
 msgid "Writing {} files"
-msgstr "Gravando imagem"
+msgstr "Gravando {} arquivos"
 
 #: src/modules/isowriter.cc:64
-#, fuzzy
 msgid "Getting ISO image"
-msgstr "Configurando imagem ISO"
+msgstr "Obtendo imagem ISO"
 
 #: src/modules/isowriter.cc:67
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
+
+#, c++-format
+#~ msgid "Unable to open fat://{}/"
+#~ msgstr "Incapaz de abrir fat://{}/"
 
 #, fuzzy
 #~ msgid "Cant handle binary template"
@@ -500,7 +490,8 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid "Authentication is required and has failed or has not yet been provided."
+#~ msgid ""
+#~ "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -541,9 +532,6 @@ msgstr "Gravando imagem ISO"
 
 #~ msgid "Error"
 #~ msgstr "Erro"
-
-#~ msgid "First step has failed"
-#~ msgstr "Primeira etapa falhou"
 
 #~ msgid "Forbidden"
 #~ msgstr "Proibido"
@@ -671,7 +659,8 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid ""
+#~ "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -701,17 +690,25 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid "The initialization procedure has failed, the application cant continue"
+#~ msgid ""
+#~ "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
-#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
+#~ msgid ""
+#~ "The request contained valid data and was understood by the server, but "
+#~ "the server is refusing action."
+#~ msgstr ""
+#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
+#~ "o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid "The request method is not supported by the server and cannot be handled."
-#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
+#~ msgid ""
+#~ "The request method is not supported by the server and cannot be handled."
+#~ msgstr ""
+#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
+#~ "atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -722,16 +719,25 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid "The server has encountered a situation it does not know how to handle."
+#~ msgid ""
+#~ "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
+#~ msgstr ""
+#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
+#~ "tempo esperado."
 
-#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
-#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
+#~ msgid ""
+#~ "The server is not ready to handle the request. Common causes are a server "
+#~ "that is down for maintenance or that is overloaded."
+#~ msgstr ""
+#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
+#~ "para manutenção ou sobrecarregado."
 
-#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
+#~ msgid ""
+#~ "The server, while working as a gateway to get a response needed to handle "
+#~ "the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
@@ -817,9 +823,6 @@ msgstr "Gravando imagem ISO"
 
 #~ msgid "second"
 #~ msgstr "segundo"
-
-#~ msgid "seconds"
-#~ msgstr "segundos"
 
 #~ msgid "true"
 #~ msgstr "verdadeiro"
