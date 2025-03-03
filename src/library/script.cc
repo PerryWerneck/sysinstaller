@@ -34,6 +34,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/script.h>
  #include <reinstall/tools/repository.h>
+ #include <udjat/tools/intl.h>
  #include <stdexcept>
  #include <pwd.h>
  #include <grp.h>
@@ -249,15 +250,19 @@
 			cmd.expand(object);
 			cmd.expand(*this);
 	
-			debug("running ",cmd.c_str());
+			debug("running '",cmd.c_str(),"'");
 
-			SubProcess{
+			int rc = SubProcess{
 				uid,
 				gid,
 				object.name(),
 				cmd
 			}.run();
 
+			if(rc) {
+				throw runtime_error(_("External command failed"));
+			}
+			
 			return;
 			
 		} else {
