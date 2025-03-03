@@ -106,6 +106,7 @@
 	}
 
 	Dialog::Progress & Dialog::Progress::url(const char *) {
+		throw runtime_error("Not implemented");
 		return *this;
 	}
 

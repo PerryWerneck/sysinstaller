@@ -201,6 +201,10 @@
 
 				if(Config::Value<bool>{"modules","isobuilder",true}) {
 					Reinstall::IsoBuilder::Module::Factory();
+					if(Config::Value<bool>("modules","legacy",true)) {
+						Reinstall::IsoBuilder::Module::Factory("netinstall");
+						Reinstall::IsoBuilder::Module::Factory("network-installer");
+					}
 				}
 
 				if(Config::Value<bool>{"modules","grub2",true}) {

@@ -36,9 +36,9 @@
 		public:
 			class Action;
 			
-			static Udjat::Module * Factory();
+			static Udjat::Module * Factory(const char *name = "iso-builder");
 
-			Module(const char *name = "isobuilder");
+			Module(const char *name);
 			virtual ~Module();
 			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
 	

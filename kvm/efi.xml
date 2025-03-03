@@ -1,6 +1,6 @@
 <domain type="kvm">
   <name>reinstall</name>
-  <uuid>c67a60a6-41ba-4a21-96aa-80a4aea4bc6b</uuid>
+  <uuid>c67a60a6-41ba-4a21-96aa-80a4aea4bc6c</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://suse.com/sle/15.2"/>

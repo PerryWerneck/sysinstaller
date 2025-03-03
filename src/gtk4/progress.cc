@@ -257,6 +257,7 @@
 			}
 
 			Dialog::Progress & url(const char *url) override {
+				debug("-------------> url=",url);
 				string str{url};
 				Glib::signal_idle().connect([this,str](){
 					progress.pulse();

@@ -152,7 +152,7 @@
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory("iso-builder",moduleinfo) {
+	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory(name,moduleinfo) {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
@@ -184,39 +184,9 @@
 
 	}
 
-	Udjat::Module * Reinstall::IsoBuilder::Module::Factory() {
-
-		/// @brief Proxy for legacy config files.
-		class UDJAT_PRIVATE Proxy : public Udjat::Factory {
-		private:
-			Udjat::Factory &target ;
+	Udjat::Module * Reinstall::IsoBuilder::Module::Factory(const char *name) {
 	
-		public:
-			Proxy(const char *name, Udjat::Factory *t) : Udjat::Factory(name,moduleinfo), target{*t} {
-			}
-	
-			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const XML::Node &node) override {
-				Logger::String{"Parsing obsolete node '",node.name(),"'"}.warning(node.attribute("name").as_string("node"));
-				return target.ObjectFactory(parent,node);
-			}
-	
-		};
-		
-	
-		class Module : public Reinstall::IsoBuilder::Module {
-		private:
-			Proxy legacy{"network-installer",this};
-
-		public:
-			Module(const char *name) : Reinstall::IsoBuilder::Module(name) {
-			}
-			
-			virtual ~Module() {
-			}
-
-		};
-
-		return new Module("netinstall");
+		return new Module(name);
 
 	}
 

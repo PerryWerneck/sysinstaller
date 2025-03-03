@@ -63,23 +63,20 @@ efi() {
 
 }
 
-make Debug
+meson compile -C .build
+if [ "${?}" -ne 0 ]; then
+	exit ${?}
+fi
+
+sudo setcap CAP_DAC_OVERRIDE,CAP_SETGID,CAP_SETUID+eip .build/reinstall
 if [ "$?" != "0" ]; then
+	echo "setcap error"
 	exit -1
 fi
 
-sudo rm -f /tmp/test.iso /tmp/51_reinstall /tmp/reinstall.qcow2
+.build/reinstall --output=/tmp/test.iso
 if [ "$?" != "0" ]; then
-	echo "Erro ao remover arquivos do teste anterior"
-	exit -1
-fi
-
-# ./mount.sh
-#sudo setcap cap_dac_override,cap_setuid,cap_setgid,cap_chown,cap_sys_admin+ep .bin/Debug/reinstall 
-#sudo rm -f /tmp/51_reinstall
-
-.bin/Debug/reinstall --output=/tmp/test.iso
-if [ "$?" != "0" ]; then
+	echo "reinstall error ${?}"
 	exit -1
 fi
 
