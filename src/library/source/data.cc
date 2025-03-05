@@ -42,6 +42,9 @@
 
  #include <stdexcept>
  #include <unistd.h>
+ #include <stdio.h>
+ #include <mntent.h>
+ #include <limits.h>
 
  using namespace Udjat;
  using namespace std;
@@ -142,6 +145,60 @@
 		}
 
 		return false;
+	}
+
+	const Udjat::String DataSource::fspath() const {
+
+		if(!has_local()) {
+			throw logic_error("Unable to get filesystem path without local path");
+		}
+
+		String filename{URL{local()}.path()};
+
+		// Sanitize path.
+		{
+			size_t pos;
+			while((pos = filename.find("//")) != string::npos) {
+				filename.replace(pos,2,"/");
+			}
+		}
+
+		struct stat st;
+		if(stat(filename.c_str(),&st)) {
+			throw system_error(errno, system_category(), Logger::Message({_("Error getting info for '{}'"),filename.c_str()}));
+		}
+
+		FILE *fp;
+		struct mntent *fs;
+		fp = setmntent("/etc/mtab", "r");
+		if (fp == NULL) {
+			throw system_error(errno, system_category(), _("Error opening /etc/mtab"));
+		}
+
+		struct mntent mnt;
+		char buf[PATH_MAX*3];
+		std::string mountpoint;
+
+		while ((fs = getmntent_r(fp,&mnt,buf,sizeof(buf))) != NULL) {
+			debug(fs->mnt_dir);
+			struct stat stm;
+			if(stat(fs->mnt_dir,&stm) == 0 && stm.st_dev == st.st_dev) {
+				mountpoint = fs->mnt_dir;
+				break;
+			}
+
+		}
+		endmntent(fp);
+
+		if(mountpoint.empty()) {
+			throw runtime_error(Logger::Message{_("Cant find mountpoint for '{}'"),filename.c_str()});
+		}
+
+		Logger::String{"Got mountpoint '",mountpoint.c_str(),"' for path '",filename.c_str(),"'"}.trace(name());
+
+		debug("RESULT= '",filename.c_str()+mountpoint.size(),"'");
+		return Udjat::String{(const char *) (filename.c_str()+mountpoint.size())};
+
 	}
 
 	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {

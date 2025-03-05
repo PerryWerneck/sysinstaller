@@ -223,7 +223,7 @@ machine=`uname -m`
 #    if grub_file_is_not_garbage "$i" ; then list="$list $i" ; fi
 #done
 
-list=%{kernel-file}
+list=%{boot-kernel}
 case "$machine" in
     i?86) GENKERNEL_ARCH="x86" ;;
     mips|mips64) GENKERNEL_ARCH="mips" ;;
@@ -279,7 +279,7 @@ while [ "x$list" != "x" ] ; do
     fi
   done
 
-  initrd_real=%{initrd-file}
+  initrd_real=%{boot-initrd}
 
   initrd=
   if test -n "${initrd_early}" || test -n "${initrd_real}"; then

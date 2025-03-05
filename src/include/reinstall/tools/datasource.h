@@ -26,6 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
+ #include <udjat/tools/string.h>
  #include <udjat/ui/progress.h>
  #include <memory>
  #include <vector>
@@ -75,6 +76,10 @@
 		/// @brief Get path for source on target image.
 		virtual const char * path() const;
 
+		/// @brief Get path relative to mount point.
+		/// @return The path of file from mount point.
+		const Udjat::String fspath() const;
+
 		virtual void save(Udjat::Dialog::Progress &progress, const char *path);
 
 		/// @brief Save source, expand URL properties.
@@ -122,9 +127,6 @@
 		const char * local() const override;
 		const char * remote() const override;
 		const char * path() const override;
-
-		// std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
-		//void save(Udjat::Dialog::Progress &progress, const char *path) override;
 
 	};
 

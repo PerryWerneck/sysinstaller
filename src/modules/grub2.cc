@@ -147,6 +147,26 @@
 
 		}
 
+		const Kernel * kernel() const {
+			for(const auto &source : sources) {
+				const Kernel *object = dynamic_cast<Kernel *>(source.get());
+				if(object) {
+					return object;
+				}
+			}
+			throw logic_error("Unable to find installation kernel");
+		}
+
+		const Init * init() const {
+			for(const auto &source : sources) {
+				const Init *object = dynamic_cast<Init *>(source.get());
+				if(object) {
+					return object;
+				}
+			}
+			throw logic_error("Unable to find installation system");
+		}
+
 		bool getProperty(const char *key, std::string &value) const override {
 
 // 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
@@ -160,37 +180,35 @@
 				return true;
 			}
 
+			if(!(strcasecmp(key,"boot-kernel"))) {
+				value = kernel()->fspath();
+				debug(key,"='",value.c_str(),"'");
+				return true;
+			}
+
+			if(!(strcasecmp(key,"boot-initrd") )) {
+				value = init()->fspath();
+				debug(key,"='",value.c_str(),"'");
+				return true;
+			}
+
 			if(!(strcasecmp(key,"kernel-file") && strcasecmp(key,"kernel-filename"))) {
-
-				for(const auto &source : sources) {
-
-					const Kernel *object = dynamic_cast<Kernel *>(source.get());
-					if(object) {
-
-						const char *ptr = strrchr(object->local(),'/');
-						if(ptr) {
-							value = ptr+1;
-							debug(key,"='",value.c_str(),"'");
-							return true;
-						}
-					}
+				const Kernel *object = kernel();
+				const char *ptr = strrchr(object->local(),'/');
+				if(ptr) {
+					value = ptr+1;
+					debug(key,"='",value.c_str(),"'");
+					return true;
 				}
 			}
 
 			if(!(strcasecmp(key,"initrd-file") && strcasecmp(key,"initrd-filename"))) {
-
-				for(const auto &source : sources) {
-
-					const Init *object = dynamic_cast<Init *>(source.get());
-					if(object) {
-
-						const char *ptr = strrchr(object->local(),'/');
-						if(ptr) {
-							value = ptr+1;
-							debug(key,"='",value.c_str(),"'");
-							return true;
-						}
-					}
+				const Init *object = init();
+				const char *ptr = strrchr(object->local(),'/');
+				if(ptr) {
+					value = ptr+1;
+					debug(key,"='",value.c_str(),"'");
+					return true;
 				}
 			}
 
