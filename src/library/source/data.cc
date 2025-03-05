@@ -194,9 +194,15 @@
 			throw runtime_error(Logger::Message{_("Cant find mountpoint for '{}'"),filename.c_str()});
 		}
 
+		if(mountpoint.size() == 1 && mountpoint[0] == '/') {
+			Logger::Message{"Mountpoint for '{}' is root, using path as is",filename.c_str()}.trace(name());
+			return filename;
+		}
+
 		Logger::String{"Got mountpoint '",mountpoint.c_str(),"' for path '",filename.c_str(),"'"}.trace(name());
 
 		debug("RESULT= '",filename.c_str()+mountpoint.size(),"'");
+		
 		return Udjat::String{(const char *) (filename.c_str()+mountpoint.size())};
 
 	}
