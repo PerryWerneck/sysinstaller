@@ -279,7 +279,7 @@ while [ "x$list" != "x" ] ; do
     fi
   done
 
-  initrd_real=%{boot-initrd}
+  initrd_real=%{initrd-file}
 
   initrd=
   if test -n "${initrd_early}" || test -n "${initrd_real}"; then
