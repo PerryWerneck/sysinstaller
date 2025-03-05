@@ -68,7 +68,7 @@ if [ "${?}" -ne 0 ]; then
 	exit ${?}
 fi
 
-sudo setcap CAP_DAC_OVERRIDE,CAP_SETGID,CAP_SETUID+eip .build/reinstall
+sudo setcap cap_dac_override,cap_setuid,cap_setgid,cap_chown,cap_sys_admin+ep .build/reinstall
 if [ "$?" != "0" ]; then
 	echo "setcap error"
 	exit -1
