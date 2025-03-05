@@ -179,6 +179,8 @@
 				// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1IconTheme.html
 				::Gtk::IconTheme::get_for_display(Gdk::Display::get_default())->add_search_path(iconpath);
 
+				gtk_window_set_default_icon_name(G_STRINGIFY(PACKAGE_DOMAIN));
+	
 				app->mark_busy();
 				try {
 

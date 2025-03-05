@@ -48,6 +48,7 @@
 
 	static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
 
+
  	class Application : public Udjat::Gtk::Application, private Udjat::Factory {
 	private:
 		MainWindow *window = nullptr;
@@ -149,7 +150,7 @@
 				{
 					"icon",
 					[](MainWindow &window, const XML::Node &node) {
-						window.set_icon_name(node.attribute("value").as_string(PACKAGE_NAME));
+						window.set_icon_name(node.attribute("value").as_string(G_STRINGIFY(PACKAGE_DOMAIN)));
 					}
 				},
 				{

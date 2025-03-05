@@ -62,7 +62,11 @@
 	set_title(Config::Value<string>("MainWindow","title",_("System reinstallation")));
 	set_default_size(800, 600);
 
-	set_icon_name(Config::Value<string>{"MainWindow","icon",PRODUCT_ID "." PACKAGE_NAME}.c_str());
+	{
+		Config::Value<string> icon{"MainWindow","icon",G_STRINGIFY(PACKAGE_DOMAIN)};
+		Logger::String{"Setting toplevel icon to '",icon.c_str(),"'"}.trace();
+		set_icon_name(icon.c_str());
+	}
 
 	layout.box.set_hexpand(true);
 	layout.box.set_vexpand(true);
