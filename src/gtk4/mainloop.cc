@@ -237,8 +237,13 @@
 		return true;
 	}
 
+	static gboolean on_idle_call(gpointer user_data) noexcept {
+		MainLoop::Message::on_posted((MainLoop::Message *) user_data);
+		return G_SOURCE_REMOVE;
+	}
+	
 	void Gtk::MainLoop::post(Message *message) noexcept {
-		g_idle_add_once((GSourceOnceFunc) on_posted_message, (gpointer) message);
+		g_idle_add((GSourceFunc) on_idle_call, (gpointer) message);
 	}
 
 	//

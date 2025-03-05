@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 18:07-0300\n"
+"POT-Creation-Date: 2025-03-04 09:31-0300\n"
 "PO-Revision-Date: 2025-03-03 18:06-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -301,6 +301,11 @@ msgstr "Carregando índice do repositório"
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
+
+#: src/library/script.cc:263
+#, fuzzy
+msgid "External command failed"
+msgstr "Operação falhou"
 
 #: src/library/source/data.cc:280
 msgid "Invalid repository"
