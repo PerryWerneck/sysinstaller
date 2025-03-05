@@ -64,7 +64,7 @@
 
 	{
 		Config::Value<string> icon{"MainWindow","icon",G_STRINGIFY(PACKAGE_DOMAIN)};
-		Logger::String{"Setting toplevel icon to '",icon.c_str(),"'"}.trace();
+		Logger::String{"Setting toplevel icon to '",icon.c_str(),"'"}.info();
 		set_icon_name(icon.c_str());
 	}
 
