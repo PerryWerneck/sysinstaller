@@ -48,7 +48,6 @@
 
 	static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
 
-
  	class Application : public Udjat::Gtk::Application, private Udjat::Factory {
 	private:
 		MainWindow *window = nullptr;
@@ -265,10 +264,28 @@
 	Logger::verbosity(9);
 	Logger::redirect();
 	Logger::console(true);
+
 	return Application{}.run(argc,argv,"./xml.d");
+
 #else
+
 	Logger::redirect();
+
+	// Check for dark-theme
+	{
+		GSettings *theme = g_settings_new("org.gnome.desktop.interface");
+		if(theme) {
+			gchar *scheme = g_settings_get_string(theme,"color-scheme");
+			if(scheme && strstr(scheme,"dark")) {
+				Logger::String{"Dark theme detected"}.info();
+				setenv("GTK_THEME","Adwaita:dark",1);
+			}
+			g_object_unref(theme);
+		}
+	}
+
 	return Application{}.run(argc,argv);
+
 #endif // DEBUG
 
 
