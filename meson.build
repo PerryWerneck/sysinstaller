@@ -51,6 +51,22 @@ global_cxxflags = cxx.get_supported_arguments(compiler_flags_common)
 add_project_arguments(global_cxxflags, language: 'cpp')
 
 #
+# Dependencies
+#
+libslp = cxx.find_library('slp')
+deps = [
+	dependency('libudjat-static',version : '>=2.0.0'),
+	dependency('libudjathttp-static',version : '>=2.0.0'),
+	dependency('libudjatdbus-static',version : '>=2.0.0'),
+	dependency('gtkmm-4.0'),
+	dependency('libzip'),
+	dependency('libfatfs-static'),
+	dependency('zlib'),
+	dependency('libisofs-1'),
+	libslp,
+]
+
+#
 # Configuration
 #
 conf_data = configuration_data()
@@ -72,6 +88,10 @@ conf_data.set('HAVE_ISOFS', 1)
 conf_data.set('HAVE_ZLIB', 1)
 conf_data.set('HAVE_LIBZIP', 1)
 
+if libslp.found()
+  conf_data.set('HAVE_LIBSLP', 1)
+endif
+
 if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   conf_data.set('HAVE_UNISTD_H', 1)
 endif
@@ -86,23 +106,6 @@ configure_file(output :
 )
 
 includes_dir = include_directories('../src/include')
-
-#
-# Dependencies
-#
-deps = [
-	dependency('libudjat-static',version : '>=2.0.0'),
-	dependency('libudjathttp-static',version : '>=2.0.0'),
-	dependency('libudjatdbus-static',version : '>=2.0.0'),
-	dependency('gtkmm-4.0'),
-	dependency('libzip'),
-	dependency('libfatfs-static'),
-	dependency('zlib'),
-	dependency('libisofs-1'),
-	cxx.find_library('slp'),
-]
-
-# Check for libslp
 
 app_src = [
 	'src/application/main.cc',
