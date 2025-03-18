@@ -213,7 +213,7 @@
 
 					filename = url.tempfile([&progress](double current, double total){
 						progress = (total/current);
-						return true;
+						return false;
 					});
 
 					bool rc = index(filename.c_str());
