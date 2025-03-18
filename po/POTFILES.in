@@ -34,10 +34,10 @@ src/gtk4/application.cc
 src/gtk4/mainloop.cc
 src/gtk4/popup.cc
 src/gtk4/progress.cc
-src/modules/grub2.cc
 src/modules/isobuilder/fatfs/image.cc
 src/modules/isobuilder/fatfs/settings.cc
 src/modules/isobuilder/iso9660/image.cc
 src/modules/isobuilder/iso9660/settings.cc
 src/modules/isobuilder/module.cc
 src/modules/isowriter.cc
+src/modules/grub2.cc

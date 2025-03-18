@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-04 09:31-0300\n"
-"PO-Revision-Date: 2025-03-05 12:09-0300\n"
+"POT-Creation-Date: 2025-03-18 16:28-0300\n"
+"PO-Revision-Date: 2025-03-18 16:29-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -61,11 +61,11 @@ msgstr "Erro ao obter informações sobre o caminho de boot"
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/library/action.cc:231
+#: src/library/action.cc:231 src/library/source/data.cc:175
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/library/action.cc:250
+#: src/library/action.cc:250 src/library/source/data.cc:194
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
@@ -79,11 +79,11 @@ msgstr "Erro ao ler link de boot"
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/library/builder.cc:84 src/modules/grub2.cc:130 src/modules/grub2.cc:202
+#: src/library/builder.cc:84 src/modules/grub2.cc:130 src/modules/grub2.cc:220
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/library/builder.cc:256 src/modules/grub2.cc:238
+#: src/library/builder.cc:256 src/modules/grub2.cc:256
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
@@ -303,11 +303,15 @@ msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
 
 #: src/library/script.cc:263
-#, fuzzy
 msgid "External command failed"
-msgstr "Operação falhou"
+msgstr "Comando ou script externo falhou"
 
-#: src/library/source/data.cc:280
+#: src/library/source/data.cc:168
+#, c++-format
+msgid "Error getting info for '{}'"
+msgstr "Erro ao obter informações sobre '{}'"
+
+#: src/library/source/data.cc:343
 msgid "Invalid repository"
 msgstr "Repositório inválido"
 
@@ -339,19 +343,19 @@ msgstr "Finalizando"
 msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
-#: src/gtk4/application.cc:419
+#: src/gtk4/application.cc:421
 msgid "_Reboot now"
 msgstr "_Reiniciar agora"
 
-#: src/gtk4/application.cc:420
+#: src/gtk4/application.cc:422
 msgid "_Quit application"
 msgstr "_Encerrar aplicação"
 
-#: src/gtk4/application.cc:421
+#: src/gtk4/application.cc:423
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/gtk4/application.cc:422
+#: src/gtk4/application.cc:424
 msgid "C_ontinue"
 msgstr "_Continuar"
 
@@ -359,38 +363,6 @@ msgstr "_Continuar"
 #, c++-format
 msgid "{} of {}"
 msgstr "{} de {}"
-
-#: src/modules/grub2.cc:85
-msgid "Getting installation kernel"
-msgstr "Obtendo kernel de instalação"
-
-#: src/modules/grub2.cc:97
-msgid "Getting init system"
-msgstr "Obtendo imagem de instalação"
-
-#: src/modules/grub2.cc:208
-msgid "Loading kernel..."
-msgstr "Carregando kernel..."
-
-#: src/modules/grub2.cc:213
-msgid "Loading installer..."
-msgstr "Carregando instalador..."
-
-#: src/modules/grub2.cc:243
-msgid "Applying templates"
-msgstr "Aplicando templates"
-
-#: src/modules/grub2.cc:251
-msgid "Configuring boot loader"
-msgstr "Configurando carregador de boot"
-
-#: src/modules/grub2.cc:252
-msgid "First stage"
-msgstr "Primeiro estágio"
-
-#: src/modules/grub2.cc:257
-msgid "Second stage"
-msgstr "Segundo estágio"
 
 #: src/modules/isobuilder/fatfs/image.cc:73
 #, c++-format
@@ -460,6 +432,38 @@ msgstr "Obtendo imagem ISO"
 #: src/modules/isowriter.cc:67
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
+
+#: src/modules/grub2.cc:85
+msgid "Getting installation kernel"
+msgstr "Obtendo kernel de instalação"
+
+#: src/modules/grub2.cc:97
+msgid "Getting init system"
+msgstr "Obtendo imagem de instalação"
+
+#: src/modules/grub2.cc:226
+msgid "Loading kernel..."
+msgstr "Carregando kernel..."
+
+#: src/modules/grub2.cc:231
+msgid "Loading installer..."
+msgstr "Carregando instalador..."
+
+#: src/modules/grub2.cc:261
+msgid "Applying templates"
+msgstr "Aplicando templates"
+
+#: src/modules/grub2.cc:269
+msgid "Configuring boot loader"
+msgstr "Configurando carregador de boot"
+
+#: src/modules/grub2.cc:270
+msgid "First stage"
+msgstr "Primeiro estágio"
+
+#: src/modules/grub2.cc:275
+msgid "Second stage"
+msgstr "Segundo estágio"
 
 #, c++-format
 #~ msgid "Unable to open fat://{}/"
