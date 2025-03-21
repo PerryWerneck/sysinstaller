@@ -240,16 +240,6 @@
 				return true;
 			}
 
-			if(!strcasecmp(key,"install-kloading")) {
-				value = _("Loading kernel...");
-				return true;
-			}
-
-			if(!strcasecmp(key,"install-iloading")) {
-				value = _("Loading installer...");
-				return true;
-			}
-
 			if(!strcasecmp(key,"kernel-parameters")) {
 				value = KernelParameter::join(*this,kparms);
 				debug("Kernel parameters set to '",value.c_str(),"'");

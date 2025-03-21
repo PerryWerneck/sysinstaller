@@ -291,6 +291,26 @@
 			return true;
 		}
 
+		if(!(strcasecmp(key,"boot-label"))) {
+			value = Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")};
+			return true;
+		}
+
+		if(!(strcasecmp(key,"boot-label-vnc"))) {
+			value = Config::Value<string>{"defaults","boot-label-vnc",_("Remote controlled installation")};
+			return true;
+		}
+
+		if(!strcasecmp(key,"install-kloading")) {
+			value = _("Loading kernel...");
+			return true;
+		}
+
+		if(!strcasecmp(key,"install-iloading")) {
+			value = _("Loading installer...");
+			return true;
+		}
+
 		if(Udjat::NamedObject::getProperty(key,value)) {
 			return true;
 		}
