@@ -60,7 +60,6 @@
 
 	};
 
-
 	std::vector<KernelParameter::Preset> KernelParameter::presets;
 
 	KernelParameter::Preset::Preset(const char *n, const char *v)

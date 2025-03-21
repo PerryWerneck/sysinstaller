@@ -99,6 +99,14 @@
 			}
 		};
 
+		class DUD : public Reinstall::FileSource {
+			public:
+				DUD(const Udjat::XML::Node &node, const char *path) : FileSource{node} {
+					url.local = path;
+				}
+
+		};
+
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
 		std::vector<std::shared_ptr<Reinstall::KernelParameter>> kparms;
 		std::vector<std::shared_ptr<Reinstall::Template>> templates;
@@ -135,6 +143,16 @@
 
 			sources.push_back(make_shared<Kernel>(*this,node));
 			sources.push_back(make_shared<Init>(*this,node));
+
+			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
+				for(Udjat::XML::Node child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
+					auto path = XML::QuarkFactory(child,"path");
+					if(path && *path) {
+						auto source = make_shared<DUD>(child,path);
+						sources.push_back(source);
+					}
+				}
+			}
 
 			// Load kernel parameters.
 			Reinstall::KernelParameter::load(node,kparms,true);
