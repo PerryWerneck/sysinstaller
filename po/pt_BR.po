@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-18 16:29-0300\n"
-"PO-Revision-Date: 2025-03-18 16:29-0300\n"
+"POT-Creation-Date: 2025-03-21 14:32-0300\n"
+"PO-Revision-Date: 2025-03-21 14:33-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -79,11 +79,24 @@ msgstr "Erro ao ler link de boot"
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/library/builder.cc:84 src/modules/grub2.cc:130 src/modules/grub2.cc:220
+#: src/library/action.cc:295 src/library/builder.cc:84 src/modules/grub2.cc:138
+#: src/modules/grub2.cc:238
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/library/builder.cc:256 src/modules/grub2.cc:256
+#: src/library/action.cc:300
+msgid "Remote controlled installation"
+msgstr "Instalação com assistência remota"
+
+#: src/library/action.cc:305
+msgid "Loading kernel..."
+msgstr "Carregando kernel..."
+
+#: src/library/action.cc:310
+msgid "Loading installer..."
+msgstr "Carregando instalador..."
+
+#: src/library/builder.cc:256 src/modules/grub2.cc:264
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
@@ -267,7 +280,27 @@ msgstr "Sem suporte para gravação na imagem selecionada"
 msgid "Writing image"
 msgstr "Gravando imagem"
 
-#: src/library/kernelparameter.cc:170
+#: src/library/kernelparameter.cc:176
+#, c++-format
+msgid "Unable to get file mount without dirname for '{}' "
+msgstr "Não é possível obter ponto de montagem para '{}' sem o diretório "
+
+#: src/library/kernelparameter.cc:192
+#, c++-format
+msgid "Error getting status of '{}'"
+msgstr "Erro ao obter informações estado de '{}'"
+
+#: src/library/kernelparameter.cc:200
+#, c++-format
+msgid "Unable to get mount point for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem para '{}'"
+
+#: src/library/kernelparameter.cc:242
+#, c++-format
+msgid "Driver update disk '{}' has no path or url defined"
+msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
+
+#: src/library/kernelparameter.cc:309
 #, c++-format
 msgid "Kernel parameter '{}' has an empty value"
 msgstr "Parâmetro de kernel '{}' tem valor vazio"
@@ -441,27 +474,19 @@ msgstr "Obtendo kernel de instalação"
 msgid "Getting init system"
 msgstr "Obtendo imagem de instalação"
 
-#: src/modules/grub2.cc:226
-msgid "Loading kernel..."
-msgstr "Carregando kernel..."
-
-#: src/modules/grub2.cc:231
-msgid "Loading installer..."
-msgstr "Carregando instalador..."
-
-#: src/modules/grub2.cc:261
+#: src/modules/grub2.cc:269
 msgid "Applying templates"
 msgstr "Aplicando templates"
 
-#: src/modules/grub2.cc:269
+#: src/modules/grub2.cc:277
 msgid "Configuring boot loader"
 msgstr "Configurando carregador de boot"
 
-#: src/modules/grub2.cc:270
+#: src/modules/grub2.cc:278
 msgid "First stage"
 msgstr "Primeiro estágio"
 
-#: src/modules/grub2.cc:275
+#: src/modules/grub2.cc:283
 msgid "Second stage"
 msgstr "Segundo estágio"
 
@@ -499,8 +524,7 @@ msgstr "Segundo estágio"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -668,8 +692,7 @@ msgstr "Segundo estágio"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -699,25 +722,17 @@ msgstr "Segundo estágio"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -728,25 +743,16 @@ msgstr "Segundo estágio"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
