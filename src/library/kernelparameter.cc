@@ -27,6 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/configuration.h>
  #include <vector>
  #include <unordered_map>
  #include <udjat/tools/quark.h>
@@ -146,9 +147,76 @@
 			}
 
 			// Then search for driver-update-disks
+			for(auto child = parent.child("driver-update-disk");child;child = child.next_sibling("driver-update-disk")) {
 
+				String name{child,"kernel-parameter",false};
+				if(name.empty()) {
+					name = Config::Value<string>("kernel-parameters","driver-update-disk","dud").c_str();
+				}
+
+				String path{child,"path"};
+				if(!path.empty()) {
+					// Local path is defined, use it.
+					kparms.push_back(
+						make_shared<KParm>(
+							name.as_quark(),
+							String{"hd:",path.c_str()}.as_quark()
+						)
+					);
+					continue;
+				}
+
+				String url{child,"url"};
+				if(url.empty()) {
+					throw runtime_error(Logger::Message{_("Driver update disk '{}' has no path or url defined"),String{child,"name"}.c_str()});
+				}
+
+				// Remote path is defined, use it.
+				if(url[0] != '.') {
+
+					// It's a full URL, use it without adjustments.
+					kparms.push_back(
+						make_shared<KParm>(
+							name.as_quark(),
+							url.as_quark()
+						)
+					);
+
+				} else {
+
+					// It's relative to repository, get value later.
+					class RemoteUpdateDisk : public KernelParameter {
+					private:
+						std::shared_ptr<Repository> repository;
+						const char *path;
+
+					public:
+						RemoteUpdateDisk(const char *name, std::shared_ptr<Repository> repo, const char *url) : KernelParameter{name}, repository{repo}, path{url} {
+						}
+
+						std::string value(const Udjat::Abstract::Object &object) const override {
+							URL url{repository->remote()};
+							url += path;
+							url.expand(object);
+							return url;
+						}
+				
+					};
+
+					kparms.push_back(
+						make_shared<RemoteUpdateDisk>(
+							name.as_quark(),
+							Repository::Factory(child),
+							url.as_quark()
+						)
+					);
+
+				}
+
+			}
 
 		}
+
 
 	}
 

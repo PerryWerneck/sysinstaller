@@ -25,6 +25,7 @@
 
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/string.h>
  #include <memory>
  #include <vector>
 
@@ -44,15 +45,16 @@
 		static std::vector<Preset> presets;
 
 	public:
+
 		constexpr KernelParameter(const char *n) : object_name{n} {
 		}
 
-		KernelParameter(const Udjat::XML::Node &node) : KernelParameter{Udjat::XML::QuarkFactory(node,"name")} {
+		KernelParameter(const Udjat::XML::Node &node) : object_name{Udjat::String{node,"name"}.as_quark()} {
 		}
 
 		virtual ~KernelParameter();
 
-		/// @brief Convenience method to expand values when building object.
+		// @brief Convenience method to expand values when building object.
 		static const char * expand(const Udjat::XML::Node &node, const char *attrname);
 
 		/// @brief Override xml defined kernel parameters.
