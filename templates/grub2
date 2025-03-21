@@ -24,9 +24,9 @@ cat << EOF
 menuentry '%{boot-label}' --class gnu-linux --class gnu --class os {
   set gfxpayload=keep
   echo '%{install-kloading}'
-  linux %{kernel-file} %{kernel-parameters}
+  linux %{boot-kernel} %{kernel-parameters}
   echo '%{install-iloading}'
-  initrd %{initrd-file}
+  initrd %{boot-initrd}
 }
 EOF
 
@@ -34,9 +34,9 @@ cat << EOF
 menuentry '%{boot-label-vnc}' --class gnu-linux --class gnu --class os {
   set gfxpayload=keep
   echo '%{install-kloading}'
-  linux %{kernel-file} %{kernel-parameters} vnc=1
+  linux %{boot-kernel} %{kernel-parameters} vnc=1
   echo '%{install-iloading}'
-  initrd %{initrd-file}
+  initrd %{boot-initrd}
 }
 EOF
 
