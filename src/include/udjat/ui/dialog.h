@@ -84,6 +84,10 @@
 
 		Dialog(const char *name, const XML::Node &node) : Dialog{name,Dialog::AllowContinue,node} {
 		}
+		
+		inline void set(const Option option) noexcept {
+			options = (Dialog::Option) (options | option);
+		}
 
 		static inline void set_default(const Option option) {
 			defoptions = (Dialog::Option) (defoptions | option);

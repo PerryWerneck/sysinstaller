@@ -163,6 +163,9 @@
 			// Load scripts.
 			Reinstall::Script::load(*this,node,scripts);
 
+			// Enable allow reboot by default.
+			success.set(Dialog::AllowReboot);
+
 		}
 
 		const Kernel * kernel() const {

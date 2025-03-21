@@ -428,6 +428,7 @@
 			std::vector<int> values;
 
 			int cancel_button = -1;
+			int continue_button = -1;
 
 			for(int ix = 0; ix < (int) (sizeof(buttons)/sizeof(buttons[0])); ix++) {
 				if(settings.test(buttons[ix].option)) {
@@ -436,12 +437,17 @@
 				}
 				if(buttons[ix].option == Dialog::AllowCancel) {
 					cancel_button = ix;
+				} else if(buttons[ix].option == Dialog::AllowContinue) {
+					continue_button = ix;
 				}
 			}
 
 			dialog->set_buttons(labels);
 			if(cancel_button > 0) {
 				dialog->set_cancel_button(cancel_button);
+			}
+			if(continue_button > 0) {
+				dialog->set_default_button(continue_button);
 			}
 
 			dialog->choose(get_active_window(),[dialog,&settings,values](Glib::RefPtr<Gio::AsyncResult> result){
