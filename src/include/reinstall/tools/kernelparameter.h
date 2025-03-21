@@ -76,7 +76,11 @@
 		/// @return The parameter value with object properties applied.
 		virtual std::string value(const Udjat::Abstract::Object &object) const = 0;
 
-		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &parameters);
+		/// @brief Load kernel parameters.
+		/// @param node XML node to load from.
+		/// @param parameters Array to store loaded parameters.
+		/// @param relpaths If true set path to be relative to partition.
+		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &parameters, bool relpaths = false);
 		static std::string join(const Udjat::Abstract::Object &object, const std::vector<std::shared_ptr<KernelParameter>> &parameters);
 
 	};

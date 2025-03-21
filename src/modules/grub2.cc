@@ -137,7 +137,7 @@
 			sources.push_back(make_shared<Init>(*this,node));
 
 			// Load kernel parameters.
-			Reinstall::KernelParameter::load(node,kparms);
+			Reinstall::KernelParameter::load(node,kparms,true);
 
 			// Load templates
 			Reinstall::Template::load(*this,node,templates);

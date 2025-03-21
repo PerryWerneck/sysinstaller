@@ -31,7 +31,10 @@
  #include <vector>
  #include <unordered_map>
  #include <udjat/tools/quark.h>
-
+ #include <linux/limits.h>
+ #include <mntent.h>
+ #include <sys/stat.h>
+ #include <cstdio>
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
 
@@ -77,7 +80,7 @@
 		return expanded;
 	}
 
-	void KernelParameter::load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &kparms) {
+	void KernelParameter::load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &kparms, bool relpaths) {
 
 		// Use map to avoid add of the same key more than one time.
 		std::unordered_map<std::string, std::shared_ptr<KernelParameter>> keys;
@@ -154,16 +157,85 @@
 					name = Config::Value<string>("kernel-parameters","driver-update-disk","dud").c_str();
 				}
 
-				String path{child,"path"};
-				if(!path.empty()) {
-					// Local path is defined, use it.
-					kparms.push_back(
-						make_shared<KParm>(
-							name.as_quark(),
-							String{"hd:",path.c_str()}.as_quark()
-						)
-					);
-					continue;
+				// Check if path is defined.
+				{
+					String path{child,"path"};
+					if(!path.empty()) {
+
+						// Local path is defined, use it.
+
+						if(relpaths) {
+
+							// Make path relative to partition.
+							string file;
+							string dir{path.c_str()};
+							{
+								auto pos = dir.find_last_of('/');
+								if(pos == string::npos) {
+									throw runtime_error(
+										Logger::Message{
+											_("Unable to get file mount without dirname for '{}' "),dir.c_str()
+										}
+									);
+								}
+								dir = dir.substr(0,pos+1);
+								file = path.c_str() + pos + 1;
+							}
+
+							debug("dir='",dir.c_str(),"' name='",file.c_str(),"'");
+
+							struct stat st;
+							if(stat(dir.c_str(),&st)) {
+								throw system_error(
+									errno, 
+									system_category(), 
+									Logger::Message{
+										_("Error getting status of '{}'"),dir.c_str()
+									}
+								);
+							}
+			
+							if((st.st_mode & S_IFMT) != S_IFDIR) {
+								throw runtime_error(
+									Logger::Message{
+										_("Unable to get mount point for '{}'"),dir.c_str()
+									}
+								);
+							}
+							struct mntent mnt;
+			
+							char buf[PATH_MAX*3];
+						
+							FILE *fp;
+							struct mntent *fs;
+							fp = setmntent("/etc/mtab", "r");
+							while ((fs = getmntent_r(fp,&mnt,buf,sizeof(buf))) != NULL) {
+								debug(fs->mnt_dir);
+								struct stat stm;
+								if(stat(fs->mnt_dir,&stm) == 0 && stm.st_dev == st.st_dev) {
+									if((fs->mnt_dir[0] == '/' && fs->mnt_dir[1] == 0)) {
+										Logger::String{"Mount point for '",path.c_str(),"' is root, no relocation is required"}.trace();
+									} else {
+										path = path.c_str() + strlen(fs->mnt_dir);
+										Logger::String{"Mount point for '",dir.c_str(),"' is '",fs->mnt_dir,"' relative path is '",path.c_str(),"'"}.trace();	
+									}
+									break;
+								}
+			
+							}
+							endmntent(fp);
+			
+						}
+
+						kparms.push_back(
+							make_shared<KParm>(
+								name.as_quark(),
+								String{"hd:",path.c_str()}.as_quark()
+							)
+						);
+
+						continue;
+					}
 				}
 
 				String url{child,"url"};
