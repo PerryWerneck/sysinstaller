@@ -22,9 +22,11 @@
   */
 
  #pragma once
+
+ #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/version.h>
- #include <glib/gi18n-lib.h>
+ #include <glib/gi18n.h>
  #include <gtkmm.h>
 
  #include <widgets/sidebar.h>
