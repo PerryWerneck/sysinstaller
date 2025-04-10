@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-21 14:32-0300\n"
+"POT-Creation-Date: 2025-04-10 15:36-0300\n"
 "PO-Revision-Date: 2025-03-21 14:33-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -20,83 +20,108 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/library/action.cc:83
+#: src/application/mainwindow.cc:62
+msgid "System reinstallation"
+msgstr "Reinstalar o sistema"
+
+#: src/gtk4/application.cc:422
+msgid "_Reboot now"
+msgstr "_Reiniciar agora"
+
+#: src/gtk4/application.cc:423
+msgid "_Quit application"
+msgstr "_Encerrar aplicação"
+
+#: src/gtk4/application.cc:424
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/gtk4/application.cc:425
+msgid "C_ontinue"
+msgstr "_Continuar"
+
+#: src/gtk4/progress.cc:252 src/gtk4/progress.cc:285
+#, c++-format
+msgid "{} of {}"
+msgstr "{} de {}"
+
+#: src/library/action.cc:84
 msgid "The selected action cant be activated"
 msgstr "A ação selecionada não pode ser ativada"
 
-#: src/library/action.cc:92
+#: src/library/action.cc:93
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/library/action.cc:92
+#: src/library/action.cc:93
 msgid "Continue"
 msgstr "Continuar"
 
-#: src/library/action.cc:113
+#: src/library/action.cc:114
 msgid "Initializing"
 msgstr "Inicializando"
 
-#: src/library/action.cc:153
+#: src/library/action.cc:154
 msgid "A required file is not available"
 msgstr "Um arquivo necessário não está disponível"
 
-#: src/library/action.cc:171
+#: src/library/action.cc:172
 msgid "Configuration or logic error"
 msgstr "Erro de configuração ou lógica"
 
-#: src/library/action.cc:180
+#: src/library/action.cc:181
 msgid "System error"
 msgstr "Erro de sistema"
 
-#: src/library/action.cc:186
+#: src/library/action.cc:187
 msgid "Operation failed"
 msgstr "Operação falhou"
 
-#: src/library/action.cc:220
+#: src/library/action.cc:221
 msgid "Error getting boot path info"
 msgstr "Erro ao obter informações sobre o caminho de boot"
 
-#: src/library/action.cc:224
+#: src/library/action.cc:225
 #, c++-format
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/library/action.cc:231 src/library/source/data.cc:175
+#: src/library/action.cc:232 src/library/source/data.cc:175
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/library/action.cc:250 src/library/source/data.cc:194
+#: src/library/action.cc:251 src/library/source/data.cc:194
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
 
-#: src/library/action.cc:264
+#: src/library/action.cc:265
 msgid "Error readlink boot link"
 msgstr "Erro ao ler link de boot"
 
-#: src/library/action.cc:285
+#: src/library/action.cc:286
 #, c++-format
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/library/action.cc:295 src/library/builder.cc:84 src/modules/grub2.cc:138
-#: src/modules/grub2.cc:238
+#: src/library/action.cc:296 src/library/builder.cc:84 src/modules/grub2.cc:138
+#: src/modules/grub2.cc:241
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/library/action.cc:300
+#: src/library/action.cc:301
 msgid "Remote controlled installation"
 msgstr "Instalação com assistência remota"
 
-#: src/library/action.cc:305
+#: src/library/action.cc:306
 msgid "Loading kernel..."
 msgstr "Carregando kernel..."
 
-#: src/library/action.cc:310
+#: src/library/action.cc:311
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/library/builder.cc:256 src/modules/grub2.cc:264
+#: src/library/builder.cc:256 src/modules/grub2.cc:267
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
@@ -352,11 +377,11 @@ msgstr "Repositório inválido"
 msgid "Cant update template permissions"
 msgstr "Erro ao atualizar permissões de modelo"
 
-#: src/library/ui/dialog.cc:190
+#: src/library/ui/dialog.cc:191
 msgid "_No"
 msgstr "_Não"
 
-#: src/library/ui/dialog.cc:190
+#: src/library/ui/dialog.cc:191
 msgid "_Yes"
 msgstr "_Sim"
 
@@ -372,30 +397,29 @@ msgstr "Módulo de gravação já está disponível"
 msgid "Finishing"
 msgstr "Finalizando"
 
-#: src/application/mainwindow.cc:62
-msgid "System reinstallation"
-msgstr "Reinstalar o sistema"
+#: src/modules/grub2.cc:85
+msgid "Getting installation kernel"
+msgstr "Obtendo kernel de instalação"
 
-#: src/gtk4/application.cc:421
-msgid "_Reboot now"
-msgstr "_Reiniciar agora"
+#: src/modules/grub2.cc:97
+msgid "Getting init system"
+msgstr "Obtendo imagem de instalação"
 
-#: src/gtk4/application.cc:422
-msgid "_Quit application"
-msgstr "_Encerrar aplicação"
+#: src/modules/grub2.cc:272
+msgid "Applying templates"
+msgstr "Aplicando templates"
 
-#: src/gtk4/application.cc:423
-msgid "_Cancel"
-msgstr "_Cancelar"
+#: src/modules/grub2.cc:280
+msgid "Configuring boot loader"
+msgstr "Configurando carregador de boot"
 
-#: src/gtk4/application.cc:424
-msgid "C_ontinue"
-msgstr "_Continuar"
+#: src/modules/grub2.cc:281
+msgid "First stage"
+msgstr "Primeiro estágio"
 
-#: src/gtk4/progress.cc:251 src/gtk4/progress.cc:284
-#, c++-format
-msgid "{} of {}"
-msgstr "{} de {}"
+#: src/modules/grub2.cc:286
+msgid "Second stage"
+msgstr "Segundo estágio"
 
 #: src/modules/isobuilder/fatfs/image.cc:73
 #, c++-format
@@ -466,30 +490,6 @@ msgstr "Obtendo imagem ISO"
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
 
-#: src/modules/grub2.cc:85
-msgid "Getting installation kernel"
-msgstr "Obtendo kernel de instalação"
-
-#: src/modules/grub2.cc:97
-msgid "Getting init system"
-msgstr "Obtendo imagem de instalação"
-
-#: src/modules/grub2.cc:269
-msgid "Applying templates"
-msgstr "Aplicando templates"
-
-#: src/modules/grub2.cc:277
-msgid "Configuring boot loader"
-msgstr "Configurando carregador de boot"
-
-#: src/modules/grub2.cc:278
-msgid "First stage"
-msgstr "Primeiro estágio"
-
-#: src/modules/grub2.cc:283
-msgid "Second stage"
-msgstr "Segundo estágio"
-
 #, c++-format
 #~ msgid "Unable to open fat://{}/"
 #~ msgstr "Incapaz de abrir fat://{}/"
@@ -524,7 +524,8 @@ msgstr "Segundo estágio"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid "Authentication is required and has failed or has not yet been provided."
+#~ msgid ""
+#~ "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -692,7 +693,8 @@ msgstr "Segundo estágio"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid ""
+#~ "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -722,17 +724,25 @@ msgstr "Segundo estágio"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid "The initialization procedure has failed, the application cant continue"
+#~ msgid ""
+#~ "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
-#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
+#~ msgid ""
+#~ "The request contained valid data and was understood by the server, but "
+#~ "the server is refusing action."
+#~ msgstr ""
+#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
+#~ "o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid "The request method is not supported by the server and cannot be handled."
-#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
+#~ msgid ""
+#~ "The request method is not supported by the server and cannot be handled."
+#~ msgstr ""
+#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
+#~ "atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -743,16 +753,25 @@ msgstr "Segundo estágio"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid "The server has encountered a situation it does not know how to handle."
+#~ msgid ""
+#~ "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
+#~ msgstr ""
+#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
+#~ "tempo esperado."
 
-#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
-#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
+#~ msgid ""
+#~ "The server is not ready to handle the request. Common causes are a server "
+#~ "that is down for maintenance or that is overloaded."
+#~ msgstr ""
+#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
+#~ "para manutenção ou sobrecarregado."
 
-#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
+#~ msgid ""
+#~ "The server, while working as a gateway to get a response needed to handle "
+#~ "the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
