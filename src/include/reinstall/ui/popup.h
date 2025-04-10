@@ -23,9 +23,9 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
 
- namespace Udjat {
+ namespace Reinstall {
 
 	class UDJAT_API Dialog::Popup {
 	protected:

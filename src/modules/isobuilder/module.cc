@@ -31,7 +31,7 @@
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/builder.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <vector>
  #include <reinstall/modules/isobuilder.h>

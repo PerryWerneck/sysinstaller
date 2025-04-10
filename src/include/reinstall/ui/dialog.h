@@ -28,7 +28,7 @@
  #include <udjat/tools/xml.h>
  #include <cstdarg>
 
- namespace Udjat {
+ namespace Reinstall {
 
 	class UDJAT_API Dialog {
 	public:
@@ -80,9 +80,9 @@
 		}
 
 		/// @brief Declare dialog from XML Node.
-		Dialog(const char *name, Option options, const XML::Node &node);
+		Dialog(const char *name, Option options, const Udjat::XML::Node &node);
 
-		Dialog(const char *name, const XML::Node &node) : Dialog{name,Dialog::AllowContinue,node} {
+		Dialog(const char *name, const Udjat::XML::Node &node) : Dialog{name,Dialog::AllowContinue,node} {
 		}
 		
 		inline void set(const Option option) noexcept {
@@ -150,6 +150,6 @@
 		}
 
 	};
-
+	
  }
 

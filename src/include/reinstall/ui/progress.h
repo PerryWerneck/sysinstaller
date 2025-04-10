@@ -23,11 +23,11 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/dialog.h>
+ #include <udjat/ui/gtk4/dialog.h>
 
  namespace Udjat {
 
-	class UDJAT_API Dialog::Progress {
+	class UDJAT_API Gtk::Dialog::Progress {
 	private:
 		static Progress * instance;
 

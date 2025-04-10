@@ -24,7 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
- #include <udjat/ui/popup.h>
+ #include <reinstall/ui/popup.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/tools/threadpool.h>
 

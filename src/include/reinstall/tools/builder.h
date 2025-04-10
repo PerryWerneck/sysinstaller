@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/kernelparameter.h>

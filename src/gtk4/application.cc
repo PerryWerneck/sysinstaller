@@ -28,7 +28,7 @@
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
 
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <udjat/ui/gtk4/application.h>
  #include <udjat/ui/gtk4/mainloop.h>
  #include <udjat/tools/application.h>

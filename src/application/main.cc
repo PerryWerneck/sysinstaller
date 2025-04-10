@@ -26,8 +26,8 @@
  #include <udjat/module/abstract.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
- #include <udjat/ui/gtk4/application.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/application.h>
+ #include <reinstall/ui/dialog.h>
  #include <udjat/tools/factory.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/kernelparameter.h>

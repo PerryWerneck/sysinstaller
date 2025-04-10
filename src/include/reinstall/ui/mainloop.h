@@ -25,48 +25,43 @@
  #include <udjat/defs.h>
  #include <udjat/tools/mainloop.h>
 
- namespace Udjat {
+ namespace Reinstall {
 
-	namespace Gtk {
+	class UDJAT_API MainLoop : private Udjat::MainLoop {
+	public:
+		MainLoop();
+		virtual ~MainLoop();
 
-		class UDJAT_API MainLoop : private Udjat::MainLoop {
-		public:
-			MainLoop();
-			virtual ~MainLoop();
+		void wakeup() noexcept override;
 
-			void wakeup() noexcept override;
+		// Mainloop methods
+		bool enabled(const Timer *timer) const noexcept override;
 
-			// Mainloop methods
-			bool enabled(const Timer *timer) const noexcept override;
+		/// @brief Is Handler enabled?
+		bool enabled(const Handler *handler) const noexcept override;
 
-			/// @brief Is Handler enabled?
-			bool enabled(const Handler *handler) const noexcept override;
+		void push_back(MainLoop::Timer *timer) override;
+		void remove(MainLoop::Timer *timer) override;
 
-			void push_back(MainLoop::Timer *timer) override;
-			void remove(MainLoop::Timer *timer) override;
+		void push_back(MainLoop::Handler *handler) override;
+		void remove(MainLoop::Handler *handler) override;
 
-			void push_back(MainLoop::Handler *handler) override;
-			void remove(MainLoop::Handler *handler) override;
+		/// @brief Run mainloop.
+		int run() override;
 
-			/// @brief Run mainloop.
-			int run() override;
+		/// @brief Is the mainloop active?
+		bool active() const noexcept override;
 
-			/// @brief Is the mainloop active?
-			bool active() const noexcept override;
+		void post(Message *message) noexcept override;
 
-			void post(Message *message) noexcept override;
+		inline operator bool() const noexcept {
+			return active();
+		}
 
-			inline operator bool() const noexcept {
-				return active();
-			}
+		/// @brief Quit mainloop.
+		void quit() override;
 
-			/// @brief Quit mainloop.
-			void quit() override;
-
-
-		};
-
-	}
+	};
 
  }
 

@@ -29,7 +29,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/file/temporary.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>

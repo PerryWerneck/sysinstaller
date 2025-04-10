@@ -28,7 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <reinstall/modules/isowriter.h>
 
  using namespace Udjat;

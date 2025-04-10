@@ -33,7 +33,7 @@
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
  #include <reinstall/modules/grub2.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/ui/dialog.h>
  #include <vector>
  #include <reinstall/tools/kernelparameter.h>
 

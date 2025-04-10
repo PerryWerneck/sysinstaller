@@ -23,10 +23,10 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/ui/popup.h>
+ #include <reinstall/ui/popup.h>
  #include <udjat/tools/logger.h>
 
- namespace Udjat {
+ namespace Reinstall {
 
 	Dialog::Popup::Popup() {
 	}

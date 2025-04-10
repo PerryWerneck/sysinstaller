@@ -11,5 +11,5 @@
 		"typeinfo": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
-	"C_Cpp.default.compileCommands": "/home/perry/project/bb/app/reinstall/.build/compile_commands.json"
+	"C_Cpp.default.compileCommands": "/home/perry/project/tools/reinstall/.build/compile_commands.json"
 }
