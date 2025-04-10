@@ -51,7 +51,7 @@
 		} boot;
 
 	protected:
-		Udjat::Dialog output;
+		Dialog output;
 		const Udjat::Abstract::Object &parent;
 
 		bool getProperty(const char *key, std::string &value) const;

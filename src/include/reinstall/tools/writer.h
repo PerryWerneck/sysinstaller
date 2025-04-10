@@ -23,7 +23,8 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
+ #include <reinstall/ui/dialog.h>
  #include <string>
 
  namespace Reinstall {
@@ -37,12 +38,6 @@
 
 		int fd = -1;
 		unsigned long long length = 0LL;
-
-		/// @brief Device description.
-		// std::string devdescr;
-
-		/// @brief Device name.
-		//std::string devname;
 
 	protected:
 		Writer();

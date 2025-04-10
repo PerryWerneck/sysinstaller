@@ -25,7 +25,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
  #include <udjat/ui/progress.h>
- #include <udjat/ui/gtk4/application.h>
+ #include <reinstall/ui/application.h>
  #include <udjat/tools/threadpool.h>
  #include <udjat/tools/string.h>
 

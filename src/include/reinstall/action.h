@@ -49,9 +49,9 @@
 
 		} args;
 
-		Udjat::Dialog confirmation;
-		Udjat::Dialog success;
-		Udjat::Dialog failed;
+		Dialog confirmation;
+		Dialog success;
+		Dialog failed;
 
 	public:
 

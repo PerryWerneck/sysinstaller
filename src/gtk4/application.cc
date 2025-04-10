@@ -29,8 +29,8 @@
  #include <udjat/tools/configuration.h>
 
  #include <reinstall/ui/dialog.h>
- #include <udjat/ui/gtk4/application.h>
- #include <udjat/ui/gtk4/mainloop.h>
+ #include <reinstall/ui/application.h>
+ #include <reinstall/ui/mainloop.h>
  #include <udjat/tools/application.h>
  #include <udjat/tools/threadpool.h>
 
@@ -47,13 +47,13 @@
 
  namespace Udjat {
 
-	Gtk::Application::Application() {
-		static Udjat::Gtk::MainLoop mainloop;
+	Reinstall::Application::Application(int argc, char **argv) : Udjat::Application{argc,argv} {
+		static Reinstall::MainLoop mainloop;
 		mainloop.active();
 
 	}
 
-	Gtk::Application::~Application() {
+	Reinstall::Application::~Application() {
 	}
 
 	static const char * get_argument(int argc, char **argv, const char shortname, const char *longname) {
@@ -117,7 +117,7 @@
 
 	}
 
-	void Gtk::Application::help(std::ostream &out) const noexcept {
+	void Reinstall::Application::help(std::ostream &out) const noexcept {
 		Udjat::Application::help(out);
 		out << "  --text\tRun in text mode" << endl;
 	}
@@ -136,15 +136,15 @@
 	}
 
 	/// @param definitions Path to a single xml file or a folder with xml files.
-	int Gtk::Application::run(int argc, char **argv, const char *definitions) {
+	int Reinstall::Application::run(const char *definitions) {
 
 		debug("---------------------------------Definitions='",definitions,"'");
 
-		if(text_mode() || get_argument(argc,argv,'t',"text") || get_argument(argc,argv,'t',"console") ) {
+		if(text_mode() || pop('t',"text") || pop(0,"console") ) {
 
 			debug("Running in console mode");
 
-			if(Udjat::Application::setup(argc, argv, definitions)) {
+			if(Udjat::Application::setup(definitions)) {
 				return -1;
 			}
 
@@ -158,7 +158,7 @@
 
 			g_log_set_default_handler(g_syslog,this);
 
-			if(Udjat::Application::setup(argc, argv, definitions)) {
+			if(Udjat::Application::setup(definitions)) {
 				return -1;
 			}
 
@@ -254,27 +254,27 @@
 		return -1;
 	}
 
-	void Gtk::Application::activate(Glib::RefPtr<::Gtk::Application>, const char *) {
+	void Reinstall::Application::activate(Glib::RefPtr<::Gtk::Application>, const char *) {
 
 		debug("-------------------------> Activate");
 
 	}
 
-	void Gtk::Application::startup(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
+	void Reinstall::Application::startup(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Starting up");
 		init(definitions);
 
 	}
 
-	void Gtk::Application::shutdown(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
+	void Reinstall::Application::shutdown(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Shutting down");
 		deinit(definitions);
 
 	}
 
-	int Gtk::Application::select(const Dialog &settings, int cancel, const char *button, va_list args) noexcept {
+	int Reinstall::Application::select(const Dialog &settings, int cancel, const char *button, va_list args) noexcept {
 
 		int rc = -1;
 
@@ -340,7 +340,7 @@
 
 	}
 
-	static void reboot(const Dialog &settings) {
+	static void reboot(const Reinstall::Dialog &settings) {
 #if defined(HAVE_UDJAT_DBUS)
 		try {
 			// Ask gnome for reboot.
@@ -374,7 +374,7 @@
 		settings.reboot();
 	}
 
-	void Gtk::Application::present(const Dialog &settings, const char *message, const char *details) noexcept {
+	void Reinstall::Application::present(const Dialog &settings, const char *message, const char *details) noexcept {
 
 		struct {
 			std::string message;
@@ -479,21 +479,7 @@
 
 	}
 
-	/*
-	int Gtk::Application::failed(const Dialog &settings, bool allow_continue) {
-
-		int rc = -1;
-		if(allow_continue) {
-			rc = settings.select(settings, 0, _("_Quit application"), _("_Continue"), nullptr);
-		} else {
-			rc = settings.select(settings, 0, _("_Quit application"), nullptr);
-		}
-		return 0;
-
-	}
-	*/
-
-	::Gtk::Window & Gtk::Application::get_active_window() {
+	::Gtk::Window & Reinstall::Application::get_active_window() {
 		return *Glib::wrap(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
 	}
 

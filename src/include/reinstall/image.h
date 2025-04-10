@@ -40,13 +40,13 @@
 		/// @brief Abstract disk image.
 		class UDJAT_API Image {
 		protected:
-			const Udjat::Dialog &dialog;
+			const Dialog &dialog;
 			Reinstall::Builder &builder;
 
 			/// @brief EFI boot partition image file.
 			std::string efibootpart;
 
-			inline Image(const Udjat::Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
+			inline Image(const Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
 			}
 
 			/// @brief Add file to image.

@@ -23,11 +23,11 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/gtk4/dialog.h>
+ #include <reinstall/ui/dialog.h>
 
- namespace Udjat {
+ namespace Reinstall {
 
-	class UDJAT_API Gtk::Dialog::Progress {
+	class UDJAT_API Dialog::Progress {
 	private:
 		static Progress * instance;
 

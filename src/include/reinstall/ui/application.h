@@ -33,17 +33,17 @@
 
 	class UDJAT_API Application : public Udjat::Application, private Reinstall::Dialog::Controller {
 	public:
-		Application();
+		Application(int argc, char **argv);
 		virtual ~Application();
 
 		/// @param definitions Path to a single xml file or a folder with xml files.
-		int run(int argc, char **argv, const char *definitions = nullptr) override;
+		int run(const char *definitions = nullptr) override;
 
 		static ::Gtk::Window & get_active_window();
 
 	protected:
 
-		typedef Udjat::Gtk::Application super;
+		typedef Reinstall::Application super;
 
 		/// @brief Gui is starting
 		virtual void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions);
@@ -58,8 +58,8 @@
 		void help(std::ostream &out) const noexcept override;
 
 		// Udjat::Dialog::Controller
-		std::shared_ptr<Udjat::Dialog::Popup> PopupFactory() override;
-		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() override;
+		std::shared_ptr<Reinstall::Dialog::Popup> PopupFactory() override;
+		std::shared_ptr<Reinstall::Dialog::Progress> ProgressFactory() override;
 		int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept override;
 		void present(const Dialog &dialog, const char *message, const char *details) noexcept override;
 
