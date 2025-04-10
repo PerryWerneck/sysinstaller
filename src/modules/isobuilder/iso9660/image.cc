@@ -394,7 +394,7 @@
 
 	}
 
-	void Image::write(Udjat::Dialog::Progress &progress) {
+	void Image::write(Reinstall::Dialog::Progress &progress) {
 
 		debug("Writing image");
 

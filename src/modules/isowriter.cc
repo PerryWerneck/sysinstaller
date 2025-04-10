@@ -59,7 +59,7 @@
 		~Action() {
 		}
 
-		int activate(Udjat::Dialog::Progress &progress) override {
+		int activate(Reinstall::Dialog::Progress &progress) override {
 
 			progress = _("Getting ISO image");
 			auto path = iso.save(*this,progress);

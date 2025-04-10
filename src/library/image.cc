@@ -125,11 +125,11 @@
 
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
+	void Abstract::Image::write(Reinstall::Dialog::Progress &, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
 		throw runtime_error(_("No write support on selected image"));
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &progress) {
+	void Abstract::Image::write(Reinstall::Dialog::Progress &progress) {
 
 		progress = _("Writing image");
 		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
@@ -140,7 +140,7 @@
 		});
 	}
 
-	void Abstract::Image::append(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &sources) {
+	void Abstract::Image::append(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &sources) {
 
 		size_t item = 0;
 		for(auto &source : sources) {

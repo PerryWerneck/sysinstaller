@@ -79,7 +79,7 @@
 		debug("Destroying action '",name(),"'");
 	}
 
-	int Action::activate(Udjat::Dialog::Progress &) {
+	int Action::activate(Reinstall::Dialog::Progress &) {
 		throw logic_error(_("The selected action cant be activated"));
 	}
 
@@ -97,7 +97,7 @@
 		//
 		// Run action
 		//
-		auto dialog = Udjat::Dialog::Progress::Factory();
+		auto dialog = Reinstall::Dialog::Progress::Factory();
 
 		info() << "Starting activity" << endl;
 
@@ -123,7 +123,7 @@
 		} popup;
 
 		debug("Running background thread");
-		auto rc = dialog->run([&](Udjat::Dialog::Progress &progress){
+		auto rc = dialog->run([&](Reinstall::Dialog::Progress &progress){
 
 			try {
 

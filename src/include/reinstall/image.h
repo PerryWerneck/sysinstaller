@@ -55,7 +55,7 @@
 			virtual void append(const char *from, const char *to) = 0;
 
 			/// @brief Add sources to image.
-			void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &sources);
+			void append(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &sources);
 
 		public:
 			virtual ~Image();
@@ -65,9 +65,9 @@
 			/// @brief Append data source to image, download file if needed.
 			virtual void append(std::shared_ptr<DataSource> source);
 
-			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+			virtual void write(Reinstall::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			virtual void write(Udjat::Dialog::Progress &progress);
+			virtual void write(Reinstall::Dialog::Progress &progress);
 
 		};
 

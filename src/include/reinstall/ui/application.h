@@ -57,7 +57,7 @@
 		// Udjat::Application
 		void help(std::ostream &out) const noexcept override;
 
-		// Udjat::Dialog::Controller
+		// Reinstall::Dialog::Controller
 		std::shared_ptr<Reinstall::Dialog::Popup> PopupFactory() override;
 		std::shared_ptr<Reinstall::Dialog::Progress> ProgressFactory() override;
 		int select(const Dialog &dialog, int cancel, const char *button, va_list args) noexcept override;

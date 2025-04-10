@@ -57,7 +57,7 @@
 		bool getProperty(const char *key, std::string &value) const;
 
 		/// @brief Select device and write image to it.
-		//void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
+		//void write(Reinstall::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
 
 	public:
 		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
@@ -81,7 +81,7 @@
 		/// @return Valid template ptr if filename should be replaced.
 		std::shared_ptr<Reinstall::Template> tmplt(const char *filename);
 
-		void prepare(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &files);
+		void prepare(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &files);
 
 	};
 

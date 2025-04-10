@@ -68,7 +68,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) = 0;
+		virtual void open(Reinstall::Dialog::Progress &progress, const Udjat::Dialog &dialog) = 0;
 
 		/// @brief Get device length.
 		/// @return The device length.
@@ -86,10 +86,10 @@
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 		/// @brief Write file to device
-		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd);
+		void write(Reinstall::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd);
 
 		/// @brief Write iso image to device.
-		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, const char *isoname);
+		void write(Reinstall::Dialog::Progress &progress,const Udjat::Dialog &dialog, const char *isoname);
 
 	};
 
@@ -98,7 +98,7 @@
 		GtkWriter() : Writer() {
 		}
 
-		void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) override;
+		void open(Reinstall::Dialog::Progress &progress, const Udjat::Dialog &dialog) override;
 
 	};
 

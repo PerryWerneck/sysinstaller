@@ -80,7 +80,7 @@
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
 
-		class Progress : public Udjat::Dialog::Progress, private ::Gtk::Window {
+		class Progress : public Reinstall::Dialog::Progress, private ::Gtk::Window {
 		private:
 			Label main{"dialog-title"}, subtitle{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
 			ProgressBar progress{"dialog-progress-bar"};

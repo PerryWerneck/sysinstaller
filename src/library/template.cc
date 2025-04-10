@@ -152,7 +152,7 @@
 	}
 
 	/*
-	std::string Template::save(Udjat::Dialog::Progress &) {
+	std::string Template::save(Reinstall::Dialog::Progress &) {
 
 		Udjat::URL url{this->url};
 
@@ -204,7 +204,7 @@
 	}
 
 	/*
-	void Template::save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress) {
+	void Template::save(const Udjat::Abstract::Object &parent, Reinstall::Dialog::Progress &progress) {
 
 		Udjat::URL url{this->url};
 		url.expand(parent);
@@ -235,7 +235,7 @@
 
 	}
 
-	void Template::save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &object, const char *path) {
+	void Template::save(Reinstall::Dialog::Progress &progress, const Udjat::Abstract::Object &object, const char *path) {
 
 		auto from = save(progress);
 		if( (type & Template::Text) != 0) {

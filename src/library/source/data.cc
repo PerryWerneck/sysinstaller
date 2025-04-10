@@ -207,7 +207,7 @@
 
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
+	void DataSource::save(Reinstall::Dialog::Progress &progress, const char *path) {
 
 		auto url = url_remote();
 
@@ -249,7 +249,7 @@
 
 	}
 
-	std::string DataSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
+	std::string DataSource::save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress) {
 
 		if(has_local()) {
 
@@ -293,11 +293,11 @@
 
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
+	std::string DataSource::save(Reinstall::Dialog::Progress &progress) {
 		return save(Udjat::Abstract::Object{},progress);
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+	void DataSource::save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
 		const char *local_filename = this->local();
 
@@ -333,7 +333,7 @@
 		return (ptr && *ptr && ptr[strlen(ptr)-1] == '/');
 	}
 
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+	bool DataSource::for_each(Reinstall::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		if(message && *message) {
 			progress = message;

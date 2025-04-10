@@ -53,7 +53,7 @@
 	/// @brief Base class for actions.
 	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Action, protected Reinstall::Builder {
 	protected:
-		virtual void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
+		virtual void build(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
 
 	public:
 		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
@@ -78,7 +78,7 @@
 			return Reinstall::Action::getProperty(key,value);
 		}
 
-		int activate(Udjat::Dialog::Progress &progress) override {
+		int activate(Reinstall::Dialog::Progress &progress) override {
 
 			list<std::shared_ptr<DataSource>> files;
 			prepare(progress,files);
@@ -97,7 +97,7 @@
 		iso9660::Image::Settings imgdef;
 
 	protected:
-		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+		void build(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
 
 			// Build image ...
 			Logger::String{"Building ISO-9660 Image"}.info(name());
@@ -130,7 +130,7 @@
 		FatFS::Image::Settings imgdef;
 
 	protected:
-		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+		void build(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
 
 			// Build image ...
 			Logger::String{"Building Fat Image"}.info(name());

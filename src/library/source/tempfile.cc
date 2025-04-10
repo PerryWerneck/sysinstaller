@@ -74,7 +74,7 @@
 		return filepath.c_str();
 	}
 
-	std::string TempFileSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
+	std::string TempFileSource::save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress) {
 
 		if(!filename.empty()) {
 			return filename;
@@ -111,7 +111,7 @@
 
 	}
 
-	void TempFileSource::save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+	void TempFileSource::save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
 		auto url = url_remote();
 		progress = url.c_str();

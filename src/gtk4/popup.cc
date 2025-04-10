@@ -44,7 +44,7 @@
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 
 #ifdef USE_GTK_ALERT_DIALOG
-		class Popup : public Udjat::Dialog::Popup, private ::Gtk::AlertDialog {
+		class Popup : public Reinstall::Dialog::Popup, private ::Gtk::AlertDialog {
 		public:
 			Popup() {
 				gtk_window_set_transient_for(
@@ -118,7 +118,7 @@
 		};
 
 #else
-		class Popup : public Udjat::Dialog::Popup, private ::Gtk::MessageDialog {
+		class Popup : public Reinstall::Dialog::Popup, private ::Gtk::MessageDialog {
 		public:
 			Popup() : ::Gtk::MessageDialog{""} {
 				gtk_window_set_transient_for(
@@ -149,7 +149,7 @@
 				return *this;
 			}
 
-			int run(const std::function<int(Udjat::Dialog::Popup &popup)> &task) noexcept override {
+			int run(const std::function<int(Reinstall::Dialog::Popup &popup)> &task) noexcept override {
 
 				int rc = -1;
 				auto mainloop = Glib::MainLoop::create();

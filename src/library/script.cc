@@ -197,7 +197,7 @@
 
 	}
 
-	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime, Udjat::Dialog::Progress &progress) {
+	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime, Reinstall::Dialog::Progress &progress) {
 
 		class SubProcess : public Udjat::SubProcess {
 		private:

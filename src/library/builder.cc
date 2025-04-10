@@ -153,14 +153,14 @@
 				return path.remote.c_str();
 			}
 
-			void save(Udjat::Dialog::Progress &progress, const char *path) override {
+			void save(Reinstall::Dialog::Progress &progress, const char *path) override {
 				tmplt->save(parent,path,[&progress](uint64_t current, uint64_t total){
 					progress.set(current,total);
 					return false;
 				});
 			}
 
-			std::string save(Udjat::Dialog::Progress &progress) override {
+			std::string save(Reinstall::Dialog::Progress &progress) override {
 				if(filename.empty()) {
 					filename = File::Temporary::create();
 					save(progress,filename.c_str());
@@ -251,7 +251,7 @@
 		return false;
 	}
 
-	void Builder::prepare(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) {
+	void Builder::prepare(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) {
 
 		progress = _("Getting required files");
 

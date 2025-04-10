@@ -48,12 +48,12 @@
 
 	static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
 
- 	class Application : public Udjat::Gtk::Application, private Udjat::Factory {
+ 	class Application : public Reinstall::Application, private Udjat::Factory {
 	private:
 		MainWindow *window = nullptr;
 
 	public:
-		Application() :  Udjat::Factory{"MainWindow",moduleinfo} {
+		Application(int argc, char **argv) : Reinstall::Application{argc,argv}, Udjat::Factory{"MainWindow",moduleinfo} {
 		}
 
 		~Application() {
@@ -64,7 +64,7 @@
 		}
 
 		void help(std::ostream &out) const noexcept override {
-			Udjat::Gtk::Application::help(out);
+			Reinstall::Application::help(out);
 			cout	<< "  --output=img\tWrite resulting image to file 'img' instead of usb" << endl
 					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl
 					<< "  --repo=r=u\tSet url for repository 'r' to 'u', disable slp" << endl
@@ -72,6 +72,7 @@
 					<< "  --reboot\tNon interactive reboot" << endl;
 		}
 
+		/*
 		bool argument(const char *name, const char *value) override {
 
 			if(value && (strcasecmp(name,"usb-output-device") == 0 || strcasecmp(name,"output") == 0)) {
@@ -90,17 +91,17 @@
 			}
 
 			if(strcasecmp(name,"quit") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveQuit);
+				Reinstall::Dialog::set_default(Reinstall::Dialog::NonInteractiveQuit);
 				return true;
 			}
 
 			if(strcasecmp(name,"reboot") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveReboot);
+				Reinstall::Dialog::set_default(Reinstall::Dialog::NonInteractiveReboot);
 				return true;
 			}
 
 			if(strcasecmp(name,"non-interactive") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractive);
+				Reinstall::Dialog::set_default(Reinstall::Dialog::NonInteractive);
 				return true;
 			}
 
@@ -121,6 +122,7 @@
 
 			return Udjat::Gtk::Application::argument(name,value);
 		}
+		*/
 
 		bool NodeFactory(const Udjat::XML::Node &node) override {
 
@@ -265,7 +267,7 @@
 	Logger::redirect();
 	Logger::console(true);
 
-	return Application{}.run(argc,argv,"./xml.d");
+	return Application{argc,argv}.run("./xml.d");
 
 #else
 
@@ -284,7 +286,7 @@
 		}
 	}
 
-	return Application{}.run(argc,argv);
+	return Application{argc,argv}.run();
 
 #endif // DEBUG
 

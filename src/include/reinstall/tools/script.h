@@ -43,7 +43,7 @@
 
 		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts);
 
-		void run(const Udjat::Abstract::Object &object, const RunTime rtime, Udjat::Dialog::Progress &progress);
+		void run(const Udjat::Abstract::Object &object, const RunTime rtime, Reinstall::Dialog::Progress &progress);
 
 	private:
 

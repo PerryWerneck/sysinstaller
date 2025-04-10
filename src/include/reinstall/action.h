@@ -74,7 +74,7 @@
 			return args.sub_title;
 		}
 
-		virtual int activate(Udjat::Dialog::Progress &progress);
+		virtual int activate(Reinstall::Dialog::Progress &progress);
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();

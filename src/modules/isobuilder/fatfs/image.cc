@@ -160,7 +160,7 @@
 
 		try {
 
-			source->save(Udjat::Dialog::Progress::getInstance(),[&fdst,to](unsigned long long, unsigned long long, const void *buffer, size_t len){
+			source->save(Reinstall::Dialog::Progress::getInstance(),[&fdst,to](unsigned long long, unsigned long long, const void *buffer, size_t len){
 
 				unsigned int wrote = 0;
 				const BYTE *ptr = (const BYTE *) buffer;
@@ -264,7 +264,7 @@
 		disk->unmount();
 	}
 
-	void Image::write(Udjat::Dialog::Progress &progress) {
+	void Image::write(Reinstall::Dialog::Progress &progress) {
 
 		Logger::String{"Preparing to write image"}.info("fat");
 		progress = _( "Preparing to write" );

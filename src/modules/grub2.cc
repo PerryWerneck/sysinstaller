@@ -262,7 +262,7 @@
 			return Reinstall::Action::getProperty(key,value);
 		}
 
-		int activate(Udjat::Dialog::Progress &progress) override {
+		int activate(Reinstall::Dialog::Progress &progress) override {
 
 			progress = _("Getting required files");
 			for(const auto &source : sources) {
