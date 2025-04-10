@@ -43,7 +43,7 @@
 
 #ifdef USE_MESSAGE_DIALOG
 
- GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Udjat::Dialog &dialog, bool allow_output_to_file)
+ GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Reinstall::Dialog &dialog, bool allow_output_to_file)
  : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, volume_monitor{Gio::VolumeMonitor::get()}, writer{w} {
 
  	add_action_widget(cancel,ECANCELED);

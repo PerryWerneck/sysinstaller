@@ -97,7 +97,7 @@
 	void device_selected(Glib::RefPtr<DeviceHolder> device);
 
  public:
-	GtkRemovableDeviceDialog(Reinstall::Writer &writer, const Udjat::Dialog &dialog, bool allow_output_to_file = true);
+	GtkRemovableDeviceDialog(Reinstall::Writer &writer, const Reinstall::Dialog &dialog, bool allow_output_to_file = true);
 
 	/// @brief Get selected device description.
 	const char *description() const;

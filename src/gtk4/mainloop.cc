@@ -215,25 +215,25 @@
  	//
  	// MainLoop
  	//
-	Gtk::MainLoop::MainLoop() : Udjat::MainLoop{Udjat::MainLoop::GLib} {
+	Reinstall::MainLoop::MainLoop() : Udjat::MainLoop{Udjat::MainLoop::GLib} {
 		debug("Activating GLIB based mainloop");
 	}
 
-	Gtk::MainLoop::~MainLoop() {
+	Reinstall::MainLoop::~MainLoop() {
 	}
 
-	void Gtk::MainLoop::wakeup() noexcept {
+	void Reinstall::MainLoop::wakeup() noexcept {
 	}
 
-	int Gtk::MainLoop::run() {
+	int Reinstall::MainLoop::run() {
 		throw std::system_error(ENOTSUP,std::system_category(),"Use Gtk::Application::run");
 	}
 
-	void Gtk::MainLoop::quit() {
+	void Reinstall::MainLoop::quit() {
 		::Gtk::Application::get_default()->quit();
 	}
 
-	bool Gtk::MainLoop::active() const noexcept {
+	bool Reinstall::MainLoop::active() const noexcept {
 		return true;
 	}
 
@@ -242,37 +242,37 @@
 		return G_SOURCE_REMOVE;
 	}
 	
-	void Gtk::MainLoop::post(Message *message) noexcept {
+	void Reinstall::MainLoop::post(Message *message) noexcept {
 		g_idle_add((GSourceFunc) on_idle_call, (gpointer) message);
 	}
 
 	//
 	// Timers
 	//
-	bool Gtk::MainLoop::enabled(const Timer *timer) const noexcept {
+	bool Reinstall::MainLoop::enabled(const Timer *timer) const noexcept {
 		return Timers::getInstance().enabled(timer);
 	}
 
-	void Gtk::MainLoop::push_back(MainLoop::Timer *timer) {
+	void Reinstall::MainLoop::push_back(MainLoop::Timer *timer) {
 		Timers::getInstance().push_back(timer);
 	}
 
-	void Gtk::MainLoop::remove(MainLoop::Timer *timer) {
+	void Reinstall::MainLoop::remove(MainLoop::Timer *timer) {
 		Timers::getInstance().remove(timer);
 	}
 
 	//
 	// Handlers
 	//
-	void Gtk::MainLoop::push_back(MainLoop::Handler *handler) {
+	void Reinstall::MainLoop::push_back(MainLoop::Handler *handler) {
 		Handlers::getInstance().push_back(handler);
 	}
 
-	void Gtk::MainLoop::remove(MainLoop::Handler *handler) {
+	void Reinstall::MainLoop::remove(MainLoop::Handler *handler) {
 		Handlers::getInstance().remove(handler);
 	}
 
-	bool Gtk::MainLoop::enabled(const MainLoop::Handler *handler) const noexcept {
+	bool Reinstall::MainLoop::enabled(const MainLoop::Handler *handler) const noexcept {
 		return Handlers::getInstance().enabled(handler);
 	}
 

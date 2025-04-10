@@ -39,7 +39,7 @@
 
  namespace Udjat {
 
-	std::shared_ptr<Dialog::Popup> Gtk::Application::PopupFactory() {
+	std::shared_ptr<Reinstall::Dialog::Popup> Reinstall::Application::PopupFactory() {
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 

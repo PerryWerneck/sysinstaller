@@ -76,7 +76,7 @@
 
 	};
 
-	std::shared_ptr<Dialog::Progress> Gtk::Application::ProgressFactory() {
+	std::shared_ptr<Reinstall::Dialog::Progress> Reinstall::Application::ProgressFactory() {
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
 

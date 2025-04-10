@@ -70,7 +70,7 @@
 	}
 
 
-	void Writer::write(Reinstall::Dialog::Progress &progress, const Udjat::Dialog &dialog, const char *isoname) {
+	void Writer::write(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &dialog, const char *isoname) {
 
 		int fd = ::open(isoname,O_RDONLY);
 		if(fd < 0) {
@@ -92,7 +92,7 @@
 
 	}
 
-	void Writer::write(Reinstall::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd) {
+	void Writer::write(Reinstall::Dialog::Progress &progress,const Reinstall::Dialog &dialog, int fd) {
 
 		try {
 
@@ -137,7 +137,7 @@
 
 	}
 
-	void GtkWriter::open(Reinstall::Dialog::Progress &progress, const Udjat::Dialog &settings) {
+	void GtkWriter::open(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &settings) {
 
 		if(!selected.empty()) {
 

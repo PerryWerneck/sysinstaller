@@ -43,7 +43,7 @@
 	class UDJAT_PRIVATE IsoWriter::Module::Action : public Reinstall::Action {
 	private:
 		Reinstall::FileSource iso;
-		Udjat::Dialog output;
+		Reinstall::Dialog output;
 
 	public:
 
