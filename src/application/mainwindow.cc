@@ -41,6 +41,14 @@
 
  MainWindow * MainWindow::instance = nullptr;
 
+ MainWindow::Button::Button()
+ 	: apply{_("_Apply"), true}, cancel{_("_Cancel"), true}, box{Gtk::Orientation::HORIZONTAL,6} {
+ }
+
+ MainWindow::Layout::Layout()
+	: vbox{Gtk::Orientation::VERTICAL}, title{ _( "Select option" ), Gtk::Align::START }, contents{Gtk::Orientation::VERTICAL} {
+ }	
+ 
  MainWindow::MainWindow(Glib::RefPtr<::Gtk::Application> app) : Gtk::ApplicationWindow{app} {
 
 	instance = this;

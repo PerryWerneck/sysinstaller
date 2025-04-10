@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-10 15:42-0300\n"
-"PO-Revision-Date: 2025-03-21 14:33-0300\n"
+"POT-Creation-Date: 2025-04-10 16:09-0300\n"
+"PO-Revision-Date: 2025-04-10 16:10-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -20,7 +20,19 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/application/mainwindow.cc:62
+#: src/application/mainwindow.cc:45
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#: src/application/mainwindow.cc:45 src/gtk4/application.cc:424
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/application/mainwindow.cc:49
+msgid "Select option"
+msgstr "Selecione opção"
+
+#: src/application/mainwindow.cc:70
 msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
@@ -31,10 +43,6 @@ msgstr "_Reiniciar agora"
 #: src/gtk4/application.cc:423
 msgid "_Quit application"
 msgstr "_Encerrar aplicação"
-
-#: src/gtk4/application.cc:424
-msgid "_Cancel"
-msgstr "_Cancelar"
 
 #: src/gtk4/application.cc:425
 msgid "C_ontinue"
@@ -502,13 +510,6 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Cant parse server file list"
 #~ msgstr "Incapaz de processar lista de arquivos em {}"
 
-#~ msgid ""
-#~ "\n"
-#~ "Select option: "
-#~ msgstr ""
-#~ "\n"
-#~ "Selecione opção: "
-
 #~ msgid "Action completed"
 #~ msgstr "Operação concluída"
 
@@ -524,8 +525,7 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -693,8 +693,7 @@ msgstr "Gravando imagem ISO"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -724,25 +723,17 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -753,25 +744,16 @@ msgstr "Gravando imagem ISO"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
