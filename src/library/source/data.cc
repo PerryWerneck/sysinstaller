@@ -33,7 +33,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>

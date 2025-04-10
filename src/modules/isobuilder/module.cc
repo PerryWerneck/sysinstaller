@@ -32,7 +32,7 @@
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/builder.h>
  #include <reinstall/ui/dialog.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <vector>
  #include <reinstall/modules/isobuilder.h>
  #include <list>

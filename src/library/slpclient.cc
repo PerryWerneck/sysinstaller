@@ -26,7 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <mutex>
  #include <udjat/net/ip/address.h>
  #include <sys/types.h>

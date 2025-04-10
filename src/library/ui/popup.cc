@@ -26,6 +26,8 @@
  #include <reinstall/ui/popup.h>
  #include <udjat/tools/logger.h>
 
+ using namespace Udjat;
+
  namespace Reinstall {
 
 	Dialog::Popup::Popup() {

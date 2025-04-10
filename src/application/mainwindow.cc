@@ -29,7 +29,7 @@
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/threadpool.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <udjat/tools/application.h>
  #include <string>
 

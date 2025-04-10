@@ -26,7 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <reinstall/ui/dialog.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
 
  namespace Reinstall {
 

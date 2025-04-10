@@ -26,7 +26,7 @@
  #include <reinstall/tools/writer.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <udjat/tools/configuration.h>
  #include <stdexcept>
  #include <semaphore.h>

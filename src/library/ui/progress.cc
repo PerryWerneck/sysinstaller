@@ -23,14 +23,15 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <udjat/tools/logger.h>
 
  #include <stdexcept>
 
  using namespace std;
+ using namespace Udjat;
 
- namespace Udjat {
+ namespace Reinstall {
 
 	Dialog::Progress * Dialog::Progress::instance = nullptr;
 

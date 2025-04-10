@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
 
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>

@@ -32,7 +32,7 @@
  #include <udjat/tools/file.h>
  #include <udjat/tools/file/temporary.h>
  #include <reinstall/image.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
  #include <reinstall/disk/fat.h>

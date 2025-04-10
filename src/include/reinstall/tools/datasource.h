@@ -27,7 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/string.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/ui/progress.h>
  #include <memory>
  #include <vector>
 

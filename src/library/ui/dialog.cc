@@ -37,8 +37,9 @@
  #endif // HAVE_UDJAT_DBUS
 
  using namespace std;
+ using namespace Udjat;
 
- namespace Udjat {
+ namespace Reinstall {
 
 	static Dialog::Controller *instance = nullptr;
 
