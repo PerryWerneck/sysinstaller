@@ -28,7 +28,7 @@
  #include <udjat/defs.h>
  #include <udjat/tools/timer.h>
  #include <udjat/tools/handler.h>
- #include <udjat/tools/mainloop.h>
+ #include <reinstall/ui/mainloop.h>
  #include <reinstall/ui/mainloop.h>
  #include <iostream>
  #include <udjat/tools/logger.h>
@@ -210,69 +210,69 @@
 
  };
 
- namespace Udjat {
+ namespace Reinstall {
 
  	//
  	// MainLoop
  	//
-	Reinstall::MainLoop::MainLoop() : Udjat::MainLoop{Udjat::MainLoop::GLib} {
+	MainLoop::MainLoop() : Udjat::MainLoop{Udjat::MainLoop::GLib} {
 		debug("Activating GLIB based mainloop");
 	}
 
-	Reinstall::MainLoop::~MainLoop() {
+	MainLoop::~MainLoop() {
 	}
 
-	void Reinstall::MainLoop::wakeup() noexcept {
+	void MainLoop::wakeup() noexcept {
 	}
 
-	int Reinstall::MainLoop::run() {
+	int MainLoop::run() {
 		throw std::system_error(ENOTSUP,std::system_category(),"Use Gtk::Application::run");
 	}
 
-	void Reinstall::MainLoop::quit() {
+	void MainLoop::quit() {
 		::Gtk::Application::get_default()->quit();
 	}
 
-	bool Reinstall::MainLoop::active() const noexcept {
+	bool MainLoop::active() const noexcept {
 		return true;
 	}
 
 	static gboolean on_idle_call(gpointer user_data) noexcept {
-		MainLoop::Message::on_posted((MainLoop::Message *) user_data);
+		Udjat::MainLoop::Message::on_posted((Udjat::MainLoop::Message *) user_data);
 		return G_SOURCE_REMOVE;
 	}
 	
-	void Reinstall::MainLoop::post(Message *message) noexcept {
+	void MainLoop::post(Udjat::MainLoop::Message *message) noexcept {
 		g_idle_add((GSourceFunc) on_idle_call, (gpointer) message);
 	}
 
 	//
 	// Timers
 	//
-	bool Reinstall::MainLoop::enabled(const Timer *timer) const noexcept {
+	bool MainLoop::enabled(const Timer *timer) const noexcept {
 		return Timers::getInstance().enabled(timer);
 	}
 
-	void Reinstall::MainLoop::push_back(MainLoop::Timer *timer) {
+	void MainLoop::push_back(MainLoop::Timer *timer) {
 		Timers::getInstance().push_back(timer);
 	}
 
-	void Reinstall::MainLoop::remove(MainLoop::Timer *timer) {
+	void MainLoop::remove(MainLoop::Timer *timer) {
 		Timers::getInstance().remove(timer);
 	}
 
 	//
 	// Handlers
 	//
-	void Reinstall::MainLoop::push_back(MainLoop::Handler *handler) {
+	void MainLoop::push_back(MainLoop::Handler *handler) {
 		Handlers::getInstance().push_back(handler);
 	}
 
-	void Reinstall::MainLoop::remove(MainLoop::Handler *handler) {
+	void MainLoop::remove(MainLoop::Handler *handler) {
 		Handlers::getInstance().remove(handler);
 	}
 
-	bool Reinstall::MainLoop::enabled(const MainLoop::Handler *handler) const noexcept {
+	bool MainLoop::enabled(const MainLoop::Handler *handler) const noexcept {
 		return Handlers::getInstance().enabled(handler);
 	}
 

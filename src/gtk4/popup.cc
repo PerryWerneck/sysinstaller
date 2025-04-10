@@ -36,10 +36,11 @@
  #endif // USE_GTK_ALERT_DIALOG
 
  using namespace std;
+ using namespace Udjat;
 
- namespace Udjat {
+ namespace Reinstall {
 
-	std::shared_ptr<Reinstall::Dialog::Popup> Reinstall::Application::PopupFactory() {
+	std::shared_ptr<Reinstall::Dialog::Popup> Application::PopupFactory() {
 
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
 

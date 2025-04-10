@@ -24,7 +24,7 @@
  #pragma once
 
  #include <udjat/defs.h>
- #include <udjat/tools/mainloop.h>
+ #include <reinstall/ui/mainloop.h>
  #include <udjat/tools/application.h>
  #include <gtkmm.h>
  #include <reinstall/ui/dialog.h>

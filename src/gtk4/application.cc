@@ -44,16 +44,17 @@
  #endif // HAVE_UDJAT_DBUS
 
  using namespace std;
+ using namespace Udjat;
 
- namespace Udjat {
+ namespace Reinstall {
 
-	Reinstall::Application::Application(int argc, char **argv) : Udjat::Application{argc,argv} {
-		static Reinstall::MainLoop mainloop;
+	Application::Application(int argc, char **argv) : Udjat::Application{argc,argv} {
+		static MainLoop mainloop;
 		mainloop.active();
 
 	}
 
-	Reinstall::Application::~Application() {
+	Application::~Application() {
 	}
 
 	static const char * get_argument(int argc, char **argv, const char shortname, const char *longname) {
@@ -117,7 +118,7 @@
 
 	}
 
-	void Reinstall::Application::help(std::ostream &out) const noexcept {
+	void Application::help(std::ostream &out) const noexcept {
 		Udjat::Application::help(out);
 		out << "  --text\tRun in text mode" << endl;
 	}
@@ -136,7 +137,7 @@
 	}
 
 	/// @param definitions Path to a single xml file or a folder with xml files.
-	int Reinstall::Application::run(const char *definitions) {
+	int Application::run(const char *definitions) {
 
 		debug("---------------------------------Definitions='",definitions,"'");
 
@@ -254,27 +255,27 @@
 		return -1;
 	}
 
-	void Reinstall::Application::activate(Glib::RefPtr<::Gtk::Application>, const char *) {
+	void Application::activate(Glib::RefPtr<::Gtk::Application>, const char *) {
 
 		debug("-------------------------> Activate");
 
 	}
 
-	void Reinstall::Application::startup(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
+	void Application::startup(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Starting up");
 		init(definitions);
 
 	}
 
-	void Reinstall::Application::shutdown(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
+	void Application::shutdown(Glib::RefPtr<::Gtk::Application>, const char *definitions) {
 
 		debug("-------------------------> Shutting down");
 		deinit(definitions);
 
 	}
 
-	int Reinstall::Application::select(const Dialog &settings, int cancel, const char *button, va_list args) noexcept {
+	int Application::select(const Dialog &settings, int cancel, const char *button, va_list args) noexcept {
 
 		int rc = -1;
 
@@ -374,7 +375,7 @@
 		settings.reboot();
 	}
 
-	void Reinstall::Application::present(const Dialog &settings, const char *message, const char *details) noexcept {
+	void Application::present(const Dialog &settings, const char *message, const char *details) noexcept {
 
 		struct {
 			std::string message;
@@ -479,7 +480,7 @@
 
 	}
 
-	::Gtk::Window & Reinstall::Application::get_active_window() {
+	::Gtk::Window & Application::get_active_window() {
 		return *Glib::wrap(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
 	}
 

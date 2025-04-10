@@ -34,8 +34,9 @@
  #include <gtkmm.h>
 
  using namespace std;
+ using namespace Udjat;
 
- namespace Udjat {
+ namespace Reinstall {
 
 	class Label : public ::Gtk::Label {
 	public:
