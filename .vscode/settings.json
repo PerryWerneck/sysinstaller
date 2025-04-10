@@ -1,0 +1,15 @@
+{
+	"makefile.extensionOutputFolder": "./.vscode",
+	"files.associations": {
+		"array": "cpp",
+		"*.tcc": "cpp",
+		"format": "cpp",
+		"istream": "cpp",
+		"tuple": "cpp",
+		"utility": "cpp",
+		"variant": "cpp",
+		"typeinfo": "cpp"
+	},
+	"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
+	"C_Cpp.default.compileCommands": "/home/perry/project/bb/app/reinstall/.build/compile_commands.json"
+}

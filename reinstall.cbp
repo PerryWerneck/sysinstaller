@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Reinstall Main application" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".bin/Debug/reinstall" prefix_auto="1" extension_auto="1" />
+				<Option object_output=".obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output=".bin/Release/Reinstall Main application" prefix_auto="1" extension_auto="1" />
+				<Option object_output=".obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="modules/grub2/intl/eval-plural.h" />
+		<Unit filename="modules/grub2/intl/gettextP.h" />
+		<Unit filename="modules/grub2/intl/gmo.h" />
+		<Unit filename="modules/grub2/intl/hash-string.h" />
+		<Unit filename="modules/grub2/intl/loadinfo.h" />
+		<Unit filename="modules/grub2/intl/localcharset.h" />
+		<Unit filename="modules/grub2/intl/os2compat.h" />
+		<Unit filename="modules/grub2/intl/plural-exp.h" />
+		<Unit filename="modules/grub2/intl/printf-args.h" />
+		<Unit filename="modules/grub2/intl/printf-parse.h" />
+		<Unit filename="modules/grub2/intl/relocatable.h" />
+		<Unit filename="modules/grub2/intl/vasnprintf.h" />
+		<Unit filename="modules/grub2/intl/vasnwprintf.h" />
+		<Unit filename="modules/grub2/intl/wprintf-parse.h" />
+		<Unit filename="modules/grub2/intl/xsize.h" />
+		<Unit filename="modules/grub2/src/include/config.h" />
+		<Unit filename="modules/grub2/src/module/init.cc" />
+		<Unit filename="modules/isobuilder/intl/eval-plural.h" />
+		<Unit filename="modules/isobuilder/intl/gettextP.h" />
+		<Unit filename="modules/isobuilder/intl/gmo.h" />
+		<Unit filename="modules/isobuilder/intl/hash-string.h" />
+		<Unit filename="modules/isobuilder/intl/loadinfo.h" />
+		<Unit filename="modules/isobuilder/intl/localcharset.h" />
+		<Unit filename="modules/isobuilder/intl/os2compat.h" />
+		<Unit filename="modules/isobuilder/intl/plural-exp.h" />
+		<Unit filename="modules/isobuilder/intl/printf-args.h" />
+		<Unit filename="modules/isobuilder/intl/printf-parse.h" />
+		<Unit filename="modules/isobuilder/intl/relocatable.h" />
+		<Unit filename="modules/isobuilder/intl/vasnprintf.h" />
+		<Unit filename="modules/isobuilder/intl/vasnwprintf.h" />
+		<Unit filename="modules/isobuilder/intl/wprintf-parse.h" />
+		<Unit filename="modules/isobuilder/intl/xsize.h" />
+		<Unit filename="modules/isobuilder/src/fatfs/image.cc" />
+		<Unit filename="modules/isobuilder/src/fatfs/settings.cc" />
+		<Unit filename="modules/isobuilder/src/include/config.h" />
+		<Unit filename="modules/isobuilder/src/include/fatfs.h" />
+		<Unit filename="modules/isobuilder/src/include/iso9660.h" />
+		<Unit filename="modules/isobuilder/src/iso9660/image.cc" />
+		<Unit filename="modules/isobuilder/src/iso9660/settings.cc" />
+		<Unit filename="modules/isobuilder/src/module/init.cc" />
+		<Unit filename="modules/isowriter/intl/eval-plural.h" />
+		<Unit filename="modules/isowriter/intl/gettextP.h" />
+		<Unit filename="modules/isowriter/intl/gmo.h" />
+		<Unit filename="modules/isowriter/intl/hash-string.h" />
+		<Unit filename="modules/isowriter/intl/loadinfo.h" />
+		<Unit filename="modules/isowriter/intl/localcharset.h" />
+		<Unit filename="modules/isowriter/intl/os2compat.h" />
+		<Unit filename="modules/isowriter/intl/plural-exp.h" />
+		<Unit filename="modules/isowriter/intl/printf-args.h" />
+		<Unit filename="modules/isowriter/intl/printf-parse.h" />
+		<Unit filename="modules/isowriter/intl/relocatable.h" />
+		<Unit filename="modules/isowriter/intl/vasnprintf.h" />
+		<Unit filename="modules/isowriter/intl/vasnwprintf.h" />
+		<Unit filename="modules/isowriter/intl/wprintf-parse.h" />
+		<Unit filename="modules/isowriter/intl/xsize.h" />
+		<Unit filename="modules/isowriter/src/include/config.h" />
+		<Unit filename="modules/isowriter/src/module/init.cc" />
+		<Unit filename="src/application/main.cc" />
+		<Unit filename="src/application/mainwindow.cc" />
+		<Unit filename="src/application/progress.cc" />
+		<Unit filename="src/application/widgets/group.cc" />
+		<Unit filename="src/application/widgets/item.cc" />
+		<Unit filename="src/application/widgets/sidebar.cc" />
+		<Unit filename="src/gtk4/application.cc" />
+		<Unit filename="src/gtk4/mainloop.cc" />
+		<Unit filename="src/gtk4/popup.cc" />
+		<Unit filename="src/gtk4/progress.cc" />
+		<Unit filename="src/include/config.h" />
+		<Unit filename="src/include/private/gtkremovabledevicedialog.h" />
+		<Unit filename="src/include/private/mainwindow.h" />
+		<Unit filename="src/include/private/slpclient.h" />
+		<Unit filename="src/include/reinstall/action.h" />
+		<Unit filename="src/include/reinstall/disk/abstract.h" />
+		<Unit filename="src/include/reinstall/disk/fat.h" />
+		<Unit filename="src/include/reinstall/group.h" />
+		<Unit filename="src/include/reinstall/image.h" />
+		<Unit filename="src/include/reinstall/tools/builder.h" />
+		<Unit filename="src/include/reinstall/tools/datasource.h" />
+		<Unit filename="src/include/reinstall/tools/efiboot.h" />
+		<Unit filename="src/include/reinstall/tools/kernelparameter.h" />
+		<Unit filename="src/include/reinstall/tools/repository.h" />
+		<Unit filename="src/include/reinstall/tools/script.h" />
+		<Unit filename="src/include/reinstall/tools/template.h" />
+		<Unit filename="src/include/reinstall/tools/writer.h" />
+		<Unit filename="src/include/udjat/ui/dialog.h" />
+		<Unit filename="src/include/udjat/ui/gtk4/application.h" />
+		<Unit filename="src/include/udjat/ui/gtk4/mainloop.h" />
+		<Unit filename="src/include/udjat/ui/popup.h" />
+		<Unit filename="src/include/udjat/ui/progress.h" />
+		<Unit filename="src/include/widgets/sidebar.h" />
+		<Unit filename="src/library/action.cc" />
+		<Unit filename="src/library/builder.cc" />
+		<Unit filename="src/library/disk/abstract.cc" />
+		<Unit filename="src/library/disk/fat.cc" />
+		<Unit filename="src/library/efiboot.cc" />
+		<Unit filename="src/library/group.cc" />
+		<Unit filename="src/library/gtkremovabledevicedialog.cc" />
+		<Unit filename="src/library/image.cc" />
+		<Unit filename="src/library/kernelparameter.cc" />
+		<Unit filename="src/library/os/linux/gtkremovabledevicedialog.cc" />
+		<Unit filename="src/library/os/linux/writer.cc" />
+		<Unit filename="src/library/os/windows/gtkremovabledevicedialog.cc" />
+		<Unit filename="src/library/repository.cc" />
+		<Unit filename="src/library/repository/factory.cc" />
+		<Unit filename="src/library/repository/kparm.cc" />
+		<Unit filename="src/library/script.cc" />
+		<Unit filename="src/library/slpclient.cc" />
+		<Unit filename="src/library/source/data.cc" />
+		<Unit filename="src/library/source/file.cc" />
+		<Unit filename="src/library/source/load.cc" />
+		<Unit filename="src/library/source/tempfile.cc" />
+		<Unit filename="src/library/template.cc" />
+		<Unit filename="src/library/ui/dialog.cc" />
+		<Unit filename="src/library/ui/popup.cc" />
+		<Unit filename="src/library/ui/progress.cc" />
+		<Unit filename="src/library/writer.cc" />
+		<Unit filename="submodules/libudjatui/intl/eval-plural.h" />
+		<Unit filename="submodules/libudjatui/intl/gettextP.h" />
+		<Unit filename="submodules/libudjatui/intl/gmo.h" />
+		<Unit filename="submodules/libudjatui/intl/hash-string.h" />
+		<Unit filename="submodules/libudjatui/intl/loadinfo.h" />
+		<Unit filename="submodules/libudjatui/intl/localcharset.h" />
+		<Unit filename="submodules/libudjatui/intl/os2compat.h" />
+		<Unit filename="submodules/libudjatui/intl/plural-exp.h" />
+		<Unit filename="submodules/libudjatui/intl/printf-args.h" />
+		<Unit filename="submodules/libudjatui/intl/printf-parse.h" />
+		<Unit filename="submodules/libudjatui/intl/relocatable.h" />
+		<Unit filename="submodules/libudjatui/intl/vasnprintf.h" />
+		<Unit filename="submodules/libudjatui/intl/vasnwprintf.h" />
+		<Unit filename="submodules/libudjatui/intl/wprintf-parse.h" />
+		<Unit filename="submodules/libudjatui/intl/xsize.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/tools/userinterface.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/application.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialog.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/popup.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/dialogs/progress.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/application.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/icon.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/label.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/popup.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/progress.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/gtk/userinterface.h" />
+		<Unit filename="submodules/libudjatui/src/include/udjat/ui/menu.h" />
+		<Extensions>
+			<code_completion>
+				<search_path add="submodules/libudjatui/src/include" />
+			</code_completion>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

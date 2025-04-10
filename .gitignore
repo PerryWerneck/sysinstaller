@@ -1,0 +1,66 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Backups
+*~
+*.bak
+
+ABOUT-NLS
+aclocal.m4
+*.cache/
+*.log
+*.status
+configure
+intl
+m4
+po
+scripts
+config.h
+stamp-h1
+*.layout
+.bin
+*.iso
+*.txt
+*.depend
+.obj
+Makefile
+vgcore.*
+*.[0-9]
+*.png
+.pot
+*.desktop
+*.cscope_file_list
+notes.txt
+5[0-9]-*.xml
+.vale.ini
+styles

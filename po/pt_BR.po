@@ -1,0 +1,867 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Perry Werneck <perry.werneck@gmail.com>, 2022-2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: reinstall 5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-21 14:32-0300\n"
+"PO-Revision-Date: 2025-03-21 14:33-0300\n"
+"Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 3.5\n"
+
+#: src/library/action.cc:83
+msgid "The selected action cant be activated"
+msgstr "A ação selecionada não pode ser ativada"
+
+#: src/library/action.cc:92
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/library/action.cc:92
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/library/action.cc:113
+msgid "Initializing"
+msgstr "Inicializando"
+
+#: src/library/action.cc:153
+msgid "A required file is not available"
+msgstr "Um arquivo necessário não está disponível"
+
+#: src/library/action.cc:171
+msgid "Configuration or logic error"
+msgstr "Erro de configuração ou lógica"
+
+#: src/library/action.cc:180
+msgid "System error"
+msgstr "Erro de sistema"
+
+#: src/library/action.cc:186
+msgid "Operation failed"
+msgstr "Operação falhou"
+
+#: src/library/action.cc:220
+msgid "Error getting boot path info"
+msgstr "Erro ao obter informações sobre o caminho de boot"
+
+#: src/library/action.cc:224
+#, c++-format
+msgid "{} is not a directory"
+msgstr "{} não é um diretório"
+
+#: src/library/action.cc:231 src/library/source/data.cc:175
+msgid "Error opening /etc/mtab"
+msgstr "Erro ao abrir /etc/mtab"
+
+#: src/library/action.cc:250 src/library/source/data.cc:194
+#, c++-format
+msgid "Cant find mountpoint for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem para {}"
+
+#: src/library/action.cc:264
+msgid "Error readlink boot link"
+msgstr "Erro ao ler link de boot"
+
+#: src/library/action.cc:285
+#, c++-format
+msgid "Required attribute '{}' not found"
+msgstr "Atributo necessário '{}' não foi encontrado"
+
+#: src/library/action.cc:295 src/library/builder.cc:84 src/modules/grub2.cc:138
+#: src/modules/grub2.cc:238
+msgid "Reinstall workstation"
+msgstr "Reinstalar estação de trabalho"
+
+#: src/library/action.cc:300
+msgid "Remote controlled installation"
+msgstr "Instalação com assistência remota"
+
+#: src/library/action.cc:305
+msgid "Loading kernel..."
+msgstr "Carregando kernel..."
+
+#: src/library/action.cc:310
+msgid "Loading installer..."
+msgstr "Carregando instalador..."
+
+#: src/library/builder.cc:256 src/modules/grub2.cc:264
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:282
+msgid "Cant find installation files"
+msgstr "Não encontrei arquivos de instalação"
+
+#: src/library/disk/abstract.cc:50
+msgid "Cant open disk device/file"
+msgstr "Não foi possível abrir imagem ou dispositivo de disco"
+
+#: src/library/disk/abstract.cc:54
+msgid "Cant allocate disk image"
+msgstr "Não foi possível alocar imagem de disco"
+
+#: src/library/disk/fat.cc:49
+msgid "Succeeded"
+msgstr "Concluído com sucesso"
+
+#: src/library/disk/fat.cc:50 src/library/disk/fat.cc:69
+msgid "A hard error occurred in the low level disk I/O layer"
+msgstr "Um erro físico aconteceu na camada de I/O de disco"
+
+#: src/library/disk/fat.cc:51 src/library/disk/fat.cc:70
+msgid "Assertion failed"
+msgstr "Operação falhou"
+
+#: src/library/disk/fat.cc:52 src/library/disk/fat.cc:71
+msgid "The physical drive cannot work"
+msgstr "Disco físico não funciona"
+
+#: src/library/disk/fat.cc:53 src/library/disk/fat.cc:72
+msgid "Could not find the file"
+msgstr "Não foi possível encontrar arquivo"
+
+#: src/library/disk/fat.cc:54 src/library/disk/fat.cc:73
+msgid "Could not find the path"
+msgstr "Não foi possível encontrar o diretório"
+
+#: src/library/disk/fat.cc:55 src/library/disk/fat.cc:74
+msgid "The path name format is invalid"
+msgstr "O formado do caminho de arquivo não é válido"
+
+#: src/library/disk/fat.cc:56 src/library/disk/fat.cc:75
+msgid "Access denied due to prohibited access or directory full"
+msgstr "Acesso negado ou diretório cheio"
+
+#: src/library/disk/fat.cc:57 src/library/disk/fat.cc:76
+msgid "Access denied due to prohibited access"
+msgstr "Acesso negado"
+
+#: src/library/disk/fat.cc:58 src/library/disk/fat.cc:77
+msgid "The file/directory object is invalid"
+msgstr "O objeto de arquivo ou diretório não é valido"
+
+#: src/library/disk/fat.cc:59 src/library/disk/fat.cc:78
+msgid "The physical drive is write protected"
+msgstr "O disco físico está protegido contra gravação"
+
+#: src/library/disk/fat.cc:60 src/library/disk/fat.cc:79
+msgid "The logical drive number is invalid"
+msgstr "O número de drive lógico não é válido"
+
+#: src/library/disk/fat.cc:61 src/library/disk/fat.cc:80
+msgid "The volume has no work area"
+msgstr "O volume não tem área de trabalho"
+
+#: src/library/disk/fat.cc:62 src/library/disk/fat.cc:81
+msgid "There is no valid FAT volume"
+msgstr "Não encontrei um volume FAT válido"
+
+#: src/library/disk/fat.cc:63 src/library/disk/fat.cc:82
+msgid "The f_mkfs() aborted due to any problem"
+msgstr "O comando f_mkfs() encerrou devido a um problema"
+
+#: src/library/disk/fat.cc:64 src/library/disk/fat.cc:83
+msgid "Could not get a grant to access the volume within defined period"
+msgstr "Não foi possível conseguir acesso ao dispositivo no período definido"
+
+#: src/library/disk/fat.cc:65 src/library/disk/fat.cc:84
+msgid "The operation is rejected according to the file sharing policy"
+msgstr "Operação recusada pela policy de compartilhamento de arquivos"
+
+#: src/library/disk/fat.cc:66 src/library/disk/fat.cc:85
+msgid "LFN working buffer could not be allocated"
+msgstr "Buffer de trabalho LFN não pode ser alocado"
+
+#: src/library/disk/fat.cc:67 src/library/disk/fat.cc:86
+msgid "Number of open files > FF_FS_LOCK"
+msgstr "Número de arquivos abertos ultrapassa FF_FS_LOCK"
+
+#: src/library/disk/fat.cc:68 src/library/disk/fat.cc:87
+msgid "Given parameter is invalid"
+msgstr "Parâmetro informado não é válido"
+
+#: src/library/disk/fat.cc:114
+msgid "Empty disk image"
+msgstr "Imagem de disco vazia"
+
+#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:60
+msgid "Cant bind fatfs to disk image"
+msgstr "Não foi possível ligar imagem de disco ao fatfs"
+
+#: src/library/disk/fat.cc:131
+#, c++-format
+msgid "f_mkfs has failed: {}"
+msgstr "f_mkfs falhou: {}"
+
+#: src/library/disk/fat.cc:138
+#, c++-format
+msgid "f_mount has failed: {}"
+msgstr "f_mounf falhou: {}"
+
+#: src/library/disk/fat.cc:151
+msgid "f_mount has failed: "
+msgstr "f_mount falhou: "
+
+#: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
+#: src/modules/isobuilder/fatfs/image.cc:197
+#, c++-format
+msgid "Unable to open fat://{}"
+msgstr "Não foi possível abrir fat://{}"
+
+#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:170
+#: src/modules/isobuilder/fatfs/image.cc:238
+#, c++-format
+msgid "Unable to write fat://{}"
+msgstr "Não foi possível escrever em fat://{}"
+
+#: src/library/group.cc:47
+msgid "Group controller is already active"
+msgstr "Controlador de grupos já está ativo"
+
+#: src/library/group.cc:60
+msgid "No active group controller"
+msgstr "Nenhum controlador de grupo ativo"
+
+#: src/library/gtkremovabledevicedialog.cc:53
+msgid "Insert an storage device"
+msgstr "Insira um dispositivo de armazenamento"
+
+#: src/library/gtkremovabledevicedialog.cc:54
+#: src/library/gtkremovabledevicedialog.cc:110
+msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
+msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
+
+#: src/library/gtkremovabledevicedialog.cc:96
+msgid "Insert an storage device <b>NOW</b>"
+msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
+
+#: src/library/gtkremovabledevicedialog.cc:169
+msgid "Auto detect"
+msgstr "Detectar automaticamente"
+
+#: src/library/gtkremovabledevicedialog.cc:194
+msgid "Save image to file"
+msgstr "Salvar imagem para arquivo"
+
+#: src/library/gtkremovabledevicedialog.cc:214
+msgid "Select output file"
+msgstr "Selecione arquivo de saída"
+
+#: src/library/gtkremovabledevicedialog.cc:339
+msgid "Not enough space"
+msgstr "Espaço insuficiente"
+
+#: src/library/gtkremovabledevicedialog.cc:344
+msgid "Access Denied"
+msgstr "Acesso negado"
+
+#: src/library/gtkremovabledevicedialog.cc:357
+msgid "Invalid device"
+msgstr "Dispositivo inválido"
+
+#: src/library/image.cc:129
+msgid "No write support on selected image"
+msgstr "Sem suporte para gravação na imagem selecionada"
+
+#: src/library/image.cc:134 src/modules/isobuilder/fatfs/image.cc:280
+#: src/modules/isobuilder/iso9660/image.cc:427
+msgid "Writing image"
+msgstr "Gravando imagem"
+
+#: src/library/kernelparameter.cc:176
+#, c++-format
+msgid "Unable to get file mount without dirname for '{}' "
+msgstr "Não é possível obter ponto de montagem para '{}' sem o diretório "
+
+#: src/library/kernelparameter.cc:192
+#, c++-format
+msgid "Error getting status of '{}'"
+msgstr "Erro ao obter informações estado de '{}'"
+
+#: src/library/kernelparameter.cc:200
+#, c++-format
+msgid "Unable to get mount point for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem para '{}'"
+
+#: src/library/kernelparameter.cc:242
+#, c++-format
+msgid "Driver update disk '{}' has no path or url defined"
+msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
+
+#: src/library/kernelparameter.cc:309
+#, c++-format
+msgid "Kernel parameter '{}' has an empty value"
+msgstr "Parâmetro de kernel '{}' tem valor vazio"
+
+#: src/library/os/linux/writer.cc:124
+msgid "Unable to access output device"
+msgstr "Incapaz de acessar dispositivo de saída"
+
+#: src/library/os/linux/writer.cc:131
+msgid "Unable to lock output device"
+msgstr "Incapaz de bloquear dispositivo de saída"
+
+#: src/library/os/linux/writer.cc:169
+msgid "Cant get device length"
+msgstr "Não foi possível obter tamanho de dispositivo"
+
+#: src/library/os/linux/writer.cc:183
+msgid "Cant allocate space for output file"
+msgstr "Não foi possível alocar espaço para o arquivo de saída"
+
+#: src/library/repository/factory.cc:125
+#, c++-format
+msgid "Required repository '{}' not found"
+msgstr "Repositório '{}' não foi encontrado"
+
+#: src/library/repository/repository.cc:173
+msgid "Loading repository index"
+msgstr "Carregando índice do repositório"
+
+#: src/library/repository/repository.cc:271
+#, c++-format
+msgid "Kernel parameter for repository '{}' has an empty value"
+msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
+
+#: src/library/script.cc:263
+msgid "External command failed"
+msgstr "Comando ou script externo falhou"
+
+#: src/library/source/data.cc:168
+#, c++-format
+msgid "Error getting info for '{}'"
+msgstr "Erro ao obter informações sobre '{}'"
+
+#: src/library/source/data.cc:343
+msgid "Invalid repository"
+msgstr "Repositório inválido"
+
+#: src/library/template.cc:199
+msgid "Cant update template permissions"
+msgstr "Erro ao atualizar permissões de modelo"
+
+#: src/library/ui/dialog.cc:190
+msgid "_No"
+msgstr "_Não"
+
+#: src/library/ui/dialog.cc:190
+msgid "_Yes"
+msgstr "_Sim"
+
+#: src/library/writer.cc:55
+msgid "The device writer is not available"
+msgstr "Gravador de dispositivo não está disponível"
+
+#: src/library/writer.cc:61
+msgid "Writer is already available"
+msgstr "Módulo de gravação já está disponível"
+
+#: src/library/writer.cc:135
+msgid "Finishing"
+msgstr "Finalizando"
+
+#: src/application/mainwindow.cc:62
+msgid "System reinstallation"
+msgstr "Reinstalar o sistema"
+
+#: src/gtk4/application.cc:421
+msgid "_Reboot now"
+msgstr "_Reiniciar agora"
+
+#: src/gtk4/application.cc:422
+msgid "_Quit application"
+msgstr "_Encerrar aplicação"
+
+#: src/gtk4/application.cc:423
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/gtk4/application.cc:424
+msgid "C_ontinue"
+msgstr "_Continuar"
+
+#: src/gtk4/progress.cc:251 src/gtk4/progress.cc:284
+#, c++-format
+msgid "{} of {}"
+msgstr "{} de {}"
+
+#: src/modules/isobuilder/fatfs/image.cc:73
+#, c++-format
+msgid "Unexpected error '{}' on f_mkfs"
+msgstr "Erro inesperado '{}' em f_mkfs"
+
+#: src/modules/isobuilder/fatfs/image.cc:83
+#, c++-format
+msgid "Unexpected error '{}' on f_mount"
+msgstr "Erro inesperado '{}' em f_mount"
+
+#: src/modules/isobuilder/fatfs/image.cc:91
+#: src/modules/isobuilder/fatfs/image.cc:113
+#, c++-format
+msgid "Unexpected error '{}' on f_umount"
+msgstr "Erro inesperado '{}' em f_umount"
+
+#: src/modules/isobuilder/fatfs/image.cc:146
+#, c++-format
+msgid "Unable to create path fat://{} (rc={})"
+msgstr "Incapaz de criar o caminho fat://{} (rc={})"
+
+#: src/modules/isobuilder/fatfs/image.cc:156
+#, c++-format
+msgid "Unable to open fat://{} (rc={})"
+msgstr "Incapaz de abrir fat://{} (rc={})"
+
+#: src/modules/isobuilder/fatfs/image.cc:270
+#: src/modules/isobuilder/iso9660/image.cc:401
+msgid "Preparing to write"
+msgstr "Preparando para gravar"
+
+#: src/modules/isobuilder/fatfs/image.cc:305
+#: src/modules/isobuilder/iso9660/image.cc:439
+msgid "Finalizing"
+msgstr "Finalizando"
+
+#: src/modules/isobuilder/iso9660/image.cc:73
+msgid "Error creating iso image"
+msgstr "Erro ao criar imagem iso"
+
+#: src/modules/isobuilder/iso9660/image.cc:99
+msgid "Error loading system area"
+msgstr "Erro lendo área de sistema"
+
+#: src/modules/isobuilder/iso9660/image.cc:105
+msgid "Cant read system area definition file"
+msgstr "Não foi possível ler o arquivo de definição de área do sistema"
+
+#: src/modules/isobuilder/iso9660/image.cc:235
+msgid "Unexpanded path in source list"
+msgstr "Caminho incorreto na lista de fontes"
+
+#: src/modules/isobuilder/module.cc:104
+msgid "Building ISO-9660 Image"
+msgstr "Gerando imagem ISO-9660"
+
+#: src/modules/isobuilder/module.cc:105
+#, c++-format
+msgid "Writing {} files"
+msgstr "Gravando {} arquivos"
+
+#: src/modules/isowriter.cc:64
+msgid "Getting ISO image"
+msgstr "Obtendo imagem ISO"
+
+#: src/modules/isowriter.cc:67
+msgid "Writing ISO image"
+msgstr "Gravando imagem ISO"
+
+#: src/modules/grub2.cc:85
+msgid "Getting installation kernel"
+msgstr "Obtendo kernel de instalação"
+
+#: src/modules/grub2.cc:97
+msgid "Getting init system"
+msgstr "Obtendo imagem de instalação"
+
+#: src/modules/grub2.cc:269
+msgid "Applying templates"
+msgstr "Aplicando templates"
+
+#: src/modules/grub2.cc:277
+msgid "Configuring boot loader"
+msgstr "Configurando carregador de boot"
+
+#: src/modules/grub2.cc:278
+msgid "First stage"
+msgstr "Primeiro estágio"
+
+#: src/modules/grub2.cc:283
+msgid "Second stage"
+msgstr "Segundo estágio"
+
+#, c++-format
+#~ msgid "Unable to open fat://{}/"
+#~ msgstr "Incapaz de abrir fat://{}/"
+
+#, fuzzy
+#~ msgid "Cant handle binary template"
+#~ msgstr "Verificando templates"
+
+#, fuzzy
+#~ msgid "Cant parse server file list"
+#~ msgstr "Incapaz de processar lista de arquivos em {}"
+
+#~ msgid ""
+#~ "\n"
+#~ "Select option: "
+#~ msgstr ""
+#~ "\n"
+#~ "Selecione opção: "
+
+#~ msgid "Action completed"
+#~ msgstr "Operação concluída"
+
+#~ msgid "Adding EFI boot image"
+#~ msgstr "Adicionando imagem de boot EFI"
+
+#~ msgid "Adding el-torito boot image"
+#~ msgstr "Adicionando imagem de boot el-torito"
+
+#~ msgid "Agent controller"
+#~ msgstr "Controlador de agentes"
+
+#~ msgid "Agent has nothing to report"
+#~ msgstr "Agente não tem nada a informar"
+
+#~ msgid "Authentication is required and has failed or has not yet been provided."
+#~ msgstr "Autenticação falhou ou não foi fornecida."
+
+#~ msgid "Bad Request"
+#~ msgstr "Requisição inválida"
+
+#~ msgid "Bad gateway"
+#~ msgstr "Gateway inválido"
+
+#~ msgid "Building"
+#~ msgstr "Construindo"
+
+#~ msgid "Can't get an available loop device"
+#~ msgstr "Nenhum dispositivo loop disponível"
+
+#~ msgid "Can't update loop device status"
+#~ msgstr "Não foi possível atualizar estado do dispositivo de loop"
+
+#~ msgid "Cancelled by user"
+#~ msgstr "Cancelado pelo usuário"
+
+#~ msgid "Cant read from image file"
+#~ msgstr "Não foi possível der do arquivo de imagem"
+
+#~ msgid "Cant resolve hostname"
+#~ msgstr "Não foi possivel resolver nome do host"
+
+#~ msgid "Client error"
+#~ msgstr "Erro de cliente"
+
+#~ msgid "DUD Definition requires path or url attribute."
+#~ msgstr "Definição de imagem DUD requer atributos 'path' ou 'url'"
+
+#~ msgid "Downloading ISO image"
+#~ msgstr "Baixando imagem ISO"
+
+#~ msgid "Empty response from {}"
+#~ msgstr "Resposta vazia de {}"
+
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "Forbidden"
+#~ msgstr "Proibido"
+
+#~ msgid "Gateway timeout"
+#~ msgstr "Timeout no acesso ao gateway"
+
+#~ msgid "Gb"
+#~ msgstr "Gb"
+
+#~ msgid "Getting configuration"
+#~ msgstr "Obtendo a configuração"
+
+#~ msgid "Getting file lists"
+#~ msgstr "Obtendo lista de arquivos"
+
+#~ msgid "Getting install loader"
+#~ msgstr "Obtendo carregador de instalação"
+
+#~ msgid "HTTP Version Not Supported"
+#~ msgstr "Versão HTTP não suportada"
+
+#~ msgid "I dont know how to execute '{}'"
+#~ msgstr "Não sei como executar '{}'"
+
+#~ msgid "Image file name"
+#~ msgstr "Nome do arquivo de imagem"
+
+#~ msgid "Initialization has failed"
+#~ msgstr "Inicialização falhou"
+
+#~ msgid "Internal error"
+#~ msgstr "Erro interno"
+
+#~ msgid "Invalid 'type' attribute"
+#~ msgstr "Atributo 'type' é inválido"
+
+#~ msgid "Invalid action id"
+#~ msgstr "Identificador de ação inválida"
+
+#~ msgid "Invalid group ID"
+#~ msgstr "Identificador de grupo inválido"
+
+#~ msgid "Invalid kernel parameter value type"
+#~ msgstr "Tipo inválido para parâmetro de kernel"
+
+#~ msgid "Kb"
+#~ msgstr "Kb"
+
+#~ msgid "Less than one minute"
+#~ msgstr "Menos de um minuto"
+
+#~ msgid "Local file protocol"
+#~ msgstr "Protocol de arquivo local"
+
+#~ msgid "Mb"
+#~ msgstr "Mb"
+
+#~ msgid "Missing required entry <init> with the URL for the linuxrc program"
+#~ msgstr "Faltando entrada <init> com a URL do programa linuxrc"
+
+#~ msgid "Missing required entry <kernel> with the URL for installation kernel"
+#~ msgstr "Faltando entrada <kernel> com a URL do kernel de instalação"
+
+#~ msgid "More info"
+#~ msgstr "Mais informações"
+
+#~ msgid "More sources than module expects"
+#~ msgstr "Mais fontes do que o módulo esperava"
+
+#~ msgid "No abnormal state was detected"
+#~ msgstr "Nenhum estado anormal foi reportado"
+
+#~ msgid "No action"
+#~ msgstr "Nenhuma ação"
+
+#~ msgid "No active progress dialog"
+#~ msgstr "Nenhum diálogo de progresso ativo"
+
+#~ msgid "No active window"
+#~ msgstr "Nenhuma janela ativa"
+
+#~ msgid "No available image builder"
+#~ msgstr "Nenhum construtor de imagem disponível"
+
+#~ msgid "No installation media"
+#~ msgstr "Nenhuma mídia de instalação"
+
+#~ msgid "No repositories on this action"
+#~ msgstr "Nenhum repositório nesta ação"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Not Implemented"
+#~ msgstr "Não implementado"
+
+#~ msgid "Not found"
+#~ msgstr "Não encontrado"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Preparing"
+#~ msgstr "Preparando"
+
+#~ msgid "Proxy Authentication Required"
+#~ msgstr "Proxy exige autenticação"
+
+#~ msgid "Redirected"
+#~ msgstr "Redirecionado"
+
+#~ msgid "Rejecting invalid action pointer"
+#~ msgstr "Rejeitando ponteiro de ação inválido"
+
+#~ msgid "Request Timeout"
+#~ msgstr "Tempo da requisição esgotado"
+
+#~ msgid "Running post scripts"
+#~ msgstr "Executando scripts de finalização"
+
+#~ msgid "Searching for server"
+#~ msgstr "Procurando servidor"
+
+#~ msgid "Selected installation has no label"
+#~ msgstr "Instalação selecionada não tem nome"
+
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
+#~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
+
+#~ msgid "Subprocess/Script protocol"
+#~ msgstr "Protocolo para subprocesso ou script"
+
+#~ msgid "System is configured"
+#~ msgstr "Sistema está configurado"
+
+#~ msgid "System is not ready"
+#~ msgstr "Sistema não está em funcionamento"
+
+#~ msgid "System is ready"
+#~ msgstr "Sistema em funcionamento"
+
+#~ msgid "Tb"
+#~ msgstr "Tb"
+
+#~ msgid "Template was not loaded"
+#~ msgstr "Template não foi carregado"
+
+#~ msgid "The HTTP error code is unknown"
+#~ msgstr "Código de erro HTTP desconhecido"
+
+#~ msgid "The HTTP version used in the request is not supported by the server."
+#~ msgstr "A versão HTTP usada na requisição não é suportada pelo servidor."
+
+#~ msgid "The client must first authenticate itself with the proxy."
+#~ msgstr "O cliente deve primeiro autenticar no proxy"
+
+#~ msgid "The initialization procedure has failed, the application cant continue"
+#~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
+
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
+
+#~ msgid "The request has timed out"
+#~ msgstr "Tempo da requisição esgotado"
+
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
+
+#~ msgid "The request succeeded."
+#~ msgstr "Requisição concluída com sucesso."
+
+#~ msgid "The request was redirected to another URL."
+#~ msgstr "Requisição foi redirecionada para outra URL."
+
+#~ msgid "The required attribute 'cmdline' is missing"
+#~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
+
+#~ msgid "The server has encountered a situation it does not know how to handle."
+#~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
+
+#~ msgid "The server is acting as a gateway and cannot get a response in time."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
+
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
+
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
+#~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
+
+#~ msgid "Too many requests"
+#~ msgstr "Muitas requisições"
+
+#~ msgid "Unable to get image size"
+#~ msgstr "Não foi possível obter o tamanho da imagem"
+
+#~ msgid "Unable to get source with an empty URL"
+#~ msgstr "Não é possível obter uma fonte com URL vazia"
+
+#~ msgid "Unable to get source with relative URL"
+#~ msgstr "Não é possível obter fonte com URL relativa"
+
+#~ msgid "Unauthorized"
+#~ msgstr "Não autorizado"
+
+#~ msgid "Unexpected EOF reading image file"
+#~ msgstr "Fim de arquivo inesperado ao ler arquivo de imagem"
+
+#~ msgid "Unexpected error activating state"
+#~ msgstr "Erro inesperado ao ativar estado"
+
+#~ msgid "Unexpected filename on EFI boot image"
+#~ msgstr "Nome de arquivo inesperado na imagem de boot EFI"
+
+#~ msgid "Unexpected filename on el-torito boot image"
+#~ msgstr "Nome de arquivo inesperado na imagem de boot el-torito"
+
+#~ msgid "Unnamed kernel parameter"
+#~ msgstr "Parametro de kernel sem nome"
+
+#~ msgid "Unnamed kernel parameter, possible misconfiguration"
+#~ msgstr "Parametro de kernel sem nome, possível erro de configuração"
+
+#~ msgid "Window stack mismatch"
+#~ msgstr "Divergência na pilha de janelas"
+
+#~ msgid "Writing system image"
+#~ msgstr "Gravando imagem de sistema"
+
+#~ msgid "\\StringFileInfo\\080904B0\\FileDescription"
+#~ msgstr "\\StringFileInfo\\041604B0\\FileDescription"
+
+#~ msgid "_Save"
+#~ msgstr "_Salvar"
+
+#~ msgid "b"
+#~ msgstr "b"
+
+#~ msgid "day"
+#~ msgstr "dia"
+
+#~ msgid "days"
+#~ msgstr "dias"
+
+#~ msgid "default"
+#~ msgstr "padrão"
+
+#~ msgid "false"
+#~ msgstr "falso"
+
+#~ msgid "hour"
+#~ msgstr "hora"
+
+#~ msgid "hours"
+#~ msgstr "horas"
+
+#~ msgid "minute"
+#~ msgstr "minuto"
+
+#~ msgid "minutes"
+#~ msgstr "minutos"
+
+#~ msgid "no"
+#~ msgstr "não"
+
+#~ msgid "off"
+#~ msgstr "desligado"
+
+#~ msgid "on"
+#~ msgstr "ligado"
+
+#~ msgid "second"
+#~ msgstr "segundo"
+
+#~ msgid "true"
+#~ msgstr "verdadeiro"
+
+#~ msgid "yes"
+#~ msgstr "sim"
+
+#~ msgid "{d} {D}"
+#~ msgstr "{d} {D}"
+
+#~ msgid "{d} {D} and {h} {H}"
+#~ msgstr "{d} {D} e {h} {H}"
+
+#~ msgid "{d} {D} and {m} {M}"
+#~ msgstr "{d} {D} e {m} {M}"
+
+#~ msgid "{d} {D}, {h} {H} and {m} {M}"
+#~ msgstr "{d} {D}, {h} {H} e {m} {M}"
+
+#~ msgid "{h} {H}"
+#~ msgstr "{h} {H}"
+
+#~ msgid "{h} {H} and {m} {M}"
+#~ msgstr "{h} {H} e {m} {M}"
+
+#~ msgid "{m} {M}"
+#~ msgstr "{m} {M}"

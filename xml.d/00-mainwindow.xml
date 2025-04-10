@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config log-debug='yes' log-trace='yes'>
+
+	<!-- System version -->
+	<!-- attribute name='osversion' value='15.4' / -->
+
+	<MainWindow>
+		<attribute name='title' value='Sample reinstall settings' />	
+	</MainWindow>
+
+</config>
+
+

@@ -1,0 +1,91 @@
+/* SPDX-License-Identifier: LGPL-3.0-or-later */
+
+/*
+ * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+ #include <config.h>
+ #include <udjat/defs.h>
+ #include <udjat/module.h>
+ #include <udjat/tools/protocol.h>
+ #include <udjat/tools/factory.h>
+ #include <udjat/module/info.h>
+ #include <udjat/tools/xml.h>
+ #include <reinstall/action.h>
+ #include <udjat/tools/intl.h>
+ #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/writer.h>
+ #include <udjat/ui/dialog.h>
+ #include <reinstall/modules/isowriter.h>
+
+ using namespace Udjat;
+ using namespace std;
+
+ namespace Reinstall {
+
+	static const Udjat::ModuleInfo moduleinfo{
+		"Download and write an ISO file."
+  	};
+
+	class UDJAT_PRIVATE IsoWriter::Module::Action : public Reinstall::Action {
+	private:
+		Reinstall::FileSource iso;
+		Udjat::Dialog output;
+
+	public:
+
+		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+			: Reinstall::Action{parent,node}, iso{node}, output{"select-device",node} {
+
+			if(!(args.icon_name && *args.icon_name)) {
+				args.icon_name = "drive-harddisk-usb-symbolic";
+			}
+
+		}
+
+		~Action() {
+		}
+
+		int activate(Udjat::Dialog::Progress &progress) override {
+
+			progress = _("Getting ISO image");
+			auto path = iso.save(*this,progress);
+
+			progress = _("Writing ISO image");
+			Reinstall::Writer::getInstance().write(progress,output,path.c_str());
+
+			return 0;
+		}
+
+	};
+  
+	Udjat::Module * IsoWriter::Module::Factory() {
+		return new Module();
+	}
+	
+	IsoWriter::Module::Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
+	};
+
+	IsoWriter::Module::~Module() {
+	}
+
+	// Udjat::Factory
+	std::shared_ptr<Abstract::Object> IsoWriter::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
+		return make_shared<Action>(parent,node);
+	}
+
+ }
+

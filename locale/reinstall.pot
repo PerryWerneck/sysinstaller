@@ -1,0 +1,235 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-26 15:46-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/library/gtkremovabledevicedialog.cc:344
+msgid "Access Denied"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:169
+msgid "Auto detect"
+msgstr ""
+
+#: src/gtk4/application.cc:393
+msgid "C_ontinue"
+msgstr ""
+
+#: src/library/action.cc:90
+msgid "Cancel"
+msgstr ""
+
+#: src/library/fatdisk.cc:56
+msgid "Cant allocate FAT32 image"
+msgstr ""
+
+#: src/library/os/linux/writer.cc:183
+msgid "Cant allocate space for output file"
+msgstr ""
+
+#: src/library/fatdisk.cc:60
+msgid "Cant bind fatfs to disk image"
+msgstr ""
+
+#: src/library/action.cc:218
+msgid "Cant find mountpoint for '{}'"
+msgstr ""
+
+#: src/library/os/linux/writer.cc:169
+msgid "Cant get device length"
+msgstr ""
+
+#: src/library/template.cc:177
+msgid "Cant handle binary template"
+msgstr ""
+
+#: src/library/fatdisk.cc:52
+msgid "Cant open FAT32 device/file"
+msgstr ""
+
+#: src/library/repository.cc:197
+msgid "Cant parse server file list"
+msgstr ""
+
+#: src/library/template.cc:214
+msgid "Cant update template permissions"
+msgstr ""
+
+#: src/library/action.cc:140
+msgid "Configuration or logic error"
+msgstr ""
+
+#: src/library/action.cc:90
+msgid "Continue"
+msgstr ""
+
+#: src/library/action.cc:188
+msgid "Error getting boot path info"
+msgstr ""
+
+#: src/library/action.cc:199
+msgid "Error opening /etc/mtab"
+msgstr ""
+
+#: src/library/action.cc:232
+msgid "Error readlink boot link"
+msgstr ""
+
+#: src/library/writer.cc:135
+msgid "Finishing"
+msgstr ""
+
+#: src/library/builder.cc:238
+msgid "Getting required files"
+msgstr ""
+
+#: src/library/group.cc:47
+msgid "Group controller is already active"
+msgstr ""
+
+#: src/library/action.cc:111
+msgid "Initializing"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:53
+msgid "Insert an storage device"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:96
+msgid "Insert an storage device <b>NOW</b> "
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:357
+msgid "Invalid device"
+msgstr ""
+
+#: src/library/group.cc:60
+msgid "No active group controller"
+msgstr ""
+
+#: src/library/image.cc:109
+msgid "No write support on selected image"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:339
+msgid "Not enough space"
+msgstr ""
+
+#: src/library/action.cc:154
+msgid "Operation failed"
+msgstr ""
+
+#: src/library/action.cc:253
+msgid "Required attribute '{}' not found"
+msgstr ""
+
+#: src/library/repository.cc:83
+msgid "Required repository '{}' not found"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:194
+msgid "Save image to file"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:214
+msgid "Select output file"
+msgstr ""
+
+#: src/library/action.cc:149
+msgid "System error"
+msgstr ""
+
+#: src/application/mainwindow.cc:62
+msgid "System reinstallation"
+msgstr ""
+
+#: src/library/writer.cc:55
+msgid "The device writer is not available"
+msgstr ""
+
+#: src/library/action.cc:81
+msgid "The selected action cant be activated"
+msgstr ""
+
+#: src/library/gtkremovabledevicedialog.cc:54
+#: src/library/gtkremovabledevicedialog.cc:110
+msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
+msgstr ""
+
+#: src/library/os/linux/writer.cc:124
+msgid "Unable to access output device"
+msgstr ""
+
+#: src/library/os/linux/writer.cc:131
+msgid "Unable to lock output device"
+msgstr ""
+
+#: src/library/fatdisk.cc:155
+msgid "Unable to open fat://{}"
+msgstr ""
+
+#: src/library/fatdisk.cc:109
+msgid "Unable to open fat://{}/"
+msgstr ""
+
+#: src/library/fatdisk.cc:196
+msgid "Unable to write fat://{}"
+msgstr ""
+
+#: src/library/fatdisk.cc:73
+msgid "Unexpected error '{}' on f_mkfs"
+msgstr ""
+
+#: src/library/fatdisk.cc:87 src/library/fatdisk.cc:100
+msgid "Unexpected error '{}' on f_mount"
+msgstr ""
+
+#: src/library/writer.cc:61
+msgid "Writer is already available"
+msgstr ""
+
+#: src/library/image.cc:114
+msgid "Writing image"
+msgstr ""
+
+#: src/gtk4/application.cc:392
+msgid "_Cancel"
+msgstr ""
+
+#: src/library/ui/dialog.cc:190
+msgid "_No"
+msgstr ""
+
+#: src/gtk4/application.cc:391
+msgid "_Quit application"
+msgstr ""
+
+#: src/gtk4/application.cc:390
+msgid "_Reboot"
+msgstr ""
+
+#: src/library/ui/dialog.cc:190
+msgid "_Yes"
+msgstr ""
+
+#: src/library/action.cc:192
+msgid "{} is not a directory"
+msgstr ""
+
+#: src/gtk4/progress.cc:249 src/gtk4/progress.cc:281
+msgid "{} of {}"
+msgstr ""

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=@application_description@
+GenericName=@application_name@
+Comment=System Reinstall
+Categories=GTK;GNOME;Filesystem;
+Exec=/usr/bin/@application_name@
+Icon=@application_icon@
+Terminal=false
+Type=Application
+StartupNotify=true
+

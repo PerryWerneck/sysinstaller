@@ -1,0 +1,134 @@
+
+dnl Process this file with autoconf to produce a configure script.
+
+dnl The minimum version of autoconf required.
+AC_PREREQ(2.59)
+
+dnl Initialise automake with the package name, version and
+dnl bug-reporting address.
+AC_INIT([grub2], [6.0.0], [perry.werneck@gmail.com],[isobuilder],[https://github.com/PerryWerneck/reinstall])
+
+dnl Place auxilliary scripts here.
+AC_CONFIG_AUX_DIR([scripts])
+
+dnl Compute the canonical host-system type
+AC_CANONICAL_HOST
+
+dnl Put macro definitions here (though they aren't used).
+AC_CONFIG_HEADER([src/include/config.h])
+
+dnl Initialise automake stuff.
+AM_INIT_AUTOMAKE
+
+dnl Check for iconv
+AM_ICONV
+
+dnl Set gettext version
+AM_GNU_GETTEXT_VERSION([0.14])
+
+dnl Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_SED
+AC_PROG_LN_S
+
+AC_LANG([C++])
+
+AC_PATH_TOOL([STRIP], [strip])
+AC_SUBST(STRIP)
+AC_PATH_TOOL([XGETTEXT], [xgettext], [no])
+AC_PATH_TOOL([MSGCAT], [msgcat], [no])
+AC_PATH_TOOL([MSGINIT], [msginit], [no])
+AC_PATH_TOOL([MSGMERGE], [msgmerge], [no])
+AC_PATH_TOOL([MSGFMT], [msgfmt], [no])
+
+PKG_CHECK_EXISTS
+
+dnl ---------------------------------------------------------------------------
+dnl Version info
+dnl ---------------------------------------------------------------------------
+
+AC_SUBST(PACKAGE_DESCRIPTION,"Grub2 reinstall")
+
+dnl ---------------------------------------------------------------------------
+dnl Check for OS specifics
+dnl ---------------------------------------------------------------------------
+
+EXEEXT=""
+LIBEXT=".so"
+OSNAME="linux"
+CPPFLAGS="$CPPFLAGS -fPIC -pthread"
+LDFLAGS="$LDFLAGS -pthread"
+
+AC_SUBST(LIBS)
+AC_SUBST(EXEEXT)
+AC_SUBST(LIBEXT)
+AC_SUBST(OSNAME)
+AC_SUBST(DLL_LDFLAGS)
+
+dnl ---------------------------------------------------------------------------
+dnl Check for other programs
+dnl ---------------------------------------------------------------------------
+AC_PATH_TOOL([VALGRIND], [valgrind], [no])
+
+dnl ---------------------------------------------------------------------------
+dnl Check for C++ 2017 support
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([AX_CHECK_COMPILE_FLAG],
+[AC_PREREQ(2.59)dnl for _AC_LANG_PREFIX
+AS_VAR_PUSHDEF([CACHEVAR],[ax_cv_check_[]_AC_LANG_ABBREV[]flags_$4_$1])dnl
+AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1], CACHEVAR, [
+  ax_check_save_flags=$[]_AC_LANG_PREFIX[]FLAGS
+  _AC_LANG_PREFIX[]FLAGS="$[]_AC_LANG_PREFIX[]FLAGS $4 $1"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
+    [AS_VAR_SET(CACHEVAR,[yes])],
+    [AS_VAR_SET(CACHEVAR,[no])])
+  _AC_LANG_PREFIX[]FLAGS=$ax_check_save_flags])
+AS_IF([test x"AS_VAR_GET(CACHEVAR)" = xyes],
+  [m4_default([$2], :)],
+  [m4_default([$3], :)])
+AS_VAR_POPDEF([CACHEVAR])dnl
+])dnl AX_CHECK_COMPILE_FLAGS
+
+AX_CHECK_COMPILE_FLAG([-std=gnu++17], [CPPFLAGS="$CPPFLAGS -std=gnu++17"])
+
+dnl ---------------------------------------------------------------------------
+dnl Check for libudjat
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [UDJAT], [libudjat], AC_DEFINE(HAVE_UDJAT,,[Do we have udjat?]), AC_MSG_ERROR([UDJAT not present.]) )
+AC_SUBST(UDJAT_LIBS)
+AC_SUBST(UDJAT_CFLAGS)
+
+AC_ARG_WITH([product-name], [AS_HELP_STRING([--with-product-name], [Set product name])], [ app_cv_product="$withval" ],[ app_cv_product=$PACKAGE ])
+AC_DEFINE_UNQUOTED(PRODUCT_NAME, "$app_cv_product",[The product name])
+AC_SUBST(PRODUCT_NAME,"$app_cv_product")
+
+AC_ARG_WITH([product-id], [AS_HELP_STRING([--with-product-id], [Set product id])], [ app_cv_product_id="$withval" ],[ app_cv_product_id="`pkg-config --variable=product_id libudjat`" ])
+AC_SUBST(PRODUCT_ID,$app_cv_product_id)
+AC_DEFINE_UNQUOTED(PRODUCT_ID,"$app_cv_product_id",[The product id])
+
+AC_ARG_WITH([module-path], [AS_HELP_STRING([--with-module-path], [Set module-path])], [ app_cv_module_path="$withval" ],[ app_cv_module_path=`pkg-config --variable=module_path libudjat` ])
+
+AC_DEFINE_UNQUOTED(MODULE_PATH, $app_cv_module_path, [The path for module installation])
+AC_SUBST(MODULE_PATH,$app_cv_module_path)
+
+dnl ---------------------------------------------------------------------------
+dnl Check for libreinstall
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [REINSTALL], [libreinstall], AC_DEFINE(HAVE_REINSTALL,,[Do we have reinstall?]), AC_MSG_ERROR([libreinstall not present.]) )
+AC_SUBST(REINSTALL_LIBS)
+AC_SUBST(REINSTALL_CFLAGS)
+
+dnl ---------------------------------------------------------------------------
+dnl Configure which files to generate.
+dnl ---------------------------------------------------------------------------
+
+AC_CONFIG_FILES(Makefile)
+
+dnl ---------------------------------------------------------------------------
+dnl Output the generated config.status script.
+dnl ---------------------------------------------------------------------------
+AC_OUTPUT
+
