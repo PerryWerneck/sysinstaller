@@ -27,10 +27,10 @@
  #include <udjat/tools/logger.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/mainloop.h>
 
  #include <reinstall/ui/dialog.h>
  #include <reinstall/ui/application.h>
- #include <reinstall/ui/mainloop.h>
  #include <udjat/tools/application.h>
  #include <udjat/tools/threadpool.h>
 
@@ -49,9 +49,9 @@
  namespace Reinstall {
 
 	Application::Application(int argc, char **argv) : Udjat::Application{argc,argv} {
-		static MainLoop mainloop;
-		mainloop.active();
-
+		if(MainLoop::getInstance().type() != MainLoop::GLib) {
+			throw logic_error{"GLib mainloop not available"};
+		}
 	}
 
 	Application::~Application() {

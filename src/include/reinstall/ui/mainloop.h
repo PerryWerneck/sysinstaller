@@ -21,6 +21,9 @@
   * @brief Declares gtk4 mainloop binding for libudjat.
   */
 
+ #error deprecated
+
+ /*
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/mainloop.h>
@@ -64,4 +67,5 @@
 	};
 
  }
+ */
 

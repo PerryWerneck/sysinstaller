@@ -21,6 +21,7 @@
   * @brief Implement mainloop bindings to gtk4 mainloop.
   */
 
+/*
  #include <config.h>
 
  #include <gtkmm.h>
@@ -28,7 +29,6 @@
  #include <udjat/defs.h>
  #include <udjat/tools/timer.h>
  #include <udjat/tools/handler.h>
- #include <reinstall/ui/mainloop.h>
  #include <reinstall/ui/mainloop.h>
  #include <iostream>
  #include <udjat/tools/logger.h>
@@ -277,3 +277,4 @@
 	}
 
  }
+*/
