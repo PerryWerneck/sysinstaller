@@ -24,6 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/ui/progress.h>
  #include <reinstall/ui/progress.h>
  #include <reinstall/ui/application.h>
  #include <udjat/tools/threadpool.h>
@@ -61,20 +62,127 @@
 
 	};
 
-	class ProgressBar : public ::Gtk::ProgressBar {
+	class ProgressBar : public Udjat::Dialog::Progress, public ::Gtk::Grid {
+	private:
+		::Gtk::ProgressBar bar;
+		Label left{"dialog-left-label"};
+		Label right{"dialog-right-label",::Gtk::Align::END};
+
+		Glib::RefPtr<Glib::TimeoutSource> timer;
+		unsigned int idle = (unsigned int) -1;
+
+		bool changed = false;
+		uint64_t current = 0;
+		uint64_t total = 0;
+
 	public:
-		ProgressBar(const char *style) {
-			get_style_context()->add_class(style);
+
+		ProgressBar() {
+
+			// Setup grid
 			set_hexpand(true);
 			set_vexpand(false);
-			set_valign(::Gtk::Align::START);
-			set_halign(::Gtk::Align::FILL);
-			set_ellipsize(Pango::EllipsizeMode::START);
+			set_column_spacing(3);
+			set_row_spacing(3);
+			get_style_context()->add_class("dialog-footer");
+			set_valign(::Gtk::Align::END);
+		
+			// Setup bar
+			bar.get_style_context()->add_class("dialog-progress-bar");
+			bar.set_hexpand(true);
+			bar.set_vexpand(false);
+			bar.set_valign(::Gtk::Align::START);
+			bar.set_halign(::Gtk::Align::FILL);
+			bar.set_ellipsize(Pango::EllipsizeMode::START);
+
+			// Add widgets to grid
+			attach(bar,0,0,2,1);
+			attach(left,0,1,1,1);
+			attach(right,1,1,1,1);
+
+#ifdef DEBUG
+			left = "left";
+			right = "right";
+#endif // DEBUG
+
+			timer = Glib::TimeoutSource::create(100);
+
+			timer->connect([this]{
+
+				if(changed) {
+
+					idle = 0;
+					changed = false;
+
+					if(total) {
+						double fraction =  ((double) current) / ((double) total);
+						if(fraction > 1.0) {
+							bar.set_fraction(1.0);
+						} else {
+							bar.set_fraction(fraction);
+						}
+
+						right = Logger::Message{_("{} of {}"),
+									String{""}.set_byte((unsigned long long) current).c_str(),
+									String{""}.set_byte((unsigned long long) total).c_str()
+								}.c_str();
+
+					} else {
+						idle = 1000;
+						right = "";
+					}
+		
+				} else if(idle >= 100) {
+
+					bar.pulse();
+
+				} else {
+
+					idle++;
+			//		debug(idle);
+
+				}
+
+				return true;
+
+			});
+
+			timer->attach(Glib::MainContext::get_default());
+
 		}
 
-		~ProgressBar() {
+		virtual ~ProgressBar() {
+			timer->destroy();
 		}
 
+		Udjat::Dialog::Progress & item(const short current = 0, const short total = 0) override {
+			Glib::signal_idle().connect([this,current,total](){
+				if(total) {
+					left.set_text(Logger::Message{_("{} of {}"), current, total}.c_str());
+				} else {
+					left.set_text("");
+				}
+				return 0;
+			});
+			return *this;
+		}
+
+		Udjat::Dialog::Progress & set(uint64_t current, uint64_t total, bool) override {
+			this->current = current;
+			this->total = total;
+			changed = true;
+			return *this;
+		}
+
+		Udjat::Dialog::Progress & set(const char *url) override {
+			string u{url};
+			Glib::signal_idle().connect([this,u](){
+				bar.set_text(u);
+				return 0;
+			});
+			return *this;
+		}
+	
 	};
 
 	std::shared_ptr<Reinstall::Dialog::Progress> Reinstall::Application::ProgressFactory() {
@@ -83,13 +191,11 @@
 
 		class Progress : public Reinstall::Dialog::Progress, private ::Gtk::Window {
 		private:
-			Label main{"dialog-title"}, subtitle{"dialog-subtitle"}, left{"dialog-left-label"}, right{"dialog-right-label",::Gtk::Align::END};
-			ProgressBar progress{"dialog-progress-bar"};
+			Label main{"dialog-title"}, subtitle{"dialog-subtitle"};
+
+			shared_ptr<ProgressBar> bar{make_shared<ProgressBar>()};
+
 			::Gtk::Image icon;
-
-			Glib::RefPtr<Glib::TimeoutSource> timer;
-
-			unsigned int idle = (unsigned int) -1;
 
 			struct {
 				string label;
@@ -134,65 +240,21 @@
 				view.attach(main,1,0,1,1);
 				view.attach(subtitle,1,1,1,1);
 				view.attach(icon,0,0,1,2);
-				view.attach(progress,0,2,2,1);
-
-				::Gtk::Box footer{::Gtk::Orientation::HORIZONTAL};
-				footer.get_style_context()->add_class("dialog-footer");
-				footer.set_homogeneous(true);
-				footer.set_hexpand(true);
-				footer.set_vexpand(false);
-				footer.set_valign(::Gtk::Align::END);
-				footer.append(left);
-				footer.append(right);
-				view.attach(footer,0,3,2,1);
+				view.attach(*bar,0,2,2,1);
 
 #ifdef DEBUG
 				main = "The message";
 				subtitle = "The body";
-				left = "left";
-				right = "right";
 #endif // DEBUG
 
 				set_child(view);
 				view.show();
 
-				timer = Glib::TimeoutSource::create(100);
-
-				timer->connect([this]{
-
-					if(values.changed) {
-
-						idle = 0;
-						if(values.valid) {
-							progress.set_fraction(values.fraction);
-						}
-						if(values.changed &2) {
-							right.set_text(values.label);
-						}
-						values.changed = 0;
-
-					} else if(idle >= 100 || !values.valid) {
-
-						progress.pulse();
-
-					} else {
-
-						idle++;
-//						debug(idle);
-
-					}
-
-					return true;
-
-				});
-
-				timer->attach(Glib::MainContext::get_default());
 
 			}
 
 			~Progress() {
 				debug("-----------------> GTK4 progress dialog was destroyed");
-				timer->destroy();
 			}
 
 			Dialog::Progress & title(const char *title) override {
@@ -220,13 +282,6 @@
 				return *this;
 			}
 
-			Dialog::Progress & operator = (const double fraction) override {
-				values.fraction = fraction;
-				values.valid = true;
-				values.changed = true;
-				return *this;
-			}
-
 			Dialog::Progress & message(const char *text) override {
 				main = text;
 				return *this;
@@ -247,60 +302,20 @@
 			}
 
 			Dialog::Progress & item(const size_t current, const size_t total) override {
-				Glib::signal_idle().connect([this,current,total](){
-					if(total) {
-						left.set_text(Logger::Message{_("{} of {}"),current,total});
-					} else {
-						left.set_text("");
-					}
-					return 0;
-				});
+				bar->item(current,total);
 				return *this;
 			}
 
 			Dialog::Progress & url(const char *url) override {
-				debug("-------------> url=",url);
-				string str{url};
-				Glib::signal_idle().connect([this,str](){
-					progress.pulse();
-					progress.set_text(str);
-					progress.set_show_text();
-					values.valid = false;
-					values.label.clear();
-					right.set_text("");
-					return 0;
-				});
+				bar->set(url);
 				return *this;
 			}
 
 			Dialog::Progress & file_sizes(const uint64_t current, const uint64_t total) {
-
-				string label;
-
-				if(total) {
-					values.valid = true;
-					values.fraction = ((float) current) / ((float) total);
-
-					if(current) {
-						label = Logger::Message{_("{} of {}"),
-									String{""}.set_byte((unsigned long long) current).c_str(),
-									String{""}.set_byte((unsigned long long) total).c_str()
-								};
-					}
-
-				} else {
-					values.valid = false;
-				}
-
-				if(strcmp(label.c_str(),values.label.c_str())) {
-					values.changed |= 2;
-					values.label = label;
-				}
-
-				values.changed |= 1;
+				bar->set(current,total,true);
 				return *this;
 			}
-
+ 
 			int run(const std::function<int(Dialog::Progress &progress)> &task) noexcept override {
 
 				present();

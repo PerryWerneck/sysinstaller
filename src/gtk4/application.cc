@@ -57,67 +57,6 @@
 	Application::~Application() {
 	}
 
-	static const char * get_argument(int argc, char **argv, const char shortname, const char *longname) {
-
-		size_t szlong = strlen(longname);
-
-		argc--;
-		for(int ix = 1; ix <= argc; ix++) {
-
-			const char *arg = argv[ix];
-
-			if(arg[0] == '-' && arg[1] == '-' && arg[2] && strncasecmp(arg+2,longname,szlong) == 0) {
-
-				if(arg[2+szlong] == '=') {
-					return arg + 2 + szlong;
-				} else if(!arg[2+szlong]) {
-					return "1";
-				}
-
-			}
-
-			if(arg[0] == '-' && arg[1] == shortname && arg[2] == 0) {
-				if(ix < argc && argv[ix+1][0] != '-' ) {
-					return argv[ix+1];
-				}
-				return "1";
-			}
-
-		}
-
-		return nullptr;
-	}
-
-	static void g_syslog(const gchar *domain, GLogLevelFlags level, const gchar *message, gpointer G_GNUC_UNUSED(user_data)) {
-
-		static const struct Type {
-			GLogLevelFlags			level;
-			Udjat::Logger::Level	lvl;
-		} types[] =
-		{
-			{ G_LOG_FLAG_RECURSION,	Udjat::Logger::Info			},
-			{ G_LOG_FLAG_FATAL,		Udjat::Logger::Error		},
-
-			// GLib log levels
-			{ G_LOG_LEVEL_ERROR,	Udjat::Logger::Error		},
-			{ G_LOG_LEVEL_CRITICAL,	Udjat::Logger::Error		},
-			{ G_LOG_LEVEL_WARNING,	Udjat::Logger::Warning		},
-			{ G_LOG_LEVEL_MESSAGE,	Udjat::Logger::Info			},
-			{ G_LOG_LEVEL_INFO,		Udjat::Logger::Info			},
-			{ G_LOG_LEVEL_DEBUG,	Udjat::Logger::Debug		},
-		};
-
-		for(size_t ix=0; ix < G_N_ELEMENTS(types);ix++) {
-			if(types[ix].level == level) {
-				Udjat::Logger::String{message}.write(types[ix].lvl,domain ? domain : "gtk");
-				return;
-			}
-		}
-
-		Udjat::Logger::String{message}.error(domain ? domain : "gtk");
-
-	}
-
 	void Application::help(std::ostream &out) const noexcept {
 		Udjat::Application::help(out);
 		out << "  --text\tRun in text mode" << endl;
@@ -156,8 +95,6 @@
 			// https://gnome.pages.gitlab.gnome.org/gtkmm/
 
 			debug("Running ",String{PRODUCT_ID,".",name().c_str()}.c_str()," in graphic mode");
-
-			g_log_set_default_handler(g_syslog,this);
 
 			if(Udjat::Application::setup(definitions)) {
 				return -1;
