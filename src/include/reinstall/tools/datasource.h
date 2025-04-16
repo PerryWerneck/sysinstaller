@@ -27,7 +27,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/string.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <memory>
  #include <vector>
 
@@ -80,20 +80,20 @@
 		/// @return The path of file from mount point.
 		const Udjat::String fspath() const;
 
-		virtual void save(Reinstall::Dialog::Progress &progress, const char *path);
+		virtual void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const char *path);
 
 		/// @brief Save source, expand URL properties.
 		/// @return Path to local file.
-		virtual std::string save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress);
+		virtual std::string save(const Udjat::Abstract::Object &object, std::shared_ptr<Udjat::Dialog::Progress> progress);
 
 		/// @brief Save source.
-		virtual std::string save(Reinstall::Dialog::Progress &progress);
-		virtual void save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
+		virtual std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress);
+		virtual void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
 		bool for_each(const std::function<bool(const char *filename)> &func) const;
-		bool for_each(Reinstall::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
+		bool for_each(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 
@@ -151,9 +151,9 @@
 
 		const char * path() const override;
 
-		std::string save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress) override;
+		std::string save(const Udjat::Abstract::Object &object, std::shared_ptr<Udjat::Dialog::Progress> progress) override;
 
-		void save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
+		void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
 
 	};
 

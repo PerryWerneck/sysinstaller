@@ -32,7 +32,7 @@
  #include <udjat/tools/file.h>
  #include <udjat/tools/file/temporary.h>
  #include <reinstall/image.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
  #include <reinstall/disk/fat.h>
@@ -66,7 +66,7 @@
 
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
 
-		auto &progress = Dialog::Progress::getInstance();
+		auto progress = Udjat::Dialog::Progress::getInstance();
 		std::string from = source->save(progress);
 		std::string to = source->path();
 		auto efi = builder.efi();
@@ -105,8 +105,8 @@
 					if(tmplt) {
 						auto from = Udjat::File::Temporary::create();
 				
-						tmplt->save(builder.properties(),from.c_str(),[&progress](uint64_t current, uint64_t total){
-							progress.set(current,total);
+						tmplt->save(builder.properties(),from.c_str(),[progress](uint64_t current, uint64_t total){
+							progress->set(current,total);
 							return false;
 						});
 
@@ -125,13 +125,13 @@
 
 	}
 
-	void Abstract::Image::write(Reinstall::Dialog::Progress &, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
+	void Abstract::Image::write(std::shared_ptr<Udjat::Dialog::Progress> , const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
 		throw runtime_error(_("No write support on selected image"));
 	}
 
-	void Abstract::Image::write(Reinstall::Dialog::Progress &progress) {
+	void Abstract::Image::write(std::shared_ptr<Udjat::Dialog::Progress> progress) {
 
-		progress = _("Writing image");
+		progress->title(_("Writing image"));
 		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
 		writer.open(progress,dialog);
 
@@ -140,14 +140,14 @@
 		});
 	}
 
-	void Abstract::Image::append(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &sources) {
+	void Abstract::Image::append(std::shared_ptr<Udjat::Dialog::Progress> progress, list<std::shared_ptr<DataSource>> &sources) {
 
 		size_t item = 0;
 		for(auto &source : sources) {
-			progress.item(++item,sources.size());
+			progress->item(++item,sources.size());
 			append(source);
 		}
-		progress.item();
+		progress->item();
 
 	}
 

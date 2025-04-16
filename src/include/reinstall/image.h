@@ -27,7 +27,7 @@
  #include <udjat/tools/url.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <reinstall/ui/dialog.h>
  #include <list>
 
@@ -55,7 +55,7 @@
 			virtual void append(const char *from, const char *to) = 0;
 
 			/// @brief Add sources to image.
-			void append(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &sources);
+			void append(std::shared_ptr<Udjat::Dialog::Progress> progress, std::list<std::shared_ptr<DataSource>> &sources);
 
 		public:
 			virtual ~Image();
@@ -65,9 +65,9 @@
 			/// @brief Append data source to image, download file if needed.
 			virtual void append(std::shared_ptr<DataSource> source);
 
-			virtual void write(Reinstall::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+			virtual void write(std::shared_ptr<Udjat::Dialog::Progress> dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			virtual void write(Reinstall::Dialog::Progress &progress);
+			virtual void write(std::shared_ptr<Udjat::Dialog::Progress> progress);
 
 		};
 

@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <reinstall/ui/dialog.h>
  #include <string>
 
@@ -68,7 +68,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &dialog) = 0;
+		virtual void open(std::shared_ptr<Udjat::Dialog::Progress> progress, const Reinstall::Dialog &dialog) = 0;
 
 		/// @brief Get device length.
 		/// @return The device length.
@@ -86,10 +86,10 @@
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 		/// @brief Write file to device
-		void write(Reinstall::Dialog::Progress &progress,const Reinstall::Dialog &dialog, int fd);
+		void write(std::shared_ptr<Udjat::Dialog::Progress> progress,const Reinstall::Dialog &dialog, int fd);
 
 		/// @brief Write iso image to device.
-		void write(Reinstall::Dialog::Progress &progress,const Reinstall::Dialog &dialog, const char *isoname);
+		void write(std::shared_ptr<Udjat::Dialog::Progress> progress,const Reinstall::Dialog &dialog, const char *isoname);
 
 	};
 
@@ -98,7 +98,7 @@
 		GtkWriter() : Writer() {
 		}
 
-		void open(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &dialog) override;
+		void open(std::shared_ptr<Udjat::Dialog::Progress> progress, const Reinstall::Dialog &dialog) override;
 
 	};
 

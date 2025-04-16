@@ -8,7 +8,15 @@
 		"tuple": "cpp",
 		"utility": "cpp",
 		"variant": "cpp",
-		"typeinfo": "cpp"
+		"typeinfo": "cpp",
+		"exception": "cpp",
+		"memory_resource": "cpp",
+		"iosfwd": "cpp",
+		"new": "cpp",
+		"ostream": "cpp",
+		"sstream": "cpp",
+		"stop_token": "cpp",
+		"streambuf": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
 	"C_Cpp.default.compileCommands": "/home/perry/project/tools/reinstall/.build/compile_commands.json"
