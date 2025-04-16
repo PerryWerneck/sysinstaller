@@ -70,7 +70,7 @@
 	}
 
 
-	void Writer::write(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &dialog, const char *isoname) {
+	void Writer::write(const char *isoname) {
 
 		int fd = ::open(isoname,O_RDONLY);
 		if(fd < 0) {
@@ -79,7 +79,7 @@
 
 		try {
 
-			write(progress,dialog,fd);
+			write(fd);
 
 		} catch(...) {
 
@@ -92,7 +92,10 @@
 
 	}
 
-	void Writer::write(Reinstall::Dialog::Progress &progress,const Reinstall::Dialog &dialog, int fd) {
+	void Writer::write(int fd) {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->set(this->url.c_str());
 
 		try {
 
@@ -103,7 +106,9 @@
 
 			size(st.st_size);
 
-			open(progress,dialog);
+			progress->hide();
+			open();
+			progress->show();
 
 			unsigned long long offset = 0;
 			uint8_t buffer[st.st_blksize];
@@ -118,12 +123,12 @@
 
 				debug(offset,"/",st.st_size);
 
-				progress.file_sizes(offset,st.st_size);
+				progress->set((uint64_t) offset,(uint64_t) st.st_size);
 				Writer::write(offset,buffer,(unsigned long long) bytes);
 				offset += bytes;
 
 			}
-			progress.file_sizes(offset,st.st_size);
+			progress->set((uint64_t) offset,(uint64_t) st.st_size);
 
 		} catch(...) {
 
@@ -132,17 +137,16 @@
 			throw;
 		}
 
-		progress = _("Finishing");
+		progress->set(_("Finishing..."));
 		close();
 
 	}
 
-	void GtkWriter::open(Reinstall::Dialog::Progress &progress, const Reinstall::Dialog &settings) {
+	void GtkWriter::open() {
 
 		if(!selected.empty()) {
 
 			// Use pre-selected output.
-
 			try {
 
 				Writer::open(selected.c_str());
@@ -154,6 +158,9 @@
 
 			}
 
+			this->url = selected.c_str();
+			Logger::String{"Writing image to ",this->url.c_str()}.info("writer");
+	
 			return;
 
 		}
@@ -167,12 +174,9 @@
 
 		sem_init(&info.semaphore,0,0);
 
-		progress.hide();
-		progress.file_sizes(0,0);
-
 		while(!*this) {
 
-			Glib::signal_idle().connect([this,&info,&settings](){
+			Glib::signal_idle().connect([this,&info](){
 
 				auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
 
@@ -221,9 +225,9 @@
 
 		}
 
-		progress.url(info.devdescr.c_str());
-		progress.show();
-
+		this->url = info.devdescr.c_str();
+		Logger::String{"Writing image to ",this->url.c_str()}.info("writer");
+	
 	}
 
  }

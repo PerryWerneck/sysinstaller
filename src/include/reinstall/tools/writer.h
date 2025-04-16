@@ -42,11 +42,19 @@
 	protected:
 		Writer();
 
+		/// @brief The URL for progress.
+		std::string url;
+
 		/// @brief Device set from command-line option.
 		static std::string selected;
 
 		/// @brief Allocate required space, exception if not enough.
 		void allocate();
+
+		/// @brief Write data to device.
+		/// @param offset Offset of current block.
+		/// @param length Block length.
+		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 	public:
 		virtual ~Writer();
@@ -68,7 +76,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(std::shared_ptr<Udjat::Dialog::Progress> progress, const Reinstall::Dialog &dialog) = 0;
+		virtual void open() = 0;
 
 		/// @brief Get device length.
 		/// @return The device length.
@@ -80,25 +88,23 @@
 			this->length = length;
 		}
 
-		/// @brief Write data to device.
-		/// @param offset Offset of current block.
-		/// @param length Block length.
-		void write(unsigned long long offset, const void *contents, unsigned long long length);
-
 		/// @brief Write file to device
-		void write(std::shared_ptr<Udjat::Dialog::Progress> progress,const Reinstall::Dialog &dialog, int fd);
+		void write(int fd);
 
 		/// @brief Write iso image to device.
-		void write(std::shared_ptr<Udjat::Dialog::Progress> progress,const Reinstall::Dialog &dialog, const char *isoname);
+		void write(const char *isoname);
 
 	};
 
 	class UDJAT_API GtkWriter : public Writer {
+	private:
+		Reinstall::Dialog &settings;
+
 	public:
-		GtkWriter() : Writer() {
+		GtkWriter(Reinstall::Dialog &d) : Writer(), settings{d} {
 		}
 
-		void open(std::shared_ptr<Udjat::Dialog::Progress> progress, const Reinstall::Dialog &dialog) override;
+		void open() override;
 
 	};
 
