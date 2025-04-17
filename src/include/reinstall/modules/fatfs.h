@@ -57,16 +57,12 @@
 
 		void post(Udjat::Abstract::Object &object);
 
-		void write(Reinstall::Dialog::Progress &progress) override;
-
-		void append(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
-			Reinstall::Abstract::Image::append(progress,sources);
-		}
+		void write() override;
 
 	protected:
 
 		// Abstract::Image
-		void append(std::shared_ptr<Reinstall::DataSource> source) override;
+		void append(std::shared_ptr<Reinstall::DataSource> source, size_t item = 0, size_t total = 0) override;
 		void append(const char *from, const char *to) override;
 
 	private:

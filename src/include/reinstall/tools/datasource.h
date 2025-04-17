@@ -88,7 +88,7 @@
 
 		/// @brief Save source.
 		virtual std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress);
-		virtual void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
+		virtual void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
@@ -153,7 +153,7 @@
 
 		std::string save(const Udjat::Abstract::Object &object, std::shared_ptr<Udjat::Dialog::Progress> progress) override;
 
-		void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
+		void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
 
 	};
 

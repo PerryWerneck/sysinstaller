@@ -79,11 +79,7 @@
 
 		void post(Udjat::Abstract::Object &object);
 
-		void write(Reinstall::Dialog::Progress &progress) override;
-
-		inline void append(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
-			Reinstall::Abstract::Image::append(progress,sources);
-		}
+		void write() override;
 
 	protected:
 		// Abstract::Image

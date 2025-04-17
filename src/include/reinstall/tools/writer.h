@@ -43,18 +43,13 @@
 		Writer();
 
 		/// @brief The URL for progress.
-		std::string url;
+		std::string device_url;
 
 		/// @brief Device set from command-line option.
 		static std::string selected;
 
 		/// @brief Allocate required space, exception if not enough.
 		void allocate();
-
-		/// @brief Write data to device.
-		/// @param offset Offset of current block.
-		/// @param length Block length.
-		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 	public:
 		virtual ~Writer();
@@ -68,6 +63,11 @@
 
 		/// @brief Close device.
 		void close();
+
+		/// @brief The device URL (for progress bar).
+		inline const char *url() const noexcept {
+			return device_url.c_str();
+		}
 
 		/// @brief Set output from comand-line
 		static void set_output(const char *path);
@@ -93,6 +93,11 @@
 
 		/// @brief Write iso image to device.
 		void write(const char *isoname);
+
+		/// @brief Write data to device.
+		/// @param offset Offset of current block.
+		/// @param length Block length.
+		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 	};
 

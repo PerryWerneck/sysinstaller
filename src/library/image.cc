@@ -64,10 +64,12 @@
 		return str;
  	}
 
-	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
+	void Abstract::Image::append(std::shared_ptr<DataSource> source, size_t item, size_t total) {
 
 		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->item(item,total);
 		std::string from = source->save(progress);
+		
 		std::string to = source->path();
 		auto efi = builder.efi();
 
@@ -125,30 +127,34 @@
 
 	}
 
-	void Abstract::Image::write(std::shared_ptr<Udjat::Dialog::Progress> , const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
+	void Abstract::Image::write(const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
 		throw runtime_error(_("No write support on selected image"));
 	}
 
-	void Abstract::Image::write(std::shared_ptr<Udjat::Dialog::Progress> progress) {
+	void Abstract::Image::write() {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
 
 		progress->title(_("Writing image"));
-		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
-		writer.open(progress,dialog);
-
-		write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
-			writer.write(offset,contents,length);
-		});
-	}
-
-	void Abstract::Image::append(std::shared_ptr<Udjat::Dialog::Progress> progress, list<std::shared_ptr<DataSource>> &sources) {
-
-		size_t item = 0;
-		for(auto &source : sources) {
-			progress->item(++item,sources.size());
-			append(source);
-		}
 		progress->item();
 
+		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
+		progress->hide();
+		writer.open();
+		progress->show();
+		progress->set(writer.url());
+
+		write([&writer,progress](unsigned long long offset, const void *contents, unsigned long long length){
+			writer.write(offset,contents,length);
+		});
+
+	}
+
+	void Abstract::Image::append(list<std::shared_ptr<DataSource>> &sources) {
+		size_t item = 0;
+		for(auto &source : sources) {
+			append(source,++item,sources.size());
+		}
 	}
 
  }

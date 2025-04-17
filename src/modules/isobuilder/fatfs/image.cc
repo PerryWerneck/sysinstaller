@@ -125,7 +125,10 @@
 
 	}
 
-	void Image::append(std::shared_ptr<Reinstall::DataSource> source) {
+	void Image::append(std::shared_ptr<Reinstall::DataSource> source, size_t current, size_t total) {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->item(current,total);
 
 		const char *to = source->path();
 
@@ -160,10 +163,12 @@
 
 		try {
 
-			source->save(Reinstall::Dialog::Progress::getInstance(),[&fdst,to](unsigned long long, unsigned long long, const void *buffer, size_t len){
+			source->save([&fdst,progress,to](unsigned long long current, unsigned long long total, const void *buffer, size_t len) -> bool {
 
 				unsigned int wrote = 0;
 				const BYTE *ptr = (const BYTE *) buffer;
+
+				progress->set((uint64_t) current + len, (uint64_t) total);
 
 				while(len > 0) {
 					if(f_write(&fdst, ptr, (unsigned int) len, &wrote) != FR_OK) {
@@ -264,10 +269,13 @@
 		disk->unmount();
 	}
 
-	void Image::write(Reinstall::Dialog::Progress &progress) {
+	void Image::write() {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->title(_( "Preparing to write" ));
+		progress->item();
 
 		Logger::String{"Preparing to write image"}.info("fat");
-		progress = _( "Preparing to write" );
 
 		unsigned long long total = disk->length();
 		size_t buflen = disk->block_size();
@@ -275,15 +283,19 @@
 		auto &writer = Reinstall::Writer::getInstance();
 		writer.size(total);
 
-		writer.open(progress,dialog);
+		progress->hide();
+		writer.open();
+		progress->show();
 
-		progress = _( "Writing image" );
+		progress->title(_( "Writing image" ));
+		progress->set(writer.url());
+
 		char buffer[buflen];
 
 		unsigned long long current = 0LL;
 		while(current < total) {
 
-			progress.file_sizes(current,total);
+			progress->set((uint64_t) current, (uint64_t) total);
 
 			auto length = (total - current);
 			if(length > buflen) {
@@ -300,11 +312,10 @@
 			current += bytes;
 		}
 
-		progress.file_sizes(current,total);
+		progress->set((uint64_t) total, (uint64_t) total);
+		progress->title(_( "Finalizing" ));
 
-		progress = _( "Finalizing" );
 		writer.close();
-
 
 	}
 

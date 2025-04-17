@@ -394,11 +394,14 @@
 
 	}
 
-	void Image::write(Reinstall::Dialog::Progress &progress) {
+	void Image::write() {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->item();
 
 		debug("Writing image");
 
-		progress = _( "Preparing to write" );
+		progress->title(_( "Preparing to write" ));
 
 		int rc = iso_image_update_sizes(image);
 		if (rc < 0) {
@@ -422,9 +425,12 @@
 			auto &writer = Reinstall::Writer::getInstance();
 			writer.size(total);
 
-			writer.open(progress,dialog);
+			progress->hide();
+			writer.open();
+			progress->show();
 
-			progress = _( "Writing image" );
+			progress->set(writer.url());
+			progress->title(_("Writing image"));
 
 			#define BUFLEN 2048
 			unsigned char buffer[BUFLEN];
@@ -433,10 +439,11 @@
 			while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
 				writer.write(current, buffer, BUFLEN);
 				current += BUFLEN;
-				progress.file_sizes(current,total);
+				progress->set((uint64_t) current,(uint64_t) total);
 			}
 
-			progress = _( "Finalizing" );
+			progress->set((uint64_t) total,(uint64_t) total);
+			progress->title(_( "Finalizing" ));
 			writer.close();
 
 		} catch(...) {

@@ -54,20 +54,21 @@
 			/// @param to Destination file in the image.
 			virtual void append(const char *from, const char *to) = 0;
 
-			/// @brief Add sources to image.
-			void append(std::shared_ptr<Udjat::Dialog::Progress> progress, std::list<std::shared_ptr<DataSource>> &sources);
-
 		public:
 			virtual ~Image();
 
 			static const char * application_id() noexcept;
 
+			/// @brief Add sources to image.
+			/// @param sources List of data sources to append.
+			void append(std::list<std::shared_ptr<DataSource>> &sources);
+
 			/// @brief Append data source to image, download file if needed.
-			virtual void append(std::shared_ptr<DataSource> source);
+			virtual void append(std::shared_ptr<DataSource> source, size_t item = 0, size_t total = 0);
 
-			virtual void write(std::shared_ptr<Udjat::Dialog::Progress> dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+			virtual void write(const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			virtual void write(std::shared_ptr<Udjat::Dialog::Progress> progress);
+			virtual void write();
 
 		};
 

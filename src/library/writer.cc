@@ -95,7 +95,7 @@
 	void Writer::write(int fd) {
 
 		auto progress = Udjat::Dialog::Progress::getInstance();
-		progress->set(this->url.c_str());
+		progress->set(this->url());
 
 		try {
 
@@ -158,8 +158,8 @@
 
 			}
 
-			this->url = selected.c_str();
-			Logger::String{"Writing image to ",this->url.c_str()}.info("writer");
+			this->device_url = selected.c_str();
+			Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
 	
 			return;
 
@@ -225,8 +225,8 @@
 
 		}
 
-		this->url = info.devdescr.c_str();
-		Logger::String{"Writing image to ",this->url.c_str()}.info("writer");
+		this->device_url = info.devdescr.c_str();
+		Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
 	
 	}
 
