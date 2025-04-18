@@ -80,11 +80,13 @@
 		/// @return The path of file from mount point.
 		const Udjat::String fspath() const;
 
-		virtual void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const char *path);
+		/// @brief Save source to file.
+		/// @param path The destination file.
+		virtual void save(const char *path);
 
 		/// @brief Save source, expand URL properties.
 		/// @return Path to local file.
-		virtual std::string save(const Udjat::Abstract::Object &object, std::shared_ptr<Udjat::Dialog::Progress> progress);
+		virtual std::string save(const Udjat::Abstract::Object &object);
 
 		/// @brief Save source.
 		virtual std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress);
@@ -151,7 +153,7 @@
 
 		const char * path() const override;
 
-		std::string save(const Udjat::Abstract::Object &object, std::shared_ptr<Udjat::Dialog::Progress> progress) override;
+		std::string save(const Udjat::Abstract::Object &object) override;
 
 		void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
 

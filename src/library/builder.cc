@@ -29,8 +29,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/file/temporary.h>
- #include <reinstall/ui/progress.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
  #include <vector>
@@ -153,14 +152,14 @@
 				return path.remote.c_str();
 			}
 
-			void save(Reinstall::Dialog::Progress &progress, const char *path) override {
-				tmplt->save(parent,path,[&progress](uint64_t current, uint64_t total){
-					progress.set(current,total);
+			void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const char *path) override {
+				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
+					progress->set(current,total);
 					return false;
 				});
 			}
 
-			std::string save(Reinstall::Dialog::Progress &progress) override {
+			std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress) override {
 				if(filename.empty()) {
 					filename = File::Temporary::create();
 					save(progress,filename.c_str());
@@ -251,9 +250,10 @@
 		return false;
 	}
 
-	void Builder::prepare(Reinstall::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) {
+	void Builder::prepare(list<std::shared_ptr<DataSource>> &files) {
 
-		progress = _("Getting required files");
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->title(_("Getting required files"));
 
 		for(auto &source : sources) {
 

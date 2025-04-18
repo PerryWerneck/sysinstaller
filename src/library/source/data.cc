@@ -33,7 +33,7 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -207,14 +207,17 @@
 
 	}
 
-	void DataSource::save(Reinstall::Dialog::Progress &progress, const char *path) {
+	void DataSource::save(const char *path) {
+
+		auto progress = Udjat::Dialog::Progress::getInstance();
 
 		auto url = url_remote();
+		progress->set(url.c_str());
 
 		info() << "Downloading " << url.c_str() << endl;
 
 		if(message && *message) {
-			progress = message;
+			progress->title(message);
 		}
 
 		debug("Downloading '",url.c_str(),"' to '",path,"'");
@@ -233,11 +236,9 @@
 
 		try {
 
-			progress.url(url.c_str());
+			progress->set(url.c_str());
 			url.get(path,[&](uint64_t current, uint64_t total){
-
-				progress.file_sizes(current,total);
-
+				progress->set(current,total);
 				return false;
 			});
 
@@ -249,7 +250,7 @@
 
 	}
 
-	std::string DataSource::save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress) {
+	std::string DataSource::save(const Udjat::Abstract::Object &object) {
 
 		if(has_local()) {
 
@@ -270,7 +271,7 @@
 			try {
 
 				Logger::String{"Downloading ",filename.c_str()}.write(Logger::Debug,name());
-				DataSource::save(progress,filename.c_str());
+				DataSource::save(filename.c_str());
 
 			} catch(...) {
 
@@ -293,18 +294,19 @@
 
 	}
 
-	std::string DataSource::save(Reinstall::Dialog::Progress &progress) {
-		return save(Udjat::Abstract::Object{},progress);
-	}
+	//std::string DataSource::save(Reinstall::Dialog::Progress &progress) {
+	//	return save(Udjat::Abstract::Object{},progress);
+	//}
 
-	void DataSource::save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+	void DataSource::save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
+		Udjat::Abstract::Object object;
 		const char *local_filename = this->local();
 
 		if(local_filename && *local_filename) {
 
 			// Has local (cache) file, try to use it.
-			Udjat::File::Handler{save(progress).c_str()}.save(writer);
+			Udjat::File::Handler{save(object).c_str()}.save(writer);
 			return;
 		}
 
@@ -333,10 +335,10 @@
 		return (ptr && *ptr && ptr[strlen(ptr)-1] == '/');
 	}
 
-	bool DataSource::for_each(Reinstall::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
+	bool DataSource::for_each(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		if(message && *message) {
-			progress = message;
+			progress->title(message);
 		}
 
 		if(!(repository.get() && repository->index())) {

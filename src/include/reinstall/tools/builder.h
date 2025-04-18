@@ -81,7 +81,7 @@
 		/// @return Valid template ptr if filename should be replaced.
 		std::shared_ptr<Reinstall::Template> tmplt(const char *filename);
 
-		void prepare(Reinstall::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &files);
+		void prepare(std::list<std::shared_ptr<DataSource>> &files);
 
 	};
 
