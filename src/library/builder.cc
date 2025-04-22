@@ -152,19 +152,12 @@
 				return path.remote.c_str();
 			}
 
-			void save(std::shared_ptr<Udjat::Dialog::Progress> progress, const char *path) override {
+			void save(const char *path) override {
+				auto progress = ProgressFactory();			
 				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
 					progress->set(current,total);
 					return false;
 				});
-			}
-
-			std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress) override {
-				if(filename.empty()) {
-					filename = File::Temporary::create();
-					save(progress,filename.c_str());
-				}
-				return filename;
 			}
 
 		};

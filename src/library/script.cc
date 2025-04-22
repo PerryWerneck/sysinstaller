@@ -276,13 +276,13 @@
 				if(url.local && *url.local) {
 
 					// Save to local path.
-					filename = DataSource::save(progress);
+					filename = DataSource::save();
 
 				} else if(tempfilename.empty()) {
 
 					// Save to temporary path.
 					filename = tempfilename = File::Temporary::create();
-					DataSource::save(progress,filename.c_str());
+					DataSource::save(filename.c_str());
 
 				} else {
 

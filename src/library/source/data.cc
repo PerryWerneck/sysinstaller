@@ -207,20 +207,25 @@
 
 	}
 
-	void DataSource::save(const char *path) {
+	std::shared_ptr<Udjat::Dialog::Progress> DataSource::ProgressFactory() const {
 
 		auto progress = Udjat::Dialog::Progress::getInstance();
 
-		auto url = url_remote();
-		progress->set(url.c_str());
-
-		info() << "Downloading " << url.c_str() << endl;
-
+		progress->set(url_remote().c_str());
+		
 		if(message && *message) {
 			progress->title(message);
 		}
 
-		debug("Downloading '",url.c_str(),"' to '",path,"'");
+		return progress;
+
+	}
+	void DataSource::save(const char *path) {
+
+		auto progress = ProgressFactory();
+		auto url = url_remote();
+
+		info() << "Downloading " << url.c_str() << endl;
 
 		{
 			string str{path};

@@ -74,24 +74,26 @@
 		return filepath.c_str();
 	}
 
-	std::string TempFileSource::save(const Udjat::Abstract::Object &object, Reinstall::Dialog::Progress &progress) {
+	std::string TempFileSource::save(const Udjat::Abstract::Object &object) {
 
 		if(!filename.empty()) {
 			return filename;
 		}
 
+		auto progress = ProgressFactory();
+
 		auto url = url_remote();
 
 		debug("Downloading ",url.c_str());
-		progress.url(url.c_str());
+		progress->set(url.c_str());
 
 		try {
 
 			filename = Udjat::File::Temporary::create();
 			Udjat::File::Handler file{filename.c_str(),true};
 			url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
-				progress.file_sizes(current,total);
 				file.write(buf,length);
+				progress->set(current+length,total);
 				return false;
 			});
 
@@ -111,12 +113,7 @@
 
 	}
 
-	void TempFileSource::save(Reinstall::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
-
-		auto url = url_remote();
-		progress = url.c_str();
-
-		debug(url.c_str());
+	void TempFileSource::save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
 		throw runtime_error("TempFileSource::save Incomplete ");
 

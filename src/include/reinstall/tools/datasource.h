@@ -50,6 +50,8 @@
 
 		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
 
+		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
+
 		DataSource() {
 		}
 
@@ -79,6 +81,10 @@
 		/// @brief Get path relative to mount point.
 		/// @return The path of file from mount point.
 		const Udjat::String fspath() const;
+
+		/// @brief Update local file from remote server.
+		/// @return The file path.
+		std::string save();
 
 		/// @brief Save source to file.
 		/// @param path The destination file.
