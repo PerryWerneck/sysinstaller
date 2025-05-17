@@ -64,11 +64,13 @@
 	Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
 	Gtk::ScrolledWindow viewport;
 
+ protected:
+	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
+
  public:
 	TopLevel();
 	~TopLevel() override;
 
-	bool NodeFactory(const Udjat::XML::Node &node) override;
 
  };
  

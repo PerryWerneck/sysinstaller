@@ -124,6 +124,7 @@ if gtkmm.found()
 endif
 
 lib_src = [
+	'src/library/group.cc',
 ]
 
 executable(

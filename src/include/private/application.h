@@ -24,10 +24,28 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/factory.h>
+ #include <reinstall/group.h>
+ #include <memory>
+ #include <unordered_map>
+ #include <string>
 
  namespace Reinstall {
 
 	class UDJAT_PRIVATE Application : protected Udjat::Factory {
+	protected:
+
+		/// @brief The groups.
+		std::unordered_map<std::string, std::shared_ptr<Reinstall::Group>> groups;
+
+		/// @brief Selected group.
+		std::shared_ptr<Reinstall::Group> selected;
+
+		/// @brief Build a new group.
+		virtual std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) = 0;
+
+		/// @brief Select group.
+		virtual void select(std::shared_ptr<Reinstall::Group> group) noexcept;
+
 	public:
 		Application();
 		virtual ~Application();
@@ -35,6 +53,7 @@
 		/// @brief Load options from XML files.
 		void load_options();
 
+		bool NodeFactory(const Udjat::XML::Node &node) override;
 
 	};
 

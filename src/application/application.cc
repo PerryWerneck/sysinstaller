@@ -26,8 +26,11 @@
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/xml.h>
+ #include <string>
 
  using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
@@ -47,5 +50,33 @@
 
 	}
 
+	void Application::select(std::shared_ptr<Reinstall::Group> group) noexcept {
+		selected = group;
+	}
+
+	bool Application::NodeFactory(const Udjat::XML::Node &node) {
+
+		string name{node.attribute("name").as_string("default")};
+		std::shared_ptr<Group> group;
+
+		auto result = groups.find(name);
+		if(result == groups.end()) {
+			Logger::String{"Building group '",name.c_str(),"'"}.trace();
+			group = group_factory(node);
+			groups.insert({name,group});
+		} else {
+			Logger::String{"Updating group '",name.c_str(),"'"}.trace();
+			group = result->second;
+		}
+
+		group->setup(node);
+		
+		if(node.attribute("default").as_bool(false)) {
+			select(group);
+		}
+
+		return true;
+	}
+	
  }
  

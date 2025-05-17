@@ -104,9 +104,11 @@
 
 	// TODO: Show loading popup.
 
+	set_sensitive(false);
 	ThreadPool::getInstance().push([this](){
 		load_options();
 		Glib::signal_idle().connect([this](){
+			set_sensitive(true);
 			present();
 			return 0;
 		});
@@ -166,9 +168,6 @@
 	set_use_underline(true);
   }
 
-  bool TopLevel::NodeFactory(const XML::Node &node) {
-
-
-	return true;
+  std::shared_ptr<Reinstall::Group> TopLevel::group_factory(const Udjat::XML::Node &node) {
+	
   }
- 

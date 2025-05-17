@@ -24,21 +24,18 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <udjat/tools/object.h>
- #include <udjat/tools/factory.h>
- #include <list>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_API Group : public Udjat::NamedObject {
+	class UDJAT_API Group {
 	protected:
-
 		const char *dialog_title = "";
 
 	public:
 
+		/*
 		/// @brief Activity Controller
 		class UDJAT_API Controller : private Udjat::Factory {
 		private:
@@ -57,13 +54,15 @@
 			bool NodeFactory(const Udjat::XML::Node &node) override;
 
 		};
+		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
+		*/
 
-		Group(const Udjat::XML::Node &node);
+		Group();
 		virtual ~Group();
 
-		// Udjat::Abstract::Object
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
-		bool getProperty(const char *key, std::string &value) const override;
+		/// @brief Setup from XML node.
+		/// @param node The settings for this group.
+		virtual void setup(const Udjat::XML::Node &node);
 
 	};
 

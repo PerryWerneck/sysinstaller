@@ -23,6 +23,26 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/tools/xml.h>
+ #include <reinstall/group.h>
+
+ namespace Reinstall {
+
+	Group::Group() {
+
+	}
+
+	Group::~Group() {
+
+	}
+
+	void Group::setup(const Udjat::XML::Node &node) {
+
+	}
+
+ }
+
+/*
  #include <udjat/tools/intl.h>
  #include <reinstall/group.h>
  #include <udjat/module/info.h>
@@ -92,3 +112,4 @@
 
  }
 
+*/
