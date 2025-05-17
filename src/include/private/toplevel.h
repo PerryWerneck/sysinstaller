@@ -26,8 +26,10 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <gtkmm.h>
+ #include <private/application.h>
+ #include <udjat/tools/xml.h>
 
- class TopLevel : public Gtk::ApplicationWindow {
+ class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application {
  private:
 
 	class SideBar : public Gtk::Box {
@@ -35,38 +37,20 @@
 		Gtk::Image logo;
    
 	public:
-	   SideBar() : Gtk::Box{Gtk::Orientation::VERTICAL} {
-		get_style_context()->add_class("toplevel-sidebar");
-		set_hexpand(false);
-		set_vexpand(true);
-	   }
+	   SideBar();
    
 	} sidebar;
    
  	class Label : public Gtk::Label {
 	public:
 	  // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
-	  Label(const char *style, const char *text) : Gtk::Label{text} {
-		get_style_context()->add_class(style);
-		set_wrap(true);
-		set_halign(Gtk::Align::START);
-		set_hexpand(true);
-		set_vexpand(false);
-	  }
+	  Label(const char *style, const char *text);
 	
 	};
 	
 	class Button : public Gtk::Button {
 	public:
-	  Button(const char *style, const char *text) : Gtk::Button{text} {
-		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Button.html
-		get_style_context()->add_class(style);
-		set_halign(Gtk::Align::END);
-		get_style_context()->add_class("pill");
-		set_hexpand(false);
-		set_vexpand(false);
-		set_use_underline(true);
-	  }
+	  Button(const char *style, const char *text);
 
 	};
 
@@ -83,6 +67,8 @@
  public:
 	TopLevel();
 	~TopLevel() override;
+
+	bool NodeFactory(const Udjat::XML::Node &node) override;
 
  };
  

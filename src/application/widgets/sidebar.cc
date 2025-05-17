@@ -21,6 +21,8 @@
   * @brief Implements sidebar widget.
   */
 
+ #error deprecated
+ 
  #include <config.h>
 
  #include <udjat/defs.h>

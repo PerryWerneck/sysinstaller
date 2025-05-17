@@ -27,18 +27,18 @@
  #include <private/toplevel.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/threadpool.h>
+ #include <udjat/tools/mainloop.h>
  #include <string>
 
  using namespace std;
  using namespace Udjat;
-
 
  TopLevel::TopLevel() : Gtk::ApplicationWindow() {
  
 #ifdef DEBUG 
 	get_style_context()->add_class("devel");
 #endif
-
 
 	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 	{
@@ -60,6 +60,7 @@
 	hbox.append(sidebar);
 	hbox.append(vbox);
 
+	// Title
 	{
 		Gtk::Label title{_("Select an option")};
 		title.get_style_context()->add_class("main-title");
@@ -74,8 +75,6 @@
 		optionbox.set_hexpand(true);
 		optionbox.set_vexpand(true);
 		viewport.set_child(optionbox);
-
-
 		viewport.get_style_context()->add_class("content-box");
 		viewport.set_hexpand(true);
 		viewport.set_vexpand(true);
@@ -103,19 +102,73 @@
 	
 	}
 
-	// Title
-	/*
-	*/
+	// TODO: Show loading popup.
 
-	/*
+	ThreadPool::getInstance().push([this](){
+		load_options();
+		Glib::signal_idle().connect([this](){
+			present();
+			return 0;
+		});
+	});
 
-
-
-	*/
-
-	present();
  }
 
  TopLevel::~TopLevel() {
  
  }
+
+ TopLevel::SideBar::SideBar() : Gtk::Box{Gtk::Orientation::VERTICAL} {
+	get_style_context()->add_class("toplevel-sidebar");
+	set_hexpand(false);
+	set_vexpand(true);
+	set_homogeneous(false);
+
+#ifdef DEBUG
+	Config::Value<string> path{"defaults","sidebar-logo","./icons/logo.svg"};
+#else
+	Config::Value<string> path{"defaults","sidebar-logo",Application::DataFile("icons/logo.svg").c_str()};
+#endif // DEBUG
+
+	try {
+
+		Logger::String{"Getting logo from '",path.c_str(),"'"}.trace("sidebar");
+
+		logo.set_pixel_size(128);
+		logo.set(Gdk::Pixbuf::create_from_file(path.c_str()));
+		logo.get_style_context()->add_class("toplevel-sidebar-logo");
+		append(logo);
+
+	} catch(const std::exception &e) {
+
+		Logger::String{path.c_str(),": ",e.what()}.error("sidebar");
+
+	}
+	
+ }
+
+ // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
+ TopLevel::Label::Label(const char *style, const char *text) : Gtk::Label{text} {
+	get_style_context()->add_class(style);
+	set_wrap(true);
+	set_halign(Gtk::Align::START);
+	set_hexpand(true);
+	set_vexpand(false);
+ }
+
+ TopLevel::Button::Button(const char *style, const char *text) : Gtk::Button{text} {
+	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Button.html
+	get_style_context()->add_class(style);
+	set_halign(Gtk::Align::END);
+	get_style_context()->add_class("pill");
+	set_hexpand(false);
+	set_vexpand(false);
+	set_use_underline(true);
+  }
+
+  bool TopLevel::NodeFactory(const XML::Node &node) {
+
+
+	return true;
+  }
+ 
