@@ -35,6 +35,10 @@
 
  TopLevel::TopLevel() : Gtk::ApplicationWindow() {
  
+#ifdef DEBUG 
+	get_style_context()->add_class("devel");
+#endif
+
 
 	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ApplicationWindow.html
 	{
@@ -51,37 +55,64 @@
 	set_default_size(800, 600);
 
 	// Set up layout
-
 	set_title(Config::Value<string>("toplevel","title",_("System reinstallation")));
-
-	//   0       1
-	// 0 |sidebar|title      |
-	// 1 |       |optionsbox |
-	// 2 |       |buttonbox  |
-	grid.attach(sidebar,0,0,1,3);
+	set_child(hbox);
+	hbox.append(sidebar);
+	hbox.append(vbox);
 
 	{
 		Gtk::Label title{_("Select an option")};
 		title.get_style_context()->add_class("main-title");
 		title.set_hexpand(true);
 		title.set_vexpand(false);
-		set_valign(Gtk::Align::START);
-		grid.attach(title,1,0,1,1);
+		title.set_valign(Gtk::Align::START);
+		vbox.append(title);
 	}
 
-	buttons.set_hexpand(false);
-	buttons.set_vexpand(false);
-	buttons.set_valign(Gtk::Align::END);
-	buttons.set_halign(Gtk::Align::END);
-	buttons.get_style_context()->add_class("button-box");
-	buttons.set_spacing(6);
-	buttons.append(cancel);
-	buttons.append(apply);
-	set_default_widget(apply);
-	apply.set_sensitive(false);
-	grid.attach(buttons,1,2,1,1);
+	// Options
+	{
+		optionbox.set_hexpand(true);
+		optionbox.set_vexpand(true);
+		viewport.set_child(optionbox);
 
-	set_child(grid);
+
+		viewport.get_style_context()->add_class("content-box");
+		viewport.set_hexpand(true);
+		viewport.set_vexpand(true);
+		vbox.append(viewport);
+	}
+
+	// Button bar
+	{
+		buttons.set_hexpand(false);
+		buttons.set_vexpand(false);
+		buttons.set_valign(Gtk::Align::END);
+		buttons.set_halign(Gtk::Align::END);
+		buttons.set_homogeneous();	
+		buttons.get_style_context()->add_class("button-box");
+		buttons.set_spacing(3);
+		buttons.append(cancel);
+		buttons.append(apply);
+		set_default_widget(apply);
+		apply.set_sensitive(false);
+		vbox.append(buttons);
+
+		cancel.signal_clicked().connect([&]() {
+			Gtk::Window::close();
+		});
+	
+	}
+
+	// Title
+	/*
+	*/
+
+	/*
+
+
+
+	*/
+
 	present();
  }
 

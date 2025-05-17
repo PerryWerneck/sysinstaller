@@ -32,7 +32,7 @@
 
 	class SideBar : public Gtk::Box {
 	private:
-		::Gtk::Image logo;
+		Gtk::Image logo;
    
 	public:
 	   SideBar() : Gtk::Box{Gtk::Orientation::VERTICAL} {
@@ -73,12 +73,12 @@
 	Button apply{"suggested-action",_("_Apply")};
 	Button cancel{"cancel-action",_("_Cancel")};
 
-	Gtk::Grid grid;
+	Gtk::Box hbox{Gtk::Orientation::HORIZONTAL};
+	Gtk::Box vbox{Gtk::Orientation::VERTICAL};
 
-	//Gtk::Box view{Gtk::Orientation::HORIZONTAL};
-	//Gtk::Box menu{Gtk::Orientation::VERTICAL};
-	//Gtk::Box actionbox{Gtk::Orientation::VERTICAL};
+	Gtk::Box optionbox{Gtk::Orientation::VERTICAL};
 	Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
+	Gtk::ScrolledWindow viewport;
 
  public:
 	TopLevel();
