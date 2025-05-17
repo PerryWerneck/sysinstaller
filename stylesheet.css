@@ -101,7 +101,10 @@
 }
 
 .button-box {
-  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-top: 12px;
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 .group-title {

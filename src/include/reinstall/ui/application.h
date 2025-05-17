@@ -28,9 +28,10 @@
  #include <gtkmm.h>
  #include <reinstall/ui/dialog.h>
 
+ /*
  namespace Reinstall {
 
-	class UDJAT_API Application : public Udjat::Application, private Reinstall::Dialog::Controller {
+	class UDJAT_API Application : private Reinstall::Dialog::Controller {
 	public:
 		Application(int argc, char **argv);
 		virtual ~Application();
@@ -65,3 +66,4 @@
 	};
 
  }
+ */

@@ -16,7 +16,8 @@
 		"ostream": "cpp",
 		"sstream": "cpp",
 		"stop_token": "cpp",
-		"streambuf": "cpp"
+		"streambuf": "cpp",
+		"string": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
 	"C_Cpp.default.compileCommands": "/home/perry/project/tools/reinstall/.build/compile_commands.json"

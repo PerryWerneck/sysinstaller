@@ -276,7 +276,8 @@
 				if(url.local && *url.local) {
 
 					// Save to local path.
-					filename = DataSource::save();
+					filename = this->local();
+					DataSource::save(filename.c_str());
 
 				} else if(tempfilename.empty()) {
 

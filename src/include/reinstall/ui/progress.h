@@ -21,6 +21,7 @@
   * @brief Declares progress dialog.
   */
 
+  /*
  #pragma once
  #include <udjat/defs.h>
  #include <reinstall/ui/dialog.h>
@@ -70,3 +71,4 @@
 	};
 
  }
+  */

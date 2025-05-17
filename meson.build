@@ -54,11 +54,13 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 # Dependencies
 #
 libslp = cxx.find_library('slp')
+gtkmm = dependency('gtkmm-4.0', required: false)
+
 deps = [
 	dependency('libudjat-static',version : '>=2.0.0'),
 	dependency('libudjathttp-static',version : '>=2.0.0'),
 	dependency('libudjatdbus-static',version : '>=2.0.0'),
-	dependency('gtkmm-4.0'),
+	gtkmm,
 	dependency('libzip'),
 	dependency('libfatfs-static'),
 	dependency('zlib'),
@@ -78,7 +80,6 @@ conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(project_domain,meson.project_nam
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 conf_data.set_quoted('MODULE_VERSION',libversion)
 
-
 conf_data.set('application_description',project_description)
 conf_data.set('application_icon','@0@.@1@'.format(project_domain,meson.project_name()))
 conf_data.set('application_name', meson.project_name())
@@ -87,6 +88,10 @@ conf_data.set('HAVE_FATFS', 1)
 conf_data.set('HAVE_ISOFS', 1)
 conf_data.set('HAVE_ZLIB', 1)
 conf_data.set('HAVE_LIBZIP', 1)
+
+if gtkmm.found()
+  conf_data.set('HAVE_GTKMM', 1)
+endif
 
 if libslp.found()
   conf_data.set('HAVE_LIBSLP', 1)
@@ -109,50 +114,15 @@ includes_dir = include_directories('../src/include')
 
 app_src = [
 	'src/application/main.cc',
-	'src/application/mainwindow.cc',
-	'src/application/progress.cc',
-	'src/application/widgets/group.cc',
-	'src/application/widgets/item.cc',
-	'src/application/widgets/sidebar.cc',
-	'src/gtk4/application.cc',
-	'src/gtk4/mainloop.cc',
-	'src/gtk4/popup.cc',
-	'src/gtk4/progress.cc',
 ]
 
+if gtkmm.found()
+	app_src += [
+		'src/gtk4/toplevel.cc',
+	]
+endif
+
 lib_src = [
-	'src/library/action.cc',
-	'src/library/builder.cc',
-	'src/library/disk/abstract.cc',
-	'src/library/disk/fat.cc',
-	'src/library/efiboot.cc',
-	'src/library/group.cc',
-	'src/library/gtkremovabledevicedialog.cc',
-	'src/library/image.cc',
-	'src/library/kernelparameter.cc',
-	'src/library/repository/factory.cc',
-	'src/library/repository/kparm.cc',
-	'src/library/repository/repository.cc',
-	'src/library/script.cc',
-	'src/library/slpclient.cc',
-	'src/library/source/data.cc',
-	'src/library/source/file.cc',
-	'src/library/source/load.cc',
-	'src/library/source/tempfile.cc',
-	'src/library/template.cc',
-	'src/library/ui/dialog.cc',
-	'src/library/ui/popup.cc',
-	'src/library/ui/progress.cc',
-	'src/library/writer.cc',
-	'src/library/os/linux/gtkremovabledevicedialog.cc',
-	'src/library/os/linux/writer.cc',
-	'src/modules/isowriter.cc',
-	'src/modules/grub2.cc',
-	'src/modules/isobuilder/fatfs/image.cc',
-	'src/modules/isobuilder/fatfs/settings.cc',
-	'src/modules/isobuilder/iso9660/image.cc',
-	'src/modules/isobuilder/iso9660/settings.cc',
-	'src/modules/isobuilder/module.cc',
 ]
 
 executable(

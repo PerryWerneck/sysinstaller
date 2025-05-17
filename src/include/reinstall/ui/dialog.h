@@ -21,6 +21,7 @@
   * @brief Declares abstract dialog.
   */
 
+/*
  #pragma once
  #include <udjat/defs.h>
  #include <memory>
@@ -153,3 +154,4 @@
 	
  }
 
+*/
