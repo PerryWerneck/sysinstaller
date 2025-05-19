@@ -57,7 +57,7 @@ libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
 
 deps = [
-	dependency('libudjat-static',version : '>=2.0.0'),
+	dependency('libudjat',version : '>=2.0.0'),
 	dependency('libudjathttp-static',version : '>=2.0.0'),
 	dependency('libudjatdbus-static',version : '>=2.0.0'),
 	gtkmm,

@@ -37,14 +37,12 @@
 		/// @brief The groups.
 		std::unordered_map<std::string, std::shared_ptr<Reinstall::Group>> groups;
 
-		/// @brief Selected group.
-		std::shared_ptr<Reinstall::Group> selected;
-
 		/// @brief Build a new group.
 		virtual std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) = 0;
 
-		/// @brief Select group.
-		virtual void select(std::shared_ptr<Reinstall::Group> group) noexcept;
+		/// @brief Notify the user that the operation has failed.
+		/// @param e The exception that was thrown.
+		virtual void failed(const std::exception &e) noexcept = 0;
 
 	public:
 		Application();

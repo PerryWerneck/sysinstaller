@@ -67,6 +67,8 @@
  protected:
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
 
+	void failed(const std::exception &e) noexcept override;
+
  public:
 	TopLevel();
 	~TopLevel() override;

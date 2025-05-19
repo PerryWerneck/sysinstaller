@@ -48,10 +48,12 @@
 
 		Logger::String{"Loading options"}.info();
 
-	}
+	#ifdef DEBUG
+		XML::load("./xml.d");
+	#else
+		XML::load();
+	#endif
 
-	void Application::select(std::shared_ptr<Reinstall::Group> group) noexcept {
-		selected = group;
 	}
 
 	bool Application::NodeFactory(const Udjat::XML::Node &node) {
@@ -70,10 +72,6 @@
 		}
 
 		group->setup(node);
-		
-		if(node.attribute("default").as_bool(false)) {
-			select(group);
-		}
 
 		return true;
 	}

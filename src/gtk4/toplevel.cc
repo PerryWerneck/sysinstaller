@@ -25,11 +25,18 @@
  #include <udjat/defs.h>
  #include <glib/gi18n.h>
  #include <private/toplevel.h>
+
+ #ifdef LOG_DOMAIN
+	#undef LOG_DOMAIN
+ #endif
+ #define LOG_DOMAIN "toplevel"
  #include <udjat/tools/logger.h>
+
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/threadpool.h>
  #include <udjat/tools/mainloop.h>
  #include <string>
+ #include <reinstall/group.h>
 
  using namespace std;
  using namespace Udjat;
@@ -49,6 +56,20 @@
 		css->load_from_path(Application::DataFile("stylesheet.css").c_str());
 #endif // DEBUG
 		get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	}
+
+	{
+#ifdef DEBUG
+		std::string iconpath{"./icons"};
+#else
+		Udjat::Application::DataDir iconpath{"icons"};
+#endif // DEBUG
+
+		Logger::String{"Searching '",iconpath.c_str(),"' for customized icons"}.trace();
+
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1IconTheme.html
+		Gtk::IconTheme::get_for_display(Gdk::Display::get_default())->add_search_path(iconpath);
+
 	}
 
 	set_deletable(false);
@@ -75,7 +96,6 @@
 		optionbox.set_hexpand(true);
 		optionbox.set_vexpand(true);
 		viewport.set_child(optionbox);
-		viewport.get_style_context()->add_class("content-box");
 		viewport.set_hexpand(true);
 		viewport.set_vexpand(true);
 		vbox.append(viewport);
@@ -106,12 +126,20 @@
 
 	set_sensitive(false);
 	ThreadPool::getInstance().push([this](){
-		load_options();
-		Glib::signal_idle().connect([this](){
-			set_sensitive(true);
-			present();
-			return 0;
-		});
+
+		try {
+
+			load_options();
+			Glib::signal_idle().connect([this](){
+				set_sensitive(true);
+				present();
+				return 0;
+			});
+	
+		} catch(const std::exception &e) {
+			failed(e);
+		}
+
 	});
 
  }
@@ -168,6 +196,94 @@
 	set_use_underline(true);
   }
 
+  void TopLevel::failed(const std::exception &e) noexcept {
+
+	Logger::String{e.what()}.error();
+
+	Glib::signal_idle().connect([this,e](){
+
+		// TODO: Show error popup.
+		
+		this->get_application()->quit();
+		return 0;
+	});
+
+  }
+ 
   std::shared_ptr<Reinstall::Group> TopLevel::group_factory(const Udjat::XML::Node &node) {
+
+	class Group : public Gtk::Grid, public Reinstall::Group {
+	private:
+		TopLevel::Label title{"group-title",""};			///< @brief The group title.
+		TopLevel::Label sub_title{"group-subtitle",""};		///< @brief The group sub-title.
+		Gtk::Box contents{Gtk::Orientation::VERTICAL};		///< @brief The box with the options.
+
+	public:
+		Group(const Udjat::XML::Node &node) {
+
+			get_style_context()->add_class("group-title-box");
+
+			set_hexpand(true);
+			set_halign(Gtk::Align::FILL);
+		
+			set_vexpand(false);
+			set_valign(Gtk::Align::START);
+		
+			contents.set_hexpand(true);
+			contents.set_halign(Gtk::Align::FILL);
+		
+			contents.set_vexpand(false);
+			contents.set_valign(Gtk::Align::START);
+			contents.get_style_context()->add_class("item-box");
+		
+			get_style_context()->add_class("group-box");
+		
+			title.get_style_context()->add_class("group-title");
+			sub_title.get_style_context()->add_class("group-subtitle");
+		
+			int margin = 0;
+		
+			auto icon = XML::AttributeFactory(node,"icon");
+			if(icon) {
+				debug("Using icon '",icon.as_string(),"'");
+				margin = 1;
+		
+				Gtk::Image image;
+				//image.set_icon_size(Gtk::IconSize::LARGE);
+				image.set_pixel_size(32);
+				image.get_style_context()->add_class("group-icon");
+				image.set_from_icon_name(icon.as_string("image-missing"));
+		
+				attach(image,0,0,1,2);
+				contents.get_style_context()->add_class("item-box-no-icon");
+		
+			} else {
+		
+				contents.set_margin_start(35);
+				contents.get_style_context()->add_class("item-box-icon");
+		
+			}
+		
+			attach(title,margin,0);
+			attach(sub_title,margin,1);
+			attach(contents,margin,2);
+				
+		}
+
+		void setup(const Udjat::XML::Node &node) {
+			title.set_text(XML::StringFactory(node,"title"));
+			sub_title.set_text(XML::StringFactory(node,"sub-title"));
+		}
+
+	};
 	
+	auto group = make_shared<Group>(node);
+
+	Glib::signal_idle().connect([this,group](){
+		group->set_visible(true);
+		optionbox.append(*group);
+		return 0;
+	});
+
+	return group;
   }
