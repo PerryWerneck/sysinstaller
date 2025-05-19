@@ -25,7 +25,7 @@
  #include <udjat/defs.h>
  #include <glib/gi18n.h>
  #include <private/toplevel.h>
-
+ 
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
  #endif
@@ -37,6 +37,7 @@
  #include <udjat/tools/mainloop.h>
  #include <string>
  #include <reinstall/group.h>
+ #include <reinstall/action.h>
 
  using namespace std;
  using namespace Udjat;
@@ -202,6 +203,8 @@
 
 	Glib::signal_idle().connect([this,e](){
 
+		present();
+
 		// TODO: Show error popup.
 		
 		this->get_application()->quit();
@@ -209,14 +212,134 @@
 	});
 
   }
- 
+  
   std::shared_ptr<Reinstall::Group> TopLevel::group_factory(const Udjat::XML::Node &node) {
 
+	class Item : public Gtk::ToggleButton {
+	private:
+
+		std::shared_ptr<Reinstall::Action> action;
+		
+		class Label : public Gtk::Label {
+		public:
+			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
+			Label(const Udjat::XML::Node &node, const char *style, const char *attrname) 
+			: Gtk::Label{XML::AttributeFactory(node,attrname).as_string(), Gtk::Align::START} {
+				get_style_context()->add_class(style);
+			}
+		
+		} label, body;
+	
+		Gtk::Grid grid;
+		Gtk::LinkButton help_button;
+
+	public:
+		Item(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> a) 
+			: action{a}, label{node,"action-title","title"}, body{node,"action-subtitle","sub-title"} {
+
+			set_hexpand(true);
+			set_vexpand(false);
+			set_valign(Gtk::Align::START);
+			set_halign(Gtk::Align::FILL);
+	
+			get_style_context()->add_class("action-button");
+			grid.get_style_context()->add_class("action-container");
+
+			const char *icon_name = XML::AttributeFactory(node,"icon-name").as_string();			
+			int margin = 0;
+			if(icon_name && *icon_name) {
+
+				debug("Using icon '",icon_name,"'");
+				margin = 1;
+		
+				Gtk::Image image;
+				image.set_icon_size(Gtk::IconSize::LARGE);
+				image.get_style_context()->add_class("action-icon");
+				image.set_from_icon_name(icon_name);
+		
+				grid.attach(image,0,0,1,2);
+			}
+		
+			grid.attach(label,margin,0);
+			grid.attach(body,margin,1);
+		
+			set_child(grid);
+		
+			get_style_context()->add_class("action-inactive");
+		
+			signal_toggled().connect([this]() {
+		
+				Reinstall::Application &app = Reinstall::Application::getInstance();
+		
+				if(get_active()) {
+		
+					//if(window.selected && window.selected != this) {
+					//	window.selected->set_active(false);
+					//}
+		
+					//window.selected = this;
+					//window.button.apply.set_sensitive(true);
+		
+					get_style_context()->remove_class("action-inactive");
+					get_style_context()->add_class("action-active");
+		
+				} else {
+		
+					//if(window.selected == this) {
+					//	window.selected = nullptr;
+					//	window.button.apply.set_sensitive(false);
+					//}
+		
+					get_style_context()->remove_class("action-active");
+					get_style_context()->add_class("action-inactive");
+				}
+		
+			});
+		
+			set_visible();
+			set_sensitive(false);
+
+			// Check availability
+			ThreadPool::getInstance().push([this,a](){
+
+				try {
+		
+					if(action && !action->initialize()) {
+						Logger::String{"Action initialization has returned 'false', keeping it disabled"}.error(action->name());
+						return;
+					}
+		
+				} catch(const std::exception &e) {
+		
+					Logger::String{e.what()}.error(action->name());
+					return;
+		
+				} catch(...) {
+		
+					Logger::String{"Unexpected error while initializing action"}.error(action->name());
+					return;
+		
+				}
+		
+				Logger::String{"Initialization complete, enabling item"}.info(action->name());
+				Glib::signal_idle().connect([this](){
+					set_sensitive(true);
+					return 0;
+				});
+		
+			});
+		
+		
+		}
+		
+	};
+	
 	class Group : public Gtk::Grid, public Reinstall::Group {
 	private:
 		TopLevel::Label title{"group-title",""};			///< @brief The group title.
 		TopLevel::Label sub_title{"group-subtitle",""};		///< @brief The group sub-title.
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};		///< @brief The box with the options.
+		std::vector<std::shared_ptr<Item>> items;			///< @brief The list of items in this group.
 
 	public:
 		Group(const Udjat::XML::Node &node) {
@@ -270,9 +393,20 @@
 				
 		}
 
-		void setup(const Udjat::XML::Node &node) {
+		void setup(const Udjat::XML::Node &node) override {
 			title.set_text(XML::StringFactory(node,"title"));
 			sub_title.set_text(XML::StringFactory(node,"sub-title"));
+		}
+
+		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
+			auto item = make_shared<Item>(node, action);
+			items.push_back(item);
+
+			Glib::signal_idle().connect([this,item](){
+				contents.append(*item);
+				item->set_visible(true);
+				return 0;
+			});
 		}
 
 	};
@@ -287,3 +421,14 @@
 
 	return group;
   }
+
+  std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const Udjat::XML::Node &node) {
+	throw runtime_error{"DialogFactory not implemented"};
+  } 
+
+  void TopLevel::push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) {
+
+	debug("Adding action '",child->name(),"'");
+	
+ }
+ 

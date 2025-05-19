@@ -22,62 +22,38 @@
   */
 
  #pragma once
+
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <udjat/tools/object.h>
- #include <reinstall/ui/dialog.h>
- #include <reinstall/ui/progress.h>
-
+ #include <reinstall/dialog.h>
+ #include <memory>
+ 
  namespace Reinstall {
 
- 	class Group;
-
-	class UDJAT_API Action : public Udjat::NamedObject {
-	protected:
-
-		struct Args {
-			const char *icon_name = nullptr;
-			const char *title = nullptr;
-			const char *sub_title = nullptr;
-			const char *dialog_title = "";
-
-			Args(const Udjat::XML::Node &node)
-				: icon_name{Udjat::XML::QuarkFactory(node,"icon-name")},
-				  title{Udjat::XML::QuarkFactory(node,"title")},
-				  sub_title{Udjat::XML::QuarkFactory(node,"sub-title")} {
-			}
-
-		} args;
-
-		Dialog confirmation;
-		Dialog success;
-		Dialog failed;
+	class UDJAT_API Action {
+	private:
+		const char *_name;
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		Action(const Udjat::XML::Node &node);
 		virtual ~Action();
 
-		void activate();
+		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
+		virtual void activate();
 
-		bool getProperty(const char *key, std::string &value) const override;
-
-		inline const char * icon_name() const noexcept {
-			return args.icon_name;
+		inline const char * name() const noexcept {
+			return _name;
 		}
-
-		inline const char * title() const noexcept {
-			return args.title;
-		}
-
-		inline const char * sub_title() const noexcept {
-			return args.sub_title;
-		}
-
-		virtual int activate(Reinstall::Dialog::Progress &progress);
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();
+
+	protected:
+
+		std::shared_ptr<Dialog> confirmation;
+		std::shared_ptr<Dialog> success;
+		std::shared_ptr<Dialog> failed;
 
 	};
 

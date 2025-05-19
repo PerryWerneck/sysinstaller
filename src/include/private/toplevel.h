@@ -26,6 +26,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <gtkmm.h>
+ #include <memory>
  #include <private/application.h>
  #include <udjat/tools/xml.h>
 
@@ -73,6 +74,10 @@
 	TopLevel();
 	~TopLevel() override;
 
+	void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) override;
 
- };
+	std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) override;
+
+};
+
  

@@ -25,13 +25,19 @@
  #include <udjat/defs.h>
  #include <udjat/tools/factory.h>
  #include <reinstall/group.h>
+ #include <reinstall/dialog.h>
  #include <memory>
  #include <unordered_map>
  #include <string>
 
  namespace Reinstall {
 
+	class Action;
+
 	class UDJAT_PRIVATE Application : protected Udjat::Factory {
+	private:
+		static Application *instance;	///< @brief Singleton instance.
+
 	protected:
 
 		/// @brief The groups.
@@ -45,8 +51,25 @@
 		virtual void failed(const std::exception &e) noexcept = 0;
 
 	public:
+
 		Application();
 		virtual ~Application();
+
+		class Dialog {
+		public:
+			Dialog(const Udjat::XML::Node &node);
+			virtual ~Dialog() = default;
+		};
+
+		static Application & getInstance();
+
+		/// @brief Build a new dialog.
+		/// @param node The dialog description.
+		/// @return Pointer to the dialog.
+		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) = 0;	
+	
+		/// @brief Push-bach an action based on the XML node.
+		virtual void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child) = 0;
 
 		/// @brief Load options from XML files.
 		void load_options();

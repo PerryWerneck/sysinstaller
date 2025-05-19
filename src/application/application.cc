@@ -27,6 +27,7 @@
  #include <udjat/module/info.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/url/handler/http.h>
  #include <string>
 
  using namespace Udjat;
@@ -34,14 +35,32 @@
 
  namespace Reinstall {
 
+	Application *Application::instance = nullptr;
 	static const Udjat::ModuleInfo moduleinfo{"Top menu option"};
 		
 	Application::Application() : Factory{"group",moduleinfo} {
 
+		// Load default http handler.
+		static HTTP::Handler::Factory http_handler{"default"};
+
+		if(instance) {
+			throw std::runtime_error{"Application already created"};
+		}
+
+		instance = this;
+		Logger::String{"Creating application"}.info();
+
 	}
 
 	Application::~Application() {
+		instance = nullptr;
+	}
 
+	Application & Application::getInstance() {
+		if(!instance) {
+			throw std::runtime_error{"Application not created"};
+		}
+		return *instance;
 	}
 
 	void Application::load_options() {

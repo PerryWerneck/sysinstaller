@@ -21,6 +21,8 @@
   * @brief Implements abstract dialog.
   */
 
+ #error deprecated
+ 
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/ui/dialog.h>

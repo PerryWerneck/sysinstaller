@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2025 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -18,37 +18,41 @@
  */
 
  /**
-  * @brief Declare a group
+  * @brief Declares abstract dialog.
   */
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
  #include <memory>
+ #include <functional>
+ #include <udjat/tools/xml.h>
+ #include <cstdarg>
 
  namespace Reinstall {
 
-	class Action;
-
-	class UDJAT_API Group {
+	class UDJAT_API Dialog {
 	protected:
-		const char *dialog_title = "";
+
+		enum Option : uint8_t {
+			None 					= 0x0000,
+			AllowQuitApplication 	= 0x0001,
+			AllowReboot				= 0x0002,
+			AllowCancel				= 0x0004,
+			AllowContinue			= 0x0008,
+
+			NonInteractiveReboot	= 0x0010,
+			NonInteractiveQuit		= 0x0020,
+
+			AllowQuitContinue		= (AllowQuitApplication|AllowContinue),
+			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
+		} options = None;
 
 	public:
 
-		Group();
-		virtual ~Group();
+		Dialog(const Udjat::XML::Node &node);
+		virtual ~Dialog() = default;
 
-		/// @brief Setup from XML node.
-		/// @param node The settings for this group.
-		virtual void setup(const Udjat::XML::Node &node);
-
-		/// @brief Insert a child node.
-		/// @param node Child node to insert.
-		/// @param action The action to be performed.
-		virtual void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) = 0;
 
 	};
-
+	
  }
-

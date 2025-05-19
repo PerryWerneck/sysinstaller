@@ -21,6 +21,8 @@
   * @brief Implements window item.
   */
 
+ #error deprecated
+ 
  // Reference: https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1CheckButton.html
 
  #include <config.h>

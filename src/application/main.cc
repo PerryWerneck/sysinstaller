@@ -41,7 +41,9 @@
  int main(int argc, char* argv[]) {
 
 #ifdef DEBUG 
+	Config::allow_user_homedir(true);
 	Logger::verbosity(9);
+	Logger::console(true);
 #endif // DEBUG
 
 	// Check for help options.

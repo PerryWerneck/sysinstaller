@@ -21,6 +21,8 @@
   * @brief Implements abstract progress dialog.
   */
 
+ #error deprecated
+ 
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/ui/popup.h>

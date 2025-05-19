@@ -26,8 +26,6 @@
  #include <reinstall/action.h>
  #include <reinstall/group.h>
  #include <reinstall/ui/progress.h>
- #include <reinstall/ui/dialog.h>
- #include <reinstall/ui/progress.h>
  #include <udjat/tools/exception.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/quark.h>
