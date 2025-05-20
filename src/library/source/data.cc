@@ -211,12 +211,10 @@
 
 		auto progress = Udjat::Dialog::Progress::getInstance();
 
-		progress->set(url_remote().c_str());
-		
+		progress->set(url_remote().c_str());		
 		if(message && *message) {
 			progress->title(message);
 		}
-
 		return progress;
 
 	}
@@ -340,11 +338,7 @@
 		return (ptr && *ptr && ptr[strlen(ptr)-1] == '/');
 	}
 
-	bool DataSource::for_each(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
-
-		if(message && *message) {
-			progress->title(message);
-		}
+	bool DataSource::for_each(const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		if(!(repository.get() && repository->index())) {
 			throw runtime_error(_("Invalid repository"));

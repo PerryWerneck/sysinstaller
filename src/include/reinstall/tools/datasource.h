@@ -31,8 +31,6 @@
  #include <memory>
  #include <vector>
 
- #include <reinstall/tools/datasource.h>
-
  namespace Reinstall {
 
 	class Repository;
@@ -50,12 +48,13 @@
 
 		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
 
-		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
-
 		DataSource() {
 		}
 
 		DataSource(const DataSource &src);
+
+		/// @brief Build progress dialog for this source.
+		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
 
 	public:
 
@@ -91,13 +90,12 @@
 		virtual std::string save(const Udjat::Abstract::Object &object);
 
 		/// @brief Save source.
-		virtual std::string save(std::shared_ptr<Udjat::Dialog::Progress> progress);
 		virtual void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
 		bool for_each(const std::function<bool(const char *filename)> &func) const;
-		bool for_each(std::shared_ptr<Udjat::Dialog::Progress> progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
+		bool for_each(const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 

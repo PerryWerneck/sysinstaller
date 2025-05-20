@@ -127,6 +127,14 @@ lib_src = [
 	'src/library/group.cc',
 	'src/library/action.cc',
 	'src/library/ui/dialog.cc',
+	'src/library/slpclient.cc',
+	'src/library/repository/factory.cc',
+	'src/library/repository/repository.cc',
+	'src/library/repository/kparm.cc',
+	'src/library/source/data.cc',
+	'src/library/source/file.cc',
+	'src/library/source/load.cc',
+	'src/library/source/tempfile.cc',
 ]
 
 executable(

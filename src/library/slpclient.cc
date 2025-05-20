@@ -26,7 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <mutex>
  #include <udjat/net/ip/address.h>
  #include <sys/types.h>
@@ -147,8 +147,8 @@
 #ifdef HAVE_LIBSLP
 		if(service_type && *service_type && !query.done) {
 
-			Dialog::Progress &dialog = Dialog::Progress::getInstance();
-			dialog.url(service_type);
+			auto dialog = Dialog::Progress::getInstance();
+			dialog->set(service_type);
 
 			// https://github.com/ManageIQ/slp/blob/master/examples/raw_example.c
 			// https://docs.oracle.com/cd/E19455-01/806-0628/6j9vie80v/index.html

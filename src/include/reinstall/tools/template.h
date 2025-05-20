@@ -18,14 +18,13 @@
  */
 
  /**
-  * @brief Declare an image template.
+  * @brief Declare a file template.
   */
 
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
- #include <reinstall/ui/dialog.h>
  #include <vector>
 
  namespace Reinstall {

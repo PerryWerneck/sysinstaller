@@ -35,7 +35,6 @@
 	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node) {
 
 		for(auto parent = node;parent;parent = parent.parent()) {
-
 			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
 				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
 					continue;

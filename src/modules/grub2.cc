@@ -19,16 +19,37 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+
+ #ifdef LOG_DOMAIN
+	#undef LOG_DOMAIN
+ #endif // LOG_DOMAIN
+ #define LOG_DOMAIN "grub2"
+ #include <udjat/tools/logger.h>
+
+ #include <udjat/module/info.h>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/configuration.h>
+ #include <reinstall/tools/datasource.h>
+ 
+ using namespace Udjat;
+
+ namespace Reinstall {
+
+	static const Udjat::ModuleInfo moduleinfo{
+		"Reinstallation without disk image."
+	};
+
+
+}
+/*
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
- #include <udjat/tools/configuration.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
@@ -310,4 +331,4 @@
 	}
 
  }
-
+*/

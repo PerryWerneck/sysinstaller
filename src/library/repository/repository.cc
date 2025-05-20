@@ -26,7 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/ui/progress.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/file/path.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/url.h>
@@ -91,10 +91,8 @@
 
 	static void parse_index_html(const char *name, const char *root, const URL &url, std::vector<std::string> &files) {
 
-		debug("--------------------- ",url.c_str());
-
 		Logger::String{"Loading ",url.c_str()}.trace(name);
-		Dialog::Progress::getInstance().url(url.c_str());
+		Dialog::Progress::getInstance()->set(url.c_str());
 
 		String response = url.get();
 
@@ -169,9 +167,9 @@
 			return true;
 		}
 
-		auto &progress = Dialog::Progress::getInstance();
-		progress.url(_("Loading repository index"));
-		progress.item();
+		auto progress = Dialog::Progress::getInstance();
+		progress->set(_("Loading repository index"));
+		progress->item();
 		
 #ifdef HAVE_ZLIB
 		{
@@ -200,7 +198,7 @@
 					debug("------------->",filename.c_str());
 
 					url.get(filename.c_str(),[&progress](double current, double total){
-						progress = (total/current);
+						progress->set(current,total);
 						return false;
 					});
 
@@ -212,7 +210,7 @@
 					debug("Using remote file");
 
 					filename = url.tempfile([&progress](double current, double total){
-						progress = (total/current);
+						progress->set(current,total);
 						return false;
 					});
 
