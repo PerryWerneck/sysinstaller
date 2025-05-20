@@ -21,6 +21,68 @@
   * @brief Implements abstract dialog.
   */
 
+ #include <config.h>
+ #include <reinstall/dialog.h>
+ #include <private/application.h>
+ #include <udjat/tools/xml.h>
+ #include <memory>
+
+ using namespace Udjat;
+ using namespace std;
+
+ namespace Reinstall {
+
+	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node) {
+
+		for(auto parent = node;parent;parent = parent.parent()) {
+
+			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
+				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
+					continue;
+				}
+
+				return make_shared<Dialog>(child);
+			}
+		}
+		Logger::String{"Cant find dialog '",name,"', building an empty one"}.warning(node.attribute("name").as_string());
+		return std::shared_ptr<Dialog>();
+	}
+
+	Dialog::Dialog(const Udjat::XML::Node &node, const Dialog::Option o) : options{o}, title{XML::QuarkFactory(node,"dialog-title")}  {
+
+		if(!title || !*title) {
+			title = XML::QuarkFactory(node,"title");
+		}
+
+		//
+		// Load options.
+		//
+		static const struct {
+			Dialog::Option value;
+			const char * attrname;
+		} opts[] {
+			{ AllowQuitApplication,	"allow-quit" 	},
+			{ AllowReboot,			"allow-reboot"	},
+			{ NonInteractiveQuit,	"force-quit" 	},
+			{ NonInteractiveReboot,	"force-reboot" 	},
+		};
+
+		for(const auto &option : opts) {
+			if(XML::AttributeFactory(node,option.attrname).as_bool( (options & option.value) != 0)) {
+				options = (Option) (options | option.value);
+			} else {
+				options = (Option) (option.value & ~option.value);
+			}
+		}
+		
+
+	}
+
+
+
+ }
+
+ /*
  #error deprecated
  
  #include <config.h>
@@ -207,3 +269,4 @@
 	}
 
  }
+ */ 

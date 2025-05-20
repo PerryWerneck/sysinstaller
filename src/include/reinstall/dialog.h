@@ -47,10 +47,16 @@
 			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
 		} options = None;
 
+		/// @brief The title for the dialog (not the title bar).
+		/// @note This is the title visible in bold inside the dialog, usually the same as the menu item.
+		const char *title;
+
 	public:
 
-		Dialog(const Udjat::XML::Node &node);
-		virtual ~Dialog() = default;
+		Dialog(const Udjat::XML::Node &node, const Option option = None);
+		~Dialog() = default;
+
+		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node);
 
 
 	};

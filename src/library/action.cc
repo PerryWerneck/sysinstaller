@@ -24,6 +24,45 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/action.h>
+ #include <udjat/tools/object.h>
+ #include <udjat/tools/intl.h>
+ #include <stdexcept>
+ #include <reinstall/dialog.h>
+
+ using namespace Udjat;
+ using namespace std;
+
+ namespace Reinstall {
+
+	Action::Action(const Udjat::XML::Node &node) 
+		: NamedObject{node},
+			confirmation{Dialog::Factory("confirmation",node)},
+			success{Dialog::Factory("success",node)},
+			failed{Dialog::Factory("failed",node)} {
+
+
+	}
+
+	Action::~Action() {
+
+	}
+
+	/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
+	void Action::activate() {
+		throw logic_error(_("The selected action cant be activated"));
+	}
+
+	/// @brief Test if the action is valid and can be activated.
+	bool Action::initialize() {
+		return true;
+	}
+
+ }
+ 
+/*
+ #include <config.h>
+ #include <udjat/defs.h>
+ #include <reinstall/action.h>
  #include <reinstall/group.h>
  #include <reinstall/ui/progress.h>
  #include <udjat/tools/exception.h>
@@ -322,3 +361,4 @@
 
  }
 
+*/

@@ -25,15 +25,13 @@
 
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/object.h>
  #include <reinstall/dialog.h>
  #include <memory>
  
  namespace Reinstall {
 
-	class UDJAT_API Action {
-	private:
-		const char *_name;
-
+	class UDJAT_API Action : public Udjat::NamedObject {
 	public:
 
 		Action(const Udjat::XML::Node &node);
@@ -41,10 +39,6 @@
 
 		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
 		virtual void activate();
-
-		inline const char * name() const noexcept {
-			return _name;
-		}
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();

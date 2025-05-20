@@ -125,6 +125,8 @@ endif
 
 lib_src = [
 	'src/library/group.cc',
+	'src/library/action.cc',
+	'src/library/ui/dialog.cc',
 ]
 
 executable(
