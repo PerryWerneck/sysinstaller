@@ -29,6 +29,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/version.h>
  #include <udjat/tools/intl.h>
+ #include <reinstall/tools/kernelparameter.h>
 
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
@@ -70,6 +71,15 @@
 #endif
   
 	debug("argc=",argc);
+
+	// Load kernel parameters.
+	{
+		string value;
+		while(Udjat::Application::pop(argc,argv,'k',"kernel-parameter",value)) {
+			Reinstall::KernelParameter::preset(value.c_str());
+		}
+	}
+
 
 #ifdef HAVE_GTKMM
 	{

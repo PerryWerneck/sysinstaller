@@ -128,6 +128,8 @@ lib_src = [
 	'src/library/action.cc',
 	'src/library/kernelparameter.cc',
 	'src/library/slpclient.cc',
+	'src/library/script.cc',
+	'src/library/template.cc',
 	'src/library/ui/dialog.cc',
 	'src/library/repository/factory.cc',
 	'src/library/repository/repository.cc',

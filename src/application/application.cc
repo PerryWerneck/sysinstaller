@@ -22,6 +22,7 @@
   */
 
  #include <config.h>
+ #include <udjat/tools/application.h>
  #include <reinstall/application.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
