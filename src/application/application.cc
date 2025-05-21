@@ -22,13 +22,17 @@
   */
 
  #include <config.h>
- #include <private/application.h>
+ #include <reinstall/application.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/url/handler/http.h>
+ #include <udjat/tools/configuration.h>
  #include <string>
+ #include <reinstall/action.h>
+
+ #include <reinstall/modules/grub2.h>
 
  using namespace Udjat;
  using namespace std;
@@ -50,6 +54,12 @@
 		instance = this;
 		Logger::String{"Creating application"}.info();
 
+		// Load modules.
+
+		if(Config::Value<bool>{"modules","grub2",true}) {
+			Reinstall::Grub2::Module::Factory("grub");
+		}
+
 	}
 
 	Application::~Application() {
@@ -68,14 +78,29 @@
 		Logger::String{"Loading options"}.info();
 
 	#ifdef DEBUG
-		XML::load("./xml.d");
+		XML::parse("./xml.d");
 	#else
-		XML::load();
+		XML::parse();
 	#endif
 
 	}
 
-	bool Application::NodeFactory(const Udjat::XML::Node &node) {
+	void Application::push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) {
+
+		debug("Adding action '",child->name(),"'");
+
+		string parent{node.parent().attribute("name").as_string("default")};
+
+		auto result = groups.find(parent);
+		if(result == groups.end()) {
+			throw runtime_error{Logger::String{"Group '",parent.c_str(),"' not found"}};
+		}
+
+		result->second->push_back(node,child);
+
+	}
+
+	bool Application::parse(const Udjat::XML::Node &node) {
 
 		string name{node.attribute("name").as_string("default")};
 		std::shared_ptr<Group> group;

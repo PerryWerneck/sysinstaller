@@ -269,8 +269,6 @@
 		
 			signal_toggled().connect([this]() {
 		
-				Reinstall::Application &app = Reinstall::Application::getInstance();
-		
 				if(get_active()) {
 		
 					//if(window.selected && window.selected != this) {
@@ -426,9 +424,3 @@
 	throw runtime_error{"DialogFactory not implemented"};
   } 
 
-  void TopLevel::push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) {
-
-	debug("Adding action '",child->name(),"'");
-	
- }
- 

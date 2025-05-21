@@ -24,6 +24,7 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/action.h>
+ #include <reinstall/dialog.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <stdexcept>
@@ -35,11 +36,11 @@
  namespace Reinstall {
 
 	Action::Action(const Udjat::XML::Node &node) 
-		: NamedObject{node},
-			confirmation{Dialog::Factory("confirmation",node)},
-			success{Dialog::Factory("success",node)},
-			failed{Dialog::Factory("failed",node)} {
-
+		: NamedObject{node} {
+		
+		confirmation = Dialog::Factory("confirmation",node);
+		success = Dialog::Factory("success",node);
+		failed = Dialog::Factory("failed",node);
 
 	}
 

@@ -67,7 +67,8 @@
 		"valarray": "cpp",
 		"text_encoding": "cpp",
 		"queue": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"future": "cpp"
 	},
 	"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
 	"C_Cpp.default.compileCommands": "/home/perry/project/tools/reinstall/.build/compile_commands.json"

@@ -126,8 +126,9 @@ endif
 lib_src = [
 	'src/library/group.cc',
 	'src/library/action.cc',
-	'src/library/ui/dialog.cc',
+	'src/library/kernelparameter.cc',
 	'src/library/slpclient.cc',
+	'src/library/ui/dialog.cc',
 	'src/library/repository/factory.cc',
 	'src/library/repository/repository.cc',
 	'src/library/repository/kparm.cc',
@@ -135,6 +136,7 @@ lib_src = [
 	'src/library/source/file.cc',
 	'src/library/source/load.cc',
 	'src/library/source/tempfile.cc',
+	'src/modules/grub2.cc',
 ]
 
 executable(

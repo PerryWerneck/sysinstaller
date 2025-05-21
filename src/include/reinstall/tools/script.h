@@ -25,7 +25,6 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
- #include <reinstall/ui/progress.h>
  #include <reinstall/tools/datasource.h>
 
  namespace Reinstall {
@@ -43,7 +42,7 @@
 
 		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts);
 
-		void run(const Udjat::Abstract::Object &object, const RunTime rtime, Reinstall::Dialog::Progress &progress);
+		void run(const Udjat::Abstract::Object &object, const RunTime rtime);
 
 	private:
 

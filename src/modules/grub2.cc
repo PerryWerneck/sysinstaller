@@ -29,38 +29,22 @@
  #include <udjat/module/info.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
- #include <reinstall/tools/datasource.h>
- 
- using namespace Udjat;
-
- namespace Reinstall {
-
-	static const Udjat::ModuleInfo moduleinfo{
-		"Reinstallation without disk image."
-	};
-
-
-}
-/*
- #include <udjat/module.h>
- #include <udjat/tools/protocol.h>
- #include <udjat/tools/string.h>
- #include <udjat/tools/factory.h>
- #include <udjat/module/info.h>
- #include <udjat/tools/xml.h>
- #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/tools/writer.h>
+ #include <udjat/ui/progress.h>
+ #include <reinstall/application.h>
+ #include <reinstall/action.h>
+ #include <reinstall/dialog.h>
+ #include <reinstall/group.h>
+ #include <reinstall/tools/datasource.h>
+ #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
+ #include <string>
+
  #include <reinstall/modules/grub2.h>
- #include <reinstall/ui/dialog.h>
- #include <vector>
- #include <reinstall/tools/kernelparameter.h>
 
  using namespace Udjat;
  using namespace std;
- using namespace Reinstall;
 
  static const char * PathFactory(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node, const char *name, const char *text) {
 
@@ -136,8 +120,7 @@
 		const char *boot_label = nullptr;
 
 	public:
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node} {
+		Action(const Udjat::XML::Node &node) : Reinstall::Action{node} {
 
 			static const char *labels[] = {
 				"grub-label",
@@ -185,7 +168,7 @@
 			Reinstall::Script::load(*this,node,scripts);
 
 			// Enable allow reboot by default.
-			success.set(Dialog::AllowReboot);
+			success->set(Dialog::AllowReboot);
 
 		}
 
@@ -283,33 +266,34 @@
 			return Reinstall::Action::getProperty(key,value);
 		}
 
-		int activate(Reinstall::Dialog::Progress &progress) override {
+		void activate() override {
 
-			progress = _("Getting required files");
+			auto progress = Udjat::Dialog::Progress::getInstance();
+			progress->set(_("Getting required files"));
+
 			for(const auto &source : sources) {
-				source->save(*this,progress);
+				source->save(*this);
 			}
 
-			progress = _("Applying templates");
+			progress->set(_("Applying templates"));
 			for(const auto &tmplt : templates) {
-				tmplt->save(*this,[&progress](uint64_t current, uint64_t total) {
-					progress.set(current,total);
+				tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
+					progress->set(current,total);
 					return false;
 				});
 			}
 
-			progress = _("Configuring boot loader");
-			progress.url(_("First stage"));
+			progress->set(_("Configuring boot loader"));
+			progress->url(_("First stage"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Pre,progress);
+				script->run(*this,Script::Pre);
 			}
 
-			progress.url(_("Second stage"));
+			progress->url(_("Second stage"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Post,progress);
+				script->run(*this,Script::Post);
 			}
 
-			return 0;
 		}
 
 	};
@@ -322,8 +306,9 @@
 	}	
 
 	// Udjat::Factory
-	std::shared_ptr<Abstract::Object> Grub2::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
-		return make_shared<Action>(parent,node);
+	bool Grub2::Module::parse(const Udjat::XML::Node &node) {
+		Reinstall::Application::getInstance().push_back(node,make_shared<Grub2::Module::Action>(node));
+		return true;
 	}
 
 	Udjat::Module * Grub2::Module::Factory(const char *name) {
@@ -331,4 +316,3 @@
 	}
 
  }
-*/

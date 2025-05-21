@@ -27,7 +27,7 @@
  #include <udjat/defs.h>
  #include <gtkmm.h>
  #include <memory>
- #include <private/application.h>
+ #include <reinstall/application.h>
  #include <udjat/tools/xml.h>
 
  class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application {
@@ -73,8 +73,6 @@
  public:
 	TopLevel();
 	~TopLevel() override;
-
-	void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) override;
 
 	std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) override;
 

@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <reinstall/dialog.h>
- #include <private/application.h>
+ #include <reinstall/application.h>
  #include <udjat/tools/xml.h>
  #include <memory>
 

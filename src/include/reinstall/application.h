@@ -69,12 +69,12 @@
 		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) = 0;	
 	
 		/// @brief Push-bach an action based on the XML node.
-		virtual void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child) = 0;
+		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child);
 
 		/// @brief Load options from XML files.
 		void load_options();
 
-		bool NodeFactory(const Udjat::XML::Node &node) override;
+		bool parse(const Udjat::XML::Node &node) override;
 
 	};
 

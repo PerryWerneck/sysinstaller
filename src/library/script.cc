@@ -197,7 +197,7 @@
 
 	}
 
-	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime, Reinstall::Dialog::Progress &progress) {
+	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime) {
 
 		class SubProcess : public Udjat::SubProcess {
 		private:
@@ -234,7 +234,7 @@
 		}
 
 		if(message && *message) {
-			progress = message;
+			Dialog::Progress::getInstance()->message(message);
 		}
 
 		String text;
@@ -271,7 +271,7 @@
 
 			if(url.remote && *url.remote) {
 
-				progress.url(url.remote);
+				Dialog::Progress::getInstance()->url(url.remote);
 
 				if(url.local && *url.local) {
 
