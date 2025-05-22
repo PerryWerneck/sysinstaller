@@ -25,7 +25,8 @@
  #include <udjat/defs.h>
  #include <glib/gi18n.h>
  #include <private/toplevel.h>
- 
+ #include <semaphore.h>
+
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
  #endif
@@ -401,15 +402,22 @@
 
 	};
 	
-	auto group = make_shared<Group>(node);
+	// Build the group in the main thread, wait for it.
+	Group *group = nullptr;
 
-	Glib::signal_idle().connect([this,group](){
+	sem_t semaphore;
+	sem_init(&semaphore,0,0);
+
+	Glib::signal_idle().connect([this,&node,&group,&semaphore](){
+		group = new Group(node);
 		group->set_visible(false);
 		optionbox.append(*group);
+		sem_post(&semaphore);
 		return 0;
 	});
 
-	return group;
+	sem_wait(&semaphore);
+	return std::shared_ptr<Group>{group};
   }
 
   void TopLevel::select(std::shared_ptr<Reinstall::Action> action) {
