@@ -74,10 +74,11 @@
 			}
 		}
 		
-
 	}
 
-
+	void Dialog::set(const Option value) {
+		options = (Option) (options | value);
+	}
 
  }
 

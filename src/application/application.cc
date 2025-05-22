@@ -26,6 +26,7 @@
  #include <reinstall/application.h>
  #include <udjat/tools/factory.h>
  #include <udjat/module/info.h>
+ #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/url/handler/http.h>
@@ -64,6 +65,7 @@
 	}
 
 	Application::~Application() {
+		Module::unload();
 		instance = nullptr;
 	}
 
@@ -72,6 +74,11 @@
 			throw std::runtime_error{"Application not created"};
 		}
 		return *instance;
+	}
+
+	void Application::select(std::shared_ptr<Action> action) {
+		Logger::String("Action '",action->name(),"' was selected").trace();
+
 	}
 
 	void Application::load_options() {

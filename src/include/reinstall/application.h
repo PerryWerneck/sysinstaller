@@ -26,6 +26,7 @@
  #include <udjat/tools/factory.h>
  #include <reinstall/group.h>
  #include <reinstall/dialog.h>
+ #include <reinstall/action.h>
  #include <memory>
  #include <unordered_map>
  #include <string>
@@ -50,6 +51,8 @@
 		/// @param e The exception that was thrown.
 		virtual void failed(const std::exception &e) noexcept = 0;
 
+		std::shared_ptr<Action> selected;
+
 	public:
 
 		Application();
@@ -70,6 +73,9 @@
 	
 		/// @brief Push-bach an action based on the XML node.
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child);
+
+		/// @brief Set the selected action.
+		virtual void select(std::shared_ptr<Action> action);
 
 		/// @brief Load options from XML files.
 		void load_options();

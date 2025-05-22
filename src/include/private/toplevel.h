@@ -33,6 +33,8 @@
  class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application {
  private:
 
+	class Item;
+
 	class SideBar : public Gtk::Box {
 	private:
 		Gtk::Image logo;
@@ -75,6 +77,8 @@
 	~TopLevel() override;
 
 	std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) override;
+
+	void select(std::shared_ptr<Reinstall::Action> action) override;
 
 };
 

@@ -42,6 +42,93 @@
  using namespace std;
  using namespace Udjat;
 
+ class TopLevel::Item : public Gtk::ToggleButton {
+ private:
+
+	class Label : public Gtk::Label {
+	public:
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
+		Label(const Udjat::XML::Node &node, const char *style, const char *attrname) 
+		: Gtk::Label{XML::AttributeFactory(node,attrname).as_string(), Gtk::Align::START} {
+			get_style_context()->add_class(style);
+		}
+	
+	} label, body;
+
+	Gtk::Grid grid;
+	Gtk::LinkButton help_button;
+
+ public:
+	Item(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) 
+		: label{node,"action-title","title"}, body{node,"action-subtitle","sub-title"} {
+
+		set_hexpand(true);
+		set_vexpand(false);
+		set_valign(Gtk::Align::START);
+		set_halign(Gtk::Align::FILL);
+
+		get_style_context()->add_class("action-button");
+		grid.get_style_context()->add_class("action-container");
+
+		const char *icon_name = XML::AttributeFactory(node,"icon-name").as_string();			
+		int margin = 0;
+		if(icon_name && *icon_name) {
+
+			debug("Using icon '",icon_name,"'");
+			margin = 1;
+	
+			Gtk::Image image;
+			image.set_icon_size(Gtk::IconSize::LARGE);
+			image.get_style_context()->add_class("action-icon");
+			image.set_from_icon_name(icon_name);
+	
+			grid.attach(image,0,0,1,2);
+		}
+	
+		grid.attach(label,margin,0);
+		grid.attach(body,margin,1);
+	
+		set_child(grid);
+	
+		get_style_context()->add_class("action-inactive");
+		
+		set_sensitive(false);
+
+		// Check availability
+		ThreadPool::getInstance().push([this,action](){
+
+			try {
+	
+				if(action && !action->initialize()) {
+					Logger::String{"Action initialization has returned 'false', keeping it disabled"}.error(action->name());
+					return;
+				}
+	
+			} catch(const std::exception &e) {
+	
+				Logger::String{e.what()}.error(action->name());
+				return;
+	
+			} catch(...) {
+	
+				Logger::String{"Unexpected error while initializing action"}.error(action->name());
+				return;
+	
+			}
+	
+			Logger::String{"Initialization complete, enabling item"}.info(action->name());
+			Glib::signal_idle().connect([this](){
+				set_sensitive(true);
+				return 0;
+			});
+	
+		});
+	
+	
+	}
+	
+ };
+
  TopLevel::TopLevel() : Gtk::ApplicationWindow() {
  
 #ifdef DEBUG 
@@ -94,6 +181,7 @@
 
 	// Options
 	{
+		optionbox.set_margin_end(6);
 		optionbox.set_hexpand(true);
 		optionbox.set_vexpand(true);
 		viewport.set_child(optionbox);
@@ -214,123 +302,6 @@
   }
   
   std::shared_ptr<Reinstall::Group> TopLevel::group_factory(const Udjat::XML::Node &node) {
-
-	class Item : public Gtk::ToggleButton {
-	private:
-
-		std::shared_ptr<Reinstall::Action> action;
-		
-		class Label : public Gtk::Label {
-		public:
-			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
-			Label(const Udjat::XML::Node &node, const char *style, const char *attrname) 
-			: Gtk::Label{XML::AttributeFactory(node,attrname).as_string(), Gtk::Align::START} {
-				get_style_context()->add_class(style);
-			}
-		
-		} label, body;
-	
-		Gtk::Grid grid;
-		Gtk::LinkButton help_button;
-
-	public:
-		Item(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> a) 
-			: action{a}, label{node,"action-title","title"}, body{node,"action-subtitle","sub-title"} {
-
-			set_hexpand(true);
-			set_vexpand(false);
-			set_valign(Gtk::Align::START);
-			set_halign(Gtk::Align::FILL);
-	
-			get_style_context()->add_class("action-button");
-			grid.get_style_context()->add_class("action-container");
-
-			const char *icon_name = XML::AttributeFactory(node,"icon-name").as_string();			
-			int margin = 0;
-			if(icon_name && *icon_name) {
-
-				debug("Using icon '",icon_name,"'");
-				margin = 1;
-		
-				Gtk::Image image;
-				image.set_icon_size(Gtk::IconSize::LARGE);
-				image.get_style_context()->add_class("action-icon");
-				image.set_from_icon_name(icon_name);
-		
-				grid.attach(image,0,0,1,2);
-			}
-		
-			grid.attach(label,margin,0);
-			grid.attach(body,margin,1);
-		
-			set_child(grid);
-		
-			get_style_context()->add_class("action-inactive");
-		
-			signal_toggled().connect([this]() {
-		
-				if(get_active()) {
-		
-					//if(window.selected && window.selected != this) {
-					//	window.selected->set_active(false);
-					//}
-		
-					//window.selected = this;
-					//window.button.apply.set_sensitive(true);
-		
-					get_style_context()->remove_class("action-inactive");
-					get_style_context()->add_class("action-active");
-		
-				} else {
-		
-					//if(window.selected == this) {
-					//	window.selected = nullptr;
-					//	window.button.apply.set_sensitive(false);
-					//}
-		
-					get_style_context()->remove_class("action-active");
-					get_style_context()->add_class("action-inactive");
-				}
-		
-			});
-		
-			set_visible();
-			set_sensitive(false);
-
-			// Check availability
-			ThreadPool::getInstance().push([this,a](){
-
-				try {
-		
-					if(action && !action->initialize()) {
-						Logger::String{"Action initialization has returned 'false', keeping it disabled"}.error(action->name());
-						return;
-					}
-		
-				} catch(const std::exception &e) {
-		
-					Logger::String{e.what()}.error(action->name());
-					return;
-		
-				} catch(...) {
-		
-					Logger::String{"Unexpected error while initializing action"}.error(action->name());
-					return;
-		
-				}
-		
-				Logger::String{"Initialization complete, enabling item"}.info(action->name());
-				Glib::signal_idle().connect([this](){
-					set_sensitive(true);
-					return 0;
-				});
-		
-			});
-		
-		
-		}
-		
-	};
 	
 	class Group : public Gtk::Grid, public Reinstall::Group {
 	private:
@@ -397,12 +368,33 @@
 		}
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
+
 			auto item = make_shared<Item>(node, action);
 			items.push_back(item);
 
-			Glib::signal_idle().connect([this,item](){
+			Glib::signal_idle().connect([this,item,action](){
+
+				// Process activation.
+				item->signal_toggled().connect([item,action]() {
+
+					auto context = item->get_style_context();
+
+					if(item->get_active()) {
+						context->remove_class("action-inactive");
+						context->add_class("action-active");
+						Application::getInstance().select(action);
+					} else {
+						context->remove_class("action-active");
+						context->add_class("action-inactive");
+					}
+
+				});
+
+				// Show item.
 				contents.append(*item);
 				item->set_visible(true);
+				this->set_visible(true);
+
 				return 0;
 			});
 		}
@@ -412,13 +404,20 @@
 	auto group = make_shared<Group>(node);
 
 	Glib::signal_idle().connect([this,group](){
-		group->set_visible(true);
+		group->set_visible(false);
 		optionbox.append(*group);
 		return 0;
 	});
 
 	return group;
   }
+
+  void TopLevel::select(std::shared_ptr<Reinstall::Action> action) {
+
+	apply.set_sensitive(action.get() != nullptr);
+	Application::select(action);
+
+  } 
 
   std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const Udjat::XML::Node &node) {
 	throw runtime_error{"DialogFactory not implemented"};
