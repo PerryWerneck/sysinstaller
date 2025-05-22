@@ -18,9 +18,173 @@
  */
 
  /**
-  * @brief Implements gtk4 popup.
+  * @brief Implements gtk4 dialogs.
   */
 
+ #include <config.h>
+ #include <udjat/defs.h>
+ #include <gtkmm.h>
+ #include <udjat/tools/intl.h>
+ #include <udjat/tools/logger.h>
+ #include <reinstall/dialog.h>
+ #include <private/toplevel.h>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/configuration.h>
+ #include <memory>
+
+ using namespace Udjat;
+ using namespace std;
+ using namespace Gtk;
+
+ std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const char *name, const Udjat::XML::Node &node) {
+
+	class Popup : public MessageDialog {
+	public:
+
+		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Dialog.html
+
+		Popup(const Reinstall::Dialog &defs) : MessageDialog{""} {
+			gtk_window_set_transient_for(
+				GTK_WINDOW(gobj()),
+				gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+			);
+			set_modal(true);
+		}
+
+		~Popup() {
+		}
+
+	};
+
+	class Dialog : public Reinstall::Dialog {
+	private:
+
+		enum Responses {
+			DIALOG_RESPONSE_NONE,
+			DIALOG_RESPONSE_YES,
+			DIALOG_RESPONSE_NO,
+			DIALOG_RESPONSE_QUIT,
+			DIALOG_RESPONSE_REBOOT,
+			DIALOG_RESPONSE_CANCEL,
+			DIALOG_RESPONSE_CONTINUE,
+		};
+
+	public:
+		Dialog(const Udjat::XML::Node &node, const Option option) : Reinstall::Dialog{node,option} {
+		}
+
+		virtual ~Dialog() {
+
+		}
+
+		void setup(MessageDialog &window) const {
+
+			if(title && *title) {
+				window.set_message(title);
+			}
+
+			if(options & AllowQuitApplication) {
+				window.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
+			}
+
+			if(options & AllowReboot) {
+				window.add_button(_("_Reboot"),DIALOG_RESPONSE_REBOOT);
+			}
+			
+			if(options & AllowCancel) {
+				window.add_button(_("C_ancel"),DIALOG_RESPONSE_CANCEL);
+			}
+
+			if(options & AllowContinue) {
+				window.add_button(_("_Continue"),DIALOG_RESPONSE_CANCEL);
+			}
+			
+		}
+
+		/// @brief Ask for confirmation.
+		bool ask() const noexcept override {
+
+			auto mainloop = Glib::MainLoop::create();
+
+			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html
+			MessageDialog dialog{
+				(message && *message) ? message : _("Do you want to continue?"),
+				true,
+				MessageType::QUESTION,
+				ButtonsType::YES_NO,
+				true
+			};
+
+			if(title && *title) {
+				dialog.set_title(title);
+			}
+
+			gtk_window_set_transient_for(
+				GTK_WINDOW(dialog.gobj()),
+				gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+			);
+
+			if(details && *details) {
+				dialog.set_secondary_text(details);
+			}
+
+			if(destructive) {
+				// https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html
+				auto button = dialog.get_widget_for_response(ResponseType::YES);
+				button->get_style_context()->add_class("destructive-action");
+			}
+
+			dialog.set_default_response(ResponseType::YES);
+
+			bool rc = false;
+			dialog.signal_response().connect([mainloop,&rc](int response){
+				rc = (response == DIALOG_RESPONSE_YES);
+				mainloop->quit();
+			});
+
+			dialog.present();
+			mainloop->run();
+
+			return rc;
+		};
+		
+		/// @brief Show the dialog without any message.
+		void present() const noexcept {
+
+		}
+
+		/// @brief Show the dialog with an error message.
+		/// @param e The exception to show.
+		virtual void present(const std::exception &e) const noexcept {
+
+		}
+
+	};
+
+	/*
+	static const struct {
+		Dialog::Option value;
+		const char * attrname;
+	} opts[] {
+		{ Dialog::AllowQuitApplication,	"quit-button" 	},
+		{ Dialog::AllowReboot,			"reboot-button"	},
+	};
+
+	Dialog::Option option = Dialog::None;
+	String cfg{"dialog-",name};
+
+	for(const auto &opt : opts) {
+		if(Config::Value<bool>(cfg.c_str(),opt.attrname,false)) {
+			option = (Dialog::Option) (option|opt.value);
+		}
+	}
+	*/
+
+	return make_shared<Dialog>(node,Dialog::None);
+} 
+
+
+/*
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
@@ -200,3 +364,4 @@
 
  }
 
+*/

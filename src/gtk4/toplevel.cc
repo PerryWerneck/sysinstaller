@@ -442,12 +442,21 @@
 
   } 
 
-  std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const Udjat::XML::Node &node) {
-	throw runtime_error{"DialogFactory not implemented"};
-  } 
-
   void TopLevel::activate() noexcept{
 
-	Reinstall::Application::activate();
+	if(selected->confirmation && !selected->confirmation->ask()) {
+		Logger::String{"Action was cancelled"}.info(selected->name());
+		return;
+	}
+
+	// Todo: Show progress popup.
+
+	ThreadPool::getInstance().push([this](){
+		
+		Reinstall::Application::activate();
+
+		// TODO: Close progress popup.
+		// Glib::signal_idle().connect([this](){
+	});
 
   }

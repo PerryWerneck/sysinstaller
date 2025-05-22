@@ -76,7 +76,7 @@
 	TopLevel();
 	~TopLevel() override;
 
-	std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) override;
+	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node) override;
 
 	void select(std::shared_ptr<Reinstall::Action> action) override;
 

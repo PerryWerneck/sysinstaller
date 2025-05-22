@@ -139,6 +139,7 @@ lib_src = [
 	'src/library/source/load.cc',
 	'src/library/source/tempfile.cc',
 	'src/modules/grub2.cc',
+	'src/gtk4/dialog.cc',
 ]
 
 executable(

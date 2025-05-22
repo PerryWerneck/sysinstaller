@@ -58,18 +58,12 @@
 		Application();
 		virtual ~Application();
 
-		class Dialog {
-		public:
-			Dialog(const Udjat::XML::Node &node);
-			virtual ~Dialog() = default;
-		};
-
 		static Application & getInstance();
 
 		/// @brief Build a new dialog.
 		/// @param node The dialog description.
 		/// @return Pointer to the dialog.
-		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const Udjat::XML::Node &node) = 0;	
+		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node) = 0;	
 	
 		/// @brief Push-bach an action based on the XML node.
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child);

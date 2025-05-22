@@ -22,6 +22,7 @@
   */
 
  #pragma once
+
  #include <udjat/defs.h>
  #include <memory>
  #include <functional>
@@ -54,14 +55,36 @@
 
 		void set(const Option option);
 
+		/// @brief Ask for confirmation.
+		virtual bool ask() const noexcept = 0;
+		
+		/// @brief Show the dialog without any message.
+		virtual void present() const noexcept = 0;
+
+		/// @brief Show the dialog with an error message.
+		/// @param e The exception to show.
+		virtual void present(const std::exception &e) const noexcept = 0;
+
 	protected:
 
+		/// @brief The dialog options.
+		/// @note The options are set by the XML file.
+		Option options = None;
 
 		/// @brief The title for the dialog (not the title bar).
 		/// @note This is the title visible in bold inside the dialog, usually the same as the menu item.
 		const char *title;
 
-		Option options = None;
+		/// @brief The message to show in the dialog.
+		const char *message = nullptr;
+
+		/// @brief The message to show in the dialog.
+		/// @note This is the message shown in the dialog, usually a description of the action.
+		const char *details = nullptr;
+
+		/// @brief Is this popup destructive?
+		/// @note This is used to show a warning icon in the dialog.
+		bool destructive = false;
 
 	};
 	

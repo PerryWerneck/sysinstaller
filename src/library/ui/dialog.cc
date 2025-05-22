@@ -34,24 +34,37 @@
 
 	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node) {
 
+		debug("Searching for dialog '",name,"' in ",node.attribute("name").as_string());
+
 		for(auto parent = node;parent;parent = parent.parent()) {
 			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
 				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
 					continue;
 				}
 
-				return make_shared<Dialog>(child);
+				debug("==============================> Found dialog '",name,"' in ",child.attribute("name").as_string());
+				return Application::getInstance().DialogFactory(name,child);
 			}
 		}
 		Logger::String{"Cant find dialog '",name,"', building an empty one"}.warning(node.attribute("name").as_string());
 		return std::shared_ptr<Dialog>();
 	}
 
-	Dialog::Dialog(const Udjat::XML::Node &node, const Dialog::Option o) : options{o}, title{XML::QuarkFactory(node,"dialog-title")}  {
+	Dialog::Dialog(const Udjat::XML::Node &node, const Dialog::Option o) 
+		: options{o}, 
+			title{XML::QuarkFactory(node,"dialog-title")},
+			message{XML::QuarkFactory(node,"message")},
+			destructive{XML::AttributeFactory(node,"destructive").as_bool(false)}  {
 
-		if(!title || !*title) {
-			title = XML::QuarkFactory(node,"title");
-		}
+		//if(!title || !*title) {
+		//	title = XML::QuarkFactory(node,"title");
+		//}
+
+		details = String{node.child_value()}.strip().as_quark();
+
+		debug("Dialog title set to '",title,"'");
+		debug("Dialog message set to '",message,"'");
+		debug("Dialog details set to '",details,"'");
 
 		//
 		// Load options.

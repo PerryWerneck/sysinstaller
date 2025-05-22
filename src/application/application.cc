@@ -136,14 +136,15 @@
 			return;
 		}
 
-		Logger::String{"Activating action '",selected->name(),"'"}.info();
+		Logger::String{"Activating action"}.info(selected->name());
 
 		try {
 			selected->activate();
+			selected->success->present();
 		} catch(const std::exception &e) {
-			failed(e);
+			selected->failed->present(e);
 		} catch(...) {
-			failed(std::runtime_error{_("Unknown error")});
+			selected->failed->present(std::runtime_error{_("Unknown error")});
 		}
 
 	}

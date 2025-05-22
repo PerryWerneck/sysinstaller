@@ -43,8 +43,6 @@
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();
 
-	protected:
-
 		std::shared_ptr<Dialog> confirmation;
 		std::shared_ptr<Dialog> success;
 		std::shared_ptr<Dialog> failed;
