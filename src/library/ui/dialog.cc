@@ -48,12 +48,13 @@
 				return Application::getInstance().DialogFactory(name,child);
 			}
 		}
-		Logger::String{"Cant find dialog '",name,"', building a default one"}.warning(node.attribute("name").as_string());
+		Logger::String{"Cant find dialog '",name,"', building from default config"}.warning("dialog");
 
 		XML::Node defnode;
 		defnode.attribute("name").set_value(name);
 
 		Config::for_each(String{"dialog-",name}.c_str(),[&defnode](const char *key, const char *value) -> bool{
+			Logger::String{"Setting '",key,"' to '",value,"'"}.trace("dialog");
 			defnode.attribute(key).set_value(value);
 			return false;
 		});
