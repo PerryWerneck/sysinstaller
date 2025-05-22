@@ -134,11 +134,12 @@
 				button->get_style_context()->add_class("destructive-action");
 			}
 
-			dialog.set_default_response(ResponseType::YES);
+			dialog.set_default_response(ResponseType::NO);
 
 			bool rc = false;
 			dialog.signal_response().connect([mainloop,&rc](int response){
-				rc = (response == DIALOG_RESPONSE_YES);
+				Logger::String{"Dialog response: ",response}.trace("gtk");
+				rc = (response == ResponseType::YES);
 				mainloop->quit();
 			});
 

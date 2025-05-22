@@ -25,6 +25,8 @@
  #include <reinstall/dialog.h>
  #include <reinstall/application.h>
  #include <udjat/tools/xml.h>
+ #include <udjat/tools/configuration.h>
+ #include <udjat/tools/logger.h>
  #include <memory>
 
  using namespace Udjat;
@@ -46,8 +48,18 @@
 				return Application::getInstance().DialogFactory(name,child);
 			}
 		}
-		Logger::String{"Cant find dialog '",name,"', building an empty one"}.warning(node.attribute("name").as_string());
-		return std::shared_ptr<Dialog>();
+		Logger::String{"Cant find dialog '",name,"', building a default one"}.warning(node.attribute("name").as_string());
+
+		XML::Node defnode;
+		defnode.attribute("name").set_value(name);
+
+		Config::for_each(String{"dialog-",name}.c_str(),[&defnode](const char *key, const char *value) -> bool{
+			defnode.attribute(key).set_value(value);
+			return false;
+		});
+
+		return Application::getInstance().DialogFactory(name,defnode);
+
 	}
 
 	Dialog::Dialog(const Udjat::XML::Node &node, const Dialog::Option o) 
@@ -55,6 +67,7 @@
 			title{XML::QuarkFactory(node,"dialog-title")},
 			message{XML::QuarkFactory(node,"message")},
 			destructive{XML::AttributeFactory(node,"destructive").as_bool(false)}  {
+
 
 		//if(!title || !*title) {
 		//	title = XML::QuarkFactory(node,"title");
