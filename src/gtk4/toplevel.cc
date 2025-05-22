@@ -370,10 +370,13 @@
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
 
-			auto item = make_shared<Item>(node, action);
-			items.push_back(item);
+			sem_t semaphore;
+			sem_init(&semaphore,0,0);
 
-			Glib::signal_idle().connect([this,item,action](){
+			Glib::signal_idle().connect([this,&node,action,&semaphore](){
+
+				auto item = make_shared<Item>(node, action);
+				items.push_back(item);
 
 				// Process activation.
 				item->signal_toggled().connect([item,action]() {
@@ -396,8 +399,12 @@
 				item->set_visible(true);
 				this->set_visible(true);
 
+				sem_post(&semaphore);
+
 				return 0;
 			});
+
+			sem_wait(&semaphore);
 		}
 
 	};
