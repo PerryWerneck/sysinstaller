@@ -80,6 +80,8 @@
 
 	void select(std::shared_ptr<Reinstall::Action> action) override;
 
+	void activate() noexcept override;
+
 };
 
  

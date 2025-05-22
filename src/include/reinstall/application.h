@@ -80,6 +80,9 @@
 		/// @brief Load options from XML files.
 		void load_options();
 
+		/// @brief Activate the selected action.
+		virtual void activate() noexcept;
+
 		bool parse(const Udjat::XML::Node &node) override;
 
 	};

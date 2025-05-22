@@ -31,6 +31,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/url/handler/http.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/intl.h>
  #include <string>
  #include <reinstall/action.h>
 
@@ -78,7 +79,7 @@
 
 	void Application::select(std::shared_ptr<Action> action) {
 		Logger::String("Action '",action->name(),"' was selected").trace();
-
+		selected = action;
 	}
 
 	void Application::load_options() {
@@ -127,6 +128,26 @@
 
 		return true;
 	}
+
+	void Application::activate() noexcept {
+
+		if(!selected.get()) {
+			Logger::String{"No action selected"}.error();
+			return;
+		}
+
+		Logger::String{"Activating action '",selected->name(),"'"}.info();
+
+		try {
+			selected->activate();
+		} catch(const std::exception &e) {
+			failed(e);
+		} catch(...) {
+			failed(std::runtime_error{_("Unknown error")});
+		}
+
+	}
+
 	
  }
  

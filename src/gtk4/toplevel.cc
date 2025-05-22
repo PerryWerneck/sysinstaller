@@ -209,7 +209,11 @@
 		cancel.signal_clicked().connect([&]() {
 			Gtk::Window::close();
 		});
-	
+
+		apply.signal_clicked().connect([&]() {
+			activate();
+		});
+		
 	}
 
 	// TODO: Show loading popup.
@@ -288,15 +292,19 @@
 
   void TopLevel::failed(const std::exception &e) noexcept {
 
-	Logger::String{e.what()}.error();
+	Logger::String err{e.what()};
+	
+	err.error();
 
-	Glib::signal_idle().connect([this,e](){
+	Glib::signal_idle().connect([this,&err](){
 
 		present();
 
 		// TODO: Show error popup.
+		debug("Showing error popup");
 		
-		this->get_application()->quit();
+		this->close();
+
 		return 0;
 	});
 
@@ -438,3 +446,8 @@
 	throw runtime_error{"DialogFactory not implemented"};
   } 
 
+  void TopLevel::activate() noexcept{
+
+	Reinstall::Application::activate();
+
+  }
