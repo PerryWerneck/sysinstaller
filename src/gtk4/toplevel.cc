@@ -130,7 +130,7 @@
 	
  };
 
- TopLevel::TopLevel() : Gtk::ApplicationWindow() {
+ TopLevel::TopLevel() : Gtk::ApplicationWindow(), apply{"suggested-action",_("C_ontinue")}, cancel{"cancel-action",_("_Cancel")} {
  
 #ifdef DEBUG 
 	get_style_context()->add_class("devel");

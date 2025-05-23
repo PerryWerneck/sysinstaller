@@ -58,8 +58,8 @@
 
 	};
 
-	Button apply{"suggested-action",_("_Apply")};
-	Button cancel{"cancel-action",_("_Cancel")};
+	Button apply;
+	Button cancel;
 
 	Gtk::Box hbox{Gtk::Orientation::HORIZONTAL};
 	Gtk::Box vbox{Gtk::Orientation::VERTICAL};
