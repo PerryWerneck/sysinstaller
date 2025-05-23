@@ -29,6 +29,7 @@
  #include <udjat/tools/intl.h>
  #include <stdexcept>
  #include <reinstall/dialog.h>
+ #include <udjat/tools/intl.h>
 
  using namespace Udjat;
  using namespace std;
@@ -38,9 +39,9 @@
 	Action::Action(const Udjat::XML::Node &node) 
 		: NamedObject{node} {
 		
-		confirmation = Dialog::Factory("confirmation",node);
-		success = Dialog::Factory("success",node);
-		failed = Dialog::Factory("failed",node);
+		confirmation = Dialog::Factory("confirmation",node,_("Do you confirm?"));
+		success = Dialog::Factory("success",node,_("Operation complete"),Dialog::AllowQuitContinue);
+		failed = Dialog::Factory("failed",node,_("Operation failed"),Dialog::AllowQuitContinue);
 
 	}
 

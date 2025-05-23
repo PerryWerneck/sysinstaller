@@ -36,7 +36,7 @@
  using namespace std;
  using namespace Gtk;
 
- std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const char *name, const Udjat::XML::Node &node) {
+ std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const char *name, const Udjat::XML::Node &node, const char *msg, const Reinstall::Dialog::Option buttons) {
 
 	class Popup : public MessageDialog {
 	public:
@@ -70,33 +70,45 @@
 		};
 
 	public:
-		Dialog(const Udjat::XML::Node &node, const Option option) : Reinstall::Dialog{node,option} {
+		Dialog(const Udjat::XML::Node &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
 		}
 
 		virtual ~Dialog() {
+		}
+
+		void setup(MessageDialog &dialog) const {
+
+			if(title && *title) {
+				dialog.set_title(title);
+			}
+
+			gtk_window_set_transient_for(
+				GTK_WINDOW(dialog.gobj()),
+				gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
+			);
+
+			if(details && *details) {
+				dialog.set_secondary_text(details);
+			}
 
 		}
 
-		void setup(MessageDialog &window) const {
-
-			if(title && *title) {
-				window.set_message(title);
-			}
+		void add_buttons(MessageDialog &dialog) const {
 
 			if(options & AllowQuitApplication) {
-				window.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
+				dialog.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
 			}
 
 			if(options & AllowReboot) {
-				window.add_button(_("_Reboot"),DIALOG_RESPONSE_REBOOT);
+				dialog.add_button(_("_Reboot"),DIALOG_RESPONSE_REBOOT);
 			}
 			
 			if(options & AllowCancel) {
-				window.add_button(_("C_ancel"),DIALOG_RESPONSE_CANCEL);
+				dialog.add_button(_("C_ancel"),DIALOG_RESPONSE_CANCEL);
 			}
 
 			if(options & AllowContinue) {
-				window.add_button(_("_Continue"),DIALOG_RESPONSE_CANCEL);
+				dialog.add_button(_("_Continue"),DIALOG_RESPONSE_CONTINUE);
 			}
 			
 		}
@@ -115,18 +127,7 @@
 				true
 			};
 
-			if(title && *title) {
-				dialog.set_title(title);
-			}
-
-			gtk_window_set_transient_for(
-				GTK_WINDOW(dialog.gobj()),
-				gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
-			);
-
-			if(details && *details) {
-				dialog.set_secondary_text(details);
-			}
+			setup(dialog);
 
 			if(destructive) {
 				// https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html
@@ -150,13 +151,61 @@
 		};
 		
 		/// @brief Show the dialog without any message.
-		void present() const noexcept {
+		void present(const char *msg) const noexcept override {
+			
+			auto str = make_shared<string>( (msg && *msg) ? msg : "" );
 
-		}
+			Glib::signal_idle().connect([this,str](){
 
-		/// @brief Show the dialog with an error message.
-		/// @param e The exception to show.
-		virtual void present(const std::exception &e) const noexcept {
+				// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html
+				auto *dialog = new MessageDialog(
+					(message && *message) ? message : _("Do you want to continue?"),
+					true,
+					MessageType::INFO,
+					ButtonsType::NONE,
+					true
+				);
+
+				dialog->signal_response().connect([this,dialog](int response){
+
+					switch(response) {
+					case DIALOG_RESPONSE_QUIT:
+						Logger::String{"The user response was 'quit'"}.info("dialog");
+						action_quit();
+						break;
+
+						case DIALOG_RESPONSE_REBOOT:
+						Logger::String{"The user response was 'reboot'"}.info("dialog");
+						action_reboot();
+						break;
+
+						case DIALOG_RESPONSE_CANCEL:
+						Logger::String{"The user response was 'cancel'"}.info("dialog");
+						action_cancel();
+						break;
+
+						case DIALOG_RESPONSE_CONTINUE:
+						Logger::String{"The user response was 'continue'"}.info("dialog");
+						action_continue();
+						break;
+					}
+
+					delete dialog;
+
+				});
+
+				setup(*dialog);
+
+				if(!str->empty()) {
+					dialog->set_secondary_text(str->c_str());
+				}
+
+				add_buttons(*dialog);
+
+				dialog->present();
+
+				return 0;
+			});
 
 		}
 
@@ -181,7 +230,7 @@
 	}
 	*/
 
-	return make_shared<Dialog>(node,Dialog::None);
+	return make_shared<Dialog>(node,msg,buttons);
 } 
 
 

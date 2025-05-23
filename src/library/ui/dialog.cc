@@ -34,7 +34,7 @@
 
  namespace Reinstall {
 
-	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node) {
+	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node, const char *message, const Option option) {
 
 		debug("Searching for dialog '",name,"' in ",node.attribute("name").as_string());
 
@@ -45,7 +45,7 @@
 				}
 
 				debug("==============================> Found dialog '",name,"' in ",child.attribute("name").as_string());
-				return Application::getInstance().DialogFactory(name,child);
+				return Application::getInstance().DialogFactory(name,child,message,option);
 			}
 		}
 		Logger::String{"Cant find dialog '",name,"', building from default config"}.warning("dialog");
@@ -59,20 +59,15 @@
 			return false;
 		});
 
-		return Application::getInstance().DialogFactory(name,defnode);
+		return Application::getInstance().DialogFactory(name,defnode,message,option);
 
 	}
 
-	Dialog::Dialog(const Udjat::XML::Node &node, const Dialog::Option o) 
+	Dialog::Dialog(const Udjat::XML::Node &node, const char *msg, const Option o) 
 		: options{o}, 
 			title{XML::QuarkFactory(node,"dialog-title")},
-			message{XML::QuarkFactory(node,"message")},
+			message{XML::QuarkFactory(node,"message",msg)},
 			destructive{XML::AttributeFactory(node,"destructive").as_bool(false)}  {
-
-
-		//if(!title || !*title) {
-		//	title = XML::QuarkFactory(node,"title");
-		//}
 
 		details = String{node.child_value()}.strip().as_quark();
 
@@ -105,6 +100,22 @@
 
 	void Dialog::set(const Option value) {
 		options = (Option) (options | value);
+	}
+
+	void Dialog::action_quit() const {
+
+	}
+
+	void Dialog::action_cancel() const {
+
+	}
+
+	void Dialog::action_continue() const {
+
+	}
+
+	void Dialog::action_reboot() const {
+
 	}
 
  }

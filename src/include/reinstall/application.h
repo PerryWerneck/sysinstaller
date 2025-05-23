@@ -63,7 +63,7 @@
 		/// @brief Build a new dialog.
 		/// @param node The dialog description.
 		/// @return Pointer to the dialog.
-		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node) = 0;	
+		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option = Dialog::None) = 0;	
 	
 		/// @brief Push-bach an action based on the XML node.
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child);

@@ -48,10 +48,10 @@
 			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
 		};
 
-		Dialog(const Udjat::XML::Node &node, const Option option = None);
+		Dialog(const Udjat::XML::Node &node, const char *message, const Option option = None);
 		~Dialog() = default;
 
-		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node);
+		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node, const char *message, const Option option = None);
 
 		void set(const Option option);
 
@@ -59,11 +59,13 @@
 		virtual bool ask() const noexcept = 0;
 		
 		/// @brief Show the dialog without any message.
-		virtual void present() const noexcept = 0;
+		virtual void present(const char *msg = nullptr) const noexcept = 0;
 
 		/// @brief Show the dialog with an error message.
 		/// @param e The exception to show.
-		virtual void present(const std::exception &e) const noexcept = 0;
+		inline void present(const std::exception &e) const {
+			present(e.what());
+		}
 
 	protected:
 
@@ -85,6 +87,11 @@
 		/// @brief Is this popup destructive?
 		/// @note This is used to show a warning icon in the dialog.
 		bool destructive = false;
+
+		virtual void action_quit() const;
+		virtual void action_cancel() const;
+		virtual void action_continue() const;
+		virtual void action_reboot() const;
 
 	};
 	

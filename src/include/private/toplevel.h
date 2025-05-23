@@ -28,6 +28,7 @@
  #include <gtkmm.h>
  #include <memory>
  #include <reinstall/application.h>
+ #include <reinstall/dialog.h>
  #include <udjat/tools/xml.h>
 
  class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application {
@@ -76,7 +77,7 @@
 	TopLevel();
 	~TopLevel() override;
 
-	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node) override;
+	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
 
 	void select(std::shared_ptr<Reinstall::Action> action) override;
 
