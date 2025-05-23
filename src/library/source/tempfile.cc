@@ -80,11 +80,11 @@
 			return filename;
 		}
 
+		debug("From: ",url.c_str());
+		debug("To:   ",filename.c_str());
+
 		auto progress = ProgressFactory();
-
 		auto url = url_remote();
-
-		debug("Downloading ",url.c_str());
 		progress->set(url.c_str());
 
 		try {

@@ -268,9 +268,7 @@
 
 		void activate() override {
 
-			auto progress = Udjat::Dialog::Progress::getInstance();
-			progress->set(_("Getting required files"));
-
+			debug("Getting ",sources.size()," files");
 			for(const auto &source : sources) {
 				source->save(*this);
 			}
