@@ -76,6 +76,11 @@
 		virtual ~Dialog() {
 		}
 
+		void action_quit() const override {
+			Logger::String{"Finalizing the application"}.info("dialog");
+			gtk_window_close(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
+		}
+
 		void setup(MessageDialog &dialog) const {
 
 			if(title && *title) {
@@ -96,7 +101,7 @@
 		void add_buttons(MessageDialog &dialog) const {
 
 			debug("Adding buttons to dialog options=",options);
-			
+
 			if(options & AllowQuitApplication) {
 				debug("Adding button 'quit'");
 				dialog.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
