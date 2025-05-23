@@ -95,19 +95,25 @@
 
 		void add_buttons(MessageDialog &dialog) const {
 
+			debug("Adding buttons to dialog options=",options);
+			
 			if(options & AllowQuitApplication) {
+				debug("Adding button 'quit'");
 				dialog.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
 			}
 
 			if(options & AllowReboot) {
+				debug("Adding button 'reboot'");
 				dialog.add_button(_("_Reboot"),DIALOG_RESPONSE_REBOOT);
 			}
 			
 			if(options & AllowCancel) {
+				debug("Adding button 'cancel'");
 				dialog.add_button(_("C_ancel"),DIALOG_RESPONSE_CANCEL);
 			}
 
 			if(options & AllowContinue) {
+				debug("Adding button 'continue'");
 				dialog.add_button(_("_Continue"),DIALOG_RESPONSE_CONTINUE);
 			}
 			
@@ -153,6 +159,8 @@
 		/// @brief Show the dialog without any message.
 		void present(const char *msg) const noexcept override {
 			
+			debug("Presenting dialog with message");
+
 			auto str = make_shared<string>( (msg && *msg) ? msg : "" );
 
 			Glib::signal_idle().connect([this,str](){

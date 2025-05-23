@@ -74,6 +74,7 @@
 		debug("Dialog title set to '",title,"'");
 		debug("Dialog message set to '",message,"'");
 		debug("Dialog details set to '",details,"'");
+		debug("Dialog options set to ",options);
 
 		//
 		// Load options.
@@ -91,11 +92,15 @@
 		for(const auto &option : opts) {
 			if(XML::AttributeFactory(node,option.attrname).as_bool( (options & option.value) != 0)) {
 				options = (Option) (options | option.value);
+				debug("Option ",option.attrname," is set (",options,")");
 			} else {
-				options = (Option) (option.value & ~option.value);
+				options = (Option) (options & ~option.value);
+				debug("Option ",option.attrname," is not set (",options,")");
 			}
 		}
 		
+		debug("Dialog options updated to ",options);
+
 	}
 
 	void Dialog::set(const Option value) {
