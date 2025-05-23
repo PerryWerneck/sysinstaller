@@ -34,6 +34,10 @@
  #include <udjat/tools/intl.h>
  #include <string>
  #include <reinstall/action.h>
+ #include <udjat/tools/string.h>
+
+ #include <mntent.h>
+ #include <limits.h>
 
  #include <reinstall/modules/grub2.h>
 
@@ -57,8 +61,120 @@
 		instance = this;
 		Logger::String{"Creating application"}.info();
 
-		// Load modules.
+		// Setup global expansion.
+		String::push_back([](const char *key, std::string &value, bool, bool) -> bool{
 
+			if(!strncasecmp(key,"boot.",5)) {
+
+				const char *ptr = (key+5);
+				if(!strncasecmp(ptr,"path.",5)) {
+
+					ptr += 5;
+
+					// Get boot dir attributes.
+					Config::Value<string> path{"boot","path","/boot"};
+
+					struct stat st;
+					if(stat(path.c_str(),&st)) {
+						throw system_error(errno, system_category(), _("Error getting boot path info"));
+					}
+
+					if( !(st.st_mode & S_IFDIR) ) {
+						throw runtime_error(Logger::Message(_("{} is not a directory"),path.c_str()));
+					}
+
+					FILE *fp;
+					struct mntent *fs;
+					fp = setmntent("/etc/mtab", "r");
+					if (fp == NULL) {
+						throw system_error(errno, system_category(), _("Error opening /etc/mtab"));
+					}
+
+					struct mntent mnt;
+					char buf[PATH_MAX*3];
+					std::string mountpoint;
+
+					while ((fs = getmntent_r(fp,&mnt,buf,sizeof(buf))) != NULL) {
+						debug(fs->mnt_dir);
+						struct stat stm;
+						if(stat(fs->mnt_dir,&stm) == 0 && stm.st_dev == st.st_dev) {
+							mountpoint = fs->mnt_dir;
+							break;
+						}
+
+					}
+					endmntent(fp);
+
+					if(mountpoint.empty()) {
+						throw runtime_error(Logger::Message{_("Cant find mountpoint for '{}'"),path.c_str()});
+					}
+
+					Logger::String{"Got mountpoint '",mountpoint.c_str(),"' for path '",path.c_str(),"'"}.write(Logger::Debug);
+
+					if(!strcasecmp(ptr,"mount")) {
+						value = mountpoint;
+						return true;
+					}
+
+					if(!strcasecmp(ptr,"relative")) {
+
+						debug(path.c_str());
+						if(realpath(path.c_str(),buf) == NULL) {
+							throw system_error(errno, system_category(), _("Error readlink boot link"));
+						}
+
+						debug(buf);
+
+						if(strncmp(mountpoint.c_str(),buf,mountpoint.size())) {
+							throw runtime_error(Logger::Message{"Path '{}' is not inside mount point '{}'",buf,mountpoint.c_str()});
+						}
+
+#ifdef DEBUG
+						value = "/tmp/";
+						value += (buf+mountpoint.size());
+#else
+						value = (buf+mountpoint.size());
+#endif // DEBUG
+						return true;
+
+					}
+
+				}
+
+				throw runtime_error(Logger::Message{_("Required attribute '{}' not found"),key});
+				return false;
+			}
+
+			if(!strcasecmp(key,"install-version")) {
+				value = PACKAGE_VERSION;
+				return true;
+			}
+
+			if(!(strcasecmp(key,"boot-label"))) {
+				value = Config::Value<string>{"defaults","boot-label",_("Reinstall workstation")};
+				return true;
+			}
+
+			if(!(strcasecmp(key,"boot-label-vnc"))) {
+				value = Config::Value<string>{"defaults","boot-label-vnc",_("Remote controlled installation")};
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-kloading")) {
+				value = _("Loading kernel...");
+				return true;
+			}
+
+			if(!strcasecmp(key,"install-iloading")) {
+				value = _("Loading installer...");
+				return true;
+			}
+
+			return false;
+			
+		});
+
+		// Load modules.
 		if(Config::Value<bool>{"modules","grub2",true}) {
 			Reinstall::Grub2::Module::Factory("grub");
 		}
