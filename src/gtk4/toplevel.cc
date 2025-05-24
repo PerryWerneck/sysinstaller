@@ -133,6 +133,9 @@
 
  TopLevel::TopLevel() : Gtk::ApplicationWindow(), apply{"suggested-action",_("C_ontinue")}, cancel{"cancel-action",_("_Cancel")} {
  
+	// Get rid of the gtk warnings.
+	freopen("/dev/null","w",stderr);
+
 #ifdef DEBUG 
 	get_style_context()->add_class("devel");
 #endif
@@ -484,6 +487,7 @@
 			bar.set_vexpand(false);
 			bar.set_valign(Gtk::Align::START);
 			bar.set_halign(Gtk::Align::FILL);
+			bar.set_show_text(true);
 			bar.set_ellipsize(Pango::EllipsizeMode::START);
 
 			// Add widgets to grid
@@ -492,6 +496,7 @@
 			attach(right,1,1,1,1);
 
 #ifdef DEBUG
+			bar.set_text("Progress bar");
 			left.set_text("left");
 			right.set_text("right");
 #endif // DEBUG
@@ -612,9 +617,12 @@
 
 			get_style_context()->add_class("dialog-progress");
 
-			::Gtk::Grid view;
+			subtitle.set_valign(Gtk::Align::START);
+
+			Gtk::Grid view;
+			view.set_valign(Gtk::Align::CENTER);
 			view.set_hexpand(true);
-			view.set_vexpand(true);
+			view.set_vexpand(false);
 			view.set_column_spacing(3);
 			view.set_row_spacing(3);
 			view.set_row_homogeneous(false);
@@ -635,12 +643,15 @@
 			view.attach(*progress,0,2,2,1);
 
 #ifdef DEBUG
+			progress->url("The url");
 			main.set_text("The message");
 			subtitle.set_text("The body");
 #endif // DEBUG
 
 			set_child(view);
 			view.show();
+
+			set_default_size(700, -1);
 
 		}
 		

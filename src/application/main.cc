@@ -41,12 +41,6 @@
 
  int main(int argc, char* argv[]) {
 
-#ifdef DEBUG 
-	Config::allow_user_homedir(true);
-	Logger::verbosity(9);
-	Logger::console(true);
-#endif // DEBUG
-
 	// Check for help options.
 	static const Udjat::Application::Option options[] = {
 		{ 't', "text", _( "Run in text mode" ) },
@@ -69,8 +63,8 @@
 	Logger::verbosity(9);
 	Logger::console(true);
 #endif
-  
-	debug("argc=",argc);
+
+	Logger::redirect();
 
 	// Load kernel parameters.
 	{
