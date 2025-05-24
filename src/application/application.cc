@@ -35,6 +35,7 @@
  #include <string>
  #include <reinstall/action.h>
  #include <udjat/tools/string.h>
+ #include <udjat/ui/status.h>
 
  #include <mntent.h>
  #include <limits.h>
@@ -253,6 +254,11 @@
 		}
 
 		Logger::String{"Activating action"}.info(selected->name());
+
+		auto &status = Udjat::Dialog::Status::getInstance();
+
+		status.title(selected->title());
+		status.sub_title(_("Initializing..."));
 
 		try {
 			selected->activate();

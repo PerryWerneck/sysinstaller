@@ -30,7 +30,7 @@
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
  #include <reinstall/application.h>
  #include <reinstall/action.h>
  #include <reinstall/dialog.h>
@@ -268,14 +268,14 @@
 
 		void activate() override {
 
-			auto progress = Udjat::Dialog::Progress::getInstance();
-			progress->set(_("Getting required files"));
+			auto &status = Udjat::Dialog::Status::getInstance();
+			status.sub_title(_("Getting required files"));
 			for(const auto &source : sources) {
 				source->save(*this);
 			}
 
 			/*
-			progress->set(_("Applying templates"));
+			status.sub_title(_("Applying templates"));
 			for(const auto &tmplt : templates) {
 				tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
 					progress->set(current,total);
@@ -283,7 +283,7 @@
 				});
 			}
 
-			progress->set(_("Configuring boot loader"));
+			status.sub_title(_("Configuring boot loader"));
 			progress->url(_("First stage"));
 			for(auto &script : scripts) {
 				script->run(*this,Script::Pre);

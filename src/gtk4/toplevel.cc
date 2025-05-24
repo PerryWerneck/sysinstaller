@@ -27,6 +27,7 @@
  #include <private/toplevel.h>
  #include <semaphore.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
 
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
@@ -584,7 +585,7 @@
 
 
 	/// @brief The GTK4 status dialog.
-	class Status : public Gtk::Dialog, private Udjat::Dialog::Progress::Factory {
+	class Status : public Gtk::Dialog, private Udjat::Dialog::Progress::Factory, private Udjat::Dialog::Status {
 	private:
 		Label main{"dialog-title",""}, subtitle{"dialog-subtitle",""};
 		Gtk::Image icon;
@@ -661,6 +662,22 @@
 
 		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const {
 			return progress;
+		}
+
+		Udjat::Dialog::Status & title(const char *text) override {
+			string str{text};
+			Glib::signal_idle().connect_once([this,str](){
+				main.set_text(str);
+			});
+			return *this;
+		}
+
+		Udjat::Dialog::Status & sub_title(const char *text) override {
+			string str{text};
+			Glib::signal_idle().connect_once([this,str](){
+				subtitle.set_text(str);
+			});
+			return *this;
 		}
 
 	};

@@ -28,14 +28,23 @@
  #include <udjat/tools/object.h>
  #include <reinstall/dialog.h>
  #include <memory>
+ #include <string>
  
  namespace Reinstall {
 
 	class UDJAT_API Action : public Udjat::NamedObject {
+	private:
+		const char * dialog_title;
+
 	public:
 
 		Action(const Udjat::XML::Node &node);
 		virtual ~Action();
+
+		/// @brief Get the action title.
+		inline const char *title() const noexcept {
+			return dialog_title;
+		}
 
 		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
 		virtual void activate();
