@@ -666,15 +666,18 @@
 	};
 
 	// Activate the action.
-	auto status = make_shared<Status>();
+	auto status = new Status();
 	status->present();
 
 	ThreadPool::getInstance().push([this,status](){
 		
 		Reinstall::Application::activate();
 
-		// TODO: Close progress popup.
-		// Glib::signal_idle().connect([this](){
+		// Close progress popup.
+		Glib::signal_idle().connect_once([status](){
+			delete status;
+		});
+
 	});
 
   };
