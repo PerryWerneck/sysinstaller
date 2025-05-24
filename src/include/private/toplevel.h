@@ -48,7 +48,7 @@
  	class Label : public Gtk::Label {
 	public:
 	  // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
-	  Label(const char *style, const char *text);
+	  Label(const char *style, const char *text, Gtk::Align align = Gtk::Align::START);
 	
 	};
 	

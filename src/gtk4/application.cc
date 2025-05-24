@@ -21,6 +21,8 @@
   * @brief Implements gtk4 application..
   */
 
+ #error deprecated
+ 
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/application.h>

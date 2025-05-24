@@ -21,6 +21,8 @@
   * @brief Implements gtk4 popup.
   */
 
+ #error deprecated
+ 
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
@@ -36,6 +38,8 @@
 
  using namespace std;
  using namespace Udjat;
+
+ #error deprecated
 
  namespace Reinstall {
 
