@@ -194,8 +194,6 @@
 
 		bool getProperty(const char *key, std::string &value) const override {
 
-// 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
-
 			if(!strcasecmp(key,"grub-config")) {
 #ifdef DEBUG
 				value = "/tmp/grub.cfg";
@@ -255,8 +253,8 @@
 
 			if(!strcasecmp(key,"grub-conf-dir")) {
 #ifdef DEBUG
-				debug("Grub config was set to '",value.c_str(),"'");
 				value = "/tmp/";
+				debug("Grub config was set to '",value.c_str(),"'");
 #else
 				value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
 #endif // DEBUG
@@ -274,6 +272,7 @@
 				source->save(*this);
 			}
 
+			Logger::String{"Applying templates"}.info(name());
 			{
 				auto progress = Udjat::Dialog::Progress::getInstance();
 				status.sub_title(_("Applying templates"));
@@ -285,6 +284,7 @@
 				}
 			}
 
+			Logger::String{"Configuring boot loader"}.info(name());
 			status.sub_title(_("Configuring boot loader"));
 			for(auto &script : scripts) {
 				script->run(*this,Script::Pre,_("First stage"));
