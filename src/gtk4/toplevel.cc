@@ -573,13 +573,13 @@
 
 		Udjat::Dialog::Progress & url(const char *url) override {
 			string u{url};
-			Glib::signal_idle().connect([this,u](){
+			Glib::signal_idle().connect_once([this,u](){
+				idle = 1000;
+				changed = false;
 				bar.set_text(u);
-				return 0;
 			});
 			return *this;
 		}
-
 
 	};
 
@@ -588,7 +588,7 @@
 	class Status : public Gtk::Dialog, private Udjat::Dialog::Progress::Factory, private Udjat::Dialog::Status {
 	private:
 		Label main{"dialog-title",""}, subtitle{"dialog-subtitle",""};
-		Gtk::Image icon;
+		Gtk::Image side_icon;
 
 		struct {
 			string label;
@@ -631,16 +631,16 @@
 			view.set_margin(12);
 			view.get_style_context()->add_class("dialog-contents");
 
-			icon.get_style_context()->add_class("dialog-icon");
-			icon.set_hexpand(false);
-			icon.set_vexpand(false);
+			side_icon.get_style_context()->add_class("dialog-icon");
+			side_icon.set_hexpand(false);
+			side_icon.set_vexpand(false);
 			// icon.set_icon_size(::Gtk::IconSize::LARGE);
-			icon.set_pixel_size(45);
-			icon.set_from_icon_name("logo");
+			side_icon.set_pixel_size(45);
+			side_icon.set_from_icon_name("logo");
 
 			view.attach(main,1,0,1,1);
 			view.attach(subtitle,1,1,1,1);
-			view.attach(icon,0,0,1,2);
+			view.attach(side_icon,0,0,1,2);
 			view.attach(*progress,0,2,2,1);
 
 #ifdef DEBUG
@@ -674,12 +674,23 @@
 
 		Udjat::Dialog::Status & sub_title(const char *text) override {
 			string str{text};
+			progress->url("");
 			Glib::signal_idle().connect_once([this,str](){
 				subtitle.set_text(str);
 			});
 			return *this;
 		}
 
+		Udjat::Dialog::Status & icon(const char *icon_name) override {
+			if(icon_name && *icon_name) {
+				string str{icon_name};
+				Glib::signal_idle().connect_once([this,str](){
+					side_icon.set_from_icon_name(str);
+				});
+			}	
+			return *this;
+		}
+	
 	};
 
 	// Activate the action.

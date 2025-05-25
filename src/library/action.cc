@@ -37,11 +37,17 @@
  namespace Reinstall {
 
 	Action::Action(const Udjat::XML::Node &node) 
-		: NamedObject{node}, dialog_title{XML::QuarkFactory(node,"dialog-title")} {
+		: NamedObject{node}, 
+			dialog_title{XML::QuarkFactory(node,"dialog-title")},
+		 	icon_name{XML::QuarkFactory(node,"icon-name")} {
 		
 		if(!(dialog_title && *dialog_title)) {
 			dialog_title = XML::QuarkFactory(node,"title");
 		}
+
+		if(!(icon_name && *icon_name)) {
+			icon_name = XML::QuarkFactory(node,"icon");
+		}	
 
 		confirmation = Dialog::Factory("confirmation",node,_("Do you confirm?"));
 		success = Dialog::Factory("success",node,_("Operation complete"),Dialog::AllowQuitContinue);

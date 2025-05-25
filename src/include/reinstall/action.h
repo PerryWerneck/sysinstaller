@@ -35,6 +35,7 @@
 	class UDJAT_API Action : public Udjat::NamedObject {
 	private:
 		const char * dialog_title;
+		const char * icon_name;
 
 	public:
 
@@ -44,6 +45,10 @@
 		/// @brief Get the action title.
 		inline const char *title() const noexcept {
 			return dialog_title;
+		}
+
+		inline const char *icon() const noexcept {
+			return icon_name;
 		}
 
 		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.

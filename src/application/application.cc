@@ -259,6 +259,7 @@
 
 		status.title(selected->title());
 		status.sub_title(_("Initializing..."));
+		status.icon(selected->icon());
 
 		try {
 			selected->activate();
