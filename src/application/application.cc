@@ -194,9 +194,9 @@
 		return *instance;
 	}
 
-	void Application::select(std::shared_ptr<Action> action) {
-		Logger::String("Action '",action->name(),"' was selected").trace();
-		selected = action;
+	void Application::select(std::shared_ptr<Action> a) {
+		Logger::String("Action '",a->name(),"' was selected").trace();
+		action = a;
 	}
 
 	void Application::load_options() {
@@ -248,26 +248,26 @@
 
 	void Application::activate() noexcept {
 
-		if(!selected.get()) {
+		if(!action.get()) {
 			Logger::String{"No action selected"}.error();
 			return;
 		}
 
-		Logger::String{"Activating action"}.info(selected->name());
+		Logger::String{"Activating action"}.info(action->name());
 
 		auto &status = Udjat::Dialog::Status::getInstance();
 
-		status.title(selected->title());
+		status.title(action->title());
 		status.sub_title(_("Initializing..."));
-		status.icon(selected->icon());
+		status.icon(action->icon());
 
 		try {
-			selected->activate();
-			selected->success->present();
+			action->activate();
+			action->success->present();
 		} catch(const std::exception &e) {
-			selected->failed->present(e);
+			action->failed->present(e);
 		} catch(...) {
-			selected->failed->present(std::runtime_error{_("Unknown error")});
+			action->failed->present(std::runtime_error{_("Unknown error")});
 		}
 
 	}

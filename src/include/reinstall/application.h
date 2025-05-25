@@ -51,7 +51,8 @@
 		/// @param e The exception that was thrown.
 		virtual void failed(const std::exception &e) noexcept = 0;
 
-		std::shared_ptr<Action> selected;
+		/// @brief The selected action.
+		std::shared_ptr<Action> action;
 
 	public:
 

@@ -125,7 +125,7 @@
 		}
 
 		/// @brief Ask for confirmation.
-		bool ask() const noexcept override {
+		bool ask(bool default_response) const noexcept override {
 
 			auto mainloop = Glib::MainLoop::create();
 
@@ -146,7 +146,7 @@
 				button->get_style_context()->add_class("destructive-action");
 			}
 
-			dialog.set_default_response(ResponseType::NO);
+			dialog.set_default_response(default_response ? ResponseType::YES : ResponseType::NO);
 
 			bool rc = false;
 			dialog.signal_response().connect([mainloop,&rc](int response){

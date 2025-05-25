@@ -309,7 +309,7 @@
 		// TODO: Show error popup.
 		debug("Showing error popup");
 		
-		this->close();
+		this->Gtk::ApplicationWindow::close();
 
 		return 0;
 	});
@@ -450,8 +450,8 @@
 
   void TopLevel::activate() noexcept{
 
-	if(selected->confirmation && !selected->confirmation->ask()) {
-		Logger::String{"Action was cancelled"}.info(selected->name());
+	if(action->confirmation && !action->confirmation->ask()) {
+		Logger::String{"Action was cancelled"}.info(action->name());
 		return;
 	}
 
