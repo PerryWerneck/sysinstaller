@@ -41,6 +41,7 @@
  #include <limits.h>
 
  #include <reinstall/modules/grub2.h>
+ #include <reinstall/modules/isowriter.h>
 
  using namespace Udjat;
  using namespace std;
@@ -176,8 +177,15 @@
 		});
 
 		// Load modules.
+
+#ifndef _WIN32
 		if(Config::Value<bool>{"modules","grub2",true}) {
 			Reinstall::Grub2::Module::Factory("grub");
+		}
+#endif
+
+		if(Config::Value<bool>{"modules","isowriter",true}) {
+			Reinstall::IsoWriter::Module::Factory();
 		}
 
 	}

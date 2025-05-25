@@ -41,7 +41,7 @@
 
 			Module();
 			virtual ~Module();
-			bool parse(const Udjat::XML::Node &node);
+			bool parse(const Udjat::XML::Node &node) override;
 	
 		};
 	}

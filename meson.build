@@ -58,8 +58,8 @@ gtkmm = dependency('gtkmm-4.0', required: false)
 
 deps = [
 	dependency('libudjat',version : '>=2.0.0'),
-	dependency('libudjathttp-static',version : '>=2.0.0'),
-	dependency('libudjatdbus-static',version : '>=2.0.0'),
+	dependency('libudjathttp',version : '>=2.0.0'),
+	dependency('libudjatdbus',version : '>=2.0.0'),
 	gtkmm,
 	dependency('libzip'),
 	dependency('libfatfs-static'),

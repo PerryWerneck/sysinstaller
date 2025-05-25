@@ -19,6 +19,13 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+
+ #ifdef LOG_DOMAIN
+	#undef LOG_DOMAIN
+ #endif // LOG_DOMAIN
+ #define LOG_DOMAIN "isowriter"
+ #include <udjat/tools/logger.h>
+
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
  #include <udjat/tools/factory.h>
@@ -30,6 +37,7 @@
  #include <reinstall/tools/writer.h>
  #include <udjat/ui/status.h>
  #include <reinstall/modules/isowriter.h>
+ #include <reinstall/application.h>
 
  using namespace Udjat;
  using namespace std;
@@ -79,7 +87,8 @@
 
 	// Udjat::Factory
 	bool IsoWriter::Module::parse(const Udjat::XML::Node &node) {
-		make_shared<Action>(node);
+		Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info();
+		Reinstall::Application::getInstance().push_back(node,make_shared<IsoWriter::Module::Action>(node));
 		return true;
 	}
 
