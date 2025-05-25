@@ -274,26 +274,24 @@
 				source->save(*this);
 			}
 
-			/*
-			status.sub_title(_("Applying templates"));
-			for(const auto &tmplt : templates) {
-				tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
-					progress->set(current,total);
-					return false;
-				});
+			{
+				auto progress = Udjat::Dialog::Progress::getInstance();
+				status.sub_title(_("Applying templates"));
+				for(const auto &tmplt : templates) {
+					tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
+						progress->set(current,total);
+						return false;
+					});
+				}
 			}
 
 			status.sub_title(_("Configuring boot loader"));
-			progress->url(_("First stage"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Pre);
+				script->run(*this,Script::Pre,_("First stage"));
 			}
-
-			progress->url(_("Second stage"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Post);
+				script->run(*this,Script::Post,_("Second stage"));
 			}
-			*/
 
 		}
 

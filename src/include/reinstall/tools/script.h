@@ -42,7 +42,7 @@
 
 		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts);
 
-		void run(const Udjat::Abstract::Object &object, const RunTime rtime);
+		void run(const Udjat::Abstract::Object &object, const RunTime rtime, const char *msg = "");
 
 	private:
 

@@ -197,7 +197,7 @@
 
 	}
 
-	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime) {
+	void Script::run(const Udjat::Abstract::Object &object, const RunTime rtime, const char *msg) {
 
 		class SubProcess : public Udjat::SubProcess {
 		private:
@@ -231,10 +231,6 @@
 		
 		if(rtime != this->rtime) {
 			return;
-		}
-
-		if(message && *message) {
-			Dialog::Progress::getInstance()->message(message);
 		}
 
 		String text;
@@ -320,6 +316,15 @@
 			}
 
 			chmod(script.c_str(),0755);
+
+			auto progress = Udjat::Dialog::Progress::getInstance();
+			if(message && *message) {
+				progress->url(message);
+			} else if(msg && *msg) {
+				progress->url(msg);
+			} else {
+				progress->url(_("Configuring, please wait..."));
+			}
 
 			SubProcess{uid,gid,object.name(),script}.run();
 
