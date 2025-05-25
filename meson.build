@@ -129,6 +129,7 @@ lib_src = [
 	'src/library/kernelparameter.cc',
 	'src/library/slpclient.cc',
 	'src/library/script.cc',
+	'src/library/writer.cc',
 	'src/library/template.cc',
 	'src/library/ui/dialog.cc',
 	'src/library/repository/factory.cc',
@@ -138,8 +139,10 @@ lib_src = [
 	'src/library/source/file.cc',
 	'src/library/source/load.cc',
 	'src/library/source/tempfile.cc',
-	'src/modules/grub2.cc',
 	'src/gtk4/dialog.cc',
+	'src/gtk4/gtkremovabledevicedialog.cc',
+	'src/modules/grub2.cc',
+	'src/modules/isowriter.cc',
 ]
 
 executable(

@@ -22,9 +22,9 @@
   */
 
  #pragma once
+
  #include <udjat/defs.h>
- #include <udjat/ui/progress.h>
- #include <reinstall/ui/dialog.h>
+ #include <reinstall/dialog.h>
  #include <string>
 
  namespace Reinstall {
@@ -76,7 +76,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open() = 0;
+		virtual void open(const Reinstall::Dialog &settings) = 0;
 
 		/// @brief Get device length.
 		/// @return The device length.
@@ -101,6 +101,7 @@
 
 	};
 
+	/*
 	class UDJAT_API GtkWriter : public Writer {
 	private:
 		Reinstall::Dialog &settings;
@@ -112,6 +113,7 @@
 		void open() override;
 
 	};
+	*/
 
  }
 

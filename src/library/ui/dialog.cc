@@ -107,6 +107,28 @@
 		options = (Option) (options | value);
 	}
 
+	bool Dialog::ask(bool default_response) const noexcept {
+		return default_response;
+	}
+	
+	void Dialog::present(const char *) const noexcept {
+		return;
+	}
+
+	const char * Dialog::text(const char *def) const noexcept {
+		if(message && *message) {
+			return message;
+		}
+		return def;
+	}
+
+	const char * Dialog::body(const char *def) const noexcept {
+		if(details && *details) {
+			return details;
+		}
+		return def;
+	}
+
 	void Dialog::action_quit() const {
 
 	}

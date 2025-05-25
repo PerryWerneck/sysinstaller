@@ -38,6 +38,8 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
 
+ #include <reinstall/dialog.h>
+
  using namespace Udjat;
  using namespace std;
 
@@ -50,8 +52,8 @@
 	add_action_widget(apply,0);
 	apply.set_sensitive(false);
 
-	set_message(dialog.message(_("Insert an storage device")),true);
-	set_secondary_text(dialog.details(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
+	set_message(dialog.text(_("Insert an storage device")),true);
+	set_secondary_text(dialog.body(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
 
 	setup(allow_output_to_file);
 

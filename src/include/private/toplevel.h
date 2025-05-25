@@ -30,8 +30,9 @@
  #include <reinstall/application.h>
  #include <reinstall/dialog.h>
  #include <udjat/tools/xml.h>
+ #include <reinstall/tools/writer.h>
 
- class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application {
+ class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application, private Reinstall::Writer {
  private:
 
 	class Item;
@@ -72,6 +73,10 @@
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
 
 	void failed(const std::exception &e) noexcept override;
+
+	/// @brief Open target device for writing.
+	/// @see Reinstall::Writer::open()
+	void open(const Reinstall::Dialog &settings) override;
 
  public:
 	TopLevel();

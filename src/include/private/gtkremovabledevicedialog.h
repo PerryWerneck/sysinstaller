@@ -25,8 +25,8 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <gtkmm.h>
- #include <reinstall/ui/dialog.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/dialog.h>
 
  #define USE_MESSAGE_DIALOG 1
  #define USE_DROPDOWN 1

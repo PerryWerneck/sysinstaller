@@ -48,6 +48,8 @@
 			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
 		};
 
+		Dialog() = default;
+
 		Dialog(const Udjat::XML::Node &node, const char *message, const Option option = None);
 		~Dialog() = default;
 
@@ -56,16 +58,19 @@
 		void set(const Option option);
 
 		/// @brief Ask for confirmation.
-		virtual bool ask() const noexcept = 0;
+		virtual bool ask(bool default_response = true) const noexcept;
 		
 		/// @brief Show the dialog without any message.
-		virtual void present(const char *msg = nullptr) const noexcept = 0;
+		virtual void present(const char *msg = nullptr) const noexcept;
 
 		/// @brief Show the dialog with an error message.
 		/// @param e The exception to show.
 		inline void present(const std::exception &e) const {
 			present(e.what());
 		}
+
+		const char *text(const char *def = "") const noexcept;
+		const char *body(const char *def = "") const noexcept;
 
 	protected:
 

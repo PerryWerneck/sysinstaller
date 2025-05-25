@@ -28,7 +28,7 @@
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
- #include <reinstall/ui/dialog.h>
+ #include <udjat/ui/status.h>
  #include <reinstall/modules/isowriter.h>
 
  using namespace Udjat;
@@ -43,31 +43,26 @@
 	class UDJAT_PRIVATE IsoWriter::Module::Action : public Reinstall::Action {
 	private:
 		Reinstall::FileSource iso;
-		Reinstall::Dialog output;
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, iso{node}, output{"select-device",node} {
-
-			if(!(args.icon_name && *args.icon_name)) {
-				args.icon_name = "drive-harddisk-usb-symbolic";
-			}
-
+		Action(const Udjat::XML::Node &node)
+			: Reinstall::Action{node}, iso{node} {
 		}
 
 		~Action() {
 		}
 
-		int activate(Reinstall::Dialog::Progress &progress) override {
+		void activate() override {
 
-			progress = _("Getting ISO image");
-			auto path = iso.save(*this,progress);
+			auto &status = Udjat::Dialog::Status::getInstance();
 
-			progress = _("Writing ISO image");
-			Reinstall::Writer::getInstance().write(progress,output,path.c_str());
+			status.sub_title(_("Getting ISO image"));
+			auto path = iso.save(*this);
 
-			return 0;
+			status.sub_title(_("Writing ISO image"));
+			Reinstall::Writer::getInstance().write(path.c_str());
+
 		}
 
 	};
@@ -83,8 +78,9 @@
 	}
 
 	// Udjat::Factory
-	std::shared_ptr<Abstract::Object> IsoWriter::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
-		return make_shared<Action>(parent,node);
+	bool IsoWriter::Module::parse(const Udjat::XML::Node &node) {
+		make_shared<Action>(node);
+		return true;
 	}
 
  }
