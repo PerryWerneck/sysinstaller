@@ -34,16 +34,78 @@
  using namespace Udjat;
  using namespace std;
 
- namespace Reinstall {
+ void TopLevel::open(const Reinstall::Dialog &settings) {
 
-	void TopLevel::open(const Reinstall::Dialog &settings) {
+	if(!Writer::selected.empty()) {
 
-		if(!Writer::selected.empty()) {
+		// Use pre-selected output.
+		try {
 
-			// Use pre-selected output.
+			Writer::open(Writer::selected.c_str());
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error("writer");
+			Writer::close();
+			throw;
+
+		}
+
+		this->device_url = Writer::selected.c_str();
+		Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
+
+		return;
+
+	}
+
+	struct {
+		string devdescr;
+		string devname;
+		int response = -1;
+		sem_t semaphore;
+	} info;
+
+	sem_init(&info.semaphore,0,0);
+
+	while(!*this) {
+
+		Glib::signal_idle().connect([this,&info,&settings](){
+
+			auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
+
+#ifdef USE_MESSAGE_DIALOG
+			dialog->signal_response().connect([dialog,&info](int rsp){
+				info.response = rsp;
+				info.devdescr = dialog->description();
+				info.devname = dialog->device();
+				Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
+				sem_post(&info.semaphore);
+				delete dialog;
+			});
+#else
+			#error Needs implementation
+#endif // USE_MESSAGE_DIALOG
+
+			dialog->present();
+
+			return 0;
+
+		});
+
+		sem_wait(&info.semaphore);
+
+		if(info.response) {
+			Logger::String{"Device selection dialog exits with rc=",info.response," (",strerror(info.response),")"}.warning("writer");
+			Writer::close();
+			throw runtime_error(strerror(info.response));
+		}
+
+		if(!*this) {
+
 			try {
 
-				Writer::open(Writer::selected.c_str());
+				debug("Opening ",info.devname.c_str());
+				Writer::open(info.devname.c_str());
 
 			} catch(const std::exception &e) {
 
@@ -53,77 +115,11 @@
 
 			}
 
-			this->device_url = Writer::selected.c_str();
-			Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
-	
-			return;
-
 		}
 
-		struct {
-			string devdescr;
-			string devname;
-			int response = -1;
-			sem_t semaphore;
-		} info;
-
-		sem_init(&info.semaphore,0,0);
-
-		while(!*this) {
-
-			Glib::signal_idle().connect([this,&info,&settings](){
-
-				auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
-
-#ifdef USE_MESSAGE_DIALOG
-				dialog->signal_response().connect([dialog,&info](int rsp){
-					info.response = rsp;
-					info.devdescr = dialog->description();
-					info.devname = dialog->device();
-					Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
-					sem_post(&info.semaphore);
-					delete dialog;
-				});
-#else
-				#error Needs implementation
-#endif // USE_MESSAGE_DIALOG
-
-				dialog->present();
-
-				return 0;
-
-			});
-
-			sem_wait(&info.semaphore);
-
-			if(info.response) {
-				Logger::String{"Device selection dialog exits with rc=",info.response," (",strerror(info.response),")"}.warning("writer");
-				Writer::close();
-				throw runtime_error(strerror(info.response));
-			}
-
-			if(!*this) {
-
-				try {
-
-					debug("Opening ",info.devname.c_str());
-					Writer::open(info.devname.c_str());
-
-				} catch(const std::exception &e) {
-
-					Logger::String{e.what()}.error("writer");
-					Writer::close();
-					throw;
-
-				}
-
-			}
-
-		}
-
-		this->device_url = info.devdescr.c_str();
-		Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
-	
 	}
+
+	this->device_url = info.devdescr.c_str();
+	Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
 
  }
