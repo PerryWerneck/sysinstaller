@@ -29,7 +29,10 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/version.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/string.h>
  #include <reinstall/tools/kernelparameter.h>
+ #include <reinstall/tools/repository.h>
+ #include <reinstall/tools/writer.h>
 
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
@@ -45,6 +48,7 @@
 	static const Udjat::Application::Option options[] = {
 		{ 't', "text", _( "Run in text mode" ) },
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
+		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
 		{ 'K', "kparm=n=v", _("Set kernel parameter 'n' to 'v' on boot image") },
 		{ 'Q', "quit", _("Quit after processing") },
@@ -66,12 +70,37 @@
 
 	Logger::redirect();
 
-	// Load kernel parameters.
+	// Parse command line options.
 	{
-		string value;
+		std::string value;
+
+		if(Udjat::Application::pop(argc,argv,'i',"install",value)) {
+			Reinstall::Repository::preset("install",value.c_str());	
+		}
+
+		if(Udjat::Application::pop(argc,argv,'O',"output",value)) {
+			Reinstall::Writer::set_output(value.c_str());
+		}
+
+		if(Udjat::Application::pop(argc,argv,'S',"select",value)) {
+			auto args = Udjat::String{value.c_str()}.split("/",2);
+			if(args.size() != 2) {
+				throw std::runtime_error{Logger::Message(_("Unable to select '{}': Invalid path"),value)};
+			}
+		}
+
+		while(Udjat::Application::pop(argc,argv,'R',"repo",value)) {
+			auto args = Udjat::String{value.c_str()}.split("=",2);
+			if(args.size() != 2) {
+				throw std::runtime_error{Logger::Message(_("Invalid repository argument: {}"),value)};
+			}
+			Reinstall::Repository::preset(args[0].c_str(),args[1].c_str());
+		}
+
 		while(Udjat::Application::pop(argc,argv,'k',"kernel-parameter",value)) {
 			Reinstall::KernelParameter::preset(value.c_str());
 		}
+
 	}
 
 

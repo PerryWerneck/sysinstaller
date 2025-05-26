@@ -64,6 +64,7 @@
 		instance = this;
 		Logger::String{"Creating application"}.info();
 
+
 		// Setup global expansion.
 		String::push_back([](const char *key, std::string &value, bool, bool) -> bool{
 
