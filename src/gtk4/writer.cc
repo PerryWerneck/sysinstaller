@@ -72,27 +72,23 @@
 
 		Glib::signal_idle().connect([this,&info,&settings](){
 
-			auto &status = Udjat::Dialog::Status::getInstance();
-
-			status.sub_title(_("Selecting output device"));
-			status.hide();
+			Udjat::Dialog::Status::getInstance().hide();
 
 			auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([dialog,&info,&status](int rsp){
+			dialog->signal_response().connect([dialog,&info](int rsp){
 				info.response = rsp;
 				info.devdescr = dialog->description();
 				info.devname = dialog->device();
 				Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
 				sem_post(&info.semaphore);
+				Udjat::Dialog::Status::getInstance().show();
 				delete dialog;
-				status.show();
 			});
 #else
 			#error Needs implementation
 #endif // USE_MESSAGE_DIALOG
-
 			dialog->present();
 
 			return 0;
