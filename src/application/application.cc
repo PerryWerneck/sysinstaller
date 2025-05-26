@@ -42,6 +42,7 @@
 
  #include <reinstall/modules/grub2.h>
  #include <reinstall/modules/isowriter.h>
+ #include <reinstall/modules/isobuilder.h>
 
  using namespace Udjat;
  using namespace std;
@@ -186,6 +187,10 @@
 
 		if(Config::Value<bool>{"modules","isowriter",true}) {
 			Reinstall::IsoWriter::Module::Factory();
+		}
+
+		if(Config::Value<bool>{"modules","isobuilder",true}) {
+			Reinstall::IsoBuilder::Module::Factory();
 		}
 
 	}

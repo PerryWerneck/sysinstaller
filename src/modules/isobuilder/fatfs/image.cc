@@ -22,6 +22,12 @@
   */
 
  #include <config.h>
+
+ #ifdef LOG_DOMAIN
+	#undef LOG_DOMAIN
+ #endif // LOG_DOMAIN
+ #define LOG_DOMAIN "fatfs"
+
  #include <udjat/tools/xml.h>
  #include <udjat/tools/file/temporary.h>
  #include <udjat/tools/intl.h>
@@ -107,10 +113,10 @@
 
 		virtual ~Disk() {
 			if(mounted) {
-				Logger::Message{"Forcing unmount of FAT image"}.warning("fatfs");
+				Logger::String{"Forcing unmount of FAT image"}.warning();
 				auto rc = f_unmount("0:");
 				if(rc != FR_OK) {
-					Logger::Message{ _("Unexpected error '{}' on f_umount"), rc}.error("fatfs");
+					Logger::Message{ _("Unexpected error '{}' on f_umount"), rc}.error();
 				}
 			}
 		}
@@ -125,10 +131,7 @@
 
 	}
 
-	void Image::append(std::shared_ptr<Reinstall::DataSource> source, size_t current, size_t total) {
-
-		auto progress = Udjat::Dialog::Progress::getInstance();
-		progress->item(current,total);
+	void Image::append(std::shared_ptr<Reinstall::DataSource> source) {
 
 		const char *to = source->path();
 
@@ -163,12 +166,13 @@
 
 		try {
 
+			auto progress = Udjat::Dialog::Progress::getInstance();
 			source->save([&fdst,progress,to](unsigned long long current, unsigned long long total, const void *buffer, size_t len) -> bool {
 
 				unsigned int wrote = 0;
 				const BYTE *ptr = (const BYTE *) buffer;
 
-				progress->set((uint64_t) current + len, (uint64_t) total);
+				progress->set((uint64_t) (current + len), (uint64_t) total);
 
 				while(len > 0) {
 					if(f_write(&fdst, ptr, (unsigned int) len, &wrote) != FR_OK) {
@@ -260,22 +264,18 @@
 	}
 
 	void Image::pre(Udjat::Abstract::Object &) {
-		Logger::String{"Opening disk image"}.info("fat");
+		Logger::String{"Opening disk image"}.info();
 		disk->mount();
 	}
 
 	void Image::post(Udjat::Abstract::Object &) {
-		Logger::String{"Closing disk image"}.info("fat");
+		Logger::String{"Closing disk image"}.info();
 		disk->unmount();
 	}
 
 	void Image::write() {
 
-		auto progress = Udjat::Dialog::Progress::getInstance();
-		progress->title(_( "Preparing to write" ));
-		progress->item();
-
-		Logger::String{"Preparing to write image"}.info("fat");
+		Logger::String{"Preparing to write image"}.info();
 
 		unsigned long long total = disk->length();
 		size_t buflen = disk->block_size();
@@ -283,12 +283,10 @@
 		auto &writer = Reinstall::Writer::getInstance();
 		writer.size(total);
 
-		progress->hide();
-		writer.open();
-		progress->show();
+		writer.open(Reinstall::Dialog{});
 
-		progress->title(_( "Writing image" ));
-		progress->set(writer.url());
+		auto progress = Udjat::Dialog::Progress::getInstance();
+		progress->url(writer.url());
 
 		char buffer[buflen];
 

@@ -150,6 +150,11 @@ lib_src = [
 	'src/gtk4/gtkremovabledevicedialog.cc',
 	'src/modules/grub2.cc',
 	'src/modules/isowriter.cc',
+	'src/modules/isobuilder/module.cc',
+	'src/modules/isobuilder/iso9660/image.cc',
+	'src/modules/isobuilder/iso9660/settings.cc',
+	'src/modules/isobuilder/fatfs/image.cc',
+	'src/modules/isobuilder/fatfs/settings.cc',
 ]
 
 executable(
