@@ -25,7 +25,6 @@
  #include <udjat/defs.h>
  #include <reinstall/image.h>
  #include <udjat/tools/xml.h>
- #include <reinstall/ui/progress.h>
 
  typedef struct Iso_Image IsoImage;
  typedef struct iso_write_opts IsoWriteOpts;

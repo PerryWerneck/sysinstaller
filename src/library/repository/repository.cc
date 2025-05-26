@@ -168,8 +168,7 @@
 		}
 
 		auto progress = Dialog::Progress::getInstance();
-		progress->set(_("Loading repository index"));
-		progress->item();
+		progress->url(_("Loading repository index"));
 		
 #ifdef HAVE_ZLIB
 		{

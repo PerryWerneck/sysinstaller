@@ -85,6 +85,10 @@
 		/// @param path The destination file.
 		virtual void save(const char *path);
 
+		/// @brief Save source to temporary file.
+		/// @return Path to local file.
+		std::string save();
+
 		/// @brief Save source, expand URL properties.
 		/// @return Path to local file.
 		virtual std::string save(const Udjat::Abstract::Object &object);

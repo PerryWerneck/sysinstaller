@@ -552,7 +552,7 @@
 			timer->destroy();
 		}
 
-		Udjat::Dialog::Progress & item(const short current = 0, const short total = 0) override {
+		Udjat::Dialog::Progress & step(const unsigned int current = 0, const unsigned int total = 0) noexcept override {
 			Glib::signal_idle().connect([this,current,total](){
 				if(total) {
 					left.set_text(Logger::Message{_("{} of {}"), current, total}.c_str());
@@ -564,14 +564,14 @@
 			return *this;
 		}
 
-		Udjat::Dialog::Progress & set(uint64_t current, uint64_t total, bool) override {
+		Udjat::Dialog::Progress & set(uint64_t current, uint64_t total, bool) noexcept override {
 			this->current = current;
 			this->total = total;
 			changed = true;
 			return *this;
 		}
 
-		Udjat::Dialog::Progress & url(const char *url) override {
+		Udjat::Dialog::Progress & url(const char *url) noexcept override {
 			string u{url};
 			Glib::signal_idle().connect_once([this,u](){
 				idle = 1000;
@@ -664,7 +664,7 @@
 			return progress;
 		}
 
-		Udjat::Dialog::Status & title(const char *text) override {
+		Udjat::Dialog::Status & title(const char *text) noexcept override {
 			string str{text};
 			Glib::signal_idle().connect_once([this,str](){
 				main.set_text(str);
@@ -672,7 +672,7 @@
 			return *this;
 		}
 
-		Udjat::Dialog::Status & sub_title(const char *text) override {
+		Udjat::Dialog::Status & sub_title(const char *text) noexcept override {
 			string str{text};
 			progress->url("");
 			Glib::signal_idle().connect_once([this,str](){
@@ -681,7 +681,7 @@
 			return *this;
 		}
 
-		Udjat::Dialog::Status & icon(const char *icon_name) override {
+		Udjat::Dialog::Status & icon(const char *icon_name) noexcept override {
 			if(icon_name && *icon_name) {
 				string str{icon_name};
 				Glib::signal_idle().connect_once([this,str](){

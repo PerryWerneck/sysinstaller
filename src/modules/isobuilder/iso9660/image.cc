@@ -35,6 +35,9 @@
  #include <reinstall/tools/builder.h>
  #include <reinstall/tools/writer.h>
 
+ #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
+
  #define LIBISOFS_WITHOUT_LIBBURN
  #include <libisofs/libisofs.h>
 
@@ -396,12 +399,10 @@
 
 	void Image::write() {
 
-		auto progress = Udjat::Dialog::Progress::getInstance();
-		progress->item();
-
 		debug("Writing image");
+		auto &status = Udjat::Dialog::Status::getInstance();
 
-		progress->title(_( "Preparing to write" ));
+		status.sub_title(_( "Preparing to write" ));
 
 		int rc = iso_image_update_sizes(image);
 		if (rc < 0) {
@@ -425,12 +426,11 @@
 			auto &writer = Reinstall::Writer::getInstance();
 			writer.size(total);
 
-			progress->hide();
-			writer.open();
-			progress->show();
+			writer.open(Reinstall::Dialog());
 
-			progress->set(writer.url());
-			progress->title(_("Writing image"));
+			auto progress = Udjat::Dialog::Progress::getInstance();
+			progress->url(writer.url());
+			status.sub_title(_("Writing image"));
 
 			#define BUFLEN 2048
 			unsigned char buffer[BUFLEN];
@@ -443,7 +443,7 @@
 			}
 
 			progress->set((uint64_t) total,(uint64_t) total);
-			progress->title(_( "Finalizing" ));
+			progress->url(_( "Finalizing" ));
 			writer.close();
 
 		} catch(...) {

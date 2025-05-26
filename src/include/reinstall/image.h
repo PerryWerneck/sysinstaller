@@ -28,7 +28,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/ui/progress.h>
- #include <reinstall/ui/dialog.h>
+ #include <reinstall/dialog.h>
  #include <list>
 
  namespace Reinstall {
@@ -64,11 +64,11 @@
 			void append(std::list<std::shared_ptr<DataSource>> &sources);
 
 			/// @brief Append data source to image, download file if needed.
-			virtual void append(std::shared_ptr<DataSource> source, size_t item = 0, size_t total = 0);
+			virtual void append(std::shared_ptr<DataSource> source);
 
 			virtual void write(const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			virtual void write();
+			virtual void write() = 0;
 
 		};
 
