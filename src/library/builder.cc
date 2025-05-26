@@ -40,8 +40,7 @@
 
  namespace Reinstall {
 
-	Builder::Builder(const Udjat::XML::Node &node)
-		: Reinstall::Action{node}, output{Dialog::Factory("select-device",node)} {
+	Builder::Builder(const Udjat::XML::Node &node) : Reinstall::Action{node}, output{Dialog::Factory("select-device",node)} {
 
 		{
 			// Search for EFI Boot definitions

@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <reinstall/ui/progress.h>
+ #include <reinstall/dialog.h>
 
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>
@@ -59,10 +59,13 @@
 
 		void write() override;
 
-	protected:
-
-		// Abstract::Image
 		void append(std::shared_ptr<Reinstall::DataSource> source) override;
+
+		inline void append(std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+			Reinstall::Abstract::Image::append(sources);
+		}
+
+	protected:
 		void append(const char *from, const char *to) override;
 
 	private:

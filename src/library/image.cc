@@ -149,10 +149,14 @@
 
 	void Abstract::Image::append(list<std::shared_ptr<DataSource>> &sources) {
 		size_t item = 0;
+
+		auto &status = Udjat::Dialog::Status::getInstance();
 		for(auto &source : sources) {
-			Udjat::Dialog::Status::getInstance().step(++item,sources.size());
+			status.step(++item,sources.size());
 			append(source);
 		}
+		status.step();
+
 	}
 
  }

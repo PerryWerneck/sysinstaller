@@ -25,6 +25,7 @@
  #include <udjat/defs.h>
  #include <reinstall/image.h>
  #include <udjat/tools/xml.h>
+ #include <reinstall/tools/datasource.h>
 
  typedef struct Iso_Image IsoImage;
  typedef struct iso_write_opts IsoWriteOpts;
@@ -79,6 +80,11 @@
 		void post(Udjat::Abstract::Object &object);
 
 		void write() override;
+
+
+		inline void append(std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+			Reinstall::Abstract::Image::append(sources);
+		}
 
 	protected:
 		// Abstract::Image

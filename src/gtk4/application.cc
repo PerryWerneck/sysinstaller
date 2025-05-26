@@ -48,6 +48,7 @@
  using namespace std;
  using namespace Udjat;
 
+
  namespace Reinstall {
 
 	Application::Application(int argc, char **argv) : Udjat::Application{argc,argv} {

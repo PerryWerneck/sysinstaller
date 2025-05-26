@@ -128,7 +128,7 @@
 			Logger::String{"Building Fat Image"}.info(name());
 			status.sub_title(_("Building FAT Image"));
 
-			FatFS::Image image{output,*this,imgdef};
+			FatFS::Image image{*output,*this,imgdef};
 
 			image.pre(*this);
 			image.append(files);

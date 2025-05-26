@@ -559,6 +559,8 @@
 				} else {
 					left.set_text("");
 				}
+				right.set_text("");
+				idle = 1000;
 				return 0;
 			});
 			return *this;
@@ -690,7 +692,22 @@
 			}	
 			return *this;
 		}
+
+		Udjat::Dialog::Status & step(unsigned int current, unsigned int total) noexcept override {
+			progress->step(current,total);
+			return *this;
+		}
 	
+		Udjat::Dialog::Status & show() noexcept override{
+			Gtk::Dialog::set_visible(true);
+			return *this;
+		}
+
+		Udjat::Dialog::Status & hide() noexcept override {
+			Gtk::Dialog::set_visible(false);
+			return *this;
+		}
+
 	};
 
 	// Activate the action.

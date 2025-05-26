@@ -24,7 +24,8 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/tools/writer.h>
- 
+ #include <udjat/ui/status.h>
+ #include <udjat/tools/intl.h>
  #include <semaphore.h>
  #include <gtkmm.h>
  #include <private/gtkremovabledevicedialog.h>
@@ -71,16 +72,22 @@
 
 		Glib::signal_idle().connect([this,&info,&settings](){
 
+			auto &status = Udjat::Dialog::Status::getInstance();
+
+			status.sub_title(_("Selecting output device"));
+			status.hide();
+
 			auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
 
 #ifdef USE_MESSAGE_DIALOG
-			dialog->signal_response().connect([dialog,&info](int rsp){
+			dialog->signal_response().connect([dialog,&info,&status](int rsp){
 				info.response = rsp;
 				info.devdescr = dialog->description();
 				info.devname = dialog->device();
 				Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
 				sem_post(&info.semaphore);
 				delete dialog;
+				status.show();
 			});
 #else
 			#error Needs implementation
