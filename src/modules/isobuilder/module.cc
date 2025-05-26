@@ -53,27 +53,18 @@
 	};
 
 	/// @brief Base class for actions.
-	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Action, protected Reinstall::Builder {
+	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Builder {
 	protected:
 		virtual void build(list<std::shared_ptr<DataSource>> &files) = 0;
 
 	public:
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{node}, Reinstall::Builder{*this,node} {
+		Action(const Udjat::XML::Node &node)
+			: Reinstall::Builder{node} {
 
 		}
 
 		inline const char *name() const noexcept {
 			return Reinstall::Action::name();
-		}
-
-		bool getProperty(const char *key, std::string &value) const override {
-
-			if(Builder::getProperty(key,value)) {
-				return true;
-			}
-
-			return Reinstall::Action::getProperty(key,value);
 		}
 
 		void activate() override {
@@ -102,7 +93,7 @@
 			Logger::String{"Building ISO-9660 Image"}.info(name());
 			status.sub_title(_("Building ISO-9660 Image"));
 	
-			iso9660::Image image{output,*this,imgdef};
+			iso9660::Image image{*output,*this,imgdef};
 
 			image.pre(*this);
 			image.append(files);
@@ -116,8 +107,8 @@
 
 	public:
 
-		Iso9660Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Action{parent,node}, imgdef{node} {
+		Iso9660Builder(const Udjat::XML::Node &node)
+			: Action{node}, imgdef{node} {
 		}
 
 
@@ -151,8 +142,8 @@
 
 	public:
 
-		FatBuilder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Action{parent,node}, imgdef{node} {
+		FatBuilder(const Udjat::XML::Node &node)
+			: Action{node}, imgdef{node} {
 		}
 
 
@@ -164,7 +155,6 @@
 	Reinstall::IsoBuilder::Module::~Module() {
 	}
 
-	
 	bool Reinstall::IsoBuilder::Module::parse(const Udjat::XML::Node &node) {
 		try {
 

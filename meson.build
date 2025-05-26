@@ -132,6 +132,8 @@ lib_src = [
 	'src/library/writer.cc',
 	'src/library/image.cc',
 	'src/library/template.cc',
+	'src/library/builder.cc',
+	'src/library/efiboot.cc',
 	'src/library/ui/dialog.cc',
 	'src/library/disk/abstract.cc',
 	'src/library/disk/fat.cc',

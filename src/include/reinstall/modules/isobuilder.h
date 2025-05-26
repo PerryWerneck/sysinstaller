@@ -40,7 +40,7 @@
 
 			Module(const char *name);
 			virtual ~Module();
-			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
+			bool parse(const Udjat::XML::Node &node) override;
 	
 		};
 	}

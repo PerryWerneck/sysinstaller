@@ -50,10 +50,10 @@
 
 		Dialog() = default;
 
-		Dialog(const Udjat::XML::Node &node, const char *message, const Option option = None);
+		Dialog(const Udjat::XML::Node &node, const char *message = "", const Option option = None);
 		~Dialog() = default;
 
-		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node, const char *message, const Option option = None);
+		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node, const char *message = "", const Option option = None);
 
 		void set(const Option option);
 

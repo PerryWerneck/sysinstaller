@@ -297,9 +297,9 @@
 
 	}
 
-	//std::string DataSource::save(Reinstall::Dialog::Progress &progress) {
-	//	return save(Udjat::Abstract::Object{},progress);
-	//}
+	std::string DataSource::save() {
+		return save(Udjat::Abstract::Object{});
+	}
 
 	void DataSource::save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 

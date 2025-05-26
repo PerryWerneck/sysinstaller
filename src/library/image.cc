@@ -106,7 +106,7 @@
 						auto from = Udjat::File::Temporary::create();
 				
 						auto progress = Udjat::Dialog::Progress::getInstance();
-						tmplt->save(builder.properties(),from.c_str(),[progress](uint64_t current, uint64_t total){
+						tmplt->save(builder,from.c_str(),[progress](uint64_t current, uint64_t total){
 							return false;
 						});
 
