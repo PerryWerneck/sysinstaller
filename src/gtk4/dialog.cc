@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2025 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -100,28 +100,32 @@
 
 		void add_buttons(MessageDialog &dialog) const {
 
-			debug("Adding buttons to dialog options=",options);
+			static const struct {
+				Option option;
+				const char *label;
+				int response;
+			} buttons[] = {
+				{ AllowReboot, 				_("_Reboot"), 			DIALOG_RESPONSE_REBOOT 		},
+				{ AllowContinue, 			_("_Continue"), 		DIALOG_RESPONSE_CONTINUE 	},
+				{ AllowQuitApplication, 	_("_Quit application"), DIALOG_RESPONSE_QUIT 		},
+				{ AllowCancel, 				_("C_ancel"), 			DIALOG_RESPONSE_CANCEL 		}
+			};
 
-			if(options & AllowQuitApplication) {
-				debug("Adding button 'quit'");
-				dialog.add_button(_("_Quit application"),DIALOG_RESPONSE_QUIT);
+			for(const auto &opt : this->buttons.order) {
+
+				if((options & opt) == 0) {
+					continue;
+				}
+
+				for(const auto &btn : buttons) {
+					if(btn.option == opt) {
+						debug("Adding button '",btn.label,"'");
+						dialog.add_button(gettext(btn.label),btn.response);
+					}
+				}
+
 			}
 
-			if(options & AllowReboot) {
-				debug("Adding button 'reboot'");
-				dialog.add_button(_("_Reboot"),DIALOG_RESPONSE_REBOOT);
-			}
-			
-			if(options & AllowCancel) {
-				debug("Adding button 'cancel'");
-				dialog.add_button(_("C_ancel"),DIALOG_RESPONSE_CANCEL);
-			}
-
-			if(options & AllowContinue) {
-				debug("Adding button 'continue'");
-				dialog.add_button(_("_Continue"),DIALOG_RESPONSE_CONTINUE);
-			}
-			
 		}
 
 		/// @brief Ask for confirmation.
@@ -224,207 +228,5 @@
 
 	};
 
-	/*
-	static const struct {
-		Dialog::Option value;
-		const char * attrname;
-	} opts[] {
-		{ Dialog::AllowQuitApplication,	"quit-button" 	},
-		{ Dialog::AllowReboot,			"reboot-button"	},
-	};
-
-	Dialog::Option option = Dialog::None;
-	String cfg{"dialog-",name};
-
-	for(const auto &opt : opts) {
-		if(Config::Value<bool>(cfg.c_str(),opt.attrname,false)) {
-			option = (Dialog::Option) (option|opt.value);
-		}
-	}
-	*/
-
 	return make_shared<Dialog>(node,msg,buttons);
 } 
-
-
-/*
- #include <config.h>
- #include <udjat/defs.h>
- #include <udjat/tools/logger.h>
- #include <reinstall/ui/popup.h>
- #include <reinstall/ui/application.h>
- #include <udjat/tools/threadpool.h>
-
- #include <memory>
- #include <gtkmm.h>
-
- #ifdef USE_GTK_ALERT_DIALOG
-	#include <gtkmm/alertdialog.h>
- #endif // USE_GTK_ALERT_DIALOG
-
- using namespace std;
- using namespace Udjat;
-
- namespace Reinstall {
-
-	std::shared_ptr<Reinstall::Dialog::Popup> Application::PopupFactory() {
-
-		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html
-
-#ifdef USE_GTK_ALERT_DIALOG
-		class Popup : public Reinstall::Dialog::Popup, private ::Gtk::AlertDialog {
-		public:
-			Popup() {
-				gtk_window_set_transient_for(
-					GTK_WINDOW(gobj()),
-					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
-				);
-				set_modal(true);
-			}
-
-			~Popup() {
-			}
-
-			Popup & message(const char *message) override {
-				string str{message};
-				Glib::signal_idle().connect([this,str](){
-					set_message(str);
-					return 0;
-				});
-				return *this;
-			}
-
-			Popup & detail(const char *text) override {
-				string str{text};
-				Glib::signal_idle().connect([this,str](){
-					set_detail(str);
-					return 0;
-				});
-				return *this;
-			}
-
-			int run(const std::function<int(Dialog::Popup &popup)> &task) noexcept override {
-
-				int rc = -1;
-				auto mainloop = Glib::MainLoop::create();
-
-				Udjat::ThreadPool::getInstance().push([this,&task,&rc,mainloop](){
-
-					try {
-
-						rc = task(*this);
-
-					} catch(const std::exception &e) {
-
-						// TODO: Show error popup
-
-						rc = -1;
-						Logger::String{e.what()}.error("gtk");
-
-					} catch(...) {
-
-						// TODO: Show error popup
-
-						rc = -1;
-						Logger::String{"Unexpected error running background task"}.error("gtk");
-
-					}
-
-					Glib::signal_idle().connect([mainloop](){
-						mainloop->quit();
-						return 0;
-					});
-
-				});
-
-				mainloop->run();
-
-				return rc;
-
-			}
-
-		};
-
-#else
-		class Popup : public Reinstall::Dialog::Popup, private ::Gtk::MessageDialog {
-		public:
-			Popup() : ::Gtk::MessageDialog{""} {
-				gtk_window_set_transient_for(
-					GTK_WINDOW(gobj()),
-					gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()))
-				);
-				set_modal(true);
-			}
-
-			~Popup() {
-			}
-
-			Popup & message(const char *message) override {
-				string str{message};
-				Glib::signal_idle().connect([this,str](){
-					set_message(str,true);
-					return 0;
-				});
-				return *this;
-			}
-
-			Popup & detail(const char *text) override {
-				string str{text};
-				Glib::signal_idle().connect([this,str](){
-					set_secondary_text(str,true);
-					return 0;
-				});
-				return *this;
-			}
-
-			int run(const std::function<int(Reinstall::Dialog::Popup &popup)> &task) noexcept override {
-
-				int rc = -1;
-				auto mainloop = Glib::MainLoop::create();
-
-				Udjat::ThreadPool::getInstance().push([this,&task,&rc,mainloop](){
-
-					int rc = -1;
-
-					try {
-
-						rc = task(*this);
-
-					} catch(const std::exception &e) {
-
-						// TODO: Show error popup
-
-						rc = -1;
-						Logger::String{e.what()}.error("gtk");
-
-					} catch(...) {
-
-						// TODO: Show error popup
-
-						rc = -1;
-						Logger::String{"Unexpected error running background task"}.error("gtk");
-
-					}
-
-					Glib::signal_idle().connect([this,&rc,mainloop](){
-						mainloop->quit();
-						return 0;
-					});
-
-				});
-
-				mainloop->run();
-				return rc;
-
-			}
-
-		};
-#endif // USE_GTK_ALERT_DIALOG
-
-		return make_shared<Popup>();
-	}
-
-
- }
-
-*/

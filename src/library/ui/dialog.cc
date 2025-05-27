@@ -63,8 +63,36 @@
 
 	}
 
+	Dialog::Option Dialog::OptionFactory(const char *name) {
+		static const struct {
+			const char *name;
+			Option option;
+		} button_names[] = {
+			{ "reboot", 	AllowReboot				},
+			{ "continue", 	AllowContinue			},
+			{ "quit", 		AllowQuitApplication	},
+			{ "cancel", 	AllowCancel				},
+		};
+		for(const auto &button : button_names) {
+			if(strcasecmp(name,button.name) == 0) {
+				return button.option;
+			}
+		}
+		return Option::None;
+	}
+
+	Dialog::Buttons::Buttons(const XML::Node &node) {
+		for(const auto &button : String{XML::StringFactory(node,"button-order","continue,quit,cancel,reboot")}.split(",")) {
+			auto opt = Dialog::OptionFactory(button.c_str());
+			if(opt != Option::None) {
+				order.push_back(opt);
+			}
+		}
+	}
+
 	Dialog::Dialog(const Udjat::XML::Node &node, const char *msg, const Option o) 
 		: options{o}, 
+			buttons{node},
 			title{XML::QuarkFactory(node,"dialog-title")},
 			message{XML::QuarkFactory(node,"message",msg)},
 			destructive{XML::AttributeFactory(node,"destructive").as_bool(false)}  {

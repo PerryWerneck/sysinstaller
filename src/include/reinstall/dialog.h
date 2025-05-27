@@ -28,6 +28,7 @@
  #include <functional>
  #include <udjat/tools/xml.h>
  #include <cstdarg>
+ #include <vector>
 
  namespace Reinstall {
 
@@ -47,6 +48,8 @@
 			AllowQuitContinue		= (AllowQuitApplication|AllowContinue),
 			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
 		};
+
+		static Option OptionFactory(const char *name);
 
 		Dialog() = default;
 
@@ -78,6 +81,18 @@
 		/// @note The options are set by the XML file.
 		Option options = None;
 
+		/// @brief The button options.
+		struct Buttons {
+			std::vector<Option> order;	///< The button order.
+
+			// TODO: Implement button styles.
+			// Option destructive = None;	///< The destructive button option.
+			// Option suggested = None; 	///< The suggested button option.
+
+			Buttons() = default; 
+			Buttons(const Udjat::XML::Node &node);
+		} buttons;
+		
 		/// @brief The title for the dialog (not the title bar).
 		/// @note This is the title visible in bold inside the dialog, usually the same as the menu item.
 		const char *title;
