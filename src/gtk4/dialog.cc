@@ -126,12 +126,12 @@
 						// https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html
 
 						auto button = dialog.get_widget_for_response(btn.response);
+						auto style = button->get_style_context();
 						
 						if(this->buttons.destructive == opt) {
-							button->get_style_context()->add_class("destructive-action");
+							style->add_class("destructive-action");
 						} else if(this->buttons.destructive == opt) {
-							auto button = dialog.get_widget_for_response(btn.response);
-							button->get_style_context()->add_class("suggested-action");
+							style->add_class("suggested-action");
 						}
 						
 					}
