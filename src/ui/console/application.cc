@@ -36,6 +36,8 @@
  #include <udjat/tools/xml.h>
  #include <udjat/ui/console.h>
  #include <udjat/tools/intl.h>
+
+ #include <reinstall/action.h>
  
  using namespace std;
  using namespace Udjat;
@@ -82,10 +84,11 @@
 
 	int Console::run(int argc, char *argv[]) {
 
+		std::shared_ptr<Reinstall::Action> selected_action;
+		
 		{
 			// Present main menu.
 			std::shared_ptr<Group> selected_group;
-			std::shared_ptr<Reinstall::Action> selected_action;
 
 			UI::Console console;
 
@@ -130,10 +133,12 @@
 			}
 
 			if(choice.empty()) {
+				Logger::String{"User selected quit option"}.info();
 				return ECANCELED; // Quit.
 			}
 
 			if(!selected_group) {
+				Logger::String{"User selected an invalid group"}.info();
 				return EINVAL; // Invalid choice.
 			}
 
@@ -177,14 +182,22 @@
 			}
 
 			if(choice.empty()) {
+				Logger::String{"User selected quit option"}.info();
 				return ECANCELED; // Quit.
 			}
 
 			if(!selected_action) {
+				Logger::String{"User selected an invalid action"}.info();
 				return EINVAL; // Invalid choice.
 			}
 
+			if(!selected_action->confirmation->ask(true)) {
+				Logger::String{"User cancelled action"}.info();
+				return ECANCELED; // User cancelled.
+			}
 		}
+
+		Logger::String{"User selected '",selected_action->title(),"'"}.info();
 
 		return -1;
 	}
