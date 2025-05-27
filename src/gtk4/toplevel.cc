@@ -324,6 +324,7 @@
 		TopLevel::Label sub_title{"group-subtitle",""};		///< @brief The group sub-title.
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};		///< @brief The box with the options.
 		std::vector<std::shared_ptr<Item>> items;			///< @brief The list of items in this group.
+		std::shared_ptr<Item> active_item;					///< @brief The selected.
 
 	public:
 		Group(const Udjat::XML::Node &node) {
@@ -387,17 +388,21 @@
 			sem_t semaphore;
 			sem_init(&semaphore,0,0);
 
-			Glib::signal_idle().connect([this,&node,action,&semaphore](){
+			Glib::signal_idle().connect_once([this,&node,action,&semaphore](){
 
 				auto item = make_shared<Item>(node, action);
 				items.push_back(item);
 
 				// Process activation.
-				item->signal_toggled().connect([item,action]() {
+				item->signal_toggled().connect([this,item,action]() {
 
 					auto context = item->get_style_context();
 
 					if(item->get_active()) {
+						if(active_item) {
+							active_item->set_active(false);
+						}
+						active_item = item;
 						context->remove_class("action-inactive");
 						context->add_class("action-active");
 						Application::getInstance().select(action);
@@ -410,12 +415,16 @@
 
 				// Show item.
 				contents.append(*item);
+
+				if(XML::AttributeFactory(node,"default").as_bool()) {
+					item->set_active(true);
+				}
+
 				item->set_visible(true);
 				this->set_visible(true);
 
 				sem_post(&semaphore);
 
-				return 0;
 			});
 
 			sem_wait(&semaphore);
