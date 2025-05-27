@@ -33,6 +33,7 @@
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
  #include <reinstall/tools/writer.h>
+ #include <private/console.h>
 
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
@@ -42,12 +43,32 @@
  using namespace std;
  using namespace Udjat;
 
+ static bool tui_only() noexcept {
+
+#ifndef _WIN32
+	const char *session_type = getenv("XDG_SESSION_TYPE");
+	if(session_type) {
+		Logger::String{"Detected '",session_type,"' session"}.trace();
+		return session_type[0] == 0;
+	}
+#endif // _WIN32
+
+		return false;
+ }
+
  int main(int argc, char* argv[]) {
 
 	// Check for help options.
 	static const Udjat::Application::Option options[] = {
+#ifdef HAVE_GTKMM
 		{ 't', "tui", _( "Use text user interface" ) },
 		{ 'g', "gui", _( "Use graphic user interface" ) },
+#endif // HAVE_GTKMM
+		{ 'v', "version", _( "Show version information" ) },
+		{ 'V', "verbose", _( "Increase verbosity level" ) },
+		{ 'q', "quiet", _( "Decrease verbosity level" ) },
+		{ 'd', "debug", _( "Enable debug mode" ) },
+		{ 'k', "kernel-parameter=n=v", _( "Set kernel parameter 'n' to 'v'" ) },
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
@@ -106,9 +127,23 @@
 
 
 #ifdef HAVE_GTKMM
-	{
+	// If the user requested TUI, run as a TUI application.
+
+	if( !Udjat::Application::pop(argc,argv,'g',"gui") && (Udjat::Application::pop(argc,argv,'t',"tui") || tui_only())) {
+
+		// Run as a TUI application.
+		return Reinstall::Console{}.run(argc,argv);
+
+	} else {
+
 		// Run as a GUI application.
-		return Gtk::Application::create(UDJAT_PRODUCT_DOMAIN "." PACKAGE_NAME)->make_window_and_run<TopLevel>(1,argv);
+		return Gtk::Application::create(UDJAT_PRODUCT_DOMAIN ".gtk." PACKAGE_NAME)->make_window_and_run<TopLevel>(1,argv);
+
+	}
+#else 
+	{
+		No GTK, run as TUI application
+		return Reinstall::Console{}.run(argc,argv);
 
 	}
 #endif // HAVE_GTKMM

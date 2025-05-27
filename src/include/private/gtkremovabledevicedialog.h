@@ -75,10 +75,6 @@
 	/// Watch Storage devices.
 	Glib::RefPtr<Gio::VolumeMonitor> volume_monitor;
 
-	/// @brief Cancel button.
-	Gtk::Button cancel;
-	Gtk::Button apply;
-
 	void setup(bool allow_output_to_file);
 
 	/// @brief Select filename for output.
@@ -86,6 +82,12 @@
 
 	/// @brief The writer
 	Reinstall::Writer &writer;
+
+	/// @brief Cancel button.
+	Gtk::Button cancel;
+
+	/// @brief Apply button.
+	Gtk::Button apply;
 
 	/// @brief Device was added.
 	void device_added(const char *devname, const char *description);

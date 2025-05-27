@@ -21,6 +21,7 @@
   * @brief Declare application window.
   */
 
+ #error deprecated
  #pragma once
 
  #include <config.h>

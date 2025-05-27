@@ -115,6 +115,7 @@ includes_dir = include_directories('../src/include')
 app_src = [
 	'src/application/main.cc',
 	'src/application/application.cc',
+	'src/ui/console/application.cc',
 ]
 
 if gtkmm.found()
