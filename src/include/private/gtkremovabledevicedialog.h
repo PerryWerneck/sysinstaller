@@ -76,8 +76,8 @@
 	Glib::RefPtr<Gio::VolumeMonitor> volume_monitor;
 
 	/// @brief Cancel button.
-	Gtk::Button cancel{"_Cancel",true};
-	Gtk::Button apply{"C_ontinue",true};
+	Gtk::Button cancel;
+	Gtk::Button apply;
 
 	void setup(bool allow_output_to_file);
 

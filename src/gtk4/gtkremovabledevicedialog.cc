@@ -32,6 +32,7 @@
 
  #include <private/gtkremovabledevicedialog.h>
  #include <gtkmm.h>
+ #include <glib/gi18n.h>
  #include <gtkmm/filedialog.h>
 
  #include <udjat/tools/intl.h>
@@ -46,7 +47,11 @@
 #ifdef USE_MESSAGE_DIALOG
 
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Reinstall::Dialog &dialog, bool allow_output_to_file)
- : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, volume_monitor{Gio::VolumeMonitor::get()}, writer{w} {
+ : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, 
+ 	volume_monitor{Gio::VolumeMonitor::get()}, 
+	writer{w},
+	cancel{"_Cancel",true},
+	apply{"C_ontinue",true} {
 
  	add_action_widget(cancel,ECANCELED);
 	add_action_widget(apply,0);
