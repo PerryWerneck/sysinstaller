@@ -199,7 +199,20 @@
 
 		Logger::String{"User selected '",selected_action->title(),"'"}.info();
 
-		return -1;
+		try {
+
+			selected_action->activate();
+			Logger::String{"Action '",selected_action->title(),"' executed successfully"}.info();
+			selected_action->success->present();
+
+		} catch(const std::exception &e) {
+			Logger::String{"Action '",selected_action->title(),"' has failed"}.error();
+			debug(e.what());
+			selected_action->failed->present(e);
+			return -1;
+		}
+
+		return 0;
 	}
 
 	std::shared_ptr<Reinstall::Group> Console::group_factory(const Udjat::XML::Node &node) {
