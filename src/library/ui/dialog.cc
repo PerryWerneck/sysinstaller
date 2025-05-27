@@ -88,6 +88,8 @@
 				order.push_back(opt);
 			}
 		}
+		destructive = Dialog::OptionFactory(XML::StringFactory(node,"destructive-button","reboot"));
+		suggested = Dialog::OptionFactory(XML::StringFactory(node,"suggested-button","none"));
 	}
 
 	Dialog::Dialog(const Udjat::XML::Node &node, const char *msg, const Option o) 

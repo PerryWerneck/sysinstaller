@@ -121,6 +121,19 @@
 					if(btn.option == opt) {
 						debug("Adding button '",btn.label,"'");
 						dialog.add_button(gettext(btn.label),btn.response);
+
+						// Set button style classes
+						// https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html
+
+						auto button = dialog.get_widget_for_response(btn.response);
+						
+						if(this->buttons.destructive == opt) {
+							button->get_style_context()->add_class("destructive-action");
+						} else if(this->buttons.destructive == opt) {
+							auto button = dialog.get_widget_for_response(btn.response);
+							button->get_style_context()->add_class("suggested-action");
+						}
+						
 					}
 				}
 

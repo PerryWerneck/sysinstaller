@@ -85,9 +85,8 @@
 		struct Buttons {
 			std::vector<Option> order;	///< The button order.
 
-			// TODO: Implement button styles.
-			// Option destructive = None;	///< The destructive button option.
-			// Option suggested = None; 	///< The suggested button option.
+			Option destructive = None;	///< The destructive button option.
+			Option suggested = None; 	///< The suggested button option.
 
 			Buttons() = default; 
 			Buttons(const Udjat::XML::Node &node);
