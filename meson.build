@@ -119,7 +119,10 @@ app_src = [
 
 if gtkmm.found()
 	app_src += [
-		'src/gtk4/toplevel.cc',
+		'src/ui/gtk4/toplevel.cc',
+		'src/ui/gtk4/dialog.cc',
+		'src/ui/gtk4/writer.cc',
+		'src/ui/gtk4/gtkremovabledevicedialog.cc',
 	]
 endif
 
@@ -145,9 +148,6 @@ lib_src = [
 	'src/library/source/load.cc',
 	'src/library/source/tempfile.cc',
 	'src/library/os/linux/writer.cc',
-	'src/gtk4/dialog.cc',
-	'src/gtk4/writer.cc',
-	'src/gtk4/gtkremovabledevicedialog.cc',
 	'src/modules/grub2.cc',
 	'src/modules/isowriter.cc',
 	'src/modules/isobuilder/module.cc',

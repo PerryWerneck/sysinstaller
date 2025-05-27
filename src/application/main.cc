@@ -46,7 +46,8 @@
 
 	// Check for help options.
 	static const Udjat::Application::Option options[] = {
-		{ 't', "text", _( "Run in text mode" ) },
+		{ 't', "tui", _( "Use text user interface" ) },
+		{ 'g', "gui", _( "Use graphic user interface" ) },
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
