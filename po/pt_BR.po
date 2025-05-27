@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-10 16:09-0300\n"
-"PO-Revision-Date: 2025-04-10 16:10-0300\n"
+"POT-Creation-Date: 2025-05-26 21:13-0300\n"
+"PO-Revision-Date: 2025-05-26 21:26-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -20,122 +20,196 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/application/mainwindow.cc:45
-msgid "_Apply"
-msgstr "_Aplicar"
-
-#: src/application/mainwindow.cc:45 src/gtk4/application.cc:424
-msgid "_Cancel"
-msgstr "_Cancelar"
-
-#: src/application/mainwindow.cc:49
-msgid "Select option"
-msgstr "Selecione opção"
-
-#: src/application/mainwindow.cc:70
-msgid "System reinstallation"
-msgstr "Reinstalar o sistema"
-
-#: src/gtk4/application.cc:422
-msgid "_Reboot now"
-msgstr "_Reiniciar agora"
-
-#: src/gtk4/application.cc:423
-msgid "_Quit application"
-msgstr "_Encerrar aplicação"
-
-#: src/gtk4/application.cc:425
-msgid "C_ontinue"
-msgstr "_Continuar"
-
-#: src/gtk4/progress.cc:252 src/gtk4/progress.cc:285
-#, c++-format
-msgid "{} of {}"
-msgstr "{} de {}"
-
-#: src/library/action.cc:84
-msgid "The selected action cant be activated"
-msgstr "A ação selecionada não pode ser ativada"
-
-#: src/library/action.cc:93
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/library/action.cc:93
-msgid "Continue"
-msgstr "Continuar"
-
-#: src/library/action.cc:114
-msgid "Initializing"
-msgstr "Inicializando"
-
-#: src/library/action.cc:154
-msgid "A required file is not available"
-msgstr "Um arquivo necessário não está disponível"
-
-#: src/library/action.cc:172
-msgid "Configuration or logic error"
-msgstr "Erro de configuração ou lógica"
-
-#: src/library/action.cc:181
-msgid "System error"
-msgstr "Erro de sistema"
-
-#: src/library/action.cc:187
-msgid "Operation failed"
-msgstr "Operação falhou"
-
-#: src/library/action.cc:221
+#: src/application/application.cc:83
 msgid "Error getting boot path info"
 msgstr "Erro ao obter informações sobre o caminho de boot"
 
-#: src/library/action.cc:225
+#: src/application/application.cc:87
 #, c++-format
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/library/action.cc:232 src/library/source/data.cc:175
+#: src/application/application.cc:94 src/library/source/data.cc:175
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/library/action.cc:251 src/library/source/data.cc:194
+#: src/application/application.cc:113 src/library/source/data.cc:194
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
 
-#: src/library/action.cc:265
+#: src/application/application.cc:127
 msgid "Error readlink boot link"
 msgstr "Erro ao ler link de boot"
 
-#: src/library/action.cc:286
+#: src/application/application.cc:148
 #, c++-format
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/library/action.cc:296 src/library/builder.cc:84 src/modules/grub2.cc:138
-#: src/modules/grub2.cc:241
+#: src/application/application.cc:158 src/library/builder.cc:82
+#: src/modules/grub2.cc:142 src/modules/grub2.cc:243
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/library/action.cc:301
+#: src/application/application.cc:163
 msgid "Remote controlled installation"
 msgstr "Instalação com assistência remota"
 
-#: src/library/action.cc:306
+#: src/application/application.cc:168
 msgid "Loading kernel..."
 msgstr "Carregando kernel..."
 
-#: src/library/action.cc:311
+#: src/application/application.cc:173
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/library/builder.cc:256 src/modules/grub2.cc:267
-msgid "Getting required files"
-msgstr "Obtendo arquivos necessários"
+#: src/application/application.cc:275
+msgid "Initializing..."
+msgstr "Inicializando..."
 
-#: src/library/builder.cc:282
-msgid "Cant find installation files"
-msgstr "Não encontrei arquivos de instalação"
+#: src/application/application.cc:284
+msgid "Unknown error"
+msgstr "Erro inesperado"
+
+#: src/application/main.cc:49
+msgid "Run in text mode"
+msgstr "Rodar em modo text"
+
+#: src/application/main.cc:50
+msgid "Write resulting image to file 'img' instead of usb"
+msgstr "Grava imagem gerada para o arquivo 'img' ao invés da usb"
+
+#: src/application/main.cc:51
+msgid "Set install url, disable slp"
+msgstr "Fixa URL de instalação, desativa slp"
+
+#: src/application/main.cc:52
+msgid "Set url for repository 'r' to 'u', disable slp"
+msgstr "Fixa url do repositório 'r' para 'u', desativa slp"
+
+#: src/application/main.cc:53
+msgid "Set kernel parameter 'n' to 'v' on boot image"
+msgstr "Define parâmetro de kernel 'n' para 'v' na imagem gerada"
+
+#: src/application/main.cc:54
+msgid "Quit after processing"
+msgstr "Encerra ao final do processamento"
+
+#: src/application/main.cc:55
+msgid "Reboot when success"
+msgstr "Reiniciar se concluído com sucesso"
+
+#: src/application/main.cc:56
+msgid "Auto select option"
+msgstr "Seleciona opção automaticamente"
+
+#: src/application/main.cc:57
+msgid "Show this help"
+msgstr "Mostra esse help"
+
+#: src/application/main.cc:88
+#, c++-format
+msgid "Unable to select '{}': Invalid path"
+msgstr "Não foi possível selecionar '{}': Caminho inválido"
+
+#: src/application/main.cc:95
+#, c++-format
+msgid "Invalid repository argument: {}"
+msgstr "Argumento inválido para repositório: {}"
+
+#: src/application/mainwindow.cc:46
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#: src/application/mainwindow.cc:46 src/gtk4/application.cc:364
+#: src/gtk4/toplevel.cc:135
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/application/mainwindow.cc:50
+msgid "Select option"
+msgstr "Selecione opção"
+
+#. Set up layout
+#: src/application/mainwindow.cc:71 src/gtk4/toplevel.cc:173
+msgid "System reinstallation"
+msgstr "Reinstalar o sistema"
+
+#: src/gtk4/application.cc:362
+msgid "_Reboot now"
+msgstr "_Reiniciar agora"
+
+#: src/gtk4/application.cc:363 src/gtk4/dialog.cc:107
+msgid "_Quit application"
+msgstr "_Encerrar aplicação"
+
+#: src/gtk4/application.cc:365 src/gtk4/toplevel.cc:135
+msgid "C_ontinue"
+msgstr "_Continuar"
+
+#: src/gtk4/dialog.cc:112
+msgid "_Reboot"
+msgstr "_Reiniciar"
+
+#: src/gtk4/dialog.cc:117
+msgid "C_ancel"
+msgstr "_Cancelar"
+
+#: src/gtk4/dialog.cc:122
+msgid "_Continue"
+msgstr "C_ontinuar"
+
+#: src/gtk4/dialog.cc:134 src/gtk4/dialog.cc:175
+msgid "Do you want to continue?"
+msgstr "Deseja continuar?"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:55
+msgid "Insert an storage device"
+msgstr "Insira um dispositivo de armazenamento"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:56
+#: src/gtk4/gtkremovabledevicedialog.cc:112
+msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
+msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
+
+#: src/gtk4/gtkremovabledevicedialog.cc:98
+msgid "Insert an storage device <b>NOW</b>"
+msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:171
+msgid "Auto detect"
+msgstr "Detectar automaticamente"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:196
+msgid "Save image to file"
+msgstr "Salvar imagem para arquivo"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:216
+msgid "Select output file"
+msgstr "Selecione arquivo de saída"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:341
+msgid "Not enough space"
+msgstr "Espaço insuficiente"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:346
+msgid "Access Denied"
+msgstr "Acesso negado"
+
+#: src/gtk4/gtkremovabledevicedialog.cc:359
+msgid "Invalid device"
+msgstr "Dispositivo inválido"
+
+#: src/gtk4/progress.cc:129 src/gtk4/progress.cc:165 src/gtk4/toplevel.cc:522
+#: src/gtk4/toplevel.cc:558
+#, c++-format
+msgid "{} of {}"
+msgstr "{} de {}"
+
+#: src/gtk4/toplevel.cc:180
+msgid "Select an option"
+msgstr "Selecione uma opção"
 
 #: src/library/disk/abstract.cc:50
 msgid "Cant open disk device/file"
@@ -229,7 +303,7 @@ msgstr "Parâmetro informado não é válido"
 msgid "Empty disk image"
 msgstr "Imagem de disco vazia"
 
-#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:60
+#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:66
 msgid "Cant bind fatfs to disk image"
 msgstr "Não foi possível ligar imagem de disco ao fatfs"
 
@@ -248,70 +322,16 @@ msgid "f_mount has failed: "
 msgstr "f_mount falhou: "
 
 #: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
-#: src/modules/isobuilder/fatfs/image.cc:197
+#: src/modules/isobuilder/fatfs/image.cc:206
 #, c++-format
 msgid "Unable to open fat://{}"
 msgstr "Não foi possível abrir fat://{}"
 
-#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:170
-#: src/modules/isobuilder/fatfs/image.cc:238
+#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:179
+#: src/modules/isobuilder/fatfs/image.cc:247
 #, c++-format
 msgid "Unable to write fat://{}"
 msgstr "Não foi possível escrever em fat://{}"
-
-#: src/library/group.cc:47
-msgid "Group controller is already active"
-msgstr "Controlador de grupos já está ativo"
-
-#: src/library/group.cc:60
-msgid "No active group controller"
-msgstr "Nenhum controlador de grupo ativo"
-
-#: src/library/gtkremovabledevicedialog.cc:53
-msgid "Insert an storage device"
-msgstr "Insira um dispositivo de armazenamento"
-
-#: src/library/gtkremovabledevicedialog.cc:54
-#: src/library/gtkremovabledevicedialog.cc:110
-msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
-msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
-
-#: src/library/gtkremovabledevicedialog.cc:96
-msgid "Insert an storage device <b>NOW</b>"
-msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
-
-#: src/library/gtkremovabledevicedialog.cc:169
-msgid "Auto detect"
-msgstr "Detectar automaticamente"
-
-#: src/library/gtkremovabledevicedialog.cc:194
-msgid "Save image to file"
-msgstr "Salvar imagem para arquivo"
-
-#: src/library/gtkremovabledevicedialog.cc:214
-msgid "Select output file"
-msgstr "Selecione arquivo de saída"
-
-#: src/library/gtkremovabledevicedialog.cc:339
-msgid "Not enough space"
-msgstr "Espaço insuficiente"
-
-#: src/library/gtkremovabledevicedialog.cc:344
-msgid "Access Denied"
-msgstr "Acesso negado"
-
-#: src/library/gtkremovabledevicedialog.cc:357
-msgid "Invalid device"
-msgstr "Dispositivo inválido"
-
-#: src/library/image.cc:129
-msgid "No write support on selected image"
-msgstr "Sem suporte para gravação na imagem selecionada"
-
-#: src/library/image.cc:134 src/modules/isobuilder/fatfs/image.cc:280
-#: src/modules/isobuilder/iso9660/image.cc:427
-msgid "Writing image"
-msgstr "Gravando imagem"
 
 #: src/library/kernelparameter.cc:176
 #, c++-format
@@ -359,41 +379,65 @@ msgstr "Não foi possível alocar espaço para o arquivo de saída"
 msgid "Required repository '{}' not found"
 msgstr "Repositório '{}' não foi encontrado"
 
-#: src/library/repository/repository.cc:173
+#: src/library/repository/repository.cc:171
 msgid "Loading repository index"
 msgstr "Carregando índice do repositório"
 
-#: src/library/repository/repository.cc:271
+#: src/library/repository/repository.cc:268
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
-
-#: src/library/script.cc:263
-msgid "External command failed"
-msgstr "Comando ou script externo falhou"
 
 #: src/library/source/data.cc:168
 #, c++-format
 msgid "Error getting info for '{}'"
 msgstr "Erro ao obter informações sobre '{}'"
 
-#: src/library/source/data.cc:343
+#: src/library/source/data.cc:344
 msgid "Invalid repository"
 msgstr "Repositório inválido"
+
+#: src/library/action.cc:52
+msgid "Do you confirm?"
+msgstr "Confirma operação?"
+
+#: src/library/action.cc:53
+msgid "Operation complete"
+msgstr "Operação concluída"
+
+#: src/library/action.cc:54
+msgid "Operation failed"
+msgstr "Operação falhou"
+
+#: src/library/action.cc:64
+msgid "The selected action cant be activated"
+msgstr "A ação selecionada não pode ser ativada"
+
+#: src/library/builder.cc:248 src/modules/grub2.cc:270
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:274
+msgid "Cant find installation files"
+msgstr "Não encontrei arquivos de instalação"
+
+#: src/library/image.cc:129
+msgid "No write support on selected image"
+msgstr "Sem suporte para gravação na imagem selecionada"
+
+#: src/library/script.cc:259
+msgid "External command failed"
+msgstr "Comando ou script externo falhou"
+
+#: src/library/script.cc:326
+msgid "Configuring, please wait..."
+msgstr "Configurando, aguarde..."
 
 #: src/library/template.cc:199
 msgid "Cant update template permissions"
 msgstr "Erro ao atualizar permissões de modelo"
 
-#: src/library/ui/dialog.cc:191
-msgid "_No"
-msgstr "_Não"
-
-#: src/library/ui/dialog.cc:191
-msgid "_Yes"
-msgstr "_Sim"
-
-#: src/library/writer.cc:55
+#: src/library/writer.cc:56
 msgid "The device writer is not available"
 msgstr "Gravador de dispositivo não está disponível"
 
@@ -401,102 +445,129 @@ msgstr "Gravador de dispositivo não está disponível"
 msgid "Writer is already available"
 msgstr "Módulo de gravação já está disponível"
 
-#: src/library/writer.cc:135
-msgid "Finishing"
-msgstr "Finalizando"
+#: src/library/writer.cc:132
+msgid "Finishing..."
+msgstr "Finalizando..."
 
-#: src/modules/grub2.cc:85
-msgid "Getting installation kernel"
-msgstr "Obtendo kernel de instalação"
-
-#: src/modules/grub2.cc:97
-msgid "Getting init system"
-msgstr "Obtendo imagem de instalação"
-
-#: src/modules/grub2.cc:272
-msgid "Applying templates"
-msgstr "Aplicando templates"
-
-#: src/modules/grub2.cc:280
-msgid "Configuring boot loader"
-msgstr "Configurando carregador de boot"
-
-#: src/modules/grub2.cc:281
-msgid "First stage"
-msgstr "Primeiro estágio"
-
-#: src/modules/grub2.cc:286
-msgid "Second stage"
-msgstr "Segundo estágio"
-
-#: src/modules/isobuilder/fatfs/image.cc:73
+#: src/modules/isobuilder/fatfs/image.cc:79
 #, c++-format
 msgid "Unexpected error '{}' on f_mkfs"
 msgstr "Erro inesperado '{}' em f_mkfs"
 
-#: src/modules/isobuilder/fatfs/image.cc:83
+#: src/modules/isobuilder/fatfs/image.cc:89
 #, c++-format
 msgid "Unexpected error '{}' on f_mount"
 msgstr "Erro inesperado '{}' em f_mount"
 
-#: src/modules/isobuilder/fatfs/image.cc:91
-#: src/modules/isobuilder/fatfs/image.cc:113
+#: src/modules/isobuilder/fatfs/image.cc:97
+#: src/modules/isobuilder/fatfs/image.cc:119
 #, c++-format
 msgid "Unexpected error '{}' on f_umount"
 msgstr "Erro inesperado '{}' em f_umount"
 
-#: src/modules/isobuilder/fatfs/image.cc:146
+#: src/modules/isobuilder/fatfs/image.cc:152
 #, c++-format
 msgid "Unable to create path fat://{} (rc={})"
 msgstr "Incapaz de criar o caminho fat://{} (rc={})"
 
-#: src/modules/isobuilder/fatfs/image.cc:156
+#: src/modules/isobuilder/fatfs/image.cc:162
 #, c++-format
 msgid "Unable to open fat://{} (rc={})"
 msgstr "Incapaz de abrir fat://{} (rc={})"
 
-#: src/modules/isobuilder/fatfs/image.cc:270
-#: src/modules/isobuilder/iso9660/image.cc:401
-msgid "Preparing to write"
-msgstr "Preparando para gravar"
-
-#: src/modules/isobuilder/fatfs/image.cc:305
-#: src/modules/isobuilder/iso9660/image.cc:439
+#: src/modules/isobuilder/fatfs/image.cc:314
+#: src/modules/isobuilder/iso9660/image.cc:446
 msgid "Finalizing"
 msgstr "Finalizando"
 
-#: src/modules/isobuilder/iso9660/image.cc:73
+#: src/modules/isobuilder/iso9660/image.cc:76
 msgid "Error creating iso image"
 msgstr "Erro ao criar imagem iso"
 
-#: src/modules/isobuilder/iso9660/image.cc:99
+#: src/modules/isobuilder/iso9660/image.cc:102
 msgid "Error loading system area"
 msgstr "Erro lendo área de sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:105
+#: src/modules/isobuilder/iso9660/image.cc:108
 msgid "Cant read system area definition file"
 msgstr "Não foi possível ler o arquivo de definição de área do sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:235
+#: src/modules/isobuilder/iso9660/image.cc:238
 msgid "Unexpanded path in source list"
 msgstr "Caminho incorreto na lista de fontes"
 
-#: src/modules/isobuilder/module.cc:104
+#: src/modules/isobuilder/iso9660/image.cc:405
+msgid "Preparing to write"
+msgstr "Preparando para gravar"
+
+#: src/modules/isobuilder/iso9660/image.cc:433
+msgid "Writing image"
+msgstr "Gravando imagem"
+
+#: src/modules/isobuilder/module.cc:94
 msgid "Building ISO-9660 Image"
 msgstr "Gerando imagem ISO-9660"
 
-#: src/modules/isobuilder/module.cc:105
-#, c++-format
-msgid "Writing {} files"
-msgstr "Gravando {} arquivos"
+#: src/modules/isobuilder/module.cc:129
+msgid "Building FAT Image"
+msgstr "Gerando imagem FAT"
 
-#: src/modules/isowriter.cc:64
+#: src/modules/grub2.cc:90
+msgid "Getting installation kernel"
+msgstr "Obtendo kernel de instalação"
+
+#: src/modules/grub2.cc:102
+msgid "Getting init system"
+msgstr "Obtendo imagem de instalação"
+
+#: src/modules/grub2.cc:278
+msgid "Applying templates"
+msgstr "Aplicando templates"
+
+#: src/modules/grub2.cc:288
+msgid "Configuring boot loader"
+msgstr "Configurando carregador de boot"
+
+#: src/modules/grub2.cc:290
+msgid "First stage"
+msgstr "Primeiro estágio"
+
+#: src/modules/grub2.cc:293
+msgid "Second stage"
+msgstr "Segundo estágio"
+
+#: src/modules/isowriter.cc:68
 msgid "Getting ISO image"
 msgstr "Obtendo imagem ISO"
 
-#: src/modules/isowriter.cc:67
+#: src/modules/isowriter.cc:71
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
+
+#~ msgid "A required file is not available"
+#~ msgstr "Um arquivo necessário não está disponível"
+
+#~ msgid "Configuration or logic error"
+#~ msgstr "Erro de configuração ou lógica"
+
+#~ msgid "System error"
+#~ msgstr "Erro de sistema"
+
+#~ msgid "Group controller is already active"
+#~ msgstr "Controlador de grupos já está ativo"
+
+#~ msgid "No active group controller"
+#~ msgstr "Nenhum controlador de grupo ativo"
+
+#~ msgid "_No"
+#~ msgstr "_Não"
+
+#~ msgid "_Yes"
+#~ msgstr "_Sim"
+
+#, c++-format
+#~ msgid "Writing {} files"
+#~ msgstr "Gravando {} arquivos"
 
 #, c++-format
 #~ msgid "Unable to open fat://{}/"
@@ -509,9 +580,6 @@ msgstr "Gravando imagem ISO"
 #, fuzzy
 #~ msgid "Cant parse server file list"
 #~ msgstr "Incapaz de processar lista de arquivos em {}"
-
-#~ msgid "Action completed"
-#~ msgstr "Operação concluída"
 
 #~ msgid "Adding EFI boot image"
 #~ msgstr "Adicionando imagem de boot EFI"
