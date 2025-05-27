@@ -28,10 +28,11 @@
  #include <vector>
  
  #include <reinstall/application.h>
+ #include <udjat/ui/status.h>
 
  namespace Reinstall {
 
-	class UDJAT_API Console : public Reinstall::Application {
+	class UDJAT_API Console : public Reinstall::Application, private Udjat::Dialog::Status {
 	private:
 		class Group;
 

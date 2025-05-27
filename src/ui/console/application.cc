@@ -35,6 +35,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/xml.h>
  #include <udjat/ui/console.h>
+ #include <udjat/ui/status.h>
  #include <udjat/tools/intl.h>
 
  #include <reinstall/action.h>
