@@ -30,6 +30,7 @@
  #include <reinstall/tools/template.h>
  #include <udjat/tools/file/temporary.h>
  #include <udjat/ui/status.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
  #include <vector>
@@ -157,6 +158,7 @@
 					progress->set(current,total);
 					return false;
 				});
+				progress->done();
 			}
 
 		};

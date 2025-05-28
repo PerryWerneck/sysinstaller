@@ -244,6 +244,7 @@
 				progress->set(current,total);
 				return false;
 			});
+			progress->done();
 
 		} catch(const std::exception &e) {
 

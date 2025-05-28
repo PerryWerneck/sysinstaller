@@ -444,7 +444,9 @@
 
 			progress->set((uint64_t) total,(uint64_t) total);
 			progress->url(_( "Finalizing" ));
+
 			writer.close();
+			progress->done();
 
 		} catch(...) {
 

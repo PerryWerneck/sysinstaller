@@ -184,6 +184,7 @@
 
 				return true;
 			});
+			progress->done();
 
 		} catch(...) {
 			f_close(&fdst);
@@ -312,6 +313,7 @@
 
 		progress->set((uint64_t) total, (uint64_t) total);
 		progress->title(_( "Finalizing" ));
+		progress->done();
 
 		writer.close();
 

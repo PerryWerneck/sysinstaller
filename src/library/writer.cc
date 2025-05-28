@@ -130,6 +130,8 @@
 			}
 			progress->set((uint64_t) offset,(uint64_t) st.st_size);
 			progress->url(_("Finishing..."));
+			progress->done();
+
 
 		} catch(...) {
 

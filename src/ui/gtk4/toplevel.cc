@@ -717,6 +717,18 @@
 			return *this;
 		}
 
+		Udjat::Dialog::Status & busy(bool enable) noexcept {
+			if(enable) {
+				progress->url(_("Please wait..."));
+			}
+			return *this;
+		}
+
+		Udjat::Dialog::Status & busy(const char *text) noexcept {
+			progress->url(text);
+			return *this;
+		}
+
 	};
 
 	// Activate the action.

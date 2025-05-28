@@ -96,6 +96,7 @@
 				progress->set(current+length,total);
 				return false;
 			});
+			progress->done();
 
 		} catch(const std::exception &e) {
 

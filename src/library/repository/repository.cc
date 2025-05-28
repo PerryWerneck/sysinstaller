@@ -200,6 +200,7 @@
 						progress->set(current,total);
 						return false;
 					});
+					progress->done();
 
 					return index(filename.c_str());
 
@@ -212,6 +213,7 @@
 						progress->set(current,total);
 						return false;
 					});
+					progress->done();
 
 					bool rc = index(filename.c_str());
 
