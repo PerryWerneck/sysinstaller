@@ -90,20 +90,6 @@
 
 	int Console::run(int argc, char *argv[]) {
 
-		{
-			for(size_t l = 0; l < 3; l++) {
-				auto dialog = Udjat::Dialog::Progress::getInstance();
-				dialog->url("http://www.google.com");
-				for(size_t ix = 0; ix < 1000; ix++) {
-					dialog->set(ix,1000);
-					usleep(1500);
-				}
-				dialog->done();
-			}
-
-		}
-		exit(-1);
-
 		std::shared_ptr<Reinstall::Action> selected_action;
 		
 		{
