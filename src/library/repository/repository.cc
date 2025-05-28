@@ -167,10 +167,7 @@
 			return true;
 		}
 
-		auto progress = Dialog::Progress::getInstance();
-		progress->url(_("Loading repository index"));
-		
-#ifdef HAVE_ZLIB
+	#ifdef HAVE_ZLIB
 		{
 			debug("Trying index.gz");
 
@@ -196,12 +193,13 @@
 
 					debug("------------->",filename.c_str());
 
+					auto progress = Dialog::Progress::getInstance();
+					progress->url(_("Loading repository index"));
 					url.get(filename.c_str(),[&progress](double current, double total){
 						progress->set(current,total);
 						return false;
 					});
 					progress->done();
-
 					return index(filename.c_str());
 
 				} else {
@@ -209,16 +207,15 @@
 					// No local path, use cache.
 					debug("Using remote file");
 
+					auto progress = Dialog::Progress::getInstance();
+					progress->url(_("Loading repository index"));
 					filename = url.tempfile([&progress](double current, double total){
 						progress->set(current,total);
 						return false;
 					});
 					progress->done();
-
 					bool rc = index(filename.c_str());
-
 					unlink(filename.c_str());
-
 					return rc;
 				}
 

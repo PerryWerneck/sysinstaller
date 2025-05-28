@@ -38,9 +38,13 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/threadpool.h>
  #include <udjat/tools/mainloop.h>
+ #include <udjat/tools/application.h>
  #include <string>
  #include <reinstall/group.h>
  #include <reinstall/action.h>
+
+ #pragma GCC diagnostic ignored "-Wattributes"
+ #include <gtkmm.h>
 
  using namespace std;
  using namespace Udjat;
@@ -147,7 +151,7 @@
 #ifdef DEBUG
 		css->load_from_path("./stylesheet.css");
 #else
-		css->load_from_path(Application::DataFile("stylesheet.css").c_str());
+		css->load_from_path(Udjat::Application::DataFile("stylesheet.css").c_str());
 #endif // DEBUG
 		get_style_context()->add_provider_for_display(Gdk::Display::get_default(),css,GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
@@ -257,7 +261,7 @@
 #ifdef DEBUG
 	Config::Value<string> path{"defaults","sidebar-logo","./icons/logo.svg"};
 #else
-	Config::Value<string> path{"defaults","sidebar-logo",Application::DataFile("icons/logo.svg").c_str()};
+	Config::Value<string> path{"defaults","sidebar-logo",Udjat::Application::DataFile("icons/logo.svg").c_str()};
 #endif // DEBUG
 
 	try {

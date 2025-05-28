@@ -64,10 +64,6 @@
 		{ 't', "tui", _( "Use text user interface" ) },
 		{ 'g', "gui", _( "Use graphic user interface" ) },
 #endif // HAVE_GTKMM
-		{ 'v', "version", _( "Show version information" ) },
-		{ 'V', "verbose", _( "Increase verbosity level" ) },
-		{ 'q', "quiet", _( "Decrease verbosity level" ) },
-		{ 'd', "debug", _( "Enable debug mode" ) },
 		{ 'k', "kernel-parameter=n=v", _( "Set kernel parameter 'n' to 'v'" ) },
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
@@ -76,19 +72,18 @@
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=[option]", _( "Auto select option" ) },
-		{ 'h', "help", _( "Show this help" ) },
 		{ }
 	};
-
-	if(Udjat::Application::options(argc,argv,options)) {
-		return 0;
-	}
 
 #ifdef DEBUG
 	Udjat::Config::allow_user_homedir(true);
 	Logger::verbosity(9);
 	Logger::console(true);
 #endif
+
+	if(Udjat::Application::options(argc,argv,options)) {
+		return 0;
+	}
 
 	Logger::redirect();
 

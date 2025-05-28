@@ -36,9 +36,14 @@
  #include <udjat/tools/xml.h>
  #include <udjat/ui/console.h>
  #include <udjat/ui/status.h>
+ #include <udjat/ui/progress.h>
  #include <udjat/tools/intl.h>
 
  #include <reinstall/action.h>
+
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H	
  
  using namespace std;
  using namespace Udjat;
@@ -85,16 +90,30 @@
 
 	int Console::run(int argc, char *argv[]) {
 
+		{
+			for(size_t l = 0; l < 3; l++) {
+				auto dialog = Udjat::Dialog::Progress::getInstance();
+				dialog->url("http://www.google.com");
+				for(size_t ix = 0; ix < 1000; ix++) {
+					dialog->set(ix,1000);
+					usleep(1500);
+				}
+				dialog->done();
+			}
+
+		}
+		exit(-1);
+
 		std::shared_ptr<Reinstall::Action> selected_action;
 		
 		{
 			// Present main menu.
-			std::shared_ptr<Group> selected_group;
-
 			UI::Console console;
 
 			console << _("Available options") << endl << endl;
 
+			// Select group.
+			std::shared_ptr<Group> selected_group;
 			{
 				char item[] = "A";
 				for(const auto &group : groups) {
@@ -147,6 +166,7 @@
 			console << selected_group->label << ":" << endl << endl;
 			console.bold(false);
 
+			// Select item.
 			{
 				char option[] = "A";
 				for(const auto &item : selected_group->itens) {
@@ -176,7 +196,7 @@
 					}
 				}
 
-				for(size_t line = 0; line < 4; line++) {
+				for(size_t line = 0; line < 3; line++) {
 					console.erase_line().up();
 				}
 
@@ -191,6 +211,10 @@
 				Logger::String{"User selected an invalid action"}.info();
 				return EINVAL; // Invalid choice.
 			}
+
+			console.bold(true);
+			console << selected_action->title() << endl << endl;
+			console.bold(false);
 
 			if(!selected_action->confirmation->ask(true)) {
 				Logger::String{"User cancelled action"}.info();
