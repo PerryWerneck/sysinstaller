@@ -274,13 +274,15 @@
 
 			Logger::String{"Applying templates"}.info(name());
 			{
-				auto progress = Udjat::Dialog::Progress::getInstance();
 				status.sub_title(_("Applying templates"));
 				for(const auto &tmplt : templates) {
+					auto progress = Udjat::Dialog::Progress::getInstance();
+					progress->url(tmplt->to_string());
 					tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
 						progress->set(current,total);
 						return false;
 					});
+					progress->done();
 				}
 			}
 
