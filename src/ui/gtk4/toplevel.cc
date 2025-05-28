@@ -717,15 +717,23 @@
 			return *this;
 		}
 
-		Udjat::Dialog::Status & busy(bool enable) noexcept {
+		Udjat::Dialog::Status & state(const char *text) noexcept override {
+			Logger::String{text}.info("state");
+			return *this;
+		}
+
+		Udjat::Dialog::Status & busy(bool enable) noexcept override {
 			if(enable) {
 				progress->url(_("Please wait..."));
 			}
 			return *this;
 		}
 
-		Udjat::Dialog::Status & busy(const char *text) noexcept {
+		Udjat::Dialog::Status & busy(const char *text) noexcept override {
 			progress->url(text);
+			if(text && *text) {
+				Logger::String{text}.info("status");
+			}
 			return *this;
 		}
 

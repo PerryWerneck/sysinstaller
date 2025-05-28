@@ -92,6 +92,7 @@
 
 			Logger::String{"Building ISO-9660 Image"}.info(name());
 			status.sub_title(_("Building ISO-9660 Image"));
+			status.state(_("Preparing image"));
 	
 			iso9660::Image image{*output,*this,imgdef};
 
