@@ -91,7 +91,7 @@
 	int Console::run(int argc, char *argv[]) {
 
 		std::shared_ptr<Reinstall::Action> selected_action;
-		
+
 		{
 			// Present main menu.
 			UI::Console console;
@@ -237,7 +237,49 @@
 	}
 
 	std::shared_ptr<Reinstall::Dialog> Console::DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option) {
-		return make_shared<Reinstall::Dialog>(node, message, option);
+
+		class Dialog : public Reinstall::Dialog {
+		public:
+
+			Dialog(const Udjat::XML::Node &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
+			}
+
+			virtual ~Dialog() {
+			}
+
+			bool ask(bool default_response) const noexcept override {
+				return default_response;
+			}
+
+			void present(const char *msg) const noexcept override {
+				
+				Udjat::UI::Console console;
+
+				console.bold(true);
+				console << message << endl;
+				console.bold(false);
+
+				if(msg && *msg) {
+					console << msg << endl;
+				}
+
+				console << endl;
+
+
+
+				console << ":";
+
+				String choice;
+				console.cursor(true).flush();
+				cin.sync(); 
+				getline(cin, choice);
+
+			}
+
+		};
+
+		return make_shared<Dialog>(node,message,option);
+
 	}	
 
  }

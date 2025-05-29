@@ -419,10 +419,7 @@
 
 				// Show item.
 				contents.append(*item);
-
-				if(XML::AttributeFactory(node,"default").as_bool()) {
-					item->set_active(true);
-				}
+				item->set_active(action->is_default(node));
 
 				item->set_visible(true);
 				this->set_visible(true);

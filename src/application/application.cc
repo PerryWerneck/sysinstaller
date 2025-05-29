@@ -50,6 +50,7 @@
  namespace Reinstall {
 
 	Application *Application::instance = nullptr;
+
 	static const Udjat::ModuleInfo moduleinfo{"Top menu option"};
 		
 	Application::Application() : Factory{"group",moduleinfo} {
@@ -285,7 +286,6 @@
 		}
 
 	}
-
 	
  }
  

@@ -34,6 +34,7 @@
 
 	class UDJAT_API Action : public Udjat::NamedObject {
 	private:
+		static const char *presets[2];
 		const char * dialog_title;
 		const char * icon_name;
 
@@ -42,6 +43,10 @@
 		Action(const Udjat::XML::Node &node);
 		virtual ~Action();
 
+		static bool is_default(const Udjat::XML::Node &node) noexcept;
+
+		static void preset(const char *value) noexcept;
+
 		/// @brief Get the action title.
 		inline const char *title() const noexcept {
 			return dialog_title;
@@ -49,6 +54,10 @@
 
 		inline const char *icon() const noexcept {
 			return icon_name;
+		}
+
+		static inline bool has_preset() noexcept {
+			return (presets[0] && presets[1]);
 		}
 
 		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.

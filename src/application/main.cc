@@ -33,8 +33,9 @@
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/application.h>
  #include <private/console.h>
-
+ 
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
  #include <private/toplevel.h>
@@ -100,10 +101,7 @@
 		}
 
 		if(Udjat::Application::pop(argc,argv,'S',"select",value)) {
-			auto args = Udjat::String{value.c_str()}.split("/",2);
-			if(args.size() != 2) {
-				throw std::runtime_error{Logger::Message(_("Unable to select '{}': Invalid path"),value)};
-			}
+			Reinstall::Action::preset(value.c_str());
 		}
 
 		while(Udjat::Application::pop(argc,argv,'R',"repo",value)) {
