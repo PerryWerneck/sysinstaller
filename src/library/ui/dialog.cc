@@ -117,10 +117,12 @@
 			Dialog::Option value;
 			const char * attrname;
 		} opts[] {
-			{ Quit,					"allow-quit" 	},
-			{ Reboot,				"allow-reboot"	},
-			{ NonInteractiveQuit,	"force-quit" 	},
-			{ NonInteractiveReboot,	"force-reboot" 	},
+			{ Quit,					"allow-quit" 				},
+			{ Reboot,				"allow-reboot"				},	
+			{ NonInteractiveQuit,	"force-quit" 				},
+			{ NonInteractiveReboot,	"force-reboot" 				},
+			{ NonInteractiveQuit,	"non-interactive-quit" 		},
+			{ NonInteractiveReboot,	"non-interactive-reboot" 	},
 		};
 
 		for(const auto &option : opts) {
