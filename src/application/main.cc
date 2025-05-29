@@ -70,8 +70,8 @@
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
 		{ 'K', "kparm=n=v", _("Set kernel parameter 'n' to 'v' on boot image") },
-		{ 'Q', "quit", _("Quit after processing") },
-		{ 'R', "reboot", _("Reboot when success") },
+//		{ 'Q', "quit", _("Quit after processing") },
+//		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=[option]", _( "Auto select option" ) },
 		{ }
 	};
