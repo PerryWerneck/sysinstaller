@@ -34,6 +34,7 @@
  #include <udjat/tools/intl.h>
  #include <string>
  #include <reinstall/action.h>
+ #include <reinstall/dialog.h>
  #include <udjat/tools/string.h>
  #include <udjat/ui/status.h>
 
@@ -277,8 +278,16 @@
 		status.icon(action->icon());
 
 		try {
+
 			action->activate();
-			action->success->present();
+
+			if(action->success->has(Dialog::NonInteractiveReboot)) {
+				Logger::String{"Non-interactive dialog, rebooting"}.info();
+				action->success->reboot();
+			} else {
+				action->success->present();
+			}
+
 		} catch(const std::exception &e) {
 			action->failed->present(e);
 		} catch(...) {

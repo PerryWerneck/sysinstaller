@@ -45,7 +45,7 @@
 
 		static bool is_default(const Udjat::XML::Node &node) noexcept;
 
-		static void preset(const char *value) noexcept;
+		static void preset(const char *value);
 
 		/// @brief Get the action title.
 		inline const char *title() const noexcept {

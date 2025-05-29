@@ -33,6 +33,7 @@
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/dialog.h>
  #include <reinstall/application.h>
  #include <private/console.h>
  
@@ -70,8 +71,8 @@
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
 		{ 'K', "kparm=n=v", _("Set kernel parameter 'n' to 'v' on boot image") },
-//		{ 'Q', "quit", _("Quit after processing") },
-//		{ 'R', "reboot", _("Reboot when success") },
+		{ 'Q', "quit", _("Quit after processing") },
+		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=[option]", _( "Auto select option" ) },
 		{ }
 	};
@@ -102,6 +103,14 @@
 
 		if(Udjat::Application::pop(argc,argv,'S',"select",value)) {
 			Reinstall::Action::preset(value.c_str());
+		}
+
+		if(Udjat::Application::pop(argc,argv,'Q',"quit")) {
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveQuit);
+		}
+
+		if(Udjat::Application::pop(argc,argv,'R',"reboot",value)) {
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
 		}
 
 		while(Udjat::Application::pop(argc,argv,'R',"repo",value)) {

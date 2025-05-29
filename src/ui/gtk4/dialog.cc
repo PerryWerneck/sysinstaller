@@ -76,7 +76,7 @@
 		virtual ~Dialog() {
 		}
 
-		void action_quit() const override {
+		void quit() const override {
 			Logger::String{"Finalizing the application"}.info("dialog");
 			gtk_window_close(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
 		}
@@ -105,10 +105,10 @@
 				const char *label;
 				int response;
 			} buttons[] = {
-				{ AllowReboot, 				_("_Reboot"), 			DIALOG_RESPONSE_REBOOT 		},
-				{ AllowContinue, 			_("_Continue"), 		DIALOG_RESPONSE_CONTINUE 	},
-				{ AllowQuitApplication, 	_("_Quit application"), DIALOG_RESPONSE_QUIT 		},
-				{ AllowCancel, 				_("C_ancel"), 			DIALOG_RESPONSE_CANCEL 		}
+				{ Reboot, 		_("_Reboot"), 			DIALOG_RESPONSE_REBOOT 		},
+				{ Continue, 	_("_Continue"), 		DIALOG_RESPONSE_CONTINUE 	},
+				{ Quit, 		_("_Quit application"), DIALOG_RESPONSE_QUIT 		},
+				{ Cancel, 		_("C_ancel"), 			DIALOG_RESPONSE_CANCEL 		}
 			};
 
 			for(const auto &opt : this->buttons.order) {
@@ -178,14 +178,19 @@
 			return rc;
 		};
 		
-		/// @brief Show the dialog without any message.
-		void present(const char *msg) const noexcept override {
+		/// @brief Show the dialog.
+		bool present(const char *msg) const noexcept override {
 			
 			debug("Presenting dialog with message");
 
 			auto str = make_shared<string>( (msg && *msg) ? msg : "" );
 
-			Glib::signal_idle().connect([this,str](){
+			Glib::signal_idle().connect_once([this,str](){
+
+				if(Reinstall::Dialog::present(str->c_str())) {
+					// Already presented, no need to do anything else.
+					return;
+				}
 
 				// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html
 				auto *dialog = new MessageDialog(
@@ -201,22 +206,21 @@
 					switch(response) {
 					case DIALOG_RESPONSE_QUIT:
 						Logger::String{"The user response was 'quit'"}.info("dialog");
-						action_quit();
+						quit();
 						break;
 
-						case DIALOG_RESPONSE_REBOOT:
+					case DIALOG_RESPONSE_REBOOT:
 						Logger::String{"The user response was 'reboot'"}.info("dialog");
-						action_reboot();
+						reboot();
 						break;
 
-						case DIALOG_RESPONSE_CANCEL:
+					case DIALOG_RESPONSE_CANCEL:
 						Logger::String{"The user response was 'cancel'"}.info("dialog");
-						action_cancel();
+						cancel();
 						break;
 
-						case DIALOG_RESPONSE_CONTINUE:
+					case DIALOG_RESPONSE_CONTINUE:
 						Logger::String{"The user response was 'continue'"}.info("dialog");
-						action_continue();
 						break;
 					}
 
@@ -234,8 +238,9 @@
 
 				dialog->present();
 
-				return 0;
 			});
+
+			return false; // No action was taken yet, the dialog is presented asynchronously.
 
 		}
 

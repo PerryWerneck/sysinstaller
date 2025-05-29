@@ -52,8 +52,8 @@
 		}	
 
 		confirmation = Dialog::Factory("confirmation",node,_("Do you confirm?"));
-		success = Dialog::Factory("success",node,_("Operation complete"),Dialog::AllowQuitContinue);
-		failed = Dialog::Factory("failed",node,_("Operation failed"),Dialog::AllowQuitContinue);
+		success = Dialog::Factory("success",node,_("Operation complete"),Dialog::QuitContinue);
+		failed = Dialog::Factory("failed",node,_("Operation failed"),Dialog::QuitContinue);
 
 	}
 
@@ -71,7 +71,7 @@
 		return true;
 	}
 
-	void Action::preset(const char *value) noexcept {
+	void Action::preset(const char *value) {
 
 		auto args = Udjat::String{value}.split("/",2);
 		if(args.size() != 2) {

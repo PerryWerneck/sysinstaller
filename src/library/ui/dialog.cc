@@ -28,11 +28,15 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
  #include <memory>
+ #include <udjat/tools/dbus/connection.h>
+ #include <udjat/tools/dbus/message.h>
 
  using namespace Udjat;
  using namespace std;
 
  namespace Reinstall {
+
+	Dialog::Option Dialog::presets = Dialog::None;
 
 	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node, const char *message, const Option option) {
 
@@ -68,10 +72,10 @@
 			const char *name;
 			Option option;
 		} button_names[] = {
-			{ "reboot", 	AllowReboot				},
-			{ "continue", 	AllowContinue			},
-			{ "quit", 		AllowQuitApplication	},
-			{ "cancel", 	AllowCancel				},
+			{ "reboot", 	Reboot		},
+			{ "continue", 	Continue	},
+			{ "quit", 		Quit		},
+			{ "cancel", 	Cancel		},
 		};
 		for(const auto &button : button_names) {
 			if(strcasecmp(name,button.name) == 0) {
@@ -93,7 +97,7 @@
 	}
 
 	Dialog::Dialog(const Udjat::XML::Node &node, const char *msg, const Option o) 
-		: options{o}, 
+		: options{(Option) (o|presets)}, 
 			buttons{node},
 			title{XML::QuarkFactory(node,"dialog-title")},
 			message{XML::QuarkFactory(node,"message",msg)},
@@ -113,8 +117,8 @@
 			Dialog::Option value;
 			const char * attrname;
 		} opts[] {
-			{ AllowQuitApplication,	"allow-quit" 	},
-			{ AllowReboot,			"allow-reboot"	},
+			{ Quit,					"allow-quit" 	},
+			{ Reboot,				"allow-reboot"	},
 			{ NonInteractiveQuit,	"force-quit" 	},
 			{ NonInteractiveReboot,	"force-reboot" 	},
 		};
@@ -137,12 +141,23 @@
 		options = (Option) (options | value);
 	}
 
+	void Dialog::preset(const Option value) noexcept {
+		presets = (Option) (presets | value);
+	}
+
 	bool Dialog::ask(bool default_response) const noexcept {
 		return default_response;
 	}
 	
-	void Dialog::present(const char *) const noexcept {
-		return;
+	bool Dialog::present(const char *) const noexcept {
+
+		if(has(NonInteractiveQuit)) {
+			Logger::String{"Non-interactive dialog, quitting"}.info();
+			quit();
+			return true; // Non-interactive dialogs always return true.
+		}
+
+		return has(NonInteractive);
 	}
 
 	const char * Dialog::text(const char *def) const noexcept {
@@ -159,172 +174,28 @@
 		return def;
 	}
 
-	void Dialog::action_quit() const {
+	void Dialog::quit() const {
+		debug("Dialog::quit() called without implementation");
+	}
+
+	void Dialog::cancel() const {
 
 	}
 
-	void Dialog::action_cancel() const {
-
-	}
-
-	void Dialog::action_continue() const {
-
-	}
-
-	void Dialog::action_reboot() const {
-
-	}
-
- }
-
- /*
- #error deprecated
- 
- #include <config.h>
- #include <udjat/defs.h>
- #include <reinstall/ui/dialog.h>
- #include <udjat/tools/logger.h>
- #include <udjat/tools/xml.h>
- #include <udjat/tools/quark.h>
- #include <udjat/tools/intl.h>
- #include <stdexcept>
- #include <udjat/tools/configuration.h>
-
- #ifdef HAVE_UDJAT_DBUS
-	#include <udjat/tools/dbus/connection.h>
-	#include <udjat/tools/dbus/message.h>
- #endif // HAVE_UDJAT_DBUS
-
- using namespace std;
- using namespace Udjat;
-
- namespace Reinstall {
-
-	static Dialog::Controller *instance = nullptr;
-
-	Dialog::Option Dialog::defoptions = Dialog::None;
-
-	Dialog::Controller::Controller() {
-		if(instance) {
-			throw logic_error("Dialog controller is already active");
-		}
-		instance = this;
-	}
-
-	Dialog::Controller::~Controller() {
-		instance = nullptr;
-	}
-
-	std::string Dialog::message(const char *def) const {
-		if(args.message && *args.message) {
-			return args.message;
-		}
-		return Config::Value<string>{ (string{"dialog-"} + args.name).c_str(), "message", def};
-	}
-
-	std::string Dialog::details(const char *def) const {
-		if(args.details && *args.details) {
-			return args.details;
-		}
-		return Config::Value<string>{ (string{"dialog-"} + args.name).c_str(), "details", def};
-	}
-
-	static void get_attribute_if_not_exists(const XML::Node &node, const char *name, const char **value) {
-
-		if(*value && **value) {
-			return;
-		}
-
-		*value = XML::QuarkFactory(node,name);
-
-		debug(node.attribute("name").as_string(),"(",name,")='",*value,"'");
-
-	}
-
-	Dialog::Dialog(const char *name, Dialog::Option o, const XML::Node &node) : options{o} {
-
-		static const struct {
-			Dialog::Option value;
-			const char * attrname;
-		} options[] {
-			{ AllowQuitApplication,	"allow-quit" 	},
-			{ AllowReboot,			"allow-reboot"	},
-			{ NonInteractiveQuit,	"force-quit" 	},
-			{ NonInteractiveReboot,	"force-reboot" 	},
-		};
-
-		args.name = Quark{name}.c_str();
-
-		this->options = (Dialog::Option) (this->options | defoptions);
-
-		for(auto parent = node;parent;parent = parent.parent()) {
-
-			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
-
-				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
-					continue;
-				}
-
-				for(const auto &option : options) {
-					bool current = (this->options & option.value) != 0;
-					auto attr = XML::AttributeFactory(child,option.attrname);
-					if(attr) {
-						debug("Found ",option.attrname);
-						if(attr.as_bool(current)) {
-							this->options = (Dialog::Option) (this->options | option.value);
-						} else {
-							this->options = (Dialog::Option) (this->options & ~option.value);
-						}
-					}
-				}
-
-				// Load dialog properties.
-				get_attribute_if_not_exists(child,"icon",&args.icon_name);
-				get_attribute_if_not_exists(child,"message",&args.message);
-
-				if(!(args.details && *args.details)) {
-					Udjat::String text{child.child_value()};
-					text.expand(child);
-					text.strip();
-					args.details = text.as_quark();
-					debug(child.attribute("name").as_string(),"(details)='",args.details,"'");
-				}
-
-			}
-
-		}
-
-	}
-
-	Dialog::~Dialog() {
-	}
-
-	Dialog::Controller & Dialog::Controller::getInstance() {
-		if(!instance) {
-
-			// TODO: Build dummy dialog controller.
-			throw logic_error("The dialog controller was not initialized");
-
-		}
-
-		return *instance;
-	}
-
-	void Dialog::quit() const noexcept {
-		Logger::String{"Unable to quit application: ",strerror(ENOTSUP)}.error("dialog");
-	}
-
-	void Dialog::reboot() const noexcept {
-#if defined(HAVE_UDJAT_DBUS)
+	void Dialog::reboot() const {
+#ifdef DEBUG 
+		debug('---------------- Rebooting system ----------------');
+		quit();
+#else
 		try {
 			// Ask logind for reboot
 			DBus::SystemBus{}.call(
 				DBus::Message{
-					"org.freedesktop.login1",
-					"/org/freedesktop/login1",
-					"org.freedesktop.login1.Manager",
-					"Reboot",
-					true
+						"org.freedesktop.login1",
+						"/org/freedesktop/login1",
+						"org.freedesktop.login1.Manager",
+						"Reboot",
+						true
 				},
 				[this](Udjat::DBus::Message &response){
 					if(response) {
@@ -339,29 +210,8 @@
 		} catch(const std::exception &e) {
 			Logger::String{"Error '",e.what(),"' sending reboot request to logind"}.warning("dialog");
 		}
-#else
-		Logger::String{"Unable to reboot system: ",strerror(ENOTSUP)}.error("dialog");
-#endif // HAVE_UDJAT_DBUS
+#endif // DEBUG
 
-	}
-
-	bool Dialog::confirm() const noexcept {
-		if(*this) {
-			return select(1, _("_No"),_("_Yes"),nullptr) == 0;
-		}
-		return true; // Dialog is invalid, always return 'true'
-	}
-
-	int Dialog::select(int cancel, const char *button, ...) const {
-		int rc = -1;
-		if(*this) {
-			va_list args;
-			va_start(args, button);
-			rc = Controller::getInstance().select(*this,cancel,button,args);
-			va_end(args);
-		}
-		return rc;
 	}
 
  }
- */ 

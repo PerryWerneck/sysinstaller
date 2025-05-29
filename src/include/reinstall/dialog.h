@@ -36,17 +36,16 @@
 	public:
 
 		enum Option : uint8_t {
-			None 					= 0x0000,
-			AllowQuitApplication 	= 0x0001,
-			AllowReboot				= 0x0002,
-			AllowCancel				= 0x0004,
-			AllowContinue			= 0x0008,
+			None 					= 0x00,
+			Quit 					= 0x01,
+			Reboot					= 0x02,
+			Cancel					= 0x04,
+			Continue				= 0x08,
 
-			NonInteractiveReboot	= 0x0010,
-			NonInteractiveQuit		= 0x0020,
-
-			AllowQuitContinue		= (AllowQuitApplication|AllowContinue),
-			NonInteractive			= (NonInteractiveReboot|NonInteractiveQuit),
+			QuitContinue 			= Quit|Continue,		///< Quit or continue.
+			NonInteractive	 		= 0x10,
+			NonInteractiveQuit 		= 0x20,					///< Force quit without asking.
+			NonInteractiveReboot 	= 0x40,					///< Force reboot without asking.
 		};
 
 		static Option OptionFactory(const char *name);
@@ -59,12 +58,19 @@
 		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node, const char *message = "", const Option option = None);
 
 		void set(const Option option);
+		static void preset(const Option option) noexcept;
+
+		/// @brief Check option.
+		inline bool has(const Option option) const noexcept {
+			return (options & option) == option;
+		}
 
 		/// @brief Ask for confirmation.
 		virtual bool ask(bool default_response = true) const noexcept;
 		
 		/// @brief Show the dialog without any message.
-		virtual void present(const char *msg = nullptr) const noexcept;
+		/// @return true if an action was taken, false otherwise.
+		virtual bool present(const char *msg = nullptr) const noexcept;
 
 		/// @brief Show the dialog with an error message.
 		/// @param e The exception to show.
@@ -75,7 +81,13 @@
 		const char *text(const char *def = "") const noexcept;
 		const char *body(const char *def = "") const noexcept;
 
+		virtual void quit() const;
+		virtual void cancel() const;
+		virtual void reboot() const;
+
 	protected:
+
+		static Option presets;
 
 		/// @brief The dialog options.
 		/// @note The options are set by the XML file.
@@ -106,11 +118,6 @@
 		/// @brief Is this popup destructive?
 		/// @note This is used to show a warning icon in the dialog.
 		bool destructive = false;
-
-		virtual void action_quit() const;
-		virtual void action_cancel() const;
-		virtual void action_continue() const;
-		virtual void action_reboot() const;
 
 	};
 	

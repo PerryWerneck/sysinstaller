@@ -35,6 +35,7 @@
 
 	class Builder;
 
+	#pragma GCC diagnostic ignored "-Woverloaded-virtual"
 	namespace Abstract {
 
 		/// @brief Abstract disk image.

@@ -168,7 +168,7 @@
 			Reinstall::Script::load(*this,node,scripts);
 
 			// Enable allow reboot on success dialog.
-			success->set(Dialog::AllowReboot);
+			success->set(Dialog::Reboot);
 
 		}
 

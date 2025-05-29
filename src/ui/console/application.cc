@@ -251,8 +251,12 @@
 				return default_response;
 			}
 
-			void present(const char *msg) const noexcept override {
+			bool present(const char *msg) const noexcept override {
 				
+				if(Reinstall::Dialog::present(msg)) {
+					return true; // Already presented.
+				}
+
 				Udjat::UI::Console console;
 
 				console.bold(true);
@@ -274,6 +278,7 @@
 				cin.sync(); 
 				getline(cin, choice);
 
+				return true;
 			}
 
 		};
