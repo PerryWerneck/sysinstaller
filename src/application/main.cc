@@ -23,7 +23,7 @@
 
  #include <config.h>
 
- #include <udjat/tools/application.h>
+ #include <udjat/tools/commandlineparser.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
@@ -61,7 +61,7 @@
  int main(int argc, char* argv[]) {
 
 	// Check for help options.
-	static const Udjat::Application::Option options[] = {
+	static const Udjat::CommandLineParser::Argument options[] = {
 #ifdef HAVE_GTKMM
 		{ 't', "tui", _( "Use text user interface" ) },
 		{ 'g', "gui", _( "Use graphic user interface" ) },
@@ -70,10 +70,9 @@
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
-		{ 'K', "kparm=n=v", _("Set kernel parameter 'n' to 'v' on boot image") },
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot when success") },
-		{ 'S', "select=[option]", _( "Auto select option" ) },
+		{ 'S', "select=option", _( "Auto select option" ) },
 		{ }
 	};
 
@@ -83,7 +82,7 @@
 	Logger::console(true);
 #endif
 
-	if(Udjat::Application::options(argc,argv,options)) {
+	if(Udjat::CommandLineParser::options(argc,argv,options)) {
 		return 0;
 	}
 
@@ -91,29 +90,30 @@
 
 	// Parse command line options.
 	{
+		CommandLineParser options(argc,argv);
 		std::string value;
 
-		if(Udjat::Application::pop(argc,argv,'i',"install",value)) {
+		if(options.get_argument(argc,argv,'i',"install",value)) {
 			Reinstall::Repository::preset("install",value.c_str());	
 		}
 
-		if(Udjat::Application::pop(argc,argv,'O',"output",value)) {
+		if(options.get_argument(argc,argv,'O',"output",value)) {
 			Reinstall::Writer::set_output(value.c_str());
 		}
 
-		if(Udjat::Application::pop(argc,argv,'S',"select",value)) {
+		if(options.get_argument(argc,argv,'S',"select",value)) {
 			Reinstall::Action::preset(value.c_str());
 		}
 
-		if(Udjat::Application::pop(argc,argv,'Q',"quit")) {
+		if(options.has_argument(argc,argv,'Q',"quit")) {
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveQuit);
 		}
 
-		if(Udjat::Application::pop(argc,argv,'R',"reboot",value)) {
+		if(options.has_argument(argc,argv,'R',"reboot")) {
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
 		}
 
-		while(Udjat::Application::pop(argc,argv,'R',"repo",value)) {
+		while(options.get_argument(argc,argv,'R',"repo",value)) {
 			auto args = Udjat::String{value.c_str()}.split("=",2);
 			if(args.size() != 2) {
 				throw std::runtime_error{Logger::Message(_("Invalid repository argument: {}"),value)};
@@ -121,7 +121,7 @@
 			Reinstall::Repository::preset(args[0].c_str(),args[1].c_str());
 		}
 
-		while(Udjat::Application::pop(argc,argv,'k',"kernel-parameter",value)) {
+		while(options.get_argument(argc,argv,'k',"kernel-parameter",value)) {
 			Reinstall::KernelParameter::preset(value.c_str());
 		}
 
@@ -131,7 +131,7 @@
 #ifdef HAVE_GTKMM
 	// If the user requested TUI, run as a TUI application.
 
-	if( !Udjat::Application::pop(argc,argv,'g',"gui") && (Udjat::Application::pop(argc,argv,'t',"tui") || tui_only())) {
+	if( !CommandLineParser::has_argument(argc,argv,'g',"gui") && (CommandLineParser::has_argument(argc,argv,'t',"tui") || tui_only())) {
 
 		// Run as a TUI application.
 		return Reinstall::Console{}.run(argc,argv);
