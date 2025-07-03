@@ -23,19 +23,19 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/factory.h>
  #include <reinstall/group.h>
  #include <reinstall/dialog.h>
  #include <reinstall/action.h>
  #include <memory>
  #include <unordered_map>
  #include <string>
+ #include <udjat/tools/xml.h>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_PRIVATE Application : protected Udjat::Factory {
+	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser {
 	private:
 		static Application *instance;	///< @brief Singleton instance.
 

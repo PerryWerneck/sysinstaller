@@ -21,7 +21,7 @@
  #include <udjat/defs.h>
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
@@ -150,7 +150,7 @@
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory(name,moduleinfo) {
+	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{name} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
@@ -177,11 +177,11 @@
 				return true;
 			}
 
-			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(Factory::name());
+			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(XML::Parser::name());
 
 		} catch(const std::exception &e) {
 
-			Logger::String{e.what()}.error(Factory::name());
+			Logger::String{e.what()}.error(XML::Parser::name());
 
 		}
 

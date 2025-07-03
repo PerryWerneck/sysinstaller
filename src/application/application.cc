@@ -24,7 +24,7 @@
  #include <config.h>
  #include <udjat/tools/application.h>
  #include <reinstall/application.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <udjat/module/info.h>
  #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
@@ -54,7 +54,7 @@
 
 	static const Udjat::ModuleInfo moduleinfo{"Top menu option"};
 		
-	Application::Application() : Factory{"group",moduleinfo} {
+	Application::Application() : XML::Parser{"group"} {
 
 		// Load default http handler.
 		static HTTP::Handler::Factory http_handler{"default"};

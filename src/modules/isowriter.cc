@@ -28,7 +28,7 @@
 
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
@@ -79,13 +79,13 @@
 		return new Module();
 	}
 	
-	IsoWriter::Module::Module() : Udjat::Module("isowriter",moduleinfo), Udjat::Factory("iso-writer",moduleinfo) {
+	IsoWriter::Module::Module() : Udjat::Module("isowriter",moduleinfo), Udjat::XML::Parser{"iso-writer"} {
 	};
 
 	IsoWriter::Module::~Module() {
 	}
 
-	// Udjat::Factory
+	// Udjat::XML::Parser interface.
 	bool IsoWriter::Module::parse(const Udjat::XML::Node &node) {
 		Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info();
 		Reinstall::Application::getInstance().push_back(node,make_shared<IsoWriter::Module::Action>(node));

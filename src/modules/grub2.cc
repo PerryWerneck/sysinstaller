@@ -300,13 +300,13 @@
 	};
 	
 
-	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory("local-installer",moduleinfo) {
+	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser("local-installer") {
 	};
 
 	Grub2::Module::~Module() {
 	}	
 
-	// Udjat::Factory
+	// Udjat::XML::Parser interface.
 	bool Grub2::Module::parse(const Udjat::XML::Node &node) {
 		Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info("isowriter");
 		Reinstall::Application::getInstance().push_back(node,make_shared<Grub2::Module::Action>(node));

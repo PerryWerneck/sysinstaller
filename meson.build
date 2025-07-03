@@ -57,12 +57,27 @@ libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
 
 deps = [
-	dependency('libudjat',version : '>=2.0.0'),
-	dependency('libudjathttp',version : '>=2.0.0'),
-	dependency('libudjatdbus',version : '>=2.0.0'),
+	dependency(
+		'libudjat',
+		static: true,
+		version : '>=2.0.0'
+	),
+	dependency(
+		'libudjathttp',
+		version : '>=2.0.0',
+		static: true,
+	),
+	dependency(
+		'libudjatdbus',
+		static: true,
+		version : '>=2.0.0',
+	),
 	gtkmm,
 	dependency('libzip'),
-	dependency('libfatfs-static'),
+	dependency(
+		'libfatfs',
+		static: true,
+	),
 	dependency('zlib'),
 	dependency('libisofs-1'),
 	libslp,
