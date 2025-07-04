@@ -1,13 +1,12 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.0.1',
+	version: '6.1.0',
 	default_options : ['cpp_std=c++17'],
 	license: 'GPL-3.0-or-later',
 )
 
 project_description = 'Instalar/reinstalar terminal'
-project_domain = 'br.com.bb'
 
 pkg_version = meson.project_version()
 version_array = pkg_version.split('.')
@@ -57,9 +56,13 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
 libudjat = dependency('libudjat',version : '>=2.0.0',fallback: [ 'libudjat', 'static_library' ])
+libisofs =	dependency('libisofs-1',required: false)
 
 deps = [
 	libudjat,
+	gtkmm,
+	libisofs,
+	libslp,
 	dependency(
 		'libudjathttp',
 		version : '>=2.0.0',
@@ -71,15 +74,16 @@ deps = [
 		fallback: [ 'libudjatdbus', 'static_library' ],
 		version : '>=2.0.0',
 	),
-	gtkmm,
-	dependency('libzip'),
+	dependency(
+		'libzip'
+	),
 	dependency(
 		'libfatfs',
 		static: true,
 	),
-	dependency('zlib'),
-	dependency('libisofs-1'),
-	libslp,
+	dependency(
+		'zlib'
+	),
 ]
 
 #
@@ -90,18 +94,23 @@ conf_data.set_quoted('PACKAGE_NAME', meson.project_name())
 conf_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf_data.set_quoted('PACKAGE_DESCRIPTION', project_description)
 conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), meson.project_version()))
-conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(project_domain,meson.project_name()))
+conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 conf_data.set_quoted('MODULE_VERSION',libversion)
 
 conf_data.set('application_description',project_description)
-conf_data.set('application_icon','@0@.@1@'.format(project_domain,meson.project_name()))
+conf_data.set('application_icon','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
 conf_data.set('HAVE_FATFS', 1)
-conf_data.set('HAVE_ISOFS', 1)
+
 conf_data.set('HAVE_ZLIB', 1)
 conf_data.set('HAVE_LIBZIP', 1)
+
+if libisofs.found()
+	conf_data.set('HAVE_LIBISOFS', 1)
+	conf_data.set('HAVE_ISOFS', 1)
+endif
 
 if gtkmm.found()
   conf_data.set('HAVE_GTKMM', 1)
@@ -153,6 +162,7 @@ lib_src = [
 	'src/library/builder.cc',
 	'src/library/efiboot.cc',
 	'src/library/ui/dialog.cc',
+	'src/library/ui/removabledevicedialog.cc',
 	'src/library/disk/abstract.cc',
 	'src/library/disk/fat.cc',
 	'src/library/repository/factory.cc',
@@ -182,7 +192,7 @@ executable(
 
 custom_target(
 	input: 'icons/logo.svg',
-	output: '@0@.@1@.svg'.format(project_domain,meson.project_name()),
+	output: '@0@.@1@.svg'.format(libudjat.get_variable('product_domain'),meson.project_name()),
 	install: true,
 	install_dir: '/usr/share/icons/hicolor/scalable/apps',
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
@@ -204,7 +214,7 @@ install_data(
 install_data(
 configure_file(
         input: 'sysconf/launcher.desktop.in',
-        output: '@0@.@1@.desktop'.format(project_domain,meson.project_name()), 
+        output: '@0@.@1@.desktop'.format(libudjat.get_variable('product_domain'),meson.project_name()), 
         configuration: conf_data,
 	),
 	install_dir:'/usr/share/applications' 

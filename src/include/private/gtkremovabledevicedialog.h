@@ -26,33 +26,23 @@
  #include <udjat/defs.h>
  #include <gtkmm.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/tools/removabledevicedialog.h>
  #include <reinstall/dialog.h>
 
  #define USE_MESSAGE_DIALOG 1
  #define USE_DROPDOWN 1
 
  #ifdef USE_MESSAGE_DIALOG
- class UDJAT_PRIVATE GtkRemovableDeviceDialog : public Gtk::MessageDialog {
+ class UDJAT_PRIVATE GtkRemovableDeviceDialog : public Gtk::MessageDialog, public Reinstall::RemovableDeviceDialog {
  private:
  #else
- class GtkRemovableDeviceDialog : public Gtk::Window {
+ class GtkRemovableDeviceDialog : public Gtk::Window, public Reinstall::RemovableDeviceDialog {
  private:
  #endif // USE_MESSAGE_DIALOG
 
  #ifdef USE_DROPDOWN
-	class DeviceHolder : public Glib::Object {
+	class DeviceHolder : public Glib::Object, public Reinstall::RemovableDeviceDialog::DeviceHolder {
 	public:
-
-		enum Type : uint8_t {
-			Undefined,
-			AutoDetect,	///<< @brief Waiting for device.
-			FileDialog,	///<< @brief File dialog.
-			File,		///<< @brief File name.
-			Device		///<< @brief Standard device entry.
-		} type = Undefined;
-
-		Glib::ustring	description;
-		std::string		device_name;
 
 		static Glib::RefPtr<DeviceHolder> create(Type type, const char *devname, const char *descr) {
 			return Glib::make_refptr_for_instance<DeviceHolder>(new DeviceHolder(type, devname, descr));
@@ -60,8 +50,8 @@
 
 	private:
 
-		DeviceHolder(Type t, const char *name, const char *descr)
-			: type{t}, description{descr}, device_name{name} {
+		DeviceHolder(Type type, const char *name, const char *descr) :
+			Reinstall::RemovableDeviceDialog::DeviceHolder{type, name, descr} {
 		}
 
 	};
@@ -80,9 +70,6 @@
 	/// @brief Select filename for output.
 	void select_file();
 
-	/// @brief The writer
-	Reinstall::Writer &writer;
-
 	/// @brief Cancel button.
 	Gtk::Button cancel;
 
@@ -90,10 +77,10 @@
 	Gtk::Button apply;
 
 	/// @brief Device was added.
-	void device_added(const char *devname, const char *description);
+	void append(const char *devname, const char *description) override;
 
 	/// @brief Device was removed.
-	void device_removed(const char *devname, const char *description);
+	void remove(const char *devname, const char *description) override;
 
 	/// @brief Device was selected.
 	void device_selected(Glib::RefPtr<DeviceHolder> device);
@@ -102,10 +89,10 @@
 	GtkRemovableDeviceDialog(Reinstall::Writer &writer, const Reinstall::Dialog &dialog, bool allow_output_to_file = true);
 
 	/// @brief Get selected device description.
-	const char *description() const;
+	const char *description() const override;
 
-	/// @brief Get Device path
-	const char *device() const;
+	/// @brief Get selected device path
+	const char *device() const override;
 
  };
 

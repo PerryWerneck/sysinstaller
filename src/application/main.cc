@@ -68,7 +68,7 @@
 		{ 'k', "kernel-parameter=n=v", _( "Set kernel parameter 'n' to 'v'" ) },
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
-		{ 'R', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
+		{ 'r', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=option", _( "Auto select option" ) },
@@ -112,7 +112,7 @@
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
 		}
 
-		while(options.get_argument(argc,argv,'R',"repo",value)) {
+		while(options.get_argument(argc,argv,'r',"repo",value)) {
 			auto args = Udjat::String{value.c_str()}.split("=",2);
 			if(args.size() != 2) {
 				throw std::runtime_error{Logger::Message(_("Invalid repository argument: {}"),value)};

@@ -47,10 +47,9 @@
 #ifdef USE_MESSAGE_DIALOG
 
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Reinstall::Dialog &dialog, bool allow_output_to_file)
- : Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, 
- 	volume_monitor{Gio::VolumeMonitor::get()}, 
-	writer{w},
-	cancel{"_Cancel",true},
+ : 	Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, 
+ 	RemovableDeviceDialog{writer,allow_output_to_file}, 
+ 	volume_monitor{Gio::VolumeMonitor::get()}, 	cancel{"_Cancel",true},
 	apply{"C_ontinue",true} {
 
  	add_action_widget(cancel,ECANCELED);
@@ -64,13 +63,13 @@
 
 	volume_monitor->signal_drive_connected().connect([&](const Glib::RefPtr<Gio::Drive> drive){
 		if(drive->is_removable()) {
-			device_added(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+			append(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
 		}
 	});
 
 	volume_monitor->signal_drive_disconnected().connect([&](const Glib::RefPtr<Gio::Drive> drive){
 		if(drive->is_removable()) {
-			device_removed(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+			remove(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
 		}
 	});
 
@@ -204,7 +203,7 @@
 	// Load devices
 	for(const auto &drive : volume_monitor->get_connected_drives()) {
 		if(drive->is_removable()) {
-			device_added(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
+			append(drive->get_identifier(G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE).c_str(),drive->get_name().c_str());
 		}
 	}
 
@@ -263,7 +262,7 @@
 	return "";
  }
 
- void GtkRemovableDeviceDialog::device_added(const char *devname, const char *description) {
+ void GtkRemovableDeviceDialog::append(const char *devname, const char *description) {
 
 	Logger::String("Device '",description,"' was inserted (",devname,")").info("dialog");
 
@@ -278,7 +277,7 @@
 
  }
 
- void GtkRemovableDeviceDialog::device_removed(const char *devname, const char *description) {
+ void GtkRemovableDeviceDialog::remove(const char *devname, const char *description) {
 
  	Logger::String("Device '",description,"' was removed (",devname,")").info("dialog");
 
