@@ -67,7 +67,7 @@
 		const char *label; ///< @brief The label for this group.
 
 		Group(const Udjat::XML::Node &node) : label{XML::QuarkFactory(node,"title",XML::AttributeFactory(node,"name").as_string("Unnamed group"))} {
-			parse(node);
+			debug("Creating group '",label,"'");
 		}
 
 		~Group() override = default;
