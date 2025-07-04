@@ -64,3 +64,6 @@ notes.txt
 5[0-9]-*.xml
 .vale.ini
 styles
+libudjat
+libudjatdbus
+libudjathttp

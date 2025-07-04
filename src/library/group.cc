@@ -25,6 +25,10 @@
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/group.h>
+ #include <udjat/tools/logger.h>
+
+ using namespace Udjat;
+ using namespace std;
 
  namespace Reinstall {
 
@@ -36,8 +40,11 @@
 
 	}
 
-	void Group::setup(const Udjat::XML::Node &node) {
-
+	void Group::parse(const Udjat::XML::Node &node) {
+		debug("-----------------------------------------------------------------------");
+		debug("Setting up group '",node.attribute("name").as_string(),"'");
+		XML::parse_children(node);
+		debug("-----------------------------------------------------------------------");
 	}
 
  }

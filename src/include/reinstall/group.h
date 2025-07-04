@@ -39,9 +39,9 @@
 		Group();
 		virtual ~Group();
 
-		/// @brief Setup from XML node.
-		/// @param node The settings for this group.
-		virtual void setup(const Udjat::XML::Node &node);
+		/// @brief Parse xml node, build children.
+		/// @param node The definitions for this group.
+		virtual void parse(const Udjat::XML::Node &node);
 
 		/// @brief Insert a child node.
 		/// @param node Child node to insert.

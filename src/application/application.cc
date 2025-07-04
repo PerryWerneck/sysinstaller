@@ -257,7 +257,8 @@
 			group = result->second;
 		}
 
-		group->setup(node);
+		debug("Setting up group '",name.c_str(),"'");
+		group->parse(node);
 
 		return true;
 	}

@@ -382,9 +382,18 @@
 				
 		}
 
-		void setup(const Udjat::XML::Node &node) override {
-			title.set_text(XML::StringFactory(node,"title"));
-			sub_title.set_text(XML::StringFactory(node,"sub-title"));
+		void parse(const Udjat::XML::Node &node) override {
+			const char *str = XML::StringFactory(node,"title");
+			if(str && *str) {
+				title.set_text(str);
+			} 
+
+			str = XML::StringFactory(node,"sub-title");
+			if(str && *str) {
+				sub_title.set_text(str);
+			}
+
+			Reinstall::Group::parse(node);
 		}
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
