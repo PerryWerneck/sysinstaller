@@ -27,7 +27,6 @@
  #include <udjat/tools/intl.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
- #include <udjat/version.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/string.h>
  #include <reinstall/tools/kernelparameter.h>
@@ -139,7 +138,7 @@
 	} else {
 
 		// Run as a GUI application.
-		return Gtk::Application::create(UDJAT_PRODUCT_DOMAIN ".gtk." PACKAGE_NAME)->make_window_and_run<TopLevel>(1,argv);
+		return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) ".gtk." PACKAGE_NAME)->make_window_and_run<TopLevel>(1,argv);
 
 	}
 #else 

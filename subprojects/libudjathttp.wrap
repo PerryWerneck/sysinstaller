@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/PerryWerneck/libudjathttp
+revision = develop
+depth = 1
+

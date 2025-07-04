@@ -33,6 +33,7 @@ endif
 
 compiler_flags_common = [
 	'-DBUILD_DATE='+time_epoch,
+	'-Wno-overloaded-virtual',
 ]
 
 if enable_debug
@@ -55,21 +56,19 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 #
 libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
+libudjat = dependency('libudjat',version : '>=2.0.0',fallback: [ 'libudjat', 'static_library' ])
 
 deps = [
-	dependency(
-		'libudjat',
-		static: true,
-		version : '>=2.0.0'
-	),
+	libudjat,
 	dependency(
 		'libudjathttp',
 		version : '>=2.0.0',
-		static: true,
+		fallback: [ 'libudjathttp', 'static_library' ],
 	),
 	dependency(
 		'libudjatdbus',
-		static: true,
+		version : '>=2.0.0',
+		fallback: [ 'libudjatdbus', 'static_library' ],
 		version : '>=2.0.0',
 	),
 	gtkmm,
