@@ -147,7 +147,14 @@
 	} else {
 
 		// Run as a GUI application.
-		return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) ".gtk." PACKAGE_NAME)->make_window_and_run<TopLevel>(1,argv);
+		if(Reinstall::Dialog::has_preset(Reinstall::Dialog::NonInteractive)) {
+
+
+		} else {
+
+			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) ".gtk." PACKAGE_NAME)->make_window_and_run<InteractiveWindow>(1,argv);
+		
+		}
 
 	}
 #else 

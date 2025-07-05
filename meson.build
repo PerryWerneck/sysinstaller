@@ -144,6 +144,7 @@ app_src = [
 if gtkmm.found()
 	app_src += [
 		'src/ui/gtk4/toplevel.cc',
+		'src/ui/gtk4/interactive.cc',
 		'src/ui/gtk4/dialog.cc',
 		'src/ui/gtk4/writer.cc',
 		'src/ui/gtk4/gtkremovabledevicedialog.cc',

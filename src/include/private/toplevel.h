@@ -32,7 +32,28 @@
  #include <udjat/tools/xml.h>
  #include <reinstall/tools/writer.h>
 
- class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, private Reinstall::Application, private Reinstall::Writer {
+ class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, protected Reinstall::Application, private Reinstall::Writer {
+ private:
+ public:
+	TopLevel();
+	~TopLevel() override;
+
+ protected:
+
+	/// @brief Start XML parsing
+	void start();
+
+	void failed(const std::exception &e) noexcept override;
+
+	/// @brief Open target device for writing.
+	/// @see Reinstall::Writer::open()
+	void open(const Reinstall::Dialog &settings) override;
+
+	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
+
+ };
+
+ class UDJAT_PRIVATE InteractiveWindow : public TopLevel {
  private:
 
 	class Item;
@@ -69,25 +90,17 @@
 	Gtk::Box buttons{Gtk::Orientation::HORIZONTAL};
 	Gtk::ScrolledWindow viewport;
 
+ public:
+	InteractiveWindow();
+	~InteractiveWindow() override;
+
  protected:
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
-
-	void failed(const std::exception &e) noexcept override;
-
-	/// @brief Open target device for writing.
-	/// @see Reinstall::Writer::open()
-	void open(const Reinstall::Dialog &settings) override;
-
- public:
-	TopLevel();
-	~TopLevel() override;
-
-	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
 
 	void select(std::shared_ptr<Reinstall::Action> action) override;
 
 	void activate() noexcept override;
 
-};
+ };
 
  
