@@ -46,6 +46,7 @@
 			NonInteractive	 		= 0x10,
 			NonInteractiveQuit 		= 0x30,					///< Force quit without asking.
 			NonInteractiveReboot 	= 0x50,					///< Force reboot without asking.
+			AutoConfirm				= 0x80,					///< Automatically confirm the dialog.	
 		};
 
 		static Option OptionFactory(const char *name);

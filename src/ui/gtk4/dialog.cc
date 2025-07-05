@@ -144,6 +144,11 @@
 		/// @brief Ask for confirmation.
 		bool ask(bool default_response) const noexcept override {
 
+			if(has(AutoConfirm)) {
+				debug("Non-interactive dialog, returning default response");
+				return default_response;
+			}
+
 			auto mainloop = Glib::MainLoop::create();
 
 			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html

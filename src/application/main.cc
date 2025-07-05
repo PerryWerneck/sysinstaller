@@ -69,6 +69,7 @@
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'r', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
+		{ 'y', "non-interactive", _("Non interactivebui") },
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=option", _( "Auto select option" ) },
@@ -110,6 +111,10 @@
 
 		if(options.has_argument(argc,argv,'R',"reboot")) {
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
+		}
+
+		if(options.has_argument(argc,argv,'y',"non-interactive")) {
+			Reinstall::Dialog::preset(Reinstall::Dialog::AutoConfirm);
 		}
 
 		while(options.get_argument(argc,argv,'r',"repo",value)) {
