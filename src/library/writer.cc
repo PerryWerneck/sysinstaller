@@ -33,13 +33,11 @@
  #include <semaphore.h>
 
  #include <fcntl.h>
+ #include <sys/stat.h>
 
  #ifndef _WIN32
 	#include <unistd.h>
  #endif // _WIN32
-
- #include <gtkmm.h>
- #include <private/gtkremovabledevicedialog.h>
 
  using namespace Udjat;
  using namespace std;
@@ -143,95 +141,5 @@
 		close();
 
 	}
-
-	/*
-	void GtkWriter::open() {
-
-		if(!selected.empty()) {
-
-			// Use pre-selected output.
-			try {
-
-				Writer::open(selected.c_str());
-
-			} catch(const std::exception &e) {
-
-				Logger::String{e.what()}.error("writer");
-				close();
-
-			}
-
-			this->device_url = selected.c_str();
-			Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
-	
-			return;
-
-		}
-
-		struct {
-			string devdescr;
-			string devname;
-			int response = -1;
-			sem_t semaphore;
-		} info;
-
-		sem_init(&info.semaphore,0,0);
-
-		while(!*this) {
-
-			Glib::signal_idle().connect([this,&info](){
-
-				auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
-
-#ifdef USE_MESSAGE_DIALOG
-				dialog->signal_response().connect([dialog,&info](int rsp){
-					info.response = rsp;
-					info.devdescr = dialog->description();
-					info.devname = dialog->device();
-					Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
-					sem_post(&info.semaphore);
-					delete dialog;
-				});
-#else
-				#error Needs implementation
-#endif // USE_MESSAGE_DIALOG
-
-				dialog->present();
-
-				return 0;
-
-			});
-
-			sem_wait(&info.semaphore);
-
-			if(info.response) {
-				Logger::String{"Device selection dialog exits with rc=",info.response," (",strerror(info.response),")"}.warning("writer");
-				close();
-				throw runtime_error(strerror(info.response));
-			}
-
-			if(!*this) {
-
-				try {
-
-					debug("Opening ",info.devname.c_str());
-					Writer::open(info.devname.c_str());
-
-				} catch(const std::exception &e) {
-
-					Logger::String{e.what()}.error("writer");
-					close();
-
-				}
-
-			}
-
-		}
-
-		this->device_url = info.devdescr.c_str();
-		Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
-	
-	}
-	*/
 
  }

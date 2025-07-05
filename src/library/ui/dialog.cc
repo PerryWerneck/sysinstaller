@@ -153,11 +153,19 @@
 	
 	bool Dialog::present(const char *) const noexcept {
 
+		/*
 		if(has(NonInteractiveQuit)) {
 			Logger::String{"Non-interactive dialog, quitting"}.info();
 			quit();
 			return true; // Non-interactive dialogs always return true.
+		} else if(has(NonInteractiveReboot)) {
+			Logger::String{"Non-interactive dialog, rebooting"}.info();
+			reboot();
+			return true; // Non-interactive dialogs always return true.
 		}
+		*/
+
+		debug("Dialog::present() called in ",(has(NonInteractive) ? "non-interactive" : "interactive")," mode");
 
 		return has(NonInteractive);
 	}

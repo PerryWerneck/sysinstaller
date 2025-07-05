@@ -87,15 +87,16 @@
 	bool Action::is_default(const Udjat::XML::Node &node) noexcept {
 
 		bool has_preset = Action::has_preset();
+		if(has_preset) {
+			if(has_preset && strcasecmp(presets[0],node.parent().attribute("name").as_string("default"))) {
+				return false;
+			}
 
-		if(has_preset && strcasecmp(presets[0],node.parent().attribute("name").as_string("default"))) {
-			return false;
+			if(has_preset && strcasecmp(presets[1],node.attribute("name").as_string("default"))) {
+				return false;
+			}			
 		}
 
-		if(has_preset && strcasecmp(presets[1],node.attribute("name").as_string("default"))) {
-			return false;
-		}
-		
 		return XML::AttributeFactory(node,"default").as_bool(has_preset) || 
 		       XML::AttributeFactory(node,"selected").as_bool(has_preset) || 
 		       XML::AttributeFactory(node,"active").as_bool(has_preset);

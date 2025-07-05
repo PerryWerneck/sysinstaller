@@ -283,9 +283,10 @@
 			action->activate();
 
 			if(action->success->has(Dialog::NonInteractiveReboot)) {
-				Logger::String{"Non-interactive dialog, rebooting"}.info();
+				Logger::String{"Non interactive dialog, rebooting"}.info();
 				action->success->reboot();
 			} else {
+				debug("Action '",action->name(),"' was activated successfully");
 				action->success->present();
 			}
 

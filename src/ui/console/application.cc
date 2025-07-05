@@ -53,6 +53,8 @@
 	class Reinstall::Console::Group : public Reinstall::Group {
 	public:
 
+		static std::shared_ptr<Reinstall::Action> preset;
+
 		struct Item {
 			std::shared_ptr<Reinstall::Action> action; ///< @brief The action associated with this item.
 			const char *label;
@@ -73,10 +75,15 @@
 		~Group() override = default;
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
-			itens.emplace_back(node,action);
+			auto &itn = itens.emplace_back(node,action);
+			if(itn.action->is_default(node)) {
+				preset = itn.action;
+			}
 		}
 
 	};
+
+	std::shared_ptr<Reinstall::Action> Reinstall::Console::Group::preset;
 
 	Console::Console() {
 		
@@ -90,10 +97,11 @@
 
 	int Console::run(int argc, char *argv[]) {
 
-		std::shared_ptr<Reinstall::Action> selected_action;
+		std::shared_ptr<Reinstall::Action> selected_action = Reinstall::Console::Group::preset;
 
-		{
-			// Present main menu.
+		if(!Action::has_preset()) {
+
+			// No present - Present main menu.
 			UI::Console console;
 
 			console << _("Available options") << endl << endl;
@@ -206,14 +214,21 @@
 				Logger::String{"User cancelled action"}.info();
 				return ECANCELED; // User cancelled.
 			}
+
+			Logger::String{"User selected '",selected_action->title(),"'"}.info();
+
 		}
 
-		Logger::String{"User selected '",selected_action->title(),"'"}.info();
+		if(!selected_action) {
+			Logger::String{"No action selected"}.error();
+			return -EINVAL; // No action selected.
+		}
 
 		try {
 
 			selected_action->activate();
 			Logger::String{"Action '",selected_action->title(),"' executed successfully"}.info();
+
 			selected_action->success->present();
 
 		} catch(const std::exception &e) {
@@ -223,6 +238,7 @@
 			return -1;
 		}
 
+		debug("Console action completed successfully");
 		return 0;
 	}
 
@@ -252,9 +268,10 @@
 			}
 
 			bool present(const char *msg) const noexcept override {
-				
+
 				if(Reinstall::Dialog::present(msg)) {
-					return true; // Already presented.
+					Logger::String{((msg && *msg) ? msg : message)}.info();
+					return true;
 				}
 
 				Udjat::UI::Console console;

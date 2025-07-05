@@ -44,8 +44,8 @@
 
 			QuitContinue 			= Quit|Continue,		///< Quit or continue.
 			NonInteractive	 		= 0x10,
-			NonInteractiveQuit 		= 0x20,					///< Force quit without asking.
-			NonInteractiveReboot 	= 0x40,					///< Force reboot without asking.
+			NonInteractiveQuit 		= 0x30,					///< Force quit without asking.
+			NonInteractiveReboot 	= 0x50,					///< Force reboot without asking.
 		};
 
 		static Option OptionFactory(const char *name);
