@@ -35,6 +35,7 @@
  #include <reinstall/dialog.h>
  #include <reinstall/application.h>
  #include <private/console.h>
+ #include <udjat/tools/quark.h>
  
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
@@ -69,12 +70,15 @@
 		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
 		{ 'i', "install=url", _("Set install url, disable slp") },
 		{ 'r', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
-		{ 'y', "non-interactive", _("Non interactivebui") },
+		{ 'y', "non-interactive", _("Non interactive") },
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot when success") },
 		{ 'S', "select=option", _( "Auto select option" ) },
 		{ }
 	};
+
+	// Initialize the application.
+	Quark::init();
 
 #ifdef DEBUG
 	Udjat::Config::allow_user_homedir(true);
@@ -114,7 +118,7 @@
 		}
 
 		if(options.has_argument(argc,argv,'y',"non-interactive")) {
-			Reinstall::Dialog::preset(Reinstall::Dialog::AutoConfirm);
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
 		}
 
 		while(options.get_argument(argc,argv,'r',"repo",value)) {

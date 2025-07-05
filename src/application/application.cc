@@ -281,7 +281,9 @@
 		try {
 
 			action->activate();
+			action->success->present();
 
+			/*
 			if(action->success->has(Dialog::NonInteractiveReboot)) {
 				Logger::String{"Non interactive dialog, rebooting"}.info();
 				action->success->reboot();
@@ -289,6 +291,7 @@
 				debug("Action '",action->name(),"' was activated successfully");
 				action->success->present();
 			}
+			*/
 
 		} catch(const std::exception &e) {
 			action->failed->present(e);

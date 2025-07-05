@@ -44,9 +44,8 @@
 
 			QuitContinue 			= Quit|Continue,		///< Quit or continue.
 			NonInteractive	 		= 0x10,
-			NonInteractiveQuit 		= 0x30,					///< Force quit without asking.
-			NonInteractiveReboot 	= 0x50,					///< Force reboot without asking.
-			AutoConfirm				= 0x80,					///< Automatically confirm the dialog.	
+			NonInteractiveQuit 		= 0x20,					///< Force quit without asking.
+			NonInteractiveReboot 	= 0x40,					///< Force reboot without asking.
 		};
 
 		static Option OptionFactory(const char *name);
@@ -60,7 +59,8 @@
 
 		void set(const Option option);
 		static void preset(const Option option) noexcept;
-
+		static bool has_preset(const Option option) noexcept;
+	
 		/// @brief Check option.
 		inline bool has(const Option option) const noexcept {
 			return (options & option) == option;

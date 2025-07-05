@@ -147,11 +147,21 @@
 		presets = (Option) (presets | value);
 	}
 
+	bool Dialog::has_preset(const Option option) noexcept {
+		return (presets & option) == option;
+	}
+
 	bool Dialog::ask(bool default_response) const noexcept {
 		return default_response;
 	}
 	
 	bool Dialog::present(const char *) const noexcept {
+
+#ifdef DEBUG
+		cout << "Options ---------> " << hex << ((unsigned int) options) << " <---------\n";
+		cout << "Reboot  ---------> " << hex << ((unsigned int) (options&NonInteractiveReboot)) << " <---------\n";
+		cout << "Quit    ---------> " << hex << ((unsigned int) (options&NonInteractiveQuit)) << " <---------\n";
+#endif // DEBUG
 
 		if(has(NonInteractiveQuit)) {
 			Logger::String{"Non-interactive dialog, quitting"}.info();

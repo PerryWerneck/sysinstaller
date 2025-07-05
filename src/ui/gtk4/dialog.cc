@@ -144,9 +144,8 @@
 		/// @brief Ask for confirmation.
 		bool ask(bool default_response) const noexcept override {
 
-			if(has(AutoConfirm)) {
-				debug("Non-interactive dialog, returning default response");
-				return default_response;
+			if(has(NonInteractive)) {
+				return true;
 			}
 
 			auto mainloop = Glib::MainLoop::create();
