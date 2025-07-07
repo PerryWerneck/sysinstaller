@@ -3,7 +3,6 @@ src/application/main.cc
 src/library/disk/abstract.cc
 src/library/disk/fat.cc
 src/library/kernelparameter.cc
-src/library/os/linux/gtkremovabledevicedialog.cc
 src/library/os/linux/writer.cc
 src/library/os/windows/gtkremovabledevicedialog.cc
 src/library/repository/factory.cc
@@ -16,6 +15,7 @@ src/library/source/tempfile.cc
 src/library/ui/dialog.cc
 src/library/ui/popup.cc
 src/library/ui/progress.cc
+src/library/ui/removabledevicedialog.cc
 src/library/action.cc
 src/library/builder.cc
 src/library/efiboot.cc
@@ -34,6 +34,10 @@ src/modules/grub2.cc
 src/modules/isowriter.cc
 src/ui/gtk4/dialog.cc
 src/ui/gtk4/gtkremovabledevicedialog.cc
-src/ui/gtk4/toplevel.cc
 src/ui/gtk4/writer.cc
+src/ui/gtk4/interactive.cc
+src/ui/gtk4/toplevel.cc
+src/ui/gtk4/noninteractive.cc
+src/ui/gtk4/progress.cc
+src/ui/gtk4/status.cc
 src/ui/console/application.cc

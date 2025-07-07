@@ -93,7 +93,12 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 #
 libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
-libudjat = dependency('libudjat',version : '>=2.0.0',fallback: [ 'libudjat', 'static_library' ])
+libudjat = dependency(
+	'libudjat',
+	version : '>=2.0.0',
+	fallback: [ 'libudjat', 'static_library' ],
+	default_options: ['default_library=static'],
+)
 libisofs =	dependency('libisofs-1',required: false)
 
 deps = [
@@ -105,15 +110,16 @@ deps = [
 		'libudjathttp',
 		version : '>=2.0.0',
 		fallback: [ 'libudjathttp', 'static_library' ],
+	    default_options: ['default_library=static'],
 	),
 	dependency(
 		'libudjatdbus',
 		version : '>=2.0.0',
 		fallback: [ 'libudjatdbus', 'static_library' ],
-		version : '>=2.0.0',
+	    default_options: ['default_library=static'],
 	),
 	dependency(
-		'libzip'
+		'libzip',
 	),
 	dependency(
 		'libfatfs',
