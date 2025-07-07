@@ -27,6 +27,7 @@
  #include <udjat/defs.h>
  #include <gtkmm.h>
  #include <memory>
+ #include <string>
  #include <reinstall/application.h>
  #include <reinstall/dialog.h>
  #include <udjat/tools/xml.h>
@@ -82,6 +83,37 @@
 
 	};
 	
+	class Status : public Gtk::Grid, private Udjat::Dialog::Progress::Factory, private Udjat::Dialog::Status {
+	private:
+		Label main{"dialog-title",""}, subtitle{"dialog-subtitle",""};
+		Gtk::Image side_icon;
+
+		struct {
+			std::string label;
+			uint8_t changed = 0;
+			bool valid = false;
+			float fraction;
+		} values;
+
+		std::shared_ptr<Progress> progress;
+
+	public:
+		Status();
+		~Status() override;
+
+		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
+		Udjat::Dialog::Status & title(const char *text) noexcept override;
+		Udjat::Dialog::Status & sub_title(const char *text) noexcept override;
+		Udjat::Dialog::Status & icon(const char *icon_name) noexcept override;
+		Udjat::Dialog::Status & step(unsigned int current, unsigned int total) noexcept override;
+		Udjat::Dialog::Status & state(const char *text) noexcept override;
+		Udjat::Dialog::Status & busy(bool enable) noexcept override;
+		Udjat::Dialog::Status & busy(const char *text) noexcept override;
+		Udjat::Dialog::Status & show() noexcept override;
+		Udjat::Dialog::Status & hide() noexcept override;
+
+	};
+
 	/// @brief Start XML parsing
 	void start();
 
@@ -95,10 +127,10 @@
 
  };
 
- class UDJAT_PRIVATE NonInteractiveWindow : public TopLevel, private Udjat::Dialog::Status {
+ class UDJAT_PRIVATE NonInteractiveWindow : public TopLevel, private Udjat::Dialog::Progress::Factory {
  private:
 	std::shared_ptr<Reinstall::Action> action;
-	Progress progress;
+	std::shared_ptr<Progress> progress;
 
  public:
 	NonInteractiveWindow();
@@ -107,6 +139,8 @@
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
 
 	void activate() noexcept override;
+
+	std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const override;
 
  };
 

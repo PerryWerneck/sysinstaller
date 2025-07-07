@@ -155,6 +155,7 @@ if gtkmm.found()
 	app_src += [
 		'src/ui/gtk4/toplevel.cc',
 		'src/ui/gtk4/progress.cc',
+		'src/ui/gtk4/status.cc',
 		'src/ui/gtk4/interactive.cc',
 		'src/ui/gtk4/noninteractive.cc',
 		'src/ui/gtk4/dialog.cc',

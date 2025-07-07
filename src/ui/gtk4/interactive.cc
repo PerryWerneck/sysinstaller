@@ -404,24 +404,12 @@
 
 
 	/// @brief The GTK4 status dialog.
-	class Status : public Gtk::Dialog, private Udjat::Dialog::Progress::Factory, private Udjat::Dialog::Status {
+	class Status : public Gtk::Dialog {
 	private:
-		Label main{"dialog-title",""}, subtitle{"dialog-subtitle",""};
-		Gtk::Image side_icon;
-
-		struct {
-			string label;
-			uint8_t changed = 0;
-			bool valid = false;
-			float fraction;
-		} values;
-
-		std::shared_ptr<Progress> progress;
+		TopLevel::Status status;
 
 	public:
-		Status() : progress{std::make_shared<Progress>()} {
-
-			debug("Building GTK4 status dialog");
+		Status() {
 
 			gtk_window_set_transient_for(
 				GTK_WINDOW(gobj()),
@@ -437,39 +425,7 @@
 
 			get_style_context()->add_class("dialog-progress");
 
-			subtitle.set_valign(Gtk::Align::START);
-
-			Gtk::Grid view;
-			view.set_valign(Gtk::Align::CENTER);
-			view.set_hexpand(true);
-			view.set_vexpand(false);
-			view.set_column_spacing(3);
-			view.set_row_spacing(3);
-			view.set_row_homogeneous(false);
-			view.set_column_homogeneous(false);
-			view.set_margin(12);
-			view.get_style_context()->add_class("dialog-contents");
-
-			side_icon.get_style_context()->add_class("dialog-icon");
-			side_icon.set_hexpand(false);
-			side_icon.set_vexpand(false);
-			// icon.set_icon_size(::Gtk::IconSize::LARGE);
-			side_icon.set_pixel_size(45);
-			side_icon.set_from_icon_name("logo");
-
-			view.attach(main,1,0,1,1);
-			view.attach(subtitle,1,1,1,1);
-			view.attach(side_icon,0,0,1,2);
-			view.attach(*progress,0,2,2,1);
-
-#ifdef DEBUG
-			progress->url("The url");
-			main.set_text("The message");
-			subtitle.set_text("The body");
-#endif // DEBUG
-
-			set_child(view);
-			view.show();
+			set_child(status);
 
 			set_default_size(700, -1);
 
@@ -477,72 +433,6 @@
 		
 		~Status() override {
 			debug("Destroying GTK4 status dialog");
-		}
-
-		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const {
-			return progress;
-		}
-
-		Udjat::Dialog::Status & title(const char *text) noexcept override {
-			string str{text};
-			Glib::signal_idle().connect_once([this,str](){
-				main.set_text(str);
-			});
-			return *this;
-		}
-
-		Udjat::Dialog::Status & sub_title(const char *text) noexcept override {
-			string str{text};
-			progress->url("");
-			Glib::signal_idle().connect_once([this,str](){
-				subtitle.set_text(str);
-			});
-			return *this;
-		}
-
-		Udjat::Dialog::Status & icon(const char *icon_name) noexcept override {
-			if(icon_name && *icon_name) {
-				string str{icon_name};
-				Glib::signal_idle().connect_once([this,str](){
-					side_icon.set_from_icon_name(str);
-				});
-			}	
-			return *this;
-		}
-
-		Udjat::Dialog::Status & step(unsigned int current, unsigned int total) noexcept override {
-			progress->step(current,total);
-			return *this;
-		}
-	
-		Udjat::Dialog::Status & show() noexcept override{
-			Gtk::Dialog::set_visible(true);
-			return *this;
-		}
-
-		Udjat::Dialog::Status & hide() noexcept override {
-			Gtk::Dialog::set_visible(false);
-			return *this;
-		}
-
-		Udjat::Dialog::Status & state(const char *text) noexcept override {
-			Logger::String{text}.info("state");
-			return *this;
-		}
-
-		Udjat::Dialog::Status & busy(bool enable) noexcept override {
-			if(enable) {
-				progress->url(_("Please wait..."));
-			}
-			return *this;
-		}
-
-		Udjat::Dialog::Status & busy(const char *text) noexcept override {
-			progress->url(text);
-			if(text && *text) {
-				Logger::String{text}.info("status");
-			}
-			return *this;
 		}
 
 	};

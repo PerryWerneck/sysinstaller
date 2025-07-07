@@ -61,6 +61,10 @@
 
  }
 
+ std::shared_ptr<Udjat::Dialog::Progress> NonInteractiveWindow::ProgressFactory() const {
+	return progress;
+ }
+
  std::shared_ptr<Reinstall::Group> NonInteractiveWindow::group_factory(const Udjat::XML::Node &node) {
 
 	class Group : public Reinstall::Group {
