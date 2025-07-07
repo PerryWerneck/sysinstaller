@@ -106,6 +106,7 @@ deps = [
 	gtkmm,
 	libisofs,
 	libslp,
+	cxx.find_library('dl', required: true),
 	dependency(
 		'libudjathttp',
 		version : '>=2.0.0',
