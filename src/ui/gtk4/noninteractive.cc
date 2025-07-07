@@ -30,6 +30,7 @@
  #include <reinstall/action.h>
  #include <memory>
  #include <semaphore.h>
+ #include <udjat/tools/threadpool.h>
 
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
@@ -46,7 +47,14 @@
  NonInteractiveWindow::NonInteractiveWindow() : TopLevel() {
  
 	// Setup the window
+	set_deletable(false);
+	set_resizable(false);
 	set_default_size(700, -1);
+
+	get_style_context()->add_class("dialog-progress");
+
+	set_child(status);
+
 
 	// Initialize, parse XML files.
 	start();
@@ -59,10 +67,19 @@
 
  void NonInteractiveWindow::activate() noexcept {
 
- }
+	present();
 
- std::shared_ptr<Udjat::Dialog::Progress> NonInteractiveWindow::ProgressFactory() const {
-	return progress;
+	ThreadPool::getInstance().push([this](){
+		
+		Reinstall::Application::activate();
+
+		// Close progress popup.
+		Glib::signal_idle().connect_once([](){
+			gtk_window_close(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
+		});
+
+	});
+
  }
 
  std::shared_ptr<Reinstall::Group> NonInteractiveWindow::group_factory(const Udjat::XML::Node &node) {
@@ -82,6 +99,7 @@
 			for (const auto &child : node.children()) {
 				if(!Reinstall::Action::is_default(child)) {
 					continue; // Skip non-action nodes.
+				
 				}
 				push_back(node,make_shared<Reinstall::Action>(child));
 			}
@@ -93,11 +111,16 @@
 			sem_init(&semaphore,0,0);
 
 			Glib::signal_idle().connect_once([this,&node,action,&semaphore](){
-
+				auto &status = Udjat::Dialog::Status::getInstance();
+				status.title(action->title());
+				status.sub_title(_("Initializing..."));
+				status.icon(action->icon());
+				hwnd.select(action);
 				sem_post(&semaphore);
 			});
 
 			sem_wait(&semaphore);
+
 		}
 
 	};

@@ -127,10 +127,9 @@
 
  };
 
- class UDJAT_PRIVATE NonInteractiveWindow : public TopLevel, private Udjat::Dialog::Progress::Factory {
+ class UDJAT_PRIVATE NonInteractiveWindow : public TopLevel {
  private:
-	std::shared_ptr<Reinstall::Action> action;
-	std::shared_ptr<Progress> progress;
+	TopLevel::Status status;
 
  public:
 	NonInteractiveWindow();
@@ -139,8 +138,6 @@
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
 
 	void activate() noexcept override;
-
-	std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const override;
 
  };
 
