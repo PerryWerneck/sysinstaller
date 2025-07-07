@@ -54,6 +54,9 @@
 		/// @brief The selected action.
 		std::shared_ptr<Action> action;
 
+		/// @brief Options loaded from XML files.
+		virtual void loaded() noexcept;
+
 	public:
 
 		Application();

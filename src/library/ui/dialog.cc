@@ -152,6 +152,7 @@
 	}
 
 	bool Dialog::ask(bool default_response) const noexcept {
+		debug("Dialog::ask() called with default response '",default_response,"'");
 		return default_response;
 	}
 	

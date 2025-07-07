@@ -63,6 +63,7 @@
 
 	/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
 	void Action::activate() {
+		Logger::String{"This action cant be activated"}.error(name());	
 		throw logic_error(_("The selected action cant be activated"));
 	}
 

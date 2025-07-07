@@ -129,27 +129,3 @@
 	}
 	return *this;
  }
-
- Udjat::Dialog::Status & TopLevel::Status::show() noexcept {
-	auto parent = gtk_widget_get_parent(GTK_WIDGET(gobj()));
-	while(parent) {
-		if(GTK_IS_WINDOW(parent)) {
-			gtk_widget_set_visible(parent,TRUE);
-			return *this;
-		}
-		parent = gtk_widget_get_parent(parent);
-	}
-	return *this;
- }
-
- Udjat::Dialog::Status & TopLevel::Status::hide() noexcept {
-	auto parent = gtk_widget_get_parent(GTK_WIDGET(gobj()));
-	while(parent) {
-		if(GTK_IS_WINDOW(parent)) {
-			gtk_widget_set_visible(parent,FALSE);
-			return *this;
-		}
-		parent = gtk_widget_get_parent(parent);
-	}
-	return *this;
- }

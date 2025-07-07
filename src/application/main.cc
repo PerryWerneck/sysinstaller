@@ -72,7 +72,7 @@
 		{ 'r', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
 		{ 'y', "non-interactive", _("Non interactive") },
 		{ 'Q', "quit", _("Quit after processing") },
-		{ 'R', "reboot", _("Reboot when success") },
+		{ 'R', "reboot", _("Reboot on success") },
 		{ 'S', "select=option", _( "Auto select option" ) },
 		{ }
 	};

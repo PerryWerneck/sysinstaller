@@ -188,6 +188,7 @@
 			debug("Presenting dialog with message");
 
 			auto str = make_shared<string>( (msg && *msg) ? msg : "" );
+			debug("---> '",str->c_str(),"'");
 
 			Glib::signal_idle().connect_once([this,str](){
 

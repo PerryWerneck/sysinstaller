@@ -406,7 +406,41 @@
 	/// @brief The GTK4 status dialog.
 	class Status : public Gtk::Dialog {
 	private:
-		TopLevel::Status status;
+
+		class StatusDialog : public TopLevel::Status {
+		public:
+			StatusDialog() : TopLevel::Status() {
+			}
+
+			~StatusDialog() override {
+				debug("Destroying GTK4 status dialog");
+			}
+
+			Udjat::Dialog::Status & show() noexcept override {
+				auto parent = gtk_widget_get_parent(GTK_WIDGET(gobj()));
+				while(parent) {
+					if(GTK_IS_WINDOW(parent)) {
+						gtk_widget_set_visible(parent,TRUE);
+						return *this;
+					}
+					parent = gtk_widget_get_parent(parent);
+				}
+				return *this;
+			}
+
+			Udjat::Dialog::Status & hide() noexcept override {
+				auto parent = gtk_widget_get_parent(GTK_WIDGET(gobj()));
+				while(parent) {
+					if(GTK_IS_WINDOW(parent)) {
+						gtk_widget_set_visible(parent,FALSE);
+						return *this;
+					}
+					parent = gtk_widget_get_parent(parent);
+				}
+				return *this;
+			}
+
+		} status;
 
 	public:
 		Status() {

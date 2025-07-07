@@ -225,6 +225,11 @@
 		XML::parse();
 	#endif
 
+		loaded();
+
+	}
+
+	void Application::loaded() noexcept {
 	}
 
 	void Application::push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) {

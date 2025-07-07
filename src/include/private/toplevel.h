@@ -83,7 +83,7 @@
 
 	};
 	
-	class Status : public Gtk::Grid, private Udjat::Dialog::Progress::Factory, private Udjat::Dialog::Status {
+	class Status : public Gtk::Grid, private Udjat::Dialog::Progress::Factory, protected Udjat::Dialog::Status {
 	private:
 		Label main{"dialog-title",""}, subtitle{"dialog-subtitle",""};
 		Gtk::Image side_icon;
@@ -109,8 +109,6 @@
 		Udjat::Dialog::Status & state(const char *text) noexcept override;
 		Udjat::Dialog::Status & busy(bool enable) noexcept override;
 		Udjat::Dialog::Status & busy(const char *text) noexcept override;
-		Udjat::Dialog::Status & show() noexcept override;
-		Udjat::Dialog::Status & hide() noexcept override;
 
 	};
 
@@ -138,7 +136,7 @@
 	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
 
 	void activate() noexcept override;
-
+	void loaded() noexcept override;
  };
 
  class UDJAT_PRIVATE InteractiveWindow : public TopLevel {

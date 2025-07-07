@@ -31,6 +31,7 @@
  #include <memory>
  #include <semaphore.h>
  #include <udjat/tools/threadpool.h>
+ #include <reinstall/application.h>
 
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
@@ -65,6 +66,12 @@
  
  }
 
+ void NonInteractiveWindow::loaded() noexcept {
+	Glib::signal_idle().connect_once([this](){
+		activate();
+	});
+ }
+
  void NonInteractiveWindow::activate() noexcept {
 
 	present();
@@ -94,18 +101,11 @@
 			// Initialize group with the XML node.
 		}
 
-		void parse(const Udjat::XML::Node &node) override {
-			// Parse the XML node and build children.
-			for (const auto &child : node.children()) {
-				if(!Reinstall::Action::is_default(child)) {
-					continue; // Skip non-action nodes.
-				
-				}
-				push_back(node,make_shared<Reinstall::Action>(child));
-			}
-		}
-
 		void push_back(const Udjat::XML::Node &node, shared_ptr<Reinstall::Action> action) override {
+
+			if(!Reinstall::Action::is_default(node)) {
+				return;
+			}
 
 			sem_t semaphore;
 			sem_init(&semaphore,0,0);
