@@ -77,6 +77,15 @@
 		{ }
 	};
 
+	bool non_interactive = false;
+	{
+		const char *ptr = strrchr(argv[0],'/');
+		if(ptr) {
+			ptr++;
+			non_interactive = (strcmp(ptr,"reinstall-enable") == 0 || strcmp(ptr,"reinstall-system") == 0);
+		}
+	}
+
 	// Initialize the application.
 	Quark::init();
 
@@ -117,7 +126,7 @@
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
 		}
 
-		if(options.has_argument(argc,argv,'y',"non-interactive")) {
+		if(options.has_argument(argc,argv,'y',"non-interactive") || non_interactive) {
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
 		}
 
