@@ -230,7 +230,7 @@
  }
 
  // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
- InteractiveWindow::Label::Label(const char *style, const char *text, Gtk::Align align) : Gtk::Label{text} {
+ TopLevel::Label::Label(const char *style, const char *text, Gtk::Align align) : Gtk::Label{text} {
 	get_style_context()->add_class(style);
 	set_wrap(true);
 	set_halign(align);
@@ -238,7 +238,7 @@
 	set_vexpand(false);
  }
 
- InteractiveWindow::Button::Button(const char *style, const char *text) : Gtk::Button{text} {
+ TopLevel::Button::Button(const char *style, const char *text) : Gtk::Button{text} {
 	// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Button.html
 	get_style_context()->add_class(style);
 	set_halign(Gtk::Align::END);
@@ -395,142 +395,12 @@
 
   } 
 
-  void InteractiveWindow::activate() noexcept{
+  void InteractiveWindow::activate() noexcept {
 
 	if(action->confirmation && !action->confirmation->ask()) {
 		Logger::String{"Action was cancelled"}.info(action->name());
 		return;
 	}
-
-	/// @brief The GTK4 progress dialog.
-	class Progress : public Gtk::Grid, public Udjat::Dialog::Progress {
-	private:	
-		Gtk::ProgressBar bar;
-		Label left{"dialog-left-label","",Gtk::Align::START};
-		Label right{"dialog-right-label","",Gtk::Align::END};
-
-		Glib::RefPtr<Glib::TimeoutSource> timer;
-		unsigned int idle = (unsigned int) -1;
-
-		bool changed = false;
-		uint64_t current = 0;
-		uint64_t total = 0;
-
-	public:
-		Progress() {
-
-			debug("Building GTK4 progress dialog");
-
-			// Setup grid
-			set_hexpand(true);
-			set_vexpand(false);
-			set_column_spacing(3);
-			set_row_spacing(3);
-			get_style_context()->add_class("dialog-footer");
-			set_valign(Gtk::Align::END);
-		
-			// Setup bar
-			bar.get_style_context()->add_class("dialog-progress-bar");
-			bar.set_hexpand(true);
-			bar.set_vexpand(false);
-			bar.set_valign(Gtk::Align::START);
-			bar.set_halign(Gtk::Align::FILL);
-			bar.set_show_text(true);
-			bar.set_ellipsize(Pango::EllipsizeMode::START);
-
-			// Add widgets to grid
-			attach(bar,0,0,2,1);
-			attach(left,0,1,1,1);
-			attach(right,1,1,1,1);
-
-#ifdef DEBUG
-			bar.set_text("Progress bar");
-			left.set_text("left");
-			right.set_text("right");
-#endif // DEBUG
-
-			timer = Glib::TimeoutSource::create(100);
-
-			timer->connect([this]{
-
-				if(changed) {
-
-					idle = 0;
-					changed = false;
-
-					if(total) {
-						double fraction =  ((double) current) / ((double) total);
-						if(fraction > 1.0) {
-							bar.set_fraction(1.0);
-						} else {
-							bar.set_fraction(fraction);
-						}
-
-						right.set_text(Logger::Message{_("{} of {}"),
-									String{""}.set_byte((unsigned long long) current).c_str(),
-									String{""}.set_byte((unsigned long long) total).c_str()
-								}.c_str());
-
-					} else {
-						idle = 1000;
-						right.set_text("");
-					}
-		
-				} else if(idle >= 100) {
-
-					bar.pulse();
-
-				} else {
-
-					idle++;
-
-				}
-
-				return true;
-
-			});
-
-			timer->attach(Glib::MainContext::get_default());
-
-		}
-
-		~Progress() override {
-			debug("Destroying GTK4 progress dialog");
-			timer->destroy();
-		}
-
-		Udjat::Dialog::Progress & step(const unsigned int current = 0, const unsigned int total = 0) noexcept override {
-			Glib::signal_idle().connect([this,current,total](){
-				if(total) {
-					left.set_text(Logger::Message{_("{} of {}"), current, total}.c_str());
-				} else {
-					left.set_text("");
-				}
-				right.set_text("");
-				idle = 1000;
-				return 0;
-			});
-			return *this;
-		}
-
-		Udjat::Dialog::Progress & set(uint64_t current, uint64_t total, bool) noexcept override {
-			this->current = current;
-			this->total = total;
-			changed = true;
-			return *this;
-		}
-
-		Udjat::Dialog::Progress & url(const char *url) noexcept override {
-			string u{url};
-			Glib::signal_idle().connect_once([this,u](){
-				idle = 1000;
-				changed = false;
-				bar.set_text(u);
-			});
-			return *this;
-		}
-
-	};
 
 
 	/// @brief The GTK4 status dialog.

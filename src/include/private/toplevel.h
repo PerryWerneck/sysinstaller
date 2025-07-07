@@ -31,6 +31,10 @@
  #include <reinstall/dialog.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/tools/writer.h>
+ #include <reinstall/action.h>
+ #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
+ #include <udjat/ui/progress.h>
 
  class UDJAT_PRIVATE TopLevel : public Gtk::ApplicationWindow, protected Reinstall::Application, private Reinstall::Writer {
  private:
@@ -40,6 +44,44 @@
 
  protected:
 
+  	class Label : public Gtk::Label {
+	public:
+	  // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
+	  Label(const char *style, const char *text, Gtk::Align align = Gtk::Align::START);
+	
+	};
+	
+	class Button : public Gtk::Button {
+	public:
+	  Button(const char *style, const char *text);
+
+	};
+
+	class Progress : public Gtk::Grid, public Udjat::Dialog::Progress {
+	private:	
+		Gtk::ProgressBar bar;
+		Label left{"dialog-left-label","",Gtk::Align::START};
+		Label right{"dialog-right-label","",Gtk::Align::END};
+
+		Glib::RefPtr<Glib::TimeoutSource> timer;
+		unsigned int idle = (unsigned int) -1;
+
+		bool changed = false;
+		uint64_t current = 0;
+		uint64_t total = 0;
+
+	public:
+		Progress();
+		~Progress() override;
+
+		Udjat::Dialog::Progress & step(const unsigned int current = 0, const unsigned int total = 0) noexcept override;
+			
+		Udjat::Dialog::Progress & set(uint64_t current, uint64_t total, bool) noexcept override;
+
+		Udjat::Dialog::Progress & url(const char *url) noexcept override;
+
+	};
+	
 	/// @brief Start XML parsing
 	void start();
 
@@ -50,6 +92,21 @@
 	void open(const Reinstall::Dialog &settings) override;
 
 	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
+
+ };
+
+ class UDJAT_PRIVATE NonInteractiveWindow : public TopLevel, private Udjat::Dialog::Status {
+ private:
+	std::shared_ptr<Reinstall::Action> action;
+	Progress progress;
+
+ public:
+	NonInteractiveWindow();
+	~NonInteractiveWindow() override;
+
+	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
+
+	void activate() noexcept override;
 
  };
 
@@ -67,19 +124,6 @@
    
 	} sidebar;
    
- 	class Label : public Gtk::Label {
-	public:
-	  // https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
-	  Label(const char *style, const char *text, Gtk::Align align = Gtk::Align::START);
-	
-	};
-	
-	class Button : public Gtk::Button {
-	public:
-	  Button(const char *style, const char *text);
-
-	};
-
 	Button apply;
 	Button cancel;
 

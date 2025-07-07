@@ -6,6 +6,44 @@ project(
 	license: 'GPL-3.0-or-later',
 )
 
+app_src = [
+	'src/application/main.cc',
+	'src/application/application.cc',
+	'src/ui/console/application.cc',
+]
+
+lib_src = [
+	'src/library/group.cc',
+	'src/library/action.cc',
+	'src/library/kernelparameter.cc',
+	'src/library/slpclient.cc',
+	'src/library/script.cc',
+	'src/library/writer.cc',
+	'src/library/image.cc',
+	'src/library/template.cc',
+	'src/library/builder.cc',
+	'src/library/efiboot.cc',
+	'src/library/ui/dialog.cc',
+	'src/library/ui/removabledevicedialog.cc',
+	'src/library/disk/abstract.cc',
+	'src/library/disk/fat.cc',
+	'src/library/repository/factory.cc',
+	'src/library/repository/repository.cc',
+	'src/library/repository/kparm.cc',
+	'src/library/source/data.cc',
+	'src/library/source/file.cc',
+	'src/library/source/load.cc',
+	'src/library/source/tempfile.cc',
+	'src/library/os/linux/writer.cc',
+	'src/modules/grub2.cc',
+	'src/modules/isowriter.cc',
+	'src/modules/isobuilder/module.cc',
+	'src/modules/isobuilder/iso9660/image.cc',
+	'src/modules/isobuilder/iso9660/settings.cc',
+	'src/modules/isobuilder/fatfs/image.cc',
+	'src/modules/isobuilder/fatfs/settings.cc',
+]
+
 project_description = 'Instalar/reinstalar terminal'
 
 pkg_version = meson.project_version()
@@ -113,7 +151,16 @@ if libisofs.found()
 endif
 
 if gtkmm.found()
-  conf_data.set('HAVE_GTKMM', 1)
+	conf_data.set('HAVE_GTKMM', 1)
+	app_src += [
+		'src/ui/gtk4/toplevel.cc',
+		'src/ui/gtk4/progress.cc',
+		'src/ui/gtk4/interactive.cc',
+		'src/ui/gtk4/noninteractive.cc',
+		'src/ui/gtk4/dialog.cc',
+		'src/ui/gtk4/writer.cc',
+		'src/ui/gtk4/gtkremovabledevicedialog.cc',
+	]
 endif
 
 if libslp.found()
@@ -124,64 +171,12 @@ if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   conf_data.set('HAVE_UNISTD_H', 1)
 endif
 
-if cxx.compiles('#include <getopt.h>', name : 'getopt.h')
-  conf_data.set('HAVE_GETOPT', 1)
-endif
-
 configure_file(output : 
 	'config.h', 
 	configuration : conf_data
 )
 
 includes_dir = include_directories('../src/include')
-
-app_src = [
-	'src/application/main.cc',
-	'src/application/application.cc',
-	'src/ui/console/application.cc',
-]
-
-if gtkmm.found()
-	app_src += [
-		'src/ui/gtk4/toplevel.cc',
-		'src/ui/gtk4/interactive.cc',
-		'src/ui/gtk4/dialog.cc',
-		'src/ui/gtk4/writer.cc',
-		'src/ui/gtk4/gtkremovabledevicedialog.cc',
-	]
-endif
-
-lib_src = [
-	'src/library/group.cc',
-	'src/library/action.cc',
-	'src/library/kernelparameter.cc',
-	'src/library/slpclient.cc',
-	'src/library/script.cc',
-	'src/library/writer.cc',
-	'src/library/image.cc',
-	'src/library/template.cc',
-	'src/library/builder.cc',
-	'src/library/efiboot.cc',
-	'src/library/ui/dialog.cc',
-	'src/library/ui/removabledevicedialog.cc',
-	'src/library/disk/abstract.cc',
-	'src/library/disk/fat.cc',
-	'src/library/repository/factory.cc',
-	'src/library/repository/repository.cc',
-	'src/library/repository/kparm.cc',
-	'src/library/source/data.cc',
-	'src/library/source/file.cc',
-	'src/library/source/load.cc',
-	'src/library/source/tempfile.cc',
-	'src/library/os/linux/writer.cc',
-	'src/modules/grub2.cc',
-	'src/modules/isowriter.cc',
-	'src/modules/isobuilder/module.cc',
-	'src/modules/isobuilder/iso9660/image.cc',
-	'src/modules/isobuilder/iso9660/settings.cc',
-	'src/modules/isobuilder/fatfs/image.cc',
-	'src/modules/isobuilder/fatfs/settings.cc',
-]
 
 executable(
 	meson.project_name(),

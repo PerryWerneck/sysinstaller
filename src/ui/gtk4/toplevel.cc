@@ -45,7 +45,8 @@
 
  #pragma GCC diagnostic ignored "-Wattributes"
  #include <gtkmm.h>
-
+ #include <private/toplevel.h>
+ 
  using namespace std;
  using namespace Udjat;
 

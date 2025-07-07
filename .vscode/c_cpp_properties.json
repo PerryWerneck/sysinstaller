@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/.build",
+                "${workspaceFolder}/subprojects/libudjat/src/include",
                 "/usr/include/**",
                 "/usr/lib64/**"
             ],

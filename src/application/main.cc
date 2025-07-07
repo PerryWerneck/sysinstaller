@@ -149,10 +149,11 @@
 		// Run as a GUI application.
 		if(Reinstall::Dialog::has_preset(Reinstall::Dialog::NonInteractive)) {
 
+			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) "." PACKAGE_NAME)->make_window_and_run<NonInteractiveWindow>(1,argv);
 
 		} else {
 
-			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) ".gtk." PACKAGE_NAME)->make_window_and_run<InteractiveWindow>(1,argv);
+			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) "." PACKAGE_NAME)->make_window_and_run<InteractiveWindow>(1,argv);
 		
 		}
 
