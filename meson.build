@@ -93,6 +93,8 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 #
 libslp = cxx.find_library('slp')
 gtkmm = dependency('gtkmm-4.0', required: false)
+libarchive = dependency('libarchive', required: false)
+
 libudjat = dependency(
 	'libudjat',
 	version : '>=2.0.0',
@@ -118,9 +120,6 @@ deps = [
 		version : '>=2.0.0',
 		fallback: [ 'libudjatdbus', 'static_library' ],
 	    default_options: ['default_library=static'],
-	),
-	dependency(
-		'libzip',
 	),
 	dependency(
 		'libfatfs',
@@ -150,11 +149,14 @@ conf_data.set('application_name', meson.project_name())
 conf_data.set('HAVE_FATFS', 1)
 
 conf_data.set('HAVE_ZLIB', 1)
-conf_data.set('HAVE_LIBZIP', 1)
 
 if libisofs.found()
 	conf_data.set('HAVE_LIBISOFS', 1)
 	conf_data.set('HAVE_ISOFS', 1)
+endif
+
+if libarchive.found()
+	conf_data.set('HAVE_ARCHIVE', 1)
 endif
 
 if gtkmm.found()
