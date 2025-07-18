@@ -183,7 +183,6 @@
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
 		}
 
-
 		while(options.get_argument(argc,argv,'r',"repo",value)) {
 			auto args = Udjat::String{value.c_str()}.split("=",2);
 			if(args.size() != 2) {

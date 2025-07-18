@@ -99,7 +99,7 @@
 
 		std::shared_ptr<Reinstall::Action> selected_action = Reinstall::Console::Group::preset;
 
-		if(!Action::has_preset()) {
+		if(!(Action::has_preset() || Reinstall::Dialog::has_preset(Reinstall::Dialog::NonInteractive))) {
 
 			// No present - Present main menu.
 			UI::Console console;
