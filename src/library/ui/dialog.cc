@@ -203,7 +203,7 @@
 
 	void Dialog::reboot() const {
 #ifdef DEBUG 
-		debug('---------------- Rebooting system ----------------');
+		debug("---------------- Rebooting system ----------------");
 		quit();
 #else
 		try {

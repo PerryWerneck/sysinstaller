@@ -33,7 +33,10 @@
  #include <private/gtkremovabledevicedialog.h>
  #include <gtkmm.h>
  #include <glib/gi18n.h>
+
+ #if GTK_CHECK_VERSION(4,10,0)
  #include <gtkmm/filedialog.h>
+ #endif
 
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
@@ -196,9 +199,11 @@
 
 	});
 
+#if GTK_CHECK_VERSION(4,10,0)
 	if(allow_output_to_file) {
 		store->append(DeviceHolder::create(DeviceHolder::FileDialog,"",_("Save image to file")));
 	}
+#endif // GTK_CHECK_VERSION(4,10,0)
 
 	// Load devices
 	for(const auto &drive : volume_monitor->get_connected_drives()) {
@@ -212,6 +217,7 @@
  }
 
  void GtkRemovableDeviceDialog::select_file() {
+ #if GTK_CHECK_VERSION(4,10,0)
 
 	debug("Selecting filename");
 
@@ -236,7 +242,7 @@
 		}
 
 	});
-
+ #endif // GTK_CHECK_VERSION(4,10,0)
 
  }
 
@@ -313,7 +319,6 @@
 	switch(device->type) {
 	case DeviceHolder::FileDialog:
 		apply.set_label("C_ontinue");
-//		apply.set_sensitive(false);
 		select_file();
 		break;
 
