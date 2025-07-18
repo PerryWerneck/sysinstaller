@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([reinstall], [6.0.0], [perry.werneck@gmail.com],[reinstall],[https://github.com/PerryWerneck/reinstall])
+AC_INIT([reinstall], [6.1.0], [perry.werneck@gmail.com],[reinstall],[https://github.com/PerryWerneck/reinstall])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
@@ -83,61 +83,10 @@ dnl ---------------------------------------------------------------------------
 dnl Check for OS specifics
 dnl ---------------------------------------------------------------------------
 
-app_cv_modules="isobuilder isowriter"
-
-case "$host" in
-	*-mingw32|*-pc-msys)
-		EXEEXT=".exe"
-		OSNAME="windows"
-
-		CFLAGS="$CFLAGS -D_WIN32_WINNT=0x0600"
-		DLL_LDFLAGS="-shared -Wl,--output-def,\$(@D)/\$(LIBNAME).def"
-		DLLEXT=".dll"
-		AC_SUBST(SONAME,"reinstall.dll")
-
-		app_win32_revision=$(date +%y.%m.%d.%H)
-		AC_SUBST(WIN32_VERSION,$app_win32_revision)
-
-		app_win32_fileversion=$(date +%_y,%_m,%_d,%_H)
-		AC_SUBST(WIN32_FILEVERSION,$app_win32_fileversion)
-
-		if test "$host_cpu" = "x86_64"; then
-			app_cv_programfiles="PROGRAMFILES64"
-			app_cv_winarch="64"
-		else
-			app_cv_programfiles="PROGRAMFILES"
-			app_cv_winarch="32"
-		fi
-		
-		AC_SUBST(PROGRAMFILES,$app_cv_programfiles)
-		AC_SUBST(WINARCH,$app_cv_winarch)
-
-		AC_PATH_TOOL([WINDRES], [windres], [no])
-		AC_PATH_TOOL([ZIP], [zip], [no])
-dnl		AC_CONFIG_FILES(src/os/windows/resources.rc)
-dnl		AC_CONFIG_FILES(src/os/windows/app-manifest.xml)
-dnl		AC_CONFIG_FILES(win/userinfo.nsi)
-		;;
-
- 	*)
-		EXEEXT=""
-		DLLEXT=".so"
-		OSNAME="linux"
-		CFLAGS="$CFLAGS -pthread"
-		LDFLAGS="$LDFLAGS -pthread"
-		DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
-		AC_SUBST(SONAME,libreinstall.so.$app_vrs_major.$app_vrs_minor)
-		AC_CONFIG_FILES(sysconf/launcher.desktop)
-		app_cv_modules="grub2 $app_cv_modules"
-
-esac
-
-AC_SUBST(LIBS)
-AC_SUBST(EXEEXT)
-AC_SUBST(DLLEXT)
-AC_SUBST(OSNAME)
-AC_SUBST(DLL_LDFLAGS)
-AC_SUBST(MODULES,$app_cv_modules)
+CFLAGS="$CFLAGS -pthread"
+LDFLAGS="$LDFLAGS -pthread"
+DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
+AC_SUBST(SONAME,libreinstall.so.$app_vrs_major.$app_vrs_minor)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for other programs
@@ -146,20 +95,6 @@ AC_PATH_TOOL([DOXYGEN], [doxygen])
 AC_PATH_TOOL([VALGRIND], [valgrind], [no])
 AC_PATH_TOOL([AR], [ar], [ar])
 AC_PATH_TOOL([INSTALL_DESKTOP],[desktop-file-install],[no])
-
-dnl ---------------------------------------------------------------------------
-dnl test for reentrant time routines
-dnl ---------------------------------------------------------------------------
-
-AC_MSG_CHECKING(for localtime_r in time.h)
-AC_EGREP_HEADER(localtime_r, time.h,
- [ AC_DEFINE([HAVE_LOCALTIME_R], [1], [Define to 1 if localtime_r is available.]) AC_MSG_RESULT(yes) ],
- AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING(for gmtime_r in time.h)
-AC_EGREP_HEADER(gmtime_r, time.h,
- [ AC_DEFINE([HAVE_GMTIME_R], [1], [Define to 1 if gmtime_r is available.]) AC_MSG_RESULT(yes) ],
- AC_MSG_RESULT(no))
 
 dnl ---------------------------------------------------------------------------
 dnl Check for C++ 2017 support
@@ -180,7 +115,11 @@ AS_IF([test x"AS_VAR_GET(CACHEVAR)" = xyes],
 AS_VAR_POPDEF([CACHEVAR])dnl
 ])dnl AX_CHECK_COMPILE_FLAGS
 
-AX_CHECK_COMPILE_FLAG([-std=gnu++17], [CPPFLAGS="$CPPFLAGS -std=gnu++17"])
+AX_CHECK_COMPILE_FLAG([-std=c++1z], [CPPFLAGS="$CPPFLAGS -std=c++1z"], [app_cv_c17=no])
+
+if test "$app_cv_c17" == "no"; then
+	AX_CHECK_COMPILE_FLAG([-std=c++11], [CPPFLAGS="$CPPFLAGS -std=c++11 -DLIBUDJAT_LEGACY=1"], [app_cv_c11=no])
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl Check for libudjat
@@ -190,29 +129,21 @@ PKG_CHECK_MODULES( [UDJAT], [libudjat], AC_DEFINE(HAVE_UDJAT,,[Do we have udjat?
 AC_SUBST(UDJAT_LIBS)
 AC_SUBST(UDJAT_CFLAGS)
 
-AC_ARG_WITH([product-name], [AS_HELP_STRING([--with-product-name], [Set product name])], [ app_cv_product="$withval" ],[ app_cv_product=$PACKAGE ])
-AC_DEFINE_UNQUOTED(PRODUCT_NAME, "$app_cv_product",[The product name])
-AC_SUBST(PRODUCT_NAME,"$app_cv_product")
+dnl ---------------------------------------------------------------------------
+dnl Check for libudjatdbus
+dnl ---------------------------------------------------------------------------
 
-AC_ARG_WITH([product-id], [AS_HELP_STRING([--with-product-id], [Set product id])], [ app_cv_product_id="$withval" ],[ app_cv_product_id="`pkg-config --variable=product_id libudjat`" ])
-AC_SUBST(PRODUCT_ID,$app_cv_product_id)
-AC_DEFINE_UNQUOTED(PRODUCT_ID,"$app_cv_product_id",[The product id])
-
-AC_ARG_WITH([module-path], [AS_HELP_STRING([--with-module-path], [Set module-path])], [ app_cv_module_path="$withval" ],[ app_cv_module_path=`pkg-config --variable=module_path libudjat` ])
-
-AC_DEFINE_UNQUOTED(MODULE_PATH, $app_cv_module_path, [The path for module installation])
-AC_SUBST(MODULE_PATH,$app_cv_module_path)
-
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$app_cv_product",[The gettext package name.])
-AC_SUBST(GETTEXT_PACKAGE,$app_cv_product)
+PKG_CHECK_MODULES( [DBUS], [libudjatdbus], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+AC_SUBST(DBUS_LIBS)
+AC_SUBST(DBUS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for libudjatdbus
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [DBUS], [libudjatdbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
-AC_SUBST(DBUS_LIBS)
-AC_SUBST(DBUS_CFLAGS)
+PKG_CHECK_MODULES( [HTTP], [libudjathttp], AC_DEFINE(HAVE_UDJAT_HTTP,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+AC_SUBST(HTTP_LIBS)
+AC_SUBST(HTTP_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for libslp
@@ -230,30 +161,20 @@ fi
 AC_SUBST(LIBSLP_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
-dnl Check for ZIPLIB
+dnl Check for libisofs
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [ZIPLIB], [libzip], AC_DEFINE(HAVE_ZIPLIB,,[ "Do we have zziplib?" ]), AC_MSG_NOTICE([ziplib not present.]))
 
-AC_SUBST(ZIPLIB_LIBS)
-AC_SUBST(ZIPLIB_CFLAGS)
+PKG_CHECK_MODULES( [ISOFS], [libisofs-1], AC_DEFINE(HAVE_ISOFS,,[ Do we have isofs? ]), AC_MSG_ERROR([isofs not present.]))
 
-dnl ---------------------------------------------------------------------------
-dnl Check for GTK
-dnl ---------------------------------------------------------------------------
-
-GLIB_GSETTINGS
-
-PKG_CHECK_MODULES( [GTK], [gtkmm-4.0], AC_DEFINE(HAVE_GTK,,[ "Do we have GTK++?" ]), AC_MSG_ERROR([GTK4++ not present.]))
-
-AC_SUBST(GTK_LIBS)
-AC_SUBST(GTK_CFLAGS)
+AC_SUBST(ISOFS_LIBS)
+AC_SUBST(ISOFS_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for fatfs
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [FATFS], [libfatfs-static], AC_DEFINE(HAVE_FATFS,,[ Do we have fatfs? ]), AC_MSG_ERROR([fatfs not present.]))
+PKG_CHECK_MODULES( [FATFS], [libfatfs], AC_DEFINE(HAVE_FATFS,,[ Do we have fatfs? ]), AC_MSG_ERROR([fatfs not present.]))
 
 AC_SUBST(FATFS_LIBS)
 AC_SUBST(FATFS_CFLAGS)
@@ -271,20 +192,7 @@ dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
 dnl ---------------------------------------------------------------------------
 
-dnl AC_CONFIG_FILES(src/library/Makefile)
-AC_CONFIG_FILES(locale/Makefile)
 AC_CONFIG_FILES(Makefile)
-
-dnl https://www.gnu.org/software/autoconf-archive/ax_subdirs_configure.html
-dnl AX_SUBDIRS_CONFIGURE( [subdirs], [mandatory arguments], [possibly merged arguments], [replacement arguments], [forbidden arguments])
-dnl AX_SUBDIRS_CONFIGURE([modules/isowriter],[UDJAT_CFLAGS=-I$ac_pwd/src/include],[UDJAT_LIBS=-L$ac_pwd/.bin/Debug/libudjat.so.$app_vrs_major.$app_vrs_minor],[--with-build-dir=$ac_pwd])
-
-export REINSTALL_CFLAGS="-I$ac_pwd/src/include"
-export REINSTALL_LIBS="-L$ac_pwd/.bin/Debug/libreinstall.so.$app_vrs_major.$app_vrs_minor"
-
-AC_CONFIG_SUBDIRS( [modules/isowriter] )
-AC_CONFIG_SUBDIRS( [modules/isobuilder] )
-AC_CONFIG_SUBDIRS( [modules/grub2] )
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
