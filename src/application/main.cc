@@ -29,6 +29,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/string.h>
+ #include <udjat/tools/url.h>
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
  #include <reinstall/tools/writer.h>
@@ -76,6 +77,7 @@
 		{ 'Q', "quit", _("Quit after processing") },
 		{ 'R', "reboot", _("Reboot on success") },
 		{ 'S', "select=option", _( "Auto select option" ) },
+		{ 'T', "target=target", _( "Auto select target" ) },
 		{ }
 	};
 
@@ -106,7 +108,7 @@
 	// Parse command line options.
 	{
 		CommandLineParser options(argc,argv);
-		std::string value;
+		String value;
 
 		if(options.get_argument(argc,argv,'i',"install",value)) {
 			Reinstall::Repository::preset("install",value.c_str());	
@@ -120,8 +122,57 @@
 			Reinstall::Action::preset(value.c_str());
 		}
 
-		if(options.has_argument(argc,argv,'Q',"quit")) {
-			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveQuit);
+		if(options.get_argument(argc,argv,'S',"select",value)) {
+			Reinstall::Action::preset(value.c_str());
+		}
+
+		if(options.get_argument(argc,argv,'T',"target",value)) {
+
+			auto targets = value.split(",",2);
+
+			if(targets.empty() || targets[0].empty()) {
+				throw std::runtime_error{Logger::Message(_("Invalid target '{}', please check your configuration"),value)};
+			}
+
+			//
+			// Get TARGET URL
+			//
+			URL target{Config::Value<string>{"install-targets",targets[0].c_str()}.c_str()};
+
+			if(target.empty()) {
+				target = Config::Value<string>{"install-targets","default"}.c_str();
+			}
+
+			if(target.empty()) {
+				throw std::runtime_error{Logger::Message(_("No target found for '{}', please check your configuration"),targets[0])};
+			}
+
+			target.expand([&targets](const char *name, std::string &val) -> bool{
+
+				if(strcasecmp(name,"hostname") == 0 || strcasecmp(name,"ip") == 0 || strcasecmp(name,"server") == 0) {
+					if(targets.size() < 2) {
+						throw std::runtime_error{"This target requires a second argument, please check your configuration"};
+					}
+					val = targets[1].c_str();
+					return true;
+
+				} else if(strcasecmp(name,"target") == 0) {
+					val = targets[0].c_str();
+					return true;
+				}
+				
+				return false;
+			});
+
+			if(targets.size() > 1) {
+				target.hostname(targets[1].c_str());
+			}
+
+			Logger::String{"Using non interactive mode with target '",target.c_str(),"'"}.info();
+
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
+			Reinstall::Repository::preset("install",target.c_str());	
+
 		}
 
 		if(options.has_argument(argc,argv,'R',"reboot")) {
@@ -131,6 +182,7 @@
 		if(options.has_argument(argc,argv,'y',"non-interactive") || non_interactive) {
 			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
 		}
+
 
 		while(options.get_argument(argc,argv,'r',"repo",value)) {
 			auto args = Udjat::String{value.c_str()}.split("=",2);
