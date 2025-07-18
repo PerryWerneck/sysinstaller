@@ -51,7 +51,6 @@
 
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Reinstall::Dialog &dialog, bool allow_output_to_file)
  : 	Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, 
- 	RemovableDeviceDialog{writer,allow_output_to_file}, 
  	volume_monitor{Gio::VolumeMonitor::get()}, 	cancel{"_Cancel",true},
 	apply{"C_ontinue",true} {
 
@@ -314,7 +313,7 @@
 
 	debug("Selected device: ",device->description.c_str());
 
- 	writer.close();
+ 	Reinstall::Writer::getInstance().close();
 
 	switch(device->type) {
 	case DeviceHolder::FileDialog:
@@ -332,9 +331,9 @@
 
 		try {
 
-			writer.open(device->device_name.c_str());
+			Reinstall::Writer::getInstance().open(device->device_name.c_str());
 			apply.set_label("C_ontinue");
-			apply.set_sensitive((bool) writer);
+			apply.set_sensitive((bool) Reinstall::Writer::getInstance());
 
 		} catch(const std::system_error &e) {
 

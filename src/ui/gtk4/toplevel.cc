@@ -42,6 +42,7 @@
  #include <string>
  #include <reinstall/group.h>
  #include <reinstall/action.h>
+ #include <reinstall/tools/writer.h>
 
  #pragma GCC diagnostic ignored "-Wattributes"
  #include <gtkmm.h>
@@ -50,8 +51,8 @@
  using namespace std;
  using namespace Udjat;
 
- TopLevel::TopLevel() : Gtk::ApplicationWindow() {
- 
+ TopLevel::TopLevel() : Gtk::ApplicationWindow(), Reinstall::Writer{"toplevel"} {
+
 	// Get rid of the gtk warnings.
 	freopen("/dev/null","w",stderr);
 

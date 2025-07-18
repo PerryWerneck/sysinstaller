@@ -24,7 +24,6 @@
  #pragma once
  #include <config.h>
  #include <udjat/defs.h>
- #include <reinstall/tools/writer.h>
  #include <reinstall/dialog.h>
 
  namespace Reinstall {
@@ -36,7 +35,7 @@
 	/// derive from it and implement the `device_added` and `device_removed` methods.
 	class UDJAT_API RemovableDeviceDialog {
 	public:
-		RemovableDeviceDialog(Reinstall::Writer &w, bool allow_output_to_file);
+		RemovableDeviceDialog();
 		virtual ~RemovableDeviceDialog() = default;
 
 	protected:
@@ -59,9 +58,6 @@
 			}
 
 		};
-
-		/// @brief The writer
-		Reinstall::Writer &writer;
 
 		/// @brief Device was added.
 		virtual void append(const char *devname, const char *description) = 0;

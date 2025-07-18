@@ -54,7 +54,7 @@
 		throw runtime_error(_("The device writer is not available"));
 	}
 
-	Writer::Writer() {
+	Writer::Writer(const char *name) : writer_name{name} {
 		if(instance) {
 			throw logic_error(_("Writer is already available"));
 		}

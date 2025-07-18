@@ -33,6 +33,9 @@
 	class UDJAT_API Writer {
 	private:
 
+		/// @brief The writer name.
+		const char *writer_name = nullptr;
+		
 		/// @brief The active writer instance.
 		static Writer *instance;
 
@@ -40,7 +43,7 @@
 		unsigned long long length = 0LL;
 
 	protected:
-		Writer();
+		Writer(const char *name);
 
 		/// @brief The URL for progress.
 		std::string device_url;
@@ -53,6 +56,10 @@
 
 	public:
 		virtual ~Writer();
+
+		inline const char *name() const noexcept {
+			return writer_name;
+		}
 
 		inline operator bool() const noexcept {
 			return (bool) (fd != -1);
@@ -100,20 +107,6 @@
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
 
 	};
-
-	/*
-	class UDJAT_API GtkWriter : public Writer {
-	private:
-		Reinstall::Dialog &settings;
-
-	public:
-		GtkWriter(Reinstall::Dialog &d) : Writer(), settings{d} {
-		}
-
-		void open() override;
-
-	};
-	*/
 
  }
 

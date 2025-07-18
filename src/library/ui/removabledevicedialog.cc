@@ -31,7 +31,7 @@
 
  namespace Reinstall {
 
-		RemovableDeviceDialog::RemovableDeviceDialog(Reinstall::Writer &w, bool allow_output_to_file) : writer{w} {
+		RemovableDeviceDialog::RemovableDeviceDialog() {
 		}
 
 		/// @brief Get selected device description.
