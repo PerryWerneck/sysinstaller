@@ -137,11 +137,14 @@
 			//
 			// Get TARGET URL
 			//
-			URL target{Config::Value<string>{"install-targets",targets[0].c_str()}.c_str()};
-
+#ifdef DEFAULT_INSTALL_URL
+			URL target{Config::Value<string>{"install-targets",targets[0].c_str(),DEFAULT_INSTALL_URL}.c_str()};
+#else
+			URL target{Config::Value<string>{"install-targets",targets[0].c_str(),""}.c_str()};
 			if(target.empty()) {
 				target = Config::Value<string>{"install-targets","default"}.c_str();
 			}
+#endif // DEFAULT_INSTALL_URL
 
 			if(target.empty()) {
 				throw std::runtime_error{Logger::Message(_("No target found for '{}', please check your configuration"),targets[0])};
