@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2025 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -45,6 +45,7 @@
  using namespace std;
  using namespace Udjat;
 
+#ifdef HAVE_GTKMM
  static bool tui_only() noexcept {
 
 #ifndef _WIN32
@@ -57,6 +58,7 @@
 
 		return false;
  }
+#endif // HAVE_GTKMM
 
  int main(int argc, char* argv[]) {
 
@@ -169,7 +171,7 @@
 	}
 #else 
 	{
-		No GTK, run as TUI application
+		// No GTK, run as TUI application
 		return Reinstall::Console{}.run(argc,argv);
 
 	}

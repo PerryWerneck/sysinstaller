@@ -91,9 +91,17 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 #
 # Dependencies
 #
-libslp = cxx.find_library('slp')
+libslp = cxx.find_library('slp', required: false)
 gtkmm = dependency('gtkmm-4.0', required: false)
+libisofs =	dependency('libisofs-1',required: false)
 libarchive = dependency('libarchive', required: false)
+zlib= dependency('zlib', required: false)
+
+fatfs =	dependency(
+	'libfatfs',
+	static: true,
+	required: false,
+)
 
 libudjat = dependency(
 	'libudjat',
@@ -101,14 +109,16 @@ libudjat = dependency(
 	fallback: [ 'libudjat', 'static_library' ],
 	default_options: ['default_library=static'],
 )
-libisofs =	dependency('libisofs-1',required: false)
 
 deps = [
 	libudjat,
 	gtkmm,
 	libisofs,
 	libslp,
-	cxx.find_library('dl', required: true),
+	zlib,
+	fatfs,
+	libarchive,
+	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
 		version : '>=2.0.0',
@@ -120,13 +130,6 @@ deps = [
 		version : '>=2.0.0',
 		fallback: [ 'libudjatdbus', 'static_library' ],
 	    default_options: ['default_library=static'],
-	),
-	dependency(
-		'libfatfs',
-		static: true,
-	),
-	dependency(
-		'zlib'
 	),
 ]
 
@@ -146,9 +149,13 @@ conf_data.set('application_description',project_description)
 conf_data.set('application_icon','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
-conf_data.set('HAVE_FATFS', 1)
+if fatfs.found()
+	conf_data.set('HAVE_FATFS', 1)
+endif
 
-conf_data.set('HAVE_ZLIB', 1)
+if(zlib.found())
+	conf_data.set('HAVE_ZLIB', 1)
+endif
 
 if libisofs.found()
 	conf_data.set('HAVE_LIBISOFS', 1)
