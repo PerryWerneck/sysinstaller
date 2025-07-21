@@ -158,12 +158,6 @@
 	
 	bool Dialog::present(const char *) const noexcept {
 
-#ifdef DEBUG
-		cout << "Options ---------> " << hex << ((unsigned int) options) << " <---------\n";
-		cout << "Reboot  ---------> " << hex << ((unsigned int) (options&NonInteractiveReboot)) << " <---------\n";
-		cout << "Quit    ---------> " << hex << ((unsigned int) (options&NonInteractiveQuit)) << " <---------\n";
-#endif // DEBUG
-
 		if(has(NonInteractiveQuit)) {
 			Logger::String{"Non-interactive dialog, quitting"}.info();
 			quit();

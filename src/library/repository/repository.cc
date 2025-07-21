@@ -191,8 +191,6 @@
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
 
-					debug("------------->",filename.c_str());
-
 					auto progress = Dialog::Progress::getInstance();
 					progress->url(_("Loading repository index"));
 					url.get(filename.c_str(),[&progress](double current, double total){

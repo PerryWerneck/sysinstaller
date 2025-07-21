@@ -88,7 +88,6 @@
 			// Apply templates in tempfile
 			{
 				// Load file names.
-				debug("---------------------------> EFI boot");
 				std::vector<string> files;
 				Reinstall::Disk::Fat32 disk{from.c_str()};
 

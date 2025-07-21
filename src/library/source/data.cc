@@ -263,10 +263,6 @@
 
 			std::string filename{url.path().c_str()};
 
-			debug("---> URL=",url.c_str());
-			debug("---> PATH=",url.path());
-			debug("---> FILENAME=",filename.c_str());
-
 			if(!update_from_remote && access(filename.c_str(),R_OK) == 0) {
 				Logger::String{filename.c_str()," already exists"}.write(Logger::Debug,name());
 				return filename.c_str();
