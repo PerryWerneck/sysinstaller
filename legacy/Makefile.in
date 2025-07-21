@@ -178,6 +178,29 @@ $(BINRLS)/@PACKAGE_NAME@: \
 
 #---[ Install Targets ]------------------------------------------------------------------
 
+install: \
+	$(BINRLS)/@PACKAGE_NAME@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(bindir)
+
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/@PACKAGE_NAME@ \
+		$(DESTDIR)$(bindir)
+
+	@$(MKDIR) \
+		$(DESTDIR)$(sysconfdir)/tmpfiles.d
+
+	@$(INSTALL_DATA) \
+		sysconf/tmpfiles.d \
+		$(DESTDIR)$(sysconfdir)/tmpfiles.d/@PACKAGE_NAME@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(datarootdir)/@PACKAGE_NAME@/templates
+
+	@$(INSTALL_DATA) \
+		templates/* \
+		$(DESTDIR)$(datarootdir)/@PACKAGE_NAME@/templates
 
 #---[ Debug Targets ]--------------------------------------------------------------------
 
