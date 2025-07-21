@@ -25,7 +25,7 @@
  #include <udjat/tools/xml.h>
  #include <memory>
 
- #ifdef HAVE_ISOFS
+ #ifdef HAVE_LIBISOFS
 
  #include <reinstall/modules/iso9660.h>
 
@@ -59,5 +59,5 @@
 	}
 
  }
- #endif // HAVE_ISOFS
+ #endif // HAVE_LIBISOFS
 

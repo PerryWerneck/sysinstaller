@@ -80,6 +80,7 @@
 	};
 
 	/// @brief ISO9660 builder.
+#ifdef HAVE_LIBISOFS
 	class UDJAT_PRIVATE Iso9660Builder : public IsoBuilder::Module::Action {
 	private:
 		iso9660::Image::Settings imgdef;
@@ -114,6 +115,7 @@
 
 
 	};
+#endif // HAVE_LIBISOFS
 
 	/// @brief Fat builder.
 	class UDJAT_PRIVATE FatBuilder : public IsoBuilder::Module::Action {
@@ -161,6 +163,7 @@
 
 			auto attr = XML::AttributeFactory(node,"filesystem");
 
+#ifdef HAVE_LIBISOFS
 			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
 				Reinstall::Application::getInstance().push_back(
 					node,
@@ -168,6 +171,7 @@
 				);
 				return true;
 			}
+#endif // HAVE_LIBISOFS
 
 			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
 				Reinstall::Application::getInstance().push_back(

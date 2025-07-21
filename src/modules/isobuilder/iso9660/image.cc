@@ -22,6 +22,9 @@
   */
 
  #include <config.h>
+
+ #ifdef HAVE_LIBISOFS
+
  #include <udjat/defs.h>
  #include <reinstall/modules/iso9660.h>
  #include <string>
@@ -462,4 +465,5 @@
 
  }
  
+ #endif // HAVE_LIBISOFS
 
