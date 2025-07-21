@@ -47,7 +47,7 @@
 			/// @brief EFI boot partition image file.
 			std::string efibootpart;
 
-			inline Image(const Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
+			constexpr Image(const Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
 			}
 
 			/// @brief Add file to image.
