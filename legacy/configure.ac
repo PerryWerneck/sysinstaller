@@ -125,7 +125,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libudjat
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [UDJAT], [libudjat], AC_DEFINE(HAVE_UDJAT,,[Do we have udjat?]), AC_MSG_ERROR([UDJAT not present.]) )
+PKG_CHECK_MODULES( [UDJAT], [libudjat-static], AC_DEFINE(HAVE_UDJAT,,[Do we have udjat?]), AC_MSG_ERROR([UDJAT not present.]) )
 AC_SUBST(UDJAT_LIBS)
 AC_SUBST(UDJAT_CFLAGS)
 
@@ -133,7 +133,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libudjatdbus
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [DBUS], [libudjatdbus], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+PKG_CHECK_MODULES( [DBUS], [libudjatdbus-static], AC_DEFINE(HAVE_UDJAT_DBUS,,[Do we have udjat dbus api?]), AC_MSG_ERROR([libudjatdbus not present.]) )
 AC_SUBST(DBUS_LIBS)
 AC_SUBST(DBUS_CFLAGS)
 
@@ -141,7 +141,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libudjatdbus
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [HTTP], [libudjathttp], AC_DEFINE(HAVE_UDJAT_HTTP,,[Do we have udjat dbus api?]), AC_MSG_ERROR([UDJAT-DBUS not present.]) )
+PKG_CHECK_MODULES( [HTTP], [libudjathttp-static], AC_DEFINE(HAVE_UDJAT_HTTP,,[Do we have udjat http api?]), AC_MSG_ERROR([libudjathttp not present.]) )
 AC_SUBST(HTTP_LIBS)
 AC_SUBST(HTTP_CFLAGS)
 
@@ -164,8 +164,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libisofs
 dnl ---------------------------------------------------------------------------
 
-
-PKG_CHECK_MODULES( [ISOFS], [libisofs-1], AC_DEFINE(HAVE_ISOFS,,[ Do we have isofs? ]), AC_MSG_ERROR([isofs not present.]))
+PKG_CHECK_MODULES( [ISOFS], [libisofs-1], AC_DEFINE(HAVE_LIBISOFS,,[ Do we have isofs? ]), AC_MSG_NOTICE([isofs not present.]))
 
 AC_SUBST(ISOFS_LIBS)
 AC_SUBST(ISOFS_CFLAGS)

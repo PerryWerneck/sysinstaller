@@ -99,9 +99,9 @@ LDFLAGS=\
 
 LIBS= \
 	@LIBS@ \
-	@UDJAT_LIBS@ \
 	@DBUS_LIBS@ \
 	@HTTP_LIBS@ \
+	@UDJAT_LIBS@ \
 	@LIBSLP_LIBS@ \
 	@FATFS_LIBS@ \
 	@ZLIB_LIBS@ \
