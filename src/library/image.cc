@@ -69,7 +69,7 @@
 
 		std::string from = source->save();
 		std::string to = source->path();
-		auto efi = builder.efi();
+		auto efi = builder->efi();
 
 		if(efi->enabled() && strcmp(strip_dot(to.c_str()),strip_dot(efi->path())) == 0) {
 		
@@ -101,16 +101,16 @@
 
 				for(auto file : files) {
 
-					auto tmplt = builder.tmplt(file.c_str());
+					auto tmplt = builder->tmplt(file.c_str());
 					if(tmplt) {
 						auto from = Udjat::File::Temporary::create();
 				
 						auto progress = Udjat::Dialog::Progress::getInstance();
-						tmplt->save(builder,from.c_str(),[progress](uint64_t current, uint64_t total){
+						tmplt->save(*builder,from.c_str(),[progress](uint64_t current, uint64_t total){
 							return false;
 						});
 
-						Logger::String{"Using template '",tmplt->name(),"' for fat://",file.c_str()}.trace(builder.name());
+						Logger::String{"Using template '",tmplt->name(),"' for fat://",file.c_str()}.trace(builder->name());
 						disk.replace(from.c_str(),file.c_str());
 
 					}

@@ -124,7 +124,7 @@
 	};
 
 	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s)
-		: Reinstall::Abstract::Image{dialog,builder}, settings{s}, disk{make_shared<Disk>(settings)} {
+		: Reinstall::Abstract::Image{dialog,&builder}, settings{s}, disk{make_shared<Disk>(settings)} {
 	}
 
 	Image::~Image() {

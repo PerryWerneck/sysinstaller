@@ -71,7 +71,7 @@
 
 	};
 
-	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,builder}, settings{s} {
+	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,&builder}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 
@@ -359,10 +359,10 @@
 			} else {
 
 				// Not isohybrid.
-				Logger::String{"Adding ",builder.efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
+				Logger::String{"Adding ",builder->efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
 				iso_write_opts_set_part_like_isohybrid(opts, 0);
 
-				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder.efi()->path(),0);
+				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder->efi()->path(),0);
 
 				if(rc != ISO_SUCCESS) {
 					string msg{iso_error_to_msg(rc)};
@@ -374,10 +374,10 @@
 
 			if(settings.boot.catalog && *settings.boot.catalog) {
 
-				Logger::String{"Adding ",builder.efi()->path()," as boot image"}.trace("iso9660");
+				Logger::String{"Adding ",builder->efi()->path()," as boot image"}.trace("iso9660");
 
                 ElToritoBootImage *bootimg = NULL;
-                int rc = iso_image_add_boot_image(image,builder.efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);
+                int rc = iso_image_add_boot_image(image,builder->efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);
                 if(rc < 0) {
  					string msg{iso_error_to_msg(rc)};
 					Logger::String{"Cant add EFI boot image: ",msg.c_str()}.error("iso9660");
@@ -388,11 +388,11 @@
 
 			} else {
 
-				Logger::String{"No boot catalog, ",builder.efi()->path()," was not added as boot image"}.warning("iso9660");
+				Logger::String{"No boot catalog, ",builder->efi()->path()," was not added as boot image"}.warning("iso9660");
 
 			}
 
-		} else if(builder.efi()->enabled()) {
+		} else if(builder->efi()->enabled()) {
 
 			throw runtime_error("EFI boot image not available");
 
