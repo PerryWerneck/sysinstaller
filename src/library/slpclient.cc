@@ -247,7 +247,11 @@
 
 									for(auto rp = ai;rp != NULL && this->query.url.empty(); rp = rp->ai_next) {
 
+#if __cplusplus >= 201703L
 										sockaddr_storage addr{IP::Factory(rp->ai_addr)};
+#else
+										sockaddr_storage addr = IP::Factory(rp->ai_addr);
+#endif // C++17
 										bool remote = true;
 
 										for(IP::Addresses &local : addresses) {
