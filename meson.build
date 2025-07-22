@@ -105,7 +105,7 @@ fatfs =	dependency(
 
 libudjat = dependency(
 	'libudjat',
-	version : '>=2.0.4',
+	version : '>=2.1.0',
 	fallback: [ 'libudjat', 'static_library' ],
 	default_options: ['default_library=static'],
 )
