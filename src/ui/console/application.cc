@@ -75,7 +75,14 @@
 		~Group() override = default;
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
+
+#if __cplusplus >= 201703L
 			auto &itn = itens.emplace_back(node,action);
+#else
+			itens.emplace_back(node,action);
+			auto &itn = itens.back();
+#endif // C++17
+
 			if(itn.action->is_default(node)) {
 				preset = itn.action;
 			}
