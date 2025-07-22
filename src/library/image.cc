@@ -59,7 +59,7 @@
  	}
 
  	static const char *strip_dot(const char *str) {
-		if(*str == '.' && Config::Value{"application","legacy",true}) {
+		if(*str == '.' && Config::Value<bool>{"application","legacy",true}) {
 			return str+1;
 		}
 		return str;
