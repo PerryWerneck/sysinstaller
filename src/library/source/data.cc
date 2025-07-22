@@ -109,7 +109,7 @@
 
 			path = remote();
 
-			if(path[0] == '.' && Config::Value{"application","legacy",true}) {
+			if(path[0] == '.' && Config::Value<bool>{"application","legacy",true}) {
 				Logger::Message{"Local path is empty, using remote '{}' for legacy mode",path}.trace(name());
 				return path+1;
 			}
@@ -349,7 +349,7 @@
 			// Setup local path.
 			if(required_prefix[0] != '.') {
 				Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
-				if(Config::Value{"application","legacy",true}) {
+				if(Config::Value<bool>{"application","legacy",true}) {
 					const char *ptr = local();
 					if(ptr[0] == '/') {
 						required_prefix = ".";

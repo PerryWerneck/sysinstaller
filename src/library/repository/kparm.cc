@@ -53,7 +53,7 @@
 			}
 		}
 
-		if(!(slp && *slp) && Config::Value{"application","legacy",true}) {
+		if(!(slp && *slp) && Config::Value<bool>{"application","legacy",true}) {
 			slp = XML::QuarkFactory(node,"slp-kernel-parameter");
 			if(slp && *slp) {
 				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(node.attribute("name").as_string("repository"));
