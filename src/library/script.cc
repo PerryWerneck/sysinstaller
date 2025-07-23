@@ -111,7 +111,7 @@
  	}
 
 	Script::Script(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-		: Reinstall::FileSource{node}, rtime{(Script::RunTime) String{XML::StringFactory(node,"type","post")}.select("pre","post",nullptr)},
+		: Reinstall::FileSource{node,false}, rtime{(Script::RunTime) String{XML::StringFactory(node,"type","post")}.select("pre","post",nullptr)},
 		marker{node.attribute("marker").as_string(((std::string) Config::Value<String>("string","marker","$")).c_str())[0]},
 		uid{getuid(node)}, gid{getgid(node)}, cmdline{String{node,"cmdline"}.as_quark()} {
 

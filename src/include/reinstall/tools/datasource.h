@@ -122,7 +122,7 @@
 
 	public:
 		FileSource(const char *path);
-		FileSource(const Udjat::XML::Node &node);
+		FileSource(const Udjat::XML::Node &node, bool required = true);
 		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
 
 		virtual ~FileSource();

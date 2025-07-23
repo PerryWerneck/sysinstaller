@@ -43,10 +43,10 @@
 		url.remote = url.local = path;
 	}
 
-	FileSource::FileSource(const Udjat::XML::Node &node) : DataSource{node} {
+	FileSource::FileSource(const Udjat::XML::Node &node, bool required) : DataSource{node} {
 
-		url.remote = PathFactory(node,"remote");
-		url.local = PathFactory(node,"local");
+		url.remote = PathFactory(node,"remote",required);
+		url.local = PathFactory(node,"local",required);
 		url.path = PathFactory(node,"destination",false);
 
 		// Fixes loading of legacy control files.
