@@ -252,3 +252,12 @@ install_data(
 	install_dir:'/usr/share/@0@/templates'.format(meson.project_name())
 )
 
+install_data(
+	[
+		'models/mini.xml',
+		'models/net.xml',
+		'models/full.xml',
+		'models/grub.xml',
+	],
+	install_dir:'/usr/share/@0@/models'.format(meson.project_name())
+)

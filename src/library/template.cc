@@ -137,6 +137,16 @@
 			return true;
 		}
 
+		if(!strcasecmp(key,"models-dir")) {
+#ifdef DEBUG
+			value = getenv("PWD");
+			value += "/models";
+#else
+			value = Application::DataDir{"models"};
+#endif // DEBUG
+			return true;
+		}
+
 		return Udjat::NamedObject::getProperty(key,value);
 	}
 

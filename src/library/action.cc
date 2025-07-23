@@ -27,9 +27,11 @@
  #include <reinstall/dialog.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/application.h>
  #include <stdexcept>
  #include <reinstall/dialog.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/xml.h>
 
  using namespace Udjat;
  using namespace std;
@@ -38,8 +40,33 @@
 
 	const char * Action::presets[2] = {nullptr,nullptr};
 
+
+	Model::Model(const Udjat::XML::Node &node) {
+
+		String name{node,"model"};
+		if(name.empty()) {
+			return;
+		}
+
+		Logger::String{"Loading model '",name,"' for node ",node.path()}.info();
+
+#ifdef DEBUG
+		String path{getenv("PWD")};
+		path += "/models/";
+#else
+		String path{Application::DataDir{"models"}.c_str()};
+#endif // DEBUG
+
+		path += name;
+
+		debug("Model path: ",path.c_str());
+
+		XML::Document{path.c_str()}.copy_to(*(const_cast<XML::Node *>(&node)));
+
+	}
+
 	Action::Action(const Udjat::XML::Node &node) 
-		: NamedObject{node}, 
+		: Model{node}, NamedObject{node}, 
 			dialog_title{XML::QuarkFactory(node,"dialog-title")},
 		 	icon_name{XML::QuarkFactory(node,"icon-name")} {
 		

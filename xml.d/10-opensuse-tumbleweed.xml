@@ -59,111 +59,16 @@
  		<attribute name='icon' value='opensuse-tumbleweed' />
  		<attribute name='sub-title' value='State-of-the-art desktop and server operating system' url='https://get.opensuse.org/tumbleweed/' /> 		
 
-    <!-- 
+ 		<local-installer name='tw-local' default='yes' visible='only-on-linux' model='grub.xml' />
  		
- 			Local installer:
- 			
- 				Download kernel and initrd from net install image, adding to grub2 menu and set them to activate on next boot.
- 				This allow reinstall of the workstation without use of any external midia.
- 		
- 		-->
- 		<local-installer name='tw-local' default='yes' visible='only-on-linux'>
+ 		<iso-builder name='tw-mini' default='no' model='mini.xml' />
 
-			<attribute name='slp-allow-local' value='no' />
-
-	 		<attribute name='title' value='Reinstall this workstation'/>
-	 		<attribute name='sub-title' value='Do a complete network based reinstall on this workstation without any external boot device' />
-	 		<attribute name='icon-name' value='computer-symbolic' />
-		
-			<!-- Save configuration for the new boot option (use '%' as marker) -->
-			<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/09_reinstall' script='yes' marker='%' />
-			
-			<!-- Add new boot option to grub.cfg -->
-			<script name='grubconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>
-			<![CDATA[
-			#!/usr/bin/env -S /usr/bin/sudo --login -- /bin/bash
-			echo /usr/sbin/grub2-mkconfig -o "%{grub-config}"
-			echo /usr/sbin/grub2-set-default "%{install-label}"
-			echo /usr/sbin/grub2-reboot "%{install-label}"
-			]]>
-			</script>
-			
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?' destructive='yes'>
-				This is the secondary text on confirmation message.
-			</dialog>
-
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='success' title='Configuration complete' icon='dialog-information' message='Operation complete' allow-reboot='yes'>
-				Bootloader was set, the system will reinstall in the next reboot.
-			</dialog>
-
-		</local-installer>
- 		
- 		<iso-builder name='tw-mini' default='no'>
-
-			<attribute name='slp-allow-local' value='yes' />
-
-	 		<attribute name='title' value='Build a simple network install image'/>
-	 		<attribute name='sub-title' value='Build an small usb based boot device for network install' />
-	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
-
-			<!-- Replace every 'grub.cfg' file with template -->
-			<template name='grub.cfg' url='file://${template-dir}/grub.cfg' escape-control-characters='yes' />
-			
-			<!-- Replace every 'isolinux.cfg' file with template -->
-			<template name='isolinux.cfg' url='file://${template-dir}/isolinux.cfg' escape-control-characters='no' />
-
-			<!-- Files to copy to ISO image -->
-			<source name='boot' url='./boot/x86_64/' repository='install' />
-			<source name='efi' url='./EFI/' repository='install' />
-			
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
-				This is the secondary text on confirmation message.
-			</dialog>
-
-			<dialog name='success' title='Success message' icon='dialog-information' message='Operation complete'>
-				This is the secondary text of success message.
-			</dialog>
-
-		</iso-builder>
-		
-		<iso-writer name='tw-net' default='no'>
-
-	 		<attribute name='title' value='Build USB drive for network install' />
-	 		<attribute name='sub-title' value='This will download and write the network install image' />
-	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
-      <attribute name='url' value='../../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
-
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
-				This is the secondary text on confirmation message.
-			</dialog>
-
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='success' title='Success message' icon='dialog-information' message='Operation complete'>
-				This is the secondary text of sucess message.
-			</dialog>
-
+		<iso-writer name='tw-net' default='no' model='net.xml'>
+			<attribute name='url' value='../../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />
 		</iso-writer>
 
-		<iso-writer name='tw-full' default='no'>
-		
-	 		<attribute name='title' value='Build USB drive for offline install' />
-	 		<attribute name='sub-title' value='This will download and write the offline install image' />
-	 		<attribute name='icon-name' value='drive-removable-media-symbolic' />
-      <attribute name='url' value='../../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
-
-      <!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
-				This is the secondary text on confirmation message.
-			</dialog>
-
-			<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
-			<dialog name='success' title='Success message' icon='dialog-information' message='Operation complete'>
-				This is the secondary text of sucess message.
-			</dialog>
+		<iso-writer name='tw-full' default='no' model='full.xml'>
+	 		<attribute name='url' value='../../../iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso' />
 		</iso-writer>
 
 	</group>

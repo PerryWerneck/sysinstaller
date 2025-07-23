@@ -52,7 +52,7 @@
 				return Application::getInstance().DialogFactory(name,child,message,option);
 			}
 		}
-		Logger::String{"Cant find dialog '",name,"', building from default config"}.warning("dialog");
+		Logger::String{"Cant find dialog '",name,"', building from default config"}.trace("dialog");
 
 		XML::Node defnode;
 		defnode.attribute("name").set_value(name);

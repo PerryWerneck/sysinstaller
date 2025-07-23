@@ -32,7 +32,13 @@
  
  namespace Reinstall {
 
-	class UDJAT_API Action : public Udjat::NamedObject {
+	class UDJAT_API Model {
+	public:
+		Model(const Udjat::XML::Node &node);
+
+	};
+
+	class UDJAT_API Action : private Model, public Udjat::NamedObject {
 	private:
 		static const char *presets[2];
 		const char * dialog_title;
