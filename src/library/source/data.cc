@@ -79,7 +79,7 @@
 
 		if(value.empty()) {
 			if(required) {
-				throw runtime_error(Logger::String{"Required attribute '",attrname,"' is missing or invalid"});
+				throw runtime_error(Logger::String{"Required attribute '",attrname,"' is missing or invalid on node ",node.path()});
 			}
 			return "";
 		}

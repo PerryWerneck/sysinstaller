@@ -78,7 +78,7 @@
 		{
 			String str{node,"url",""};
 			if(str.empty()) {
-				throw runtime_error("Required attribute 'url' is missing or invalid");
+				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on node ",node.path()});
 			}
 
 			str.unescape();
