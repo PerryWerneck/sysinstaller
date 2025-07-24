@@ -48,7 +48,32 @@
 
  namespace Reinstall {
 
-	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node,false}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+
+		if(!(url.remote && *url.remote)) {
+			throw runtime_error(Logger::String{"Repository '",name(),"' has no remote URL defined"});
+		}
+
+		if(!(url.local && *url.local)) {
+			
+			String path{Config::Value<string>{"repository","cachedir",""}.c_str()};
+			if(path.empty()) {
+				throw runtime_error(Logger::String{"Repository '",name(),"' has no cache defined"});
+			}
+
+			path.expand([this](const char *key, string &value) -> bool {
+				if(!strcasecmp(key,"name")) {
+					value = name();
+					return true;
+				}
+				return false;
+			});
+
+			path.expand(node);
+
+			url.local = path.as_quark();
+			Logger::String{"Using '",url.local,"' as local path for repository"}.info(name());
+		}
 
 		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
 
