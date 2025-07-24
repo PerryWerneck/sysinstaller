@@ -94,6 +94,20 @@
 			return relative.as_quark();
 		}
 
+		value.expand([node](const char *key, string &value) -> bool {
+
+			if(!strcasecmp(key,"group-name")) {
+				for(auto xml = node; xml; xml = xml.parent()) {
+					if(!strcasecmp(xml.name(),"group")) {
+						value = xml.attribute("name").as_string();
+						return true;
+					}
+				}
+			}
+
+			return false;
+		});
+
 		return value.as_quark();
 	}
 
