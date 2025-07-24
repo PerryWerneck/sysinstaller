@@ -51,6 +51,13 @@
 
  namespace Reinstall {
 
+	/*
+	DataSource::Path::Path(const XML::Node &node) {
+
+
+	}
+	*/
+
 	DataSource::DataSource(const DataSource &src)
 		: Udjat::NamedObject{src.name()}, repository{src.repository}, update_from_remote{src.update_from_remote} {
 		this->message = src.message;
@@ -69,6 +76,7 @@
 	DataSource::~DataSource() {
 	}
 
+	/*
 	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required) const {
 
 		String value{node,attrname};
@@ -110,6 +118,7 @@
 
 		return value.as_quark();
 	}
+	*/
 
 	const char * DataSource::path() const {
 

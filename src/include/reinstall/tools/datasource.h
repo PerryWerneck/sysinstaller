@@ -46,7 +46,7 @@
 		/// @brief When true allways check file timestamp with remote server.
 		bool update_from_remote = true;
 
-		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
+		// const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
 
 		DataSource() {
 		}

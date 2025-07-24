@@ -45,22 +45,65 @@
 
 	FileSource::FileSource(const Udjat::XML::Node &node, bool required) : DataSource{node} {
 
-		url.remote = PathFactory(node,"remote",required);
-		url.local = PathFactory(node,"local",required);
-		url.path = PathFactory(node,"destination",false);
+		URL paths[]{
+			{node,"local",false},
+			{node,"remote",false},
+			{node,"url",false}
+		};
 
-		// Fixes loading of legacy control files.
-		if(!(strcmp(url.local,url.remote) || strncmp(url.local,"http:",5))) {
-			url.local = "";
+		// Expand paths.
+		for(auto &path : paths) {
+			path.expand(node);
+			path.expand([node](const char *key, string &value) -> bool {
+
+				if(!strcasecmp(key,"group-name")) {
+					for(auto xml = node; xml; xml = xml.parent()) {
+						if(!strcasecmp(xml.name(),"group")) {
+							value = xml.attribute("name").as_string();
+							return true;
+						}
+					}
+				}
+
+				return false;
+			});
+			path.expand();
+		}
+
+		// URL attribute is local?
+		bool local = (!paths[3].empty() && paths[3].local());
+
+		// Build URL for remote
+		if(!paths[1].empty()) {
+			url.remote = paths[1].as_quark();
+		} else if(!local) {
+			url.remote = paths[2].as_quark();
+		}
+
+		// Build URL for local.
+		if(!paths[0].empty()) {
+			url.local = paths[0].as_quark();
+		} else if(local) {
+			url.local = paths[2].as_quark();
 		}
 
 		if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
+
+			// If the URL starts with '/' or '.' then it is relative to the repository.
 			repository = Repository::Factory(node);
+			if(!url.local[0]) {
+				url.local = url.remote;
+			}
+
 		}
 
-		if(!url.local[0] && url.remote[0] == '.') {
-			url.local = url.remote;
-		}
+		debug("--[BEGIN]---------------------------------");
+		debug("Local_from_xml='",paths[0].c_str(),"'");
+		debug("Remote_from_xml='",paths[1].c_str(),"'");
+		debug("URL_from_xml='",paths[2].c_str(),"'");
+		debug("Local_computed='",url.local,"'");
+		debug("Remote_computed='",url.remote,"'");
+		debug("--[END]---------------------------------");
 
 	}
 
