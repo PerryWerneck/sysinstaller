@@ -56,11 +56,11 @@
  		<iso-builder name='156-mini' default='no' model='mini.xml' />
 
 		<iso-writer name='156-net' default='no' model='net.xml'>
-			<attribute name='url' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-NET-x86_64-Build710.3-Media.iso' />
+			<attribute name='remote' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-NET-x86_64-Build710.3-Media.iso' />
 		</iso-writer>
 
 		<iso-writer name='156-full' default='no' model='full.xml'>
-	 		<attribute name='url' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-DVD-x86_64-Build710.3-Media.iso' />
+	 		<attribute name='remote' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-DVD-x86_64-Build710.3-Media.iso' />
 		</iso-writer>
 
 	</group>
