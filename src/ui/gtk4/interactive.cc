@@ -250,13 +250,14 @@
 
   std::shared_ptr<Reinstall::Group> InteractiveWindow::group_factory(const Udjat::XML::Node &node) {
 	
+	static std::shared_ptr<Item> active_item;	///< @brief The selected item.
+	
 	class Group : public Gtk::Grid, public Reinstall::Group {
 	private:
 		Label title{"group-title",""};						///< @brief The group title.
 		Label sub_title{"group-subtitle",""};				///< @brief The group sub-title.
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};		///< @brief The box with the options.
 		std::vector<std::shared_ptr<Item>> items;			///< @brief The list of items in this group.
-		std::shared_ptr<Item> active_item;					///< @brief The selected.
 
 	public:
 		Group(const Udjat::XML::Node &node) {

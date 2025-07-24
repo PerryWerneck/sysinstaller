@@ -51,15 +51,15 @@
  		<attribute name='icon' value='opensuse-leap-15-6' />
  		<attribute name='sub-title' value='State-of-the-art desktop and server operating system' url='https://get.opensuse.org/leap/15.6/' /> 		
 
- 		<local-installer name='tw-local' default='yes' visible='only-on-linux' model='grub.xml' />
+ 		<local-installer name='156-local' default='yes' visible='only-on-linux' model='grub.xml' />
  		
- 		<iso-builder name='tw-mini' default='no' model='mini.xml' />
+ 		<iso-builder name='156-mini' default='no' model='mini.xml' />
 
-		<iso-writer name='tw-net' default='no' model='net.xml'>
+		<iso-writer name='156-net' default='no' model='net.xml'>
 			<attribute name='url' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-NET-x86_64-Build710.3-Media.iso' />
 		</iso-writer>
 
-		<iso-writer name='tw-full' default='no' model='full.xml'>
+		<iso-writer name='156-full' default='no' model='full.xml'>
 	 		<attribute name='url' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-DVD-x86_64-Build710.3-Media.iso' />
 		</iso-writer>
 
