@@ -49,9 +49,9 @@
  		<attribute name='title' value='OpenSUSE Leap 15.6' />
  		<attribute name='system-name' value='OpenSUSE Leap 15.6' />
  		<attribute name='icon' value='opensuse-leap' />
- 		<attribute name='sub-title' value='State-of-the-art desktop and server operating system' url='https://get.opensuse.org/leap/15.6/' /> 		
+ 		<attribute name='sub-title' value='A new type of a hybrid Linux distribution' url='https://get.opensuse.org/leap/15.6/' /> 		
 
- 		<local-installer name='156-local' default='yes' visible='only-on-linux' model='grub.xml' />
+ 		<local-installer name='156-local' default='no' visible='only-on-linux' model='grub.xml' />
  		
  		<iso-builder name='156-mini' default='no' model='mini.xml' />
 
