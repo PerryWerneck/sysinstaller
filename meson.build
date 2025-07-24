@@ -219,6 +219,22 @@ custom_target(
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
 )
 
+custom_target(
+	input: 'icons/opensuse-leap.svg',
+	output: 'opensuse-leap.svg',
+	install: true,
+	install_dir:'/usr/share/@0@/icons'.format(meson.project_name()),
+	command: [ 'scour', '@INPUT@', '@OUTPUT@']
+)
+
+custom_target(
+	input: 'icons/opensuse-tumbleweed.svg',
+	output: 'opensuse-tumbleweed.svg',
+	install: true,
+	install_dir:'/usr/share/@0@/icons'.format(meson.project_name()),
+	command: [ 'scour', '@INPUT@', '@OUTPUT@']
+)
+
 install_data(
 	'stylesheet.css',
 	install_dir:'/usr/share/@0@'.format(meson.project_name())
