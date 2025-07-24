@@ -36,8 +36,13 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/writer.h>
  #include <udjat/ui/status.h>
+ #include <udjat/ui/progress.h>
  #include <reinstall/modules/isowriter.h>
  #include <reinstall/application.h>
+
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
  using namespace Udjat;
  using namespace std;
@@ -65,11 +70,49 @@
 
 			auto &status = Udjat::Dialog::Status::getInstance();
 
-			status.sub_title(_("Getting ISO image"));
-			auto path = iso.save(*this);
+			if(iso.has_local()) {
 
-			status.sub_title(_("Writing ISO image"));
-			Reinstall::Writer::getInstance().write(path.c_str());
+				Logger::String{"Updating and writing local ISO image '",iso.local(),"'."}.info();
+
+				status.sub_title(_("Updating ISO image"));
+				auto path = iso.save(*this);
+				status.sub_title(_("Writing ISO image"));
+				Reinstall::Writer::getInstance().write(path.c_str());
+
+			} else {
+
+				status.sub_title(_("Getting ISO image"));
+				
+				auto url = iso.remote();
+				auto progress = iso.ProgressFactory();
+				progress->url(url);
+
+				Logger::String{"Getting ISO image from '",url,"'."}.info();
+
+				auto filename = File::Temporary::create();
+
+				try {
+
+					Udjat::File::Handler file{filename.c_str(),true};
+					URL{url}.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
+						file.write(buf,length);
+						progress->set(current+length,total);
+						return false;
+					});
+					progress->done();
+
+					Logger::String{"ISO image saved to '",filename.c_str(),"'"}.trace();
+
+					status.sub_title(_("Writing ISO image"));
+					Reinstall::Writer::getInstance().write(filename.c_str());
+
+				} catch(...) {
+
+					unlink(filename.c_str());
+					throw;
+				}
+
+			}
 
 		}
 

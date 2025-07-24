@@ -32,7 +32,6 @@
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/builder.h>
  #include <udjat/ui/status.h>
- #include <reinstall/ui/progress.h>
  #include <vector>
  #include <reinstall/modules/isobuilder.h>
  #include <list>

@@ -53,15 +53,15 @@
 
 		DataSource(const DataSource &src);
 
-		/// @brief Build progress dialog for this source.
-		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
-
 	public:
 
 		DataSource(const char *name) : Udjat::NamedObject(name) {}
 
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
+
+		/// @brief Build progress dialog for this source.
+		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
 
 		/// @brief True if datasource is a directory (ends with '/').
 		bool dir() const;
@@ -139,7 +139,7 @@
 	/// @brief Save source on temporary file
 	class TempFileSource : public DataSource {
 	private:
-		std::string filename;
+		std::string filename;		///< @brief The temporary file name.
 		const std::string url;		///< @brief The URL for source in the remote server.
 		const std::string filepath;	///< @brief Path for the file inside the destination image.
 

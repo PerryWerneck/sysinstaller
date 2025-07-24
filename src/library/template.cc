@@ -161,21 +161,6 @@
 
 	}
 
-	/*
-	std::string Template::save(Reinstall::Dialog::Progress &) {
-
-		Udjat::URL url{this->url};
-
-		if(url.local()) {
-			debug("url=",url.c_str());
-			return url.path();
-		}
-
-		throw runtime_error("Unable to handle remote template");
-
-	}
-	*/
-
 	void Template::save(const Udjat::Abstract::Object &parent, const char *path, const std::function<bool(uint64_t current, uint64_t total)> &progress) {
 
 		String filename{path};

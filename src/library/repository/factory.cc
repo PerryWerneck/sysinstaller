@@ -26,7 +26,6 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <reinstall/ui/progress.h>
  #include <udjat/tools/file.h>
  #include <udjat/tools/configuration.h>
 
