@@ -69,20 +69,17 @@
 			path.expand();
 		}
 
-		// URL attribute is local?
-		bool local = (!paths[3].empty() && paths[3].local());
-
 		// Build URL for remote
 		if(!paths[1].empty()) {
 			url.remote = paths[1].as_quark();
-		} else if(!local) {
+		} else if(paths[2].remote()) {
 			url.remote = paths[2].as_quark();
 		}
 
 		// Build URL for local.
 		if(!paths[0].empty()) {
 			url.local = paths[0].as_quark();
-		} else if(local) {
+		} else if(paths[2].local()) {
 			url.local = paths[2].as_quark();
 		}
 
@@ -90,19 +87,23 @@
 
 			// If the URL starts with '/' or '.' then it is relative to the repository.
 			repository = Repository::Factory(node);
-			if(!url.local[0]) {
+			if(!url.remote[0]) {
+				url.remote = url.local;
+			} else if(!url.local[0]) {
 				url.local = url.remote;
 			}
-
 		}
 
+#ifdef DEBUG
+		Logger::String{"---[ ", node.name(), " - BEGIN ]-----------------"}.info(name());
 		debug("--[BEGIN]---------------------------------");
 		debug("Local_from_xml='",paths[0].c_str(),"'");
 		debug("Remote_from_xml='",paths[1].c_str(),"'");
 		debug("URL_from_xml='",paths[2].c_str(),"'");
 		debug("Local_computed='",url.local,"'");
 		debug("Remote_computed='",url.remote,"'");
-		debug("--[END]---------------------------------");
+		Logger::String{"---[ ", node.name(), " - END ]-------------------"}.info(name());
+#endif 
 
 	}
 

@@ -19,7 +19,7 @@
 
 /* 
 
-	Reference: https://docs.gtk.org/gtk3/css-properties.html
+	Reference: https://docs.gtk.org/gtk4/css-properties.html
 	
 */
 
@@ -34,14 +34,6 @@
 .main-window {
 	padding: 12px;
 }
-
-/*
-.dialog-progress {
-}
-
-.dialog-contents {
-}
-*/
 
 .dialog-title {
 	font-size: 120%;
@@ -71,10 +63,6 @@
 	min-width: 150px;
 	padding: 6px;
 	background-color: #808080;
-}
-
-.toplevel-sidebar-logo {
-/*	opacity: 1.0; */
 }
 
 .dialog-icon {
@@ -151,16 +139,4 @@
 	margin-bottom: 3px;
 	background-position: top;
 }
-
-.action-inactive {
-}
-
-.action-active {
-}
-
-/*    -gtk-icon-source: url("path_to_the_file"); 
-radio:checked {
-	background-color: #ff0000;
-}
-*/
 
