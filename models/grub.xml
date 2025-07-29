@@ -7,7 +7,7 @@
 	<attribute name='icon-name' value='computer-symbolic' />
 
 	<!-- Save configuration for the new boot option (use '%' as marker) -->
-	<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/09_reinstall' script='yes' marker='%' />
+	<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/09_reinstall' executable='yes' marker='%' />
 	
 	<!-- Add new boot option to grub.cfg -->
 	<script name='grubconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>

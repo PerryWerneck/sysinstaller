@@ -66,7 +66,7 @@
 		}
 
 		if(XML::AttributeFactory(node,"script").as_bool()) {
-			Logger::String{"Legacy atttribute 'script' is deprecated, use 'executable' instead"}.warning(name());
+			Logger::String{node.path()," is using deprecated attribute 'script', use 'executable' instead"}.warning(name());
 			mode = 0755;
 		}
 
@@ -78,7 +78,7 @@
 		{
 			String str{node,"url",""};
 			if(str.empty()) {
-				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on node ",node.path()});
+				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
 
 			str.unescape();

@@ -54,11 +54,22 @@
 
 	static const Udjat::ModuleInfo moduleinfo{"Reinstall application"};
 
-	Application::Application() : XML::Parser{"group"}, Udjat::Module{"http",moduleinfo}, HTTP::Handler::Factory{"default"} {
+	Application::Application() : XML::Parser{"group"} {
 
 		if(instance) {
 			throw std::runtime_error{"Application already created"};
 		}
+
+
+		/// @brief The embedded http module.
+		class Module : private Udjat::Module, private Udjat::HTTP::Handler::Factory {
+		public:
+			Module() : Udjat::Module{"http",moduleinfo}, HTTP::Handler::Factory{"default"} {
+			}
+		};
+
+		// Create the module instance, the core of libudjat takes care of the rest.
+		new Module();
 
 		instance = this;
 		Logger::String{"Creating application"}.info();
