@@ -29,7 +29,6 @@
  #include <udjat/module/abstract.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
- #include <udjat/tools/url/handler/http.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
  #include <string>
@@ -41,6 +40,7 @@
  #include <mntent.h>
  #include <limits.h>
 
+ #include <reinstall/application.h>
  #include <reinstall/modules/grub2.h>
  #include <reinstall/modules/isowriter.h>
  #include <reinstall/modules/isobuilder.h>
@@ -52,12 +52,9 @@
 
 	Application *Application::instance = nullptr;
 
-	static const Udjat::ModuleInfo moduleinfo{"Top menu option"};
-		
-	Application::Application() : XML::Parser{"group"} {
+	static const Udjat::ModuleInfo moduleinfo{"Reinstall application"};
 
-		// Load default http handler.
-		static HTTP::Handler::Factory http_handler{"default"};
+	Application::Application() : XML::Parser{"group"}, Udjat::Module{"http",moduleinfo}, HTTP::Handler::Factory{"default"} {
 
 		if(instance) {
 			throw std::runtime_error{"Application already created"};
