@@ -129,6 +129,9 @@
 
 		bool has_local() const noexcept override;
 
+		// Expand string
+		void expand(Udjat::String &str, const Udjat::XML::Node &node);
+
 		// DataSource
 		const char * local() const override;
 		const char * remote() const override;

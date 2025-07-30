@@ -42,6 +42,28 @@
 		url.remote = url.local = path;
 	}
 
+	void FileSource::expand(Udjat::String &path, const Udjat::XML::Node &node) {
+		path.expand(node);
+		path.expand([this,node](const char *key, string &value) -> bool {
+
+			if(!strcasecmp(key,"name")) {
+				value = name();
+				return true;
+			}
+
+			if(!strcasecmp(key,"group-name")) {
+				for(auto xml = node; xml; xml = xml.parent()) {
+					if(!strcasecmp(xml.name(),"group")) {
+						value = xml.attribute("name").as_string();
+						return true;
+					}
+				}
+			}
+
+			return false;
+		});
+	}
+
 	FileSource::FileSource(const Udjat::XML::Node &node, bool required) : DataSource{node} {
 
 		URL paths[]{
@@ -52,20 +74,7 @@
 
 		// Expand paths.
 		for(auto &path : paths) {
-			path.expand(node);
-			path.expand([node](const char *key, string &value) -> bool {
-
-				if(!strcasecmp(key,"group-name")) {
-					for(auto xml = node; xml; xml = xml.parent()) {
-						if(!strcasecmp(xml.name(),"group")) {
-							value = xml.attribute("name").as_string();
-							return true;
-						}
-					}
-				}
-
-				return false;
-			});
+			this->expand(path, node);
 			path.expand();
 		}
 

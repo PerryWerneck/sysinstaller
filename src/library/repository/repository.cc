@@ -54,6 +54,8 @@
 			throw runtime_error(Logger::String{"Repository '",name(),"' has no remote URL defined"});
 		}
 
+		Logger::String{"Using '",url.remote,"' as remote path for repository"}.trace(name());
+
 		if(!(url.local && *url.local)) {
 			
 			String path{Config::Value<string>{"repository","cachedir",""}.c_str()};
@@ -61,18 +63,12 @@
 				throw runtime_error(Logger::String{"Repository '",name(),"' has no cache defined"});
 			}
 
-			path.expand([this](const char *key, string &value) -> bool {
-				if(!strcasecmp(key,"name")) {
-					value = name();
-					return true;
-				}
-				return false;
-			});
-
+			FileSource::expand(path,node);
 			path.expand(node);
 
 			url.local = path.as_quark();
 			Logger::String{"Using '",url.local,"' as local path for repository"}.info(name());
+
 		}
 
 		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
