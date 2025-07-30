@@ -129,20 +129,22 @@
 			url.remote = XML::QuarkFactory(node,"remote");
 			url.local = XML::QuarkFactory(node,"local");
 
-			bool local = (strncmp(attr.scheme().c_str(),"file://",7) == 0);
-
-			if(!url.local[0] && local) {
+			if(!url.local[0] && attr.local()) {
 				url.local = attr.as_quark();
 				if(url.local[0]) {
 					Logger::String{"Will get local script from",url.local}.trace(name());
 				}
 			}
 
-			if(!(url.remote[0] || local)) {
+			if(!(url.remote[0] || attr.remote())) {
 				url.remote = attr.as_quark();
 				if(url.remote[0]) {
 					Logger::String{"Will get remote script from ",url.remote}.trace(name());
 				}
+			}
+
+			if(!(url.local[0] || url.remote[0])) {
+				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
 
 		} else {
