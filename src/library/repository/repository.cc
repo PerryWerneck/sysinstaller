@@ -66,8 +66,15 @@
 			FileSource::expand(path,node);
 			path.expand(node);
 
+#ifdef DEBUG
+			debug("Expanding path ",path.c_str());
+			if(strchr(path.c_str(),'$')) {
+				throw logic_error("Error expanding variable");
+			}
+#endif
+
 			url.local = path.as_quark();
-			Logger::String{"Using '",url.local,"' as local path for repository"}.info(name());
+			Logger::String{"Using '",url.local,"' as local path for repository"}.trace(name());
 
 		}
 

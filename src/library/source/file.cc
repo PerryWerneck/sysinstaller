@@ -53,6 +53,7 @@
 
 			if(!strcasecmp(key,"group-name")) {
 				for(auto xml = node; xml; xml = xml.parent()) {
+					debug("---> '",xml.name(),"'");
 					if(!strcasecmp(xml.name(),"group")) {
 						value = xml.attribute("name").as_string();
 						return true;

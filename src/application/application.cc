@@ -72,8 +72,7 @@
 		new Module();
 
 		instance = this;
-		Logger::String{"Creating application"}.info();
-
+		Logger::String{"Starting application version " PACKAGE_VERSION}.info();
 
 		// Setup global expansion.
 		String::push_back([](const char *key, std::string &value, bool, bool) -> bool{
@@ -225,7 +224,7 @@
 
 	void Application::load_options() {
 
-		Logger::String{"Loading options"}.info();
+		Logger::String{"Loading options"}.trace();
 
 	#ifdef DEBUG
 		XML::parse("./xml.d");
