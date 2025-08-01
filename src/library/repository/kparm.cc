@@ -45,14 +45,42 @@
 
 	Repository::KParm::KParm(const Udjat::XML::Node &node) {
 
+		String slpkparm;
+
 		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
 			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
 				name = String{child,"value"}.as_quark();
-				slp = XML::QuarkFactory(node,"slp-value");
+				slpkparm = String{node,"slp-value"};
 				enabled = child.attribute("allow-slp").as_bool(true);
 			}
 		}
 
+		if(slpkparm.empty() && Config::Value<bool>{"application","legacy",true}) {
+			slpkparm = String{node,"slp-kernel-parameter"};
+			if(!slpkparm.empty()) {
+				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(name);
+			}
+		}
+
+		// Apply quirks on SLP kernel parameter.
+		{
+			// Check for quirks
+			String quirk{node,"slp-value-quirk"};
+			if(!quirk.empty()) {
+				Config::Value<string> qvalue{"quirks",quirk.c_str()};
+				if(qvalue.empty()) {
+					Logger::String{"Unknown quirk '",quirk.c_str(),"' for slp kernel parameter"}.warning(name);
+				} else {
+					Logger::String{"Applying quirk '",quirk.c_str(),"' -> '",qvalue.c_str(),"' for slp kernel parameter"}.trace(name);
+					auto values = String{qvalue.c_str()}.split(",");
+					for(auto pos = slpkparm.find(values[0].c_str()); pos != std::string::npos; pos = slpkparm.find(values[0].c_str(), pos + values[1].size())) {
+						slpkparm.replace(pos, values[0].size(), values[1].c_str());
+					}
+				}
+			}
+		}
+
+		/*
 		if(!(slp && *slp) && Config::Value<bool>{"application","legacy",true}) {
 
 			// slp = XML::QuarkFactory(node,"slp-kernel-parameter");
@@ -78,13 +106,15 @@
 
 			}
 
-			slp = slpkparm.as_quark();
 			if(slp && *slp) {
 				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(node.attribute("name").as_string("repository"));
 			}
 
 		}
+		*/
 
+		// Set converted slp value.
+		slp = slpkparm.as_quark();
 	}
 
  }
