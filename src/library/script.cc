@@ -117,68 +117,77 @@
 
 		Udjat::NamedObject::parse(node);
 
-		String text{node.child_value()};
-		text.strip();
-
-		if(text.empty()) {
-
-			// Not text, get from URLs.
-
-			URL attr{XML::StringFactory(node,"url")};
-
-			url.remote = XML::QuarkFactory(node,"remote");
-			url.local = XML::QuarkFactory(node,"local");
-
-			if(!url.local[0] && attr.local()) {
-				url.local = attr.as_quark();
-				if(url.local[0]) {
-					Logger::String{"Will get local script from",url.local}.trace(name());
-				}
-			}
-
-			if(!(url.remote[0] || attr.remote())) {
-				url.remote = attr.as_quark();
-				if(url.remote[0]) {
-					Logger::String{"Will get remote script from ",url.remote}.trace(name());
-				}
-			}
-
-			if(!(url.local[0] || url.remote[0])) {
-				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
-			}
-
+		if(cmdline && *cmdline) {
+			
+			Logger::String{"Using command line '",cmdline,"'"}.trace(name());
+		
 		} else {
 
-			// Has script code.
-			Logger::String{"Using script from XML node"}.trace(name());
+			String text{node.child_value()};
+			text.strip();
 
-			if(marker) {
-				text.expand(marker,parent);
-				text.expand(marker,node);
-			}
+			if(text.empty()) {
 
-			if(node.attribute("strip-lines").as_bool()) {
-				String stripped;
-				text.for_each("\n",[&stripped](const String &value) {
-					stripped += const_cast<String &>(value).strip();
-					stripped += "\n";
-					return false;
-				});
-				this->code = stripped.as_quark();
+				// Not text, get from URLs.
+
+				URL attr{XML::StringFactory(node,"url")};
+
+				url.remote = XML::QuarkFactory(node,"remote");
+				url.local = XML::QuarkFactory(node,"local");
+
+				if(!url.local[0] && attr.local()) {
+					url.local = attr.as_quark();
+					if(url.local[0]) {
+						Logger::String{"Will get local script from",url.local}.trace(name());
+					}
+				}
+
+				if(!(url.remote[0] || attr.remote())) {
+					url.remote = attr.as_quark();
+					if(url.remote[0]) {
+						Logger::String{"Will get remote script from ",url.remote}.trace(name());
+					}
+				}
+
+				if(!(url.local[0] || url.remote[0])) {
+					throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
+				}
 
 			} else {
-				this->code = text.as_quark();
+
+				// Has script code.
+				Logger::String{"Using script from XML node"}.trace(name());
+
+				if(marker) {
+					text.expand(marker,parent);
+					text.expand(marker,node);
+				}
+
+				if(node.attribute("strip-lines").as_bool()) {
+					String stripped;
+					text.for_each("\n",[&stripped](const String &value) {
+						stripped += const_cast<String &>(value).strip();
+						stripped += "\n";
+						return false;
+					});
+					this->code = stripped.as_quark();
+
+				} else {
+					this->code = text.as_quark();
+				}
+
+				if(Logger::enabled(Logger::Debug)) {
+					Logger::String{"Parsed script:\n",this->code}.write(Logger::Debug,name());
+				}
+
 			}
 
-			if(Logger::enabled(Logger::Debug)) {
-				Logger::String{"Parsed script:\n",this->code}.write(Logger::Debug,name());
+			if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
+				repository = Repository::Factory(node);
 			}
 
 		}
 
-		if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
-			repository = Repository::Factory(node);
-		}
 
 	}
 
