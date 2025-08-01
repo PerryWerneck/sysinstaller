@@ -144,7 +144,7 @@ Udjat::Dialog::Progress & TopLevel::Progress::url(const char *url) noexcept {
 	Glib::signal_idle().connect_once([this,u](){
 		idle = 1000;
 		changed = true;
-		bar.set_text( u.empty() ? _("wait...") : u );
+		bar.set_text( u.empty() ? _("Wait...") : u );
 	});
 	return *this;
 }

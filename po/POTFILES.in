@@ -61,10 +61,10 @@ src/include/reinstall/tools/template.h
 src/include/reinstall/tools/writer.h
 src/include/reinstall/tools/datasource.h
 src/include/reinstall/action.h
-src/include/reinstall/application.h
 src/include/reinstall/dialog.h
 src/include/reinstall/group.h
 src/include/reinstall/image.h
 src/include/reinstall/ui/application.h
 src/include/reinstall/ui/mainloop.h
 src/include/reinstall/ui/popup.h
+src/include/reinstall/application.h

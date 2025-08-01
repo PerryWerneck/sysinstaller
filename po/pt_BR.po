@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-24 17:41-0300\n"
-"PO-Revision-Date: 2025-07-24 17:42-0300\n"
+"POT-Creation-Date: 2025-08-01 14:11-0300\n"
+"PO-Revision-Date: 2025-08-01 14:11-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -53,7 +53,6 @@ msgid "Quit after processing"
 msgstr "Encerra ao final do processamento"
 
 #: src/application/main.cc:78
-#, fuzzy
 msgid "Reboot on success"
 msgstr "Reiniciar se concluído com sucesso"
 
@@ -62,9 +61,8 @@ msgid "Auto select option"
 msgstr "Seleciona opção automaticamente"
 
 #: src/application/main.cc:80
-#, fuzzy
 msgid "Auto select target"
-msgstr "Seleciona opção automaticamente"
+msgstr "Seleciona destino automaticamente"
 
 #: src/application/main.cc:134
 #, c++-format
@@ -81,55 +79,55 @@ msgstr "Nenhum target '{}' disponível, verifique sua configuração"
 msgid "Invalid repository argument: {}"
 msgstr "Argumento inválido para repositório: {}"
 
-#: src/application/application.cc:85
+#: src/application/application.cc:92
 msgid "Error getting boot path info"
 msgstr "Erro ao obter informações sobre o caminho de boot"
 
-#: src/application/application.cc:89
+#: src/application/application.cc:96
 #, c++-format
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/application/application.cc:96 src/library/source/data.cc:198
+#: src/application/application.cc:103 src/library/source/data.cc:198
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/application/application.cc:115 src/library/source/data.cc:217
+#: src/application/application.cc:122 src/library/source/data.cc:217
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
 
-#: src/application/application.cc:129
+#: src/application/application.cc:136
 msgid "Error readlink boot link"
 msgstr "Erro ao ler link de boot"
 
-#: src/application/application.cc:150
+#: src/application/application.cc:157
 #, c++-format
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/application/application.cc:160 src/library/builder.cc:83
+#: src/application/application.cc:167 src/library/builder.cc:83
 #: src/modules/grub2.cc:142 src/modules/grub2.cc:243
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/application/application.cc:165
+#: src/application/application.cc:172
 msgid "Remote controlled installation"
 msgstr "Instalação com assistência remota"
 
-#: src/application/application.cc:170
+#: src/application/application.cc:177
 msgid "Loading kernel..."
 msgstr "Carregando kernel..."
 
-#: src/application/application.cc:175
+#: src/application/application.cc:182
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/application/application.cc:283 src/ui/gtk4/noninteractive.cc:116
+#: src/application/application.cc:290 src/ui/gtk4/noninteractive.cc:116
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: src/application/application.cc:304
+#: src/application/application.cc:311
 msgid "Unknown error"
 msgstr "Erro inesperado"
 
@@ -255,27 +253,27 @@ msgstr "Não foi possível abrir fat://{}"
 msgid "Unable to write fat://{}"
 msgstr "Não foi possível escrever em fat://{}"
 
-#: src/library/kernelparameter.cc:176
+#: src/library/kernelparameter.cc:97
 #, c++-format
 msgid "Unable to get file mount without dirname for '{}' "
 msgstr "Não é possível obter ponto de montagem para '{}' sem o diretório "
 
-#: src/library/kernelparameter.cc:192
+#: src/library/kernelparameter.cc:113
 #, c++-format
 msgid "Error getting status of '{}'"
 msgstr "Erro ao obter informações estado de '{}'"
 
-#: src/library/kernelparameter.cc:200
+#: src/library/kernelparameter.cc:121
 #, c++-format
 msgid "Unable to get mount point for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para '{}'"
 
-#: src/library/kernelparameter.cc:242
+#: src/library/kernelparameter.cc:245
 #, c++-format
 msgid "Driver update disk '{}' has no path or url defined"
 msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
 
-#: src/library/kernelparameter.cc:309
+#: src/library/kernelparameter.cc:312
 #, c++-format
 msgid "Kernel parameter '{}' has an empty value"
 msgstr "Parâmetro de kernel '{}' tem valor vazio"
@@ -301,12 +299,12 @@ msgstr "Não foi possível alocar espaço para o arquivo de saída"
 msgid "Required repository '{}' not found"
 msgstr "Repositório '{}' não foi encontrado"
 
-#: src/library/repository/repository.cc:220
-#: src/library/repository/repository.cc:234
+#: src/library/repository/repository.cc:223
+#: src/library/repository/repository.cc:237
 msgid "Loading repository index"
 msgstr "Carregando índice do repositório"
 
-#: src/library/repository/repository.cc:290
+#: src/library/repository/repository.cc:293
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
@@ -369,11 +367,11 @@ msgstr "Módulo de gravação já está disponível"
 msgid "Finishing..."
 msgstr "Finalizando..."
 
-#: src/library/script.cc:259
+#: src/library/script.cc:270
 msgid "External command failed"
 msgstr "Comando ou script externo falhou"
 
-#: src/library/script.cc:326
+#: src/library/script.cc:337
 msgid "Configuring, please wait..."
 msgstr "Configurando, aguarde..."
 
@@ -469,9 +467,8 @@ msgid "Second stage"
 msgstr "Segundo estágio"
 
 #: src/modules/isowriter.cc:77
-#, fuzzy
 msgid "Updating ISO image"
-msgstr "Obtendo imagem ISO"
+msgstr "Atualizando imagem ISO"
 
 #: src/modules/isowriter.cc:79 src/modules/isowriter.cc:106
 msgid "Writing ISO image"
@@ -556,13 +553,12 @@ msgid "{} of {}"
 msgstr "{} de {}"
 
 #: src/ui/gtk4/progress.cc:147
-#, fuzzy
-msgid "wait..."
+msgid "Wait..."
 msgstr "Aguarde..."
 
 #: src/ui/gtk4/status.cc:120
 msgid "Please wait..."
-msgstr "Aguarde..."
+msgstr "Por favor, aguarde..."
 
 #. Set up layout
 #: src/ui/gtk4/toplevel.cc:91
