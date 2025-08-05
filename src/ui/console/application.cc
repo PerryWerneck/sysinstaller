@@ -105,17 +105,18 @@
 	int Console::run(int argc, char *argv[]) {
 
 		std::shared_ptr<Reinstall::Action> selected_action = Reinstall::Console::Group::preset;
+		String choice;
 
 		if(!(Action::has_preset() || Reinstall::Dialog::has_preset(Reinstall::Dialog::NonInteractive))) {
 
-			// No present - Present main menu.
+			// No preset - Present main menu.
 			UI::Console console;
 
 			console << _("Available options") << endl << endl;
 
 			// Select group.
 			std::shared_ptr<Group> selected_group;
-			{
+			if(groups.size() > 1) {
 				char item[] = "A";
 				for(const auto &group : groups) {
 					console << "\t";
@@ -129,43 +130,46 @@
 				console << endl << _("Select group (Enter to quit): ");
 				console.cursor(true).flush();
 
-			}
+				cin.sync(); 
+				getline(cin, choice);
+				debug("User choice: ", choice.c_str());
 
-			String choice;
-
-			cin.sync(); 
-			getline(cin, choice);
-			debug("User choice: ", choice.c_str());
-
-			{
-				char item = 'A';
-				char entry = toupper(choice[0]);
-				for(const auto &group : groups) {
-					console.erase_line().up();
-					if(item++ == entry) {
-						selected_group = group;
+				{
+					char item = 'A';
+					char entry = toupper(choice[0]);
+					for(const auto &group : groups) {
+						console.erase_line().up();
+						if(item++ == entry) {
+							selected_group = group;
+						}
 					}
+
+					for(size_t line = 0; line < 4; line++) {
+						console.erase_line().up();
+					}
+
 				}
 
-				for(size_t line = 0; line < 4; line++) {
-					console.erase_line().up();
+				if(choice.empty()) {
+					Logger::String{"User selected quit option"}.info();
+					return ECANCELED; // Quit.
 				}
 
-			}
+				if(!selected_group) {
+					Logger::String{"User selected an invalid group"}.info();
+					return EINVAL; // Invalid choice.
+				}
 
-			if(choice.empty()) {
-				Logger::String{"User selected quit option"}.info();
-				return ECANCELED; // Quit.
-			}
+				console.bold(true);
+				console << selected_group->label << ":" << endl << endl;
+				console.bold(false);
 
-			if(!selected_group) {
-				Logger::String{"User selected an invalid group"}.info();
-				return EINVAL; // Invalid choice.
-			}
+			} else {
 
-			console.bold(true);
-			console << selected_group->label << ":" << endl << endl;
-			console.bold(false);
+				selected_group = groups.front();
+				Logger::String{"Auto selecting group '", selected_group->label,"'"}.info();
+
+			}
 
 			// Select item.
 			{
@@ -197,7 +201,7 @@
 					}
 				}
 
-				for(size_t line = 0; line < 3; line++) {
+				for(size_t line = 0; line < 4; line++) {
 					console.erase_line().up();
 				}
 
@@ -213,9 +217,9 @@
 				return EINVAL; // Invalid choice.
 			}
 
-			console.bold(true);
-			console << selected_action->title() << endl << endl;
-			console.bold(false);
+			// console.bold(true);
+			// console << selected_action->title() << endl << endl;
+			// console.bold(false);
 
 			if(!selected_action->confirmation->ask(true)) {
 				Logger::String{"User cancelled action"}.info();
