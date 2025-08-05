@@ -31,6 +31,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/url/handler.h>
+ #include <udjat/tools/configuration.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -303,11 +304,21 @@
 			ptr = strchr(arg,':');
 		}
 
-		if(!ptr) {
-			throw runtime_error("Invalid repository parameter definition");
+		if(ptr) {
+
+			preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
+
+		} else {
+
+			Config::Value<string> target{"install-targets",arg};
+			if(target.empty()) {
+				throw std::runtime_error{Logger::Message(_("No target found for '{}', please check your configuration"),arg)};
+			}
+
+			preset("install",target.c_str());
+			
 		}
 
-		preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
 	}
 
  }
