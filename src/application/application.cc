@@ -191,7 +191,13 @@
 
 #ifndef _WIN32
 		if(Config::Value<bool>{"modules","grub2",true}) {
+
 			Reinstall::Grub2::Module::Factory("grub");
+
+			if(Config::Value<bool>{"application","legacy",false}) {
+				Reinstall::Grub2::Module::Factory("grub");
+			}
+
 		}
 #endif
 
@@ -200,7 +206,13 @@
 		}
 
 		if(Config::Value<bool>{"modules","isobuilder",true}) {
+
 			Reinstall::IsoBuilder::Module::Factory();
+
+			if(Config::Value<bool>{"application","legacy",false}) {
+				Reinstall::IsoBuilder::Module::Factory("netinstall");
+			}
+
 		}
 
 	}
