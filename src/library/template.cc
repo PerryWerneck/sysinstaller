@@ -66,7 +66,7 @@
 		}
 
 		if(XML::AttributeFactory(node,"script").as_bool()) {
-			Logger::String{node.path()," is using deprecated attribute 'script', use 'executable' instead"}.warning(name());
+			Logger::String{node.path()," is using deprecated attribute 'script', use 'executable' instead"}.trace(name());
 			mode = 0755;
 		}
 

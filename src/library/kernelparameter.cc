@@ -189,7 +189,7 @@
 						kparms.push_back(kparm);
 					}
 
-					Logger::String{"Repository declared as kernel parameter, using legacy mode"}.warning(kparm->parameter_name());
+					Logger::String{"Repository declared as kernel parameter, using legacy mode"}.trace(kparm->parameter_name());
 
 				} else {
 

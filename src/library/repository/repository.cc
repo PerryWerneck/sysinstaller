@@ -196,7 +196,7 @@
 			return true;
 		}
 
-	#ifdef HAVE_ZLIB
+#ifdef HAVE_ZLIB
 		{
 			debug("Trying index.gz");
 
@@ -316,7 +316,7 @@
 			}
 
 			preset("install",target.c_str());
-			
+
 		}
 
 	}
