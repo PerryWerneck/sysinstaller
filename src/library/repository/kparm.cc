@@ -48,6 +48,7 @@
 		String slpkparm;
 		String logname{node,"name"};
 
+		// TODO: Refactor this to use string{node,attribute-name}.
 		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
 			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
 				name = String{child,"value"}.as_quark();

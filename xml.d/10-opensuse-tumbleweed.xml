@@ -14,10 +14,10 @@
 
 		Optional attributes for automatic repository detection using SLP (http://www.openslp.org/):
 		
-			slp-service-type:	The service type string, including the authority string (if any) for the request.
+			slp-service-type: The service type string, including the authority string (if any) for the request.
 			slp-scope-list:   A pointer to a comma separated list of scope names.
 			slp-filter:       A query formulated of attribute pattern matching expressions in the form of an LDAPv3 search filter.
-			slp-url:			    The URL for the kernel parameter when SLP is available.
+			slp-url:          The URL for the kernel parameter when SLP is available.
 		
 	-->
 	<repository name='install'>
