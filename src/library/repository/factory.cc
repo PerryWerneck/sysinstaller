@@ -121,7 +121,7 @@
 
 		}
 
-		throw runtime_error(Logger::Message{_("Required repository '{}' not found"),name});
+		throw runtime_error(Logger::Message{_("Required repository '{}' not found at {}"),name, node.path()});
 
 	}
 

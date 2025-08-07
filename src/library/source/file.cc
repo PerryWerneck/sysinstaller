@@ -104,17 +104,6 @@
 			}
 		}
 
-#ifdef DEBUG
-		Logger::String{"---[ ", node.name(), " - BEGIN ]-----------------"}.info(name());
-		debug("--[BEGIN]---------------------------------");
-		debug("Local_from_xml='",paths[0].c_str(),"'");
-		debug("Remote_from_xml='",paths[1].c_str(),"'");
-		debug("URL_from_xml='",paths[2].c_str(),"'");
-		debug("Local_computed='",url.local,"'");
-		debug("Remote_computed='",url.remote,"'");
-		Logger::String{"---[ ", node.name(), " - END ]-------------------"}.info(name());
-#endif 
-
 	}
 
 	FileSource::~FileSource() {
