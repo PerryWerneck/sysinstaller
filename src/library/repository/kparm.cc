@@ -62,6 +62,7 @@
 			}
 		}
 
+		/*
 		// Apply quirks on SLP kernel parameter.
 		{
 			// Check for quirks
@@ -81,6 +82,7 @@
 				Logger::String{"No quirk for slp kernel parameter"}.trace(name);
 			}
 		}
+		*/
 
 		/*
 		if(!(slp && *slp) && Config::Value<bool>{"application","legacy",true}) {
