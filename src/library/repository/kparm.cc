@@ -77,6 +77,8 @@
 						slpkparm.replace(pos, values[0].size(), values[1].c_str());
 					}
 				}
+			} else {
+				Logger::String{"No quirk for slp kernel parameter"}.trace(name);
 			}
 		}
 
@@ -114,6 +116,7 @@
 		*/
 
 		// Set converted slp value.
+		Logger::String{"SLP kernel parameter set to '",slpkparm.c_str(),"'"}.trace(name);	
 		slp = slpkparm.as_quark();
 	}
 
