@@ -46,19 +46,21 @@
 	Repository::KParm::KParm(const Udjat::XML::Node &node) {
 
 		String slpkparm;
+		String logname{node,"name"};
 
 		for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
 			if(!strcasecmp(child.attribute("name").as_string("none"),"kernel-parameter-name")) {
 				name = String{child,"value"}.as_quark();
-				slpkparm = String{node,"slp-value"};
-				enabled = child.attribute("allow-slp").as_bool(true);
+				slpkparm = String{child,"slp-value"};
+				enabled = child.attribute("allow-slp").as_bool(!slpkparm.empty());
 			}
 		}
 
 		if(slpkparm.empty() && Config::Value<bool>{"application","legacy",true}) {
 			slpkparm = String{node,"slp-kernel-parameter"};
 			if(!slpkparm.empty()) {
-				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(name);
+				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter' at ",node.path()}.trace(logname.c_str());
+				enabled = true;
 			}
 		}
 
@@ -69,51 +71,18 @@
 			if(!quirk.empty()) {
 				Config::Value<string> qvalue{"quirks",quirk.c_str()};
 				if(qvalue.empty()) {
-					Logger::String{"Unknown quirk '",quirk.c_str(),"' for slp kernel parameter"}.warning(name);
+					Logger::String{"Unknown quirk '",quirk.c_str(),"' for slp kernel parameter"}.warning(logname.c_str());
 				} else {
-					Logger::String{"Applying quirk '",quirk.c_str(),"' -> '",qvalue.c_str(),"' for slp kernel parameter"}.trace(name);
+					Logger::String{"Applying quirk '",quirk.c_str(),"' -> '",qvalue.c_str(),"' for slp kernel parameter at ",node.path()}.trace(logname.c_str());
 					auto values = String{qvalue.c_str()}.split(",");
 					for(auto pos = slpkparm.find(values[0].c_str()); pos != std::string::npos; pos = slpkparm.find(values[0].c_str(), pos + values[1].size())) {
 						slpkparm.replace(pos, values[0].size(), values[1].c_str());
 					}
 				}
 			} else {
-				Logger::String{"No quirk for slp kernel parameter"}.trace(name);
+				Logger::String{"No quirk for slp kernel parameter at ",node.path()}.trace(logname.c_str());
 			}
 		}
-
-		/*
-		if(!(slp && *slp) && Config::Value<bool>{"application","legacy",true}) {
-
-			// slp = XML::QuarkFactory(node,"slp-kernel-parameter");
-			String slpkparm{node,"slp-kernel-parameter"};
-
-			if(!slpkparm.empty()) {
-				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(name);
-
-				// Check for quirks
-				String quirk{node,"slp-kernel-parameter-quirk"};
-				if(!quirk.empty()) {
-					Config::Value<string> qvalue{"quirks",quirk.c_str()};
-					if(qvalue.empty()) {
-						Logger::String{"Unknown quirk '",quirk.c_str(),"' for slp kernel parameter"}.warning(name);
-					} else {
-						Logger::String{"Applying quirk '",quirk.c_str(),"' -> '",qvalue.c_str(),"' for slp kernel parameter"}.trace(name);
-						auto values = String{qvalue.c_str()}.split(",");
-						for(auto pos = slpkparm.find(values[0].c_str()); pos != std::string::npos; pos = slpkparm.find(values[0].c_str(), pos + values[1].size())) {
-							slpkparm.replace(pos, values[0].size(), values[1].c_str());
-						}
-					}
-				}
-
-			}
-
-			if(slp && *slp) {
-				Logger::String{"Got slp kernel parameter using legacy attribute 'slp-kernel-parameter'"}.trace(node.attribute("name").as_string("repository"));
-			}
-
-		}
-		*/
 
 		// Set converted slp value.
 		Logger::String{"SLP kernel parameter set to '",slpkparm.c_str(),"'"}.trace(name);	
