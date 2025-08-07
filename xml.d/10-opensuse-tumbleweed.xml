@@ -20,22 +20,14 @@
 			slp-url:			    The URL for the kernel parameter when SLP is available.
 		
 	-->
-	<repository name='install'
-		url='https://download.opensuse.org/tumbleweed/repo/oss/'
-		slp-service-type='service:install.tumbleweed'
-		slp-scope-list=''
-		slp-filter=''
-		slp-kernel-parameter='slp:/?service=install.tumbleweed'
-	/>
-
-	<!-- repository name='install'>
+	<repository name='install'>
 		<attribute name='remote' value='https://download.opensuse.org/tumbleweed/repo/oss/' />
 		<attribute name='local' value='file://${HOME}/tmp/suse/tumbleweed/repo/oss/' />
 		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
 		<attribute name='kernel-parameter-name' value='install' allow-slp='yes' />
-	</repository -->
+	</repository>
 
 	<!-- Path for the driver update (Full URL or repository path) -->
 	<!-- driver-update-disk name='dud'>
