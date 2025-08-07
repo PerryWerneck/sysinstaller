@@ -143,6 +143,11 @@
 
 		}
 
+		if(path[0] == '/' && Config::Value<bool>{"application","legacy",true}) {
+			Logger::Message{"Using relative path for '{}'",path}.warning(name());
+			return path;
+		}
+
 		Logger::Message msg{"Unable to handle non relative path '{}'",path};
 		msg.error(name());
 		throw logic_error(msg);
