@@ -36,9 +36,9 @@
 		public:
 			class Action;
 			
-			static Udjat::Module * Factory(const char *name = "iso-builder");
+			static Udjat::Module * Factory(const char *name = "iso-builder", const char *tagname = "iso-builder");
 
-			Module(const char *name);
+			Module(const char *name, const char *tagname);
 			virtual ~Module();
 			bool parse(const Udjat::XML::Node &node) override;
 	

@@ -151,7 +151,7 @@
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{name} {
+	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{tagname} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
@@ -192,8 +192,8 @@
 
 	}
 
-	Udjat::Module * Reinstall::IsoBuilder::Module::Factory(const char *name) {
-		return new Module(name);
+	Udjat::Module * Reinstall::IsoBuilder::Module::Factory(const char *name, const char *tagname) {
+		return new Module(name,tagname);
 	}
 
 

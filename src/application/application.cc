@@ -210,7 +210,7 @@
 			Reinstall::IsoBuilder::Module::Factory();
 
 			if(Config::Value<bool>{"application","legacy",false}) {
-				Reinstall::IsoBuilder::Module::Factory("netinstall");
+				Reinstall::IsoBuilder::Module::Factory("netinstall","network-installer");
 			}
 
 		}
