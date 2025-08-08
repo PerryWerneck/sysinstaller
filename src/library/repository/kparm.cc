@@ -74,8 +74,8 @@
 				if(qvalue.empty()) {
 					Logger::String{"Unknown quirk '",quirk.c_str(),"' for slp kernel parameter"}.warning(logname.c_str());
 				} else {
-					Logger::String{"Applying quirk '",quirk.c_str(),"' -> '",qvalue.c_str(),"' for slp kernel parameter at ",node.path()}.trace(logname.c_str());
 					auto values = String{qvalue.c_str()}.split(",");
+					Logger::String{"Applying quirk ",quirk.c_str(),": '",values[0].c_str(),"' -> '",values[1].c_str(),"' for slp kernel parameter at ",node.path()}.trace(logname.c_str());
 					for(auto pos = slpkparm.find(values[0].c_str()); pos != std::string::npos; pos = slpkparm.find(values[0].c_str(), pos + values[1].size())) {
 						slpkparm.replace(pos, values[0].size(), values[1].c_str());
 					}
@@ -86,7 +86,7 @@
 		}
 
 		// Set converted slp value.
-		Logger::String{"SLP kernel parameter set to '",slpkparm.c_str(),"'"}.trace(name);	
+		Logger::String{"SLP kernel parameter set to '",slpkparm.c_str(),"'"}.trace(logname.c_str());	
 		slp = slpkparm.as_quark();
 	}
 

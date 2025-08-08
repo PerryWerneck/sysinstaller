@@ -130,7 +130,7 @@
 
 	// Udjat::XML::Parser interface.
 	bool IsoWriter::Module::parse(const Udjat::XML::Node &node) {
-		Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info();
+		// Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info();
 		Reinstall::Application::getInstance().push_back(node,make_shared<IsoWriter::Module::Action>(node));
 		return true;
 	}

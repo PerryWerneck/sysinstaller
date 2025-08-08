@@ -32,6 +32,10 @@
  
  namespace Reinstall {
 
+	/// @brief Action model.
+	/// @details This class is used to define an action model, which can be used to
+	/// create actions. The model is defined in an XML file and can be used to create
+	/// actions with the same properties.
 	class UDJAT_API Model {
 	public:
 		Model(const Udjat::XML::Node &node);
@@ -40,6 +44,7 @@
 
 	class UDJAT_API Action : private Model, public Udjat::NamedObject {
 	private:
+
 		static const char *presets[2];
 		const char * dialog_title;
 		const char * icon_name;

@@ -40,15 +40,17 @@
 
 	const char * Action::presets[2] = {nullptr,nullptr};
 
-
 	Model::Model(const Udjat::XML::Node &node) {
+
+		const char *logname = node.attribute("name").as_string();
 
 		String name{node,"model"};
 		if(name.empty()) {
+			Logger::String{"Building action for node '",node.path(),"'"}.info(logname);
 			return;
 		}
 
-		Logger::String{"Loading model '",name,"' for node ",node.path()}.info();
+		Logger::String{"Building action using model '", name.c_str(),"' for node '",node.path(),"'"}.info(logname);
 
 #ifdef DEBUG
 		String path{getenv("PWD")};
@@ -65,7 +67,7 @@
 
 	}
 
-	Action::Action(const Udjat::XML::Node &node) 
+	Action::Action::Action(const Udjat::XML::Node &node) 
 		: Model{node}, NamedObject{node}, 
 			dialog_title{XML::QuarkFactory(node,"dialog-title")},
 		 	icon_name{XML::QuarkFactory(node,"icon-name")} {

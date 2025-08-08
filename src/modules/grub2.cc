@@ -308,7 +308,7 @@
 
 	// Udjat::XML::Parser interface.
 	bool Grub2::Module::parse(const Udjat::XML::Node &node) {
-		Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info("isowriter");
+		// Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info("isowriter");
 		Reinstall::Application::getInstance().push_back(node,make_shared<Grub2::Module::Action>(node));
 		return true;
 	}
