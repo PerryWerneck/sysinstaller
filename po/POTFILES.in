@@ -5,9 +5,9 @@ src/library/disk/fat.cc
 src/library/kernelparameter.cc
 src/library/os/linux/writer.cc
 src/library/os/windows/gtkremovabledevicedialog.cc
+src/library/repository/repository.cc
 src/library/repository/factory.cc
 src/library/repository/kparm.cc
-src/library/repository/repository.cc
 src/library/source/load.cc
 src/library/source/file.cc
 src/library/source/data.cc
@@ -53,13 +53,13 @@ src/include/reinstall/modules/isobuilder.h
 src/include/reinstall/modules/isowriter.h
 src/include/reinstall/tools/efiboot.h
 src/include/reinstall/tools/kernelparameter.h
-src/include/reinstall/tools/repository.h
 src/include/reinstall/tools/builder.h
 src/include/reinstall/tools/removabledevicedialog.h
 src/include/reinstall/tools/script.h
 src/include/reinstall/tools/template.h
 src/include/reinstall/tools/writer.h
 src/include/reinstall/tools/datasource.h
+src/include/reinstall/tools/repository.h
 src/include/reinstall/action.h
 src/include/reinstall/dialog.h
 src/include/reinstall/group.h

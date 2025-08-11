@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 14:12-0300\n"
-"PO-Revision-Date: 2025-08-01 14:11-0300\n"
+"POT-Creation-Date: 2025-08-07 23:15-0300\n"
+"PO-Revision-Date: 2025-08-07 23:17-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -69,7 +69,7 @@ msgstr "Seleciona destino automaticamente"
 msgid "Invalid target '{}', please check your configuration"
 msgstr "Target '{}' não é válido, verifique sua configuração"
 
-#: src/application/main.cc:150
+#: src/application/main.cc:150 src/library/repository/repository.cc:315
 #, c++-format
 msgid "No target found for '{}', please check your configuration"
 msgstr "Nenhum target '{}' disponível, verifique sua configuração"
@@ -88,11 +88,11 @@ msgstr "Erro ao obter informações sobre o caminho de boot"
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/application/application.cc:103 src/library/source/data.cc:198
+#: src/application/application.cc:103 src/library/source/data.cc:203
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/application/application.cc:122 src/library/source/data.cc:217
+#: src/application/application.cc:122 src/library/source/data.cc:222
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
@@ -123,11 +123,11 @@ msgstr "Carregando kernel..."
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/application/application.cc:290 src/ui/gtk4/noninteractive.cc:116
+#: src/application/application.cc:302 src/ui/gtk4/noninteractive.cc:116
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: src/application/application.cc:311
+#: src/application/application.cc:323
 msgid "Unknown error"
 msgstr "Erro inesperado"
 
@@ -294,47 +294,47 @@ msgstr "Não foi possível obter tamanho de dispositivo"
 msgid "Cant allocate space for output file"
 msgstr "Não foi possível alocar espaço para o arquivo de saída"
 
-#: src/library/repository/factory.cc:124
-#, c++-format
-msgid "Required repository '{}' not found"
-msgstr "Repositório '{}' não foi encontrado"
-
-#: src/library/repository/repository.cc:223
-#: src/library/repository/repository.cc:237
+#: src/library/repository/repository.cc:224
+#: src/library/repository/repository.cc:238
 msgid "Loading repository index"
 msgstr "Carregando índice do repositório"
 
-#: src/library/repository/repository.cc:293
+#: src/library/repository/repository.cc:294
 #, c++-format
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
 
-#: src/library/source/data.cc:191
+#: src/library/repository/factory.cc:124
+#, c++-format
+msgid "Required repository '{}' not found at {}"
+msgstr "Repositório '{}' não foi encontrado no caminho {}"
+
+#: src/library/source/data.cc:196
 #, c++-format
 msgid "Error getting info for '{}'"
 msgstr "Erro ao obter informações sobre '{}'"
 
-#: src/library/source/data.cc:364
+#: src/library/source/data.cc:369
 msgid "Invalid repository"
 msgstr "Repositório inválido"
 
-#: src/library/action.cc:81
+#: src/library/action.cc:83
 msgid "Do you confirm?"
 msgstr "Confirma operação?"
 
-#: src/library/action.cc:82
+#: src/library/action.cc:84
 msgid "Operation complete"
 msgstr "Operação concluída"
 
-#: src/library/action.cc:83
+#: src/library/action.cc:85
 msgid "Operation failed"
 msgstr "Operação falhou"
 
-#: src/library/action.cc:94
+#: src/library/action.cc:96
 msgid "The selected action cant be activated"
 msgstr "A ação selecionada não pode ser ativada"
 
-#: src/library/action.cc:106
+#: src/library/action.cc:108
 #, c++-format
 msgid "Unable to select '{}': Invalid path"
 msgstr "Não foi possível selecionar '{}': Caminho inválido"
@@ -565,15 +565,15 @@ msgstr "Por favor, aguarde..."
 msgid "System reinstallation"
 msgstr "Reinstalar o sistema"
 
-#: src/ui/console/application.cc:114
+#: src/ui/console/application.cc:115
 msgid "Available options"
 msgstr "Opções disponíveis"
 
-#: src/ui/console/application.cc:129
+#: src/ui/console/application.cc:130
 msgid "Select group (Enter to quit): "
 msgstr "Selecione o grupo (Enter para sair): "
 
-#: src/ui/console/application.cc:182
+#: src/ui/console/application.cc:186
 msgid "Select action (Enter to quit): "
 msgstr "Seleciona ação desejada (Enter para sair): "
 
@@ -644,8 +644,7 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -810,8 +809,7 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -841,25 +839,17 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -870,25 +860,16 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"

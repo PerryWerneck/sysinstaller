@@ -50,7 +50,7 @@
 			return;
 		}
 
-		Logger::String{"Building action using model '", name.c_str(),"' for node '",node.path(),"'"}.info(logname);
+		Logger::String{"Building action using model '", name.c_str(),"' for node '",node.path(),"'"}.trace(logname);
 
 #ifdef DEBUG
 		String path{getenv("PWD")};
