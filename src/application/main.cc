@@ -66,7 +66,7 @@
 
 	// Set locale.
 	setlocale(LC_ALL, "");
-	bindtextdomain(GETTEXT_PACKAGE, G_STRINGIFY(LOCALEDIR));
+	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
@@ -106,12 +106,12 @@
 	Logger::console(true);
 #endif
 
-	debug("gettext domain: ", GETTEXT_PACKAGE);
-	debug("locale directory: ", G_STRINGIFY(LOCALEDIR));
-
 	if(Udjat::CommandLineParser::options(argc,argv,options)) {
 		return 0;
 	}
+
+	Logger::String{"Getting domain '", GETTEXT_PACKAGE,"' from configuration at ",LOCALEDIR}.trace();
+	exit(-1);
 
 	Logger::redirect();
 
