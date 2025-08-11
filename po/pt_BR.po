@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-11 20:20-0300\n"
-"PO-Revision-Date: 2025-08-07 23:17-0300\n"
+"POT-Creation-Date: 2025-08-11 20:29-0300\n"
+"PO-Revision-Date: 2025-08-11 20:31-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -506,6 +506,14 @@ msgstr "_Não"
 msgid "_Yes"
 msgstr "_Sim"
 
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:54 src/ui/gtk4/interactive.cc:139
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:55 src/ui/gtk4/interactive.cc:139
+msgid "C_ontinue"
+msgstr "C_ontinuar"
+
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:61
 msgid "Insert an storage device"
 msgstr "Insira um dispositivo de armazenamento"
@@ -542,14 +550,6 @@ msgstr "Acesso negado"
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:367
 msgid "Invalid device"
 msgstr "Dispositivo inválido"
-
-#: src/ui/gtk4/interactive.cc:139
-msgid "C_ontinue"
-msgstr "_Continuar"
-
-#: src/ui/gtk4/interactive.cc:139
-msgid "_Cancel"
-msgstr "_Cancelar"
 
 #: src/ui/gtk4/interactive.cc:150
 msgid "Select an option"
@@ -646,8 +646,7 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -812,8 +811,7 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -843,25 +841,17 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -872,25 +862,16 @@ msgstr "Seleciona ação desejada (Enter para sair): "
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"

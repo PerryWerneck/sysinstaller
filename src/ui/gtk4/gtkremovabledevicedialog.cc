@@ -51,8 +51,8 @@
 
  GtkRemovableDeviceDialog::GtkRemovableDeviceDialog(Reinstall::Writer &w, const Reinstall::Dialog &dialog, bool allow_output_to_file)
  : 	Gtk::MessageDialog{"",false,Gtk::MessageType::QUESTION,Gtk::ButtonsType::NONE}, 
- 	volume_monitor{Gio::VolumeMonitor::get()}, 	cancel{"_Cancel",true},
-	apply{"C_ontinue",true} {
+ 	volume_monitor{Gio::VolumeMonitor::get()}, 	cancel{_("_Cancel"),true},
+	apply{_("C_ontinue"),true} {
 
  	add_action_widget(cancel,ECANCELED);
 	add_action_widget(apply,0);
