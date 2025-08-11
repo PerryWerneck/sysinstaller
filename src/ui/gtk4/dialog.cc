@@ -31,6 +31,7 @@
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
  #include <memory>
+ #include <glib/gi18n.h>
 
  using namespace Udjat;
  using namespace std;
@@ -105,10 +106,10 @@
 				const char *label;
 				int response;
 			} buttons[] = {
-				{ Reboot, 		_("_Reboot"), 			DIALOG_RESPONSE_REBOOT 		},
-				{ Continue, 	_("_Continue"), 		DIALOG_RESPONSE_CONTINUE 	},
-				{ Quit, 		_("_Quit application"), DIALOG_RESPONSE_QUIT 		},
-				{ Cancel, 		_("C_ancel"), 			DIALOG_RESPONSE_CANCEL 		}
+				{ Reboot, 		N_("_Reboot"), 				DIALOG_RESPONSE_REBOOT 		},
+				{ Continue, 	N_("_Continue"), 			DIALOG_RESPONSE_CONTINUE 	},
+				{ Quit, 		N_("_Quit application"),	DIALOG_RESPONSE_QUIT 		},
+				{ Cancel, 		N_("C_ancel"), 				DIALOG_RESPONSE_CANCEL 		}
 			};
 
 			for(const auto &opt : this->buttons.order) {
@@ -155,9 +156,12 @@
 				(message && *message) ? message : _("Do you want to continue?"),
 				true,
 				MessageType::QUESTION,
-				ButtonsType::YES_NO,
+				ButtonsType::NONE,
 				true
 			};
+
+			dialog.add_button(_("_No"),ResponseType::NO);
+			dialog.add_button(_("_Yes"),ResponseType::YES);
 
 			setup(dialog);
 
