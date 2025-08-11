@@ -37,6 +37,7 @@
  #include <reinstall/application.h>
  #include <private/console.h>
  #include <udjat/tools/quark.h>
+ #include <locale.h>
  
  #ifdef HAVE_GTKMM
  #include <gtkmm.h>
@@ -62,6 +63,12 @@
 #endif // HAVE_GTKMM
 
  int main(int argc, char* argv[]) {
+
+	// Set locale.
+	setlocale(LC_ALL, "");
+	bindtextdomain(GETTEXT_PACKAGE, G_STRINGIFY(LOCALEDIR));
+	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
 
 	// Check for help options.
 	static const Udjat::CommandLineParser::Argument options[] = {
@@ -98,6 +105,9 @@
 	Logger::verbosity(9);
 	Logger::console(true);
 #endif
+
+	debug("gettext domain: ", GETTEXT_PACKAGE);
+	debug("locale directory: ", G_STRINGIFY(LOCALEDIR));
 
 	if(Udjat::CommandLineParser::options(argc,argv,options)) {
 		return 0;

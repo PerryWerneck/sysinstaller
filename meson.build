@@ -144,6 +144,8 @@ conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), mes
 conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 conf_data.set_quoted('MODULE_VERSION',libversion)
+conf_data.set_quoted('DATADIR',get_option('prefix') + '/' + get_option('datadir'))
+conf_data.set_quoted('LOCALEDIR',get_option('prefix') + '/' + get_option('localedir'))
 
 conf_data.set('application_description',project_description)
 conf_data.set('application_icon','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
