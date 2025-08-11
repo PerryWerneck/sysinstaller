@@ -64,12 +64,6 @@
 
  int main(int argc, char* argv[]) {
 
-	// Set locale.
-	setlocale(LC_ALL, "");
-	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
-
 	// Check for help options.
 	static const Udjat::CommandLineParser::Argument options[] = {
 #ifdef HAVE_GTKMM
@@ -109,9 +103,6 @@
 	if(Udjat::CommandLineParser::options(argc,argv,options)) {
 		return 0;
 	}
-
-	Logger::String{"Getting domain '", GETTEXT_PACKAGE,"' from configuration at ",LOCALEDIR}.trace();
-	exit(-1);
 
 	Logger::redirect();
 
