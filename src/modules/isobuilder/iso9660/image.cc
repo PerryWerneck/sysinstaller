@@ -22,6 +22,7 @@
   */
 
  #include <config.h>
+ #define LOG_DOMAIN "iso9660"
 
  #ifdef HAVE_LIBISOFS
 
@@ -432,8 +433,11 @@
 			writer.open(Reinstall::Dialog());
 
 			auto progress = Udjat::Dialog::Progress::getInstance();
-			progress->url(writer.url());
+
+			Logger::String("Writing ISO9660 image to ",writer.url()).info();
+
 			status.sub_title(_("Writing image"));
+			progress->url(writer.url());
 
 			#define BUFLEN 2048
 			unsigned char buffer[BUFLEN];

@@ -106,7 +106,9 @@
 			}
 			
 			auto progress = Udjat::Dialog::Progress::getInstance();
-			progress->url(this->url());
+
+			Logger::String{"Writing image to ",device_url.c_str()}.info();
+			progress->url(device_url.strip().c_str());
 
 			unsigned long long offset = 0;
 			uint8_t buffer[st.st_blksize];
@@ -119,7 +121,7 @@
 					throw runtime_error("Unexpected EOF on source file");
 				}
 
-				debug(offset,"/",st.st_size);
+				// debug(offset,"/",st.st_size);
 
 				progress->set((uint64_t) offset,(uint64_t) st.st_size);
 				Writer::write(offset,buffer,(unsigned long long) bytes);

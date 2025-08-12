@@ -26,6 +26,8 @@
  #include <udjat/defs.h>
  #include <reinstall/dialog.h>
  #include <string>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/logger.h>
 
  namespace Reinstall {
 
@@ -46,7 +48,7 @@
 		Writer(const char *name);
 
 		/// @brief The URL for progress.
-		std::string device_url;
+		Udjat::String device_url;
 
 		/// @brief Device set from command-line option.
 		static std::string selected;

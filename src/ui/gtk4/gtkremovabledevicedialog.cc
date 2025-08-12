@@ -41,6 +41,8 @@
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
+ #include <udjat/tools/mainloop.h>
+ #include <udjat/tools/threadpool.h>
 
  #include <reinstall/dialog.h>
 
@@ -57,8 +59,9 @@
  	add_action_widget(cancel,ECANCELED);
 	add_action_widget(apply,0);
 	apply.set_sensitive(false);
+	apply.get_style_context()->add_class("destructive-action");
 
-	set_message(dialog.text(_("Insert an storage device")),true);
+	set_message(dialog.text(_("Insert an storage device")),true	);
 	set_secondary_text(dialog.body(_("This action will <b>DELETE ALL CONTENT</b> on the device.")),true);
 
 	setup(allow_output_to_file);
@@ -327,44 +330,70 @@
 		break;
 
 	case DeviceHolder::Device:
-		debug("Checking ",device->device_name.c_str());
+		{
+			string devname{device->device_name};
+			debug("Checking ",devname.c_str());
 
-		try {
-
-			Reinstall::Writer::getInstance().open(device->device_name.c_str());
-			apply.set_label(_("C_ontinue"));
-			apply.set_sensitive((bool) Reinstall::Writer::getInstance());
-
-		} catch(const std::system_error &e) {
-
-			int err = e.code().value();
-
-			debug("System error ",err);
-
-			Logger::String{device->device_name.c_str(),": ",e.what()," (",err,")"}.warning("dialog");
 			apply.set_sensitive(false);
+			apply.set_label(_("Detecting..."));
 
-			switch(err) {
-			case ENOSPC:
-				apply.set_label(_("Not enough space"));
-				break;
+			// Open device in a different thread
+			// This is necessary because the device may be slow to open.
+			// The UI can not be blocked while opening the device.
+			ThreadPool::getInstance().push("devopen",[this,devname](){
 
-			case EPERM:
-			case EACCES:
-				apply.set_label(_("Access Denied"));
-				break;
+				string error_message;
 
-			default:
-				apply.set_label(strerror(err));
-			}
+				try {
 
-		} catch(const std::exception &e) {
+					debug("Opening device");
+					Reinstall::Writer::getInstance().open(devname.c_str());
 
-			debug("Exception");
+				} catch(const std::system_error &e) {
 
-			Logger::String{device->device_name.c_str(),": ",e.what()}.warning("dialog");
-			apply.set_sensitive(false);
-			apply.set_label(_("Invalid device"));
+					int err = e.code().value();
+
+					debug("System error ",err);
+
+					Logger::String{devname.c_str(),": ",e.what()," (",err,")"}.warning("dialog");
+
+					switch(err) {
+					case ENOSPC:
+						error_message.assign(_("Not enough space"));
+						break;
+
+					case EPERM:
+					case EACCES:
+						error_message.assign(_("Access Denied"));
+						break;
+
+					default:
+						error_message.assign(strerror(err));
+					}
+
+				} catch(const std::exception &e) {
+
+					debug("Exception");
+
+					Logger::String{devname.c_str(),": ",e.what()}.warning("dialog");
+					error_message.assign(_("Invalid device"));
+
+				}
+
+				// Update UI in the main thread
+				// This is necessary because the callback is executed in a different thread.
+				// The UI can only be updated in the main thread.
+				MainLoop::getInstance().run([this,error_message](){
+					if(error_message.empty()) {
+						apply.set_label(_("C_ontinue"));
+						apply.set_sensitive((bool) Reinstall::Writer::getInstance());
+					} else {
+						apply.set_label(error_message);
+						apply.set_sensitive(false);
+					}
+				}); // MainLoop::run
+
+			});
 
 		}
 		break;

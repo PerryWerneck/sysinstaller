@@ -21,6 +21,8 @@
   * @brief Implement GTK4 version of writer::open.
   */
 
+ #define LOG_DOMAIN "writer"
+
  #include <config.h>
  #include <udjat/defs.h>
  #include <reinstall/tools/writer.h>
@@ -28,6 +30,7 @@
  #include <udjat/tools/intl.h>
  #include <semaphore.h>
  #include <gtkmm.h>
+ #include <udjat/tools/logger.h>
  #include <private/gtkremovabledevicedialog.h>
 
  #include <private/toplevel.h>
@@ -53,7 +56,9 @@
 		}
 
 		this->device_url = Writer::selected.c_str();
-		Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
+		debug("Device URL: ",this->device_url.c_str()," (pre-selected)");
+
+		// Logger::String{"Writing image to ",this->device_url.c_str()}.info();
 
 		return;
 
@@ -81,7 +86,7 @@
 				info.response = rsp;
 				info.devdescr = dialog->description();
 				info.devname = dialog->device();
-				Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
+				Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace();
 				sem_post(&info.semaphore);
 				Udjat::Dialog::Status::getInstance().show();
 				delete dialog;
@@ -123,6 +128,7 @@
 	}
 
 	this->device_url = info.devdescr.c_str();
-	Logger::String{"Writing image to ",this->device_url.c_str()}.info("writer");
+	debug("Device URL: ",this->device_url.c_str());
+	// Logger::String{"Writing image to '",this->device_url.strip().c_str(),"'"}.info();
 
  }

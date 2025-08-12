@@ -1,8 +1,7 @@
-.vscode
+.*
 *.[0-9]
 dmiget
 vmdetect
 libudjat
 libudjatdbus
 libudjathttp
-.environment
