@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-12 08:59-0300\n"
-"PO-Revision-Date: 2025-08-12 09:00-0300\n"
+"POT-Creation-Date: 2025-08-12 19:26-0300\n"
+"PO-Revision-Date: 2025-08-12 19:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -88,7 +88,8 @@ msgstr "Erro ao obter informações sobre o caminho de boot"
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/application/application.cc:105 src/library/source/data.cc:203
+#: src/application/application.cc:105 src/library/os/linux/writer.cc:185
+#: src/library/source/data.cc:203
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
@@ -278,19 +279,23 @@ msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
 msgid "Kernel parameter '{}' has an empty value"
 msgstr "Parâmetro de kernel '{}' tem valor vazio"
 
-#: src/library/os/linux/writer.cc:124
+#: src/library/os/linux/writer.cc:130
 msgid "Unable to access output device"
 msgstr "Incapaz de acessar dispositivo de saída"
 
-#: src/library/os/linux/writer.cc:131
+#: src/library/os/linux/writer.cc:149
 msgid "Unable to lock output device"
 msgstr "Incapaz de bloquear dispositivo de saída"
 
-#: src/library/os/linux/writer.cc:169
+#: src/library/os/linux/writer.cc:168
+msgid "Error getting device info"
+msgstr "Erro ao obter informações sobre o dispositivo"
+
+#: src/library/os/linux/writer.cc:245
 msgid "Cant get device length"
 msgstr "Não foi possível obter tamanho de dispositivo"
 
-#: src/library/os/linux/writer.cc:183
+#: src/library/os/linux/writer.cc:259
 msgid "Cant allocate space for output file"
 msgstr "Não foi possível alocar espaço para o arquivo de saída"
 
@@ -363,7 +368,7 @@ msgstr "Gravador de dispositivo não está disponível"
 msgid "Writer is already available"
 msgstr "Módulo de gravação já está disponível"
 
-#: src/library/writer.cc:130
+#: src/library/writer.cc:132
 msgid "Finishing..."
 msgstr "Finalizando..."
 
@@ -402,31 +407,31 @@ msgid "Unable to open fat://{} (rc={})"
 msgstr "Incapaz de abrir fat://{} (rc={})"
 
 #: src/modules/isobuilder/fatfs/image.cc:315
-#: src/modules/isobuilder/iso9660/image.cc:449
+#: src/modules/isobuilder/iso9660/image.cc:453
 msgid "Finalizing"
 msgstr "Finalizando"
 
-#: src/modules/isobuilder/iso9660/image.cc:79
+#: src/modules/isobuilder/iso9660/image.cc:80
 msgid "Error creating iso image"
 msgstr "Erro ao criar imagem iso"
 
-#: src/modules/isobuilder/iso9660/image.cc:105
+#: src/modules/isobuilder/iso9660/image.cc:106
 msgid "Error loading system area"
 msgstr "Erro lendo área de sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:111
+#: src/modules/isobuilder/iso9660/image.cc:112
 msgid "Cant read system area definition file"
 msgstr "Não foi possível ler o arquivo de definição de área do sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:241
+#: src/modules/isobuilder/iso9660/image.cc:242
 msgid "Unexpanded path in source list"
 msgstr "Caminho incorreto na lista de fontes"
 
-#: src/modules/isobuilder/iso9660/image.cc:408
+#: src/modules/isobuilder/iso9660/image.cc:409
 msgid "Preparing to write"
 msgstr "Preparando para gravar"
 
-#: src/modules/isobuilder/iso9660/image.cc:436
+#: src/modules/isobuilder/iso9660/image.cc:439
 msgid "Writing image"
 msgstr "Gravando imagem"
 
@@ -506,70 +511,65 @@ msgstr "_Não"
 msgid "_Yes"
 msgstr "_Sim"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:54 src/ui/gtk4/interactive.cc:139
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:56 src/ui/gtk4/interactive.cc:139
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:55
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:320
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:335
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:373 src/ui/gtk4/interactive.cc:139
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:57
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:323
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:388
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:402 src/ui/gtk4/interactive.cc:139
 msgid "C_ontinue"
 msgstr "C_ontinuar"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:61
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:64
 msgid "Insert an storage device"
 msgstr "Insira um dispositivo de armazenamento"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:62
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:118
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:65
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:121
 msgid "This action will <b>DELETE ALL CONTENT</b> on the device."
 msgstr "Esta ação irá <b>APAGAR TODO O CONTEÚDO</b> do dispositivo."
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:104
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:107
 msgid "Insert an storage device <b>NOW</b>"
 msgstr "Insira um dispositivo de armazenamento <b>AGORA</b>"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:177
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:180
 msgid "Auto detect"
 msgstr "Detectar automaticamente"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:203
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:206
 msgid "Save image to file"
 msgstr "Salvar imagem para arquivo"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:225
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:228
 msgid "Select output file"
 msgstr "Selecione arquivo de saída"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:325
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:328
 msgid "_Save image"
 msgstr "_Salvar imagem"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:349
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:338
+msgid "Detecting..."
+msgstr "Detectando..."
+
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:362
 msgid "Not enough space"
 msgstr "Espaço insuficiente"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:354
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:367
 msgid "Access Denied"
 msgstr "Acesso negado"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:367
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:379
 msgid "Invalid device"
 msgstr "Dispositivo inválido"
 
 #: src/ui/gtk4/interactive.cc:150
 msgid "Select an option"
 msgstr "Selecione uma opção"
-
-#: src/ui/gtk4/progress.cc:88 src/ui/gtk4/progress.cc:124
-#, c++-format
-msgid "{} of {}"
-msgstr "{} de {}"
-
-#: src/ui/gtk4/progress.cc:147
-msgid "Wait..."
-msgstr "Aguarde..."
 
 #: src/ui/gtk4/status.cc:120
 msgid "Please wait..."
@@ -579,6 +579,15 @@ msgstr "Por favor, aguarde..."
 #: src/ui/gtk4/toplevel.cc:91
 msgid "System reinstallation"
 msgstr "Reinstalação de sistema"
+
+#: src/ui/gtk4/progress.cc:88 src/ui/gtk4/progress.cc:124
+#, c++-format
+msgid "{} of {}"
+msgstr "{} de {}"
+
+#: src/ui/gtk4/progress.cc:147
+msgid "Wait..."
+msgstr "Aguarde..."
 
 #: src/ui/console/application.cc:115
 msgid "Available options"
