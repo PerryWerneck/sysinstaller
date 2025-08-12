@@ -317,12 +317,12 @@
 
 	switch(device->type) {
 	case DeviceHolder::FileDialog:
-		apply.set_label("C_ontinue");
+		apply.set_label(_("C_ontinue"));
 		select_file();
 		break;
 
 	case DeviceHolder::File:
- 		apply.set_label("_Save image");
+ 		apply.set_label(_("_Save image"));
 		apply.set_sensitive(true);
 		break;
 
@@ -332,7 +332,7 @@
 		try {
 
 			Reinstall::Writer::getInstance().open(device->device_name.c_str());
-			apply.set_label("C_ontinue");
+			apply.set_label(_("C_ontinue"));
 			apply.set_sensitive((bool) Reinstall::Writer::getInstance());
 
 		} catch(const std::system_error &e) {
@@ -370,7 +370,7 @@
 		break;
 
 	default:
-		apply.set_label("C_ontinue");
+		apply.set_label(_("C_ontinue"));
 		apply.set_sensitive(false);
 	}
 

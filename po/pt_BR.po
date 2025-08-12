@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-11 20:29-0300\n"
-"PO-Revision-Date: 2025-08-11 20:31-0300\n"
+"POT-Creation-Date: 2025-08-12 08:59-0300\n"
+"PO-Revision-Date: 2025-08-12 09:00-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -510,7 +510,10 @@ msgstr "_Sim"
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:55 src/ui/gtk4/interactive.cc:139
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:55
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:320
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:335
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:373 src/ui/gtk4/interactive.cc:139
 msgid "C_ontinue"
 msgstr "C_ontinuar"
 
@@ -538,6 +541,10 @@ msgstr "Salvar imagem para arquivo"
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:225
 msgid "Select output file"
 msgstr "Selecione arquivo de saída"
+
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:325
+msgid "_Save image"
+msgstr "_Salvar imagem"
 
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:349
 msgid "Not enough space"
@@ -571,7 +578,7 @@ msgstr "Por favor, aguarde..."
 #. Set up layout
 #: src/ui/gtk4/toplevel.cc:91
 msgid "System reinstallation"
-msgstr "Reinstalar o sistema"
+msgstr "Reinstalação de sistema"
 
 #: src/ui/console/application.cc:115
 msgid "Available options"
