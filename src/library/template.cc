@@ -177,9 +177,23 @@
 		text.expand(marker,parent);
 		text.expand(marker,*this);
 
-		// TODO: handle escape sequences.
-		//if(escape) {
-		//}
+		// handle escape sequences.
+		if(escape) {
+			static const struct {
+				const char *from;
+				const char *to;
+			} escapes[] = {
+				{"&","\\&"},
+			};
+
+			debug("Text before escapes:\n",text.c_str());
+			for(const auto &e : escapes) {
+				for(auto pos = text.find(e.from); pos != std::string::npos; pos = text.find(e.from, pos + strlen(e.to))) {
+					text.replace(pos, strlen(e.from), e.to);
+				}
+			}
+			debug("Text after escapes:\n",text.c_str());
+		}
 
 		if(quirk && *quirk) {
 			Config::Value<string> qvalue{"quirks",quirk};
