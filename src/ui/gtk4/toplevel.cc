@@ -54,7 +54,9 @@
  TopLevel::TopLevel() : Gtk::ApplicationWindow(), Reinstall::Writer{"toplevel"} {
 
 	// Get rid of the gtk warnings.
-	freopen("/dev/null","w",stderr);
+	if(!freopen("/dev/null","w",stderr)) {
+		Logger::String{"Failed to redirect stderr to /dev/null: ",strerror(errno)}.warning();
+	}
 
 #ifdef DEBUG 
 	get_style_context()->add_class("devel");

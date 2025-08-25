@@ -24,6 +24,9 @@
  #define LOG_DOMAIN "writer"
 
  #include <config.h>
+
+ #include <sys/mount.h>	// Should be the first include to avoid errors on some systems.
+
  #include <udjat/defs.h>
  #include <udjat/tools/logger.h>
  #include <reinstall/tools/writer.h>
@@ -40,7 +43,6 @@
  #include <unistd.h>
  #include <cstring>
  #include <mntent.h>
- #include <sys/mount.h>
 
  /*
 
