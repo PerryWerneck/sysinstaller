@@ -173,7 +173,7 @@
 			}
 		}
 
-		debug("Adding ",value->name()," data source with path ",value->path());
+		// debug("Adding '",value->name(),"' data source with path ",value->path());
 		files.push_back(value);
 	}
 

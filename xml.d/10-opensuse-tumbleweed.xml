@@ -26,6 +26,7 @@
 		<attribute name='slp-service-type' value='service:install.tumbleweed' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
+		<attribute name='slp-kernel-parameter' value='slp:/?service:install.tumbleweed&amp;auto=1' />
 		<attribute name='kernel-parameter-name' value='install' allow-slp='yes' />
 	</repository>
 

@@ -63,15 +63,16 @@
 	private:
 
 		Type type = (Type) 0;
-		bool escape = false;
-		bool script = false;	// True if this is a script template.
+		bool escape = false;			///< @brief True if escape sequences should be processed.
+		bool script = false;			///< @brief True if this is a script template.
 		char marker = '$';
 		mode_t mode = 0644;
 
 		const char *url = nullptr;
 		const char *path = nullptr;
+		const char *quirk = nullptr;	///< @brief Quirk to apply to the template.
 
-		std::string tempfilename;	///< @brief The temporary file with template data.
+		std::string tempfilename;		///< @brief The temporary file with template data.
 
 	};
 

@@ -176,7 +176,7 @@
 					buffer[ix] = 0;
 				}
 			}
-			debug("Adding file ",buffer);
+//			debug("Adding file ",buffer);
 			files.emplace_back(buffer);
 		}
 
