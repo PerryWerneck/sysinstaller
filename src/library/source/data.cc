@@ -292,13 +292,13 @@
 			std::string filename{url.path().c_str()};
 
 			if(!update_from_remote && access(filename.c_str(),R_OK) == 0) {
-				// Logger::String{filename.c_str()," already exists"}.write(Logger::Debug,name());
+				Logger::String{filename.c_str()," already exists"}.write(Logger::Debug,name());
 				return filename.c_str();
 			}
 
 			try {
 
-				// Logger::String{"Downloading ",filename.c_str()}.write(Logger::Debug,name());
+				Logger::String{"Downloading ",filename.c_str()}.write(Logger::Debug,name());
 				DataSource::save(filename.c_str());
 
 			} catch(...) {

@@ -118,7 +118,7 @@
 			const Udjat::Abstract::Object &parent;	///< @brief Parent object (for properties).
 			std::shared_ptr<Reinstall::Template> tmplt;
 
-			std::string filename;	///< @brief The temporary file with template applyed.
+			std::string tempfile;	///< @brief The temporary file with template applyed.
 
 			struct {
 				std::string local;
@@ -136,8 +136,8 @@
 
 			~TemplateSource() {
 #ifndef DEBUG
-				if(!filename.empty()) {
-					unlink(filename.c_str());
+				if(!tempfile.empty()) {
+					unlink(tempfile.c_str());
 				}
 #endif // DEBUG
 			}
@@ -152,8 +152,17 @@
 				return path.remote.c_str();
 			}
 
+			std::string save(const Udjat::Abstract::Object &object) override {
+				// Apply template to temporary file.
+				if(tempfile.empty()) {
+					tempfile = Udjat::File::Temporary::create();
+					save(tempfile.c_str());
+				}
+				return tempfile.c_str();
+			}
+
 			void save(const char *path) override {
-				auto progress = ProgressFactory();			
+				auto progress = ProgressFactory();		
 				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
 					progress->set(current,total);
 					return false;
