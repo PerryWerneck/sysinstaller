@@ -47,11 +47,13 @@
 
  namespace Reinstall {
 
-	SLPClient::SLPClient(const Udjat::XML::Node &node) {
-		service_type = XML::QuarkFactory(node,"slp-service-type");
-		scope_list = XML::QuarkFactory(node,"slp-scope-list");
-		filter = XML::QuarkFactory(node,"slp-filter");
-		allow_local = XML::AttributeFactory(node,"slp-allow-local").as_bool(false);
+	SLPClient::SLPClient(const Udjat::XML::Node &node) 
+		: service_type{String{node,"slp-service-type"}.as_quark()},
+		 	scope_list{String{node,"slp-scope-list"}.as_quark()},
+		 	filter{String{node,"slp-filter"}.as_quark()},
+			message{String{node,"slp-search-message",service_type}.as_quark()},
+			allow_local{XML::AttributeFactory(node,"slp-allow-local").as_bool(false)}
+	{
 	}
 
 	bool SLPClient::operator==(const SLPClient &b) const noexcept {
@@ -148,7 +150,7 @@
 		if(service_type && *service_type && !query.done) {
 
 			auto &status = Dialog::Status::getInstance();
-			status.busy(service_type);
+			status.busy(message);
 
 			// https://github.com/ManageIQ/slp/blob/master/examples/raw_example.c
 			// https://docs.oracle.com/cd/E19455-01/806-0628/6j9vie80v/index.html

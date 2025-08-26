@@ -33,6 +33,7 @@
 		const char *service_type = "";
 		const char *scope_list = "";
 		const char *filter = "";
+		const char *message = "";	///< @brief The message for search dialog progress.
 		bool allow_local = false;
 
 		struct {
