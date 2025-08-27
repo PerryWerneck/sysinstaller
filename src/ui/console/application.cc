@@ -260,7 +260,7 @@
 	}
 
 	void Console::failed(const std::exception &e) noexcept {
-
+		Logger::String{e.what()}.error();
 	}
 
 	std::shared_ptr<Reinstall::Dialog> Console::DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option) {
@@ -275,6 +275,7 @@
 			}
 
 			bool ask(bool default_response) const noexcept override {
+				Logger::String{"Returning default response for '",message,"'"}.info();
 				return default_response;
 			}
 
@@ -297,7 +298,38 @@
 
 				console << endl;
 
+#ifdef DEBUG 
+				// Incomplete, show only in debug mode.
 
+				// TODO: Show buttons.
+				static const struct {
+					char response;
+					Option option;
+					const char *label;
+				} buttons[] = {
+					{ 'R',	Reboot, 		"\033[1mR\033[0meboot"				},
+					{ 'Q',	Quit, 			"\033[1mQ\033[0muit"				},
+					{ 'C',	Cancel, 		"\033[1mC\033[0mancel"		 		}
+				};
+
+				bool sep = false;
+				for(const auto &opt : buttons) {
+
+					if((options & opt.option) == 0) {
+						continue;
+					}
+
+					if(sep) {
+						console << ",";
+					} else {
+						sep = true;
+					}
+
+					console << opt.label;
+
+				}
+
+#endif // DEBUG
 
 				console << ":";
 

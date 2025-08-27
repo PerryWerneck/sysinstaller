@@ -104,6 +104,9 @@
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 
 		Udjat::URL url_local() const;
+
+		/// @brief Get URL for remote source, resolving relative URLs and SLP repositories.
+		/// @return The resolved URL for remote source.
 		Udjat::URL url_remote() const;
 
 	};

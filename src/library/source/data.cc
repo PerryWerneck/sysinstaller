@@ -76,50 +76,6 @@
 	DataSource::~DataSource() {
 	}
 
-	/*
-	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required) const {
-
-		String value{node,attrname};
-		value.expand(node).expand();
-		if(value.empty()) {
-			value = String{node,"url"}.expand(node).expand();
-		}
-
-		if(value.empty()) {
-			if(required) {
-				throw runtime_error(Logger::String{"Required attribute '",attrname,"' is missing or invalid on node ",node.path()});
-			}
-			return "";
-		}
-
-		if(value[0] != '/') {
-			return value.as_quark();
-		}
-
-		if(node.attribute("repository")) {
-			String relative{"."};
-			relative += value;
-			return relative.as_quark();
-		}
-
-		value.expand([node](const char *key, string &value) -> bool {
-
-			if(!strcasecmp(key,"group-name")) {
-				for(auto xml = node; xml; xml = xml.parent()) {
-					if(!strcasecmp(xml.name(),"group")) {
-						value = xml.attribute("name").as_string();
-						return true;
-					}
-				}
-			}
-
-			return false;
-		});
-
-		return value.as_quark();
-	}
-	*/
-
 	const char * DataSource::path() const {
 
 		const char *path = local();

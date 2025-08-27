@@ -173,6 +173,7 @@
 	}
 
 	const char * FileSource::remote() const {
+		debug("url.remote = '",url.remote,"'");
 		return url.remote;
 	}
 
