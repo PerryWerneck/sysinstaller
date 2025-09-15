@@ -115,7 +115,7 @@
 		marker{node.attribute("marker").as_string(((std::string) Config::Value<String>("string","marker","$")).c_str())[0]},
 		uid{getuid(node)}, gid{getgid(node)}, cmdline{String{node,"cmdline"}.as_quark()} {
 
-		Udjat::NamedObject::parse(node);
+		Udjat::NamedObject::setup(node);
 
 		if(cmdline && *cmdline) {
 			
