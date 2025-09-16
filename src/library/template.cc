@@ -45,7 +45,9 @@
  namespace Reinstall {
 
 	Template::Template(const Udjat::XML::Node &node)
-		: Udjat::NamedObject{node} {
+		: Udjat::NamedObject{node}, 
+			escape{node.attribute("escape-control-characters").as_bool(false)},
+			quirk{String{node,"quirk",""}.as_quark()} {
 
 		// Get marker.
 		{
@@ -66,7 +68,7 @@
 		}
 
 		if(XML::AttributeFactory(node,"script").as_bool()) {
-			Logger::String{"Legacy atttribute 'script' is deprecated, use 'executable' instead"}.warning(name());
+			Logger::String{node.path()," is using deprecated attribute 'script', use 'executable' instead"}.trace(name());
 			mode = 0755;
 		}
 
@@ -78,7 +80,7 @@
 		{
 			String str{node,"url",""};
 			if(str.empty()) {
-				throw runtime_error("Required attribute 'url' is missing or invalid");
+				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
 
 			str.unescape();
@@ -137,6 +139,16 @@
 			return true;
 		}
 
+		if(!strcasecmp(key,"models-dir")) {
+#ifdef DEBUG
+			value = getenv("PWD");
+			value += "/models";
+#else
+			value = Application::DataDir{"models"};
+#endif // DEBUG
+			return true;
+		}
+
 		return Udjat::NamedObject::getProperty(key,value);
 	}
 
@@ -150,21 +162,6 @@
 		debug("Got ",templates.size()," templates");
 
 	}
-
-	/*
-	std::string Template::save(Udjat::Dialog::Progress &) {
-
-		Udjat::URL url{this->url};
-
-		if(url.local()) {
-			debug("url=",url.c_str());
-			return url.path();
-		}
-
-		throw runtime_error("Unable to handle remote template");
-
-	}
-	*/
 
 	void Template::save(const Udjat::Abstract::Object &parent, const char *path, const std::function<bool(uint64_t current, uint64_t total)> &progress) {
 
@@ -180,10 +177,40 @@
 		text.expand(marker,parent);
 		text.expand(marker,*this);
 
+		// handle escape sequences.
+		if(escape) {
+			static const struct {
+				const char *from;
+				const char *to;
+			} escapes[] = {
+				{"&","\\&"},
+			};
+
+			debug("Text before escapes:\n",text.c_str());
+			for(const auto &e : escapes) {
+				for(auto pos = text.find(e.from); pos != std::string::npos; pos = text.find(e.from, pos + strlen(e.to))) {
+					text.replace(pos, strlen(e.from), e.to);
+				}
+			}
+			debug("Text after escapes:\n",text.c_str());
+		}
+
+		if(quirk && *quirk) {
+			Config::Value<string> qvalue{"quirks",quirk};
+			if(qvalue.empty()) {
+				Logger::String{"Unknown quirk '",quirk,"' on template"}.warning(name());
+			} else {
+				auto values = String{qvalue.c_str()}.split(",");
+				Logger::String{"Applying quirk ",quirk,": '",values[0].c_str(),"' -> '",values[1].c_str(),"'"}.trace(name());
+				for(auto pos = text.find(values[0].c_str()); pos != std::string::npos; pos = text.find(values[0].c_str(), pos + values[1].size())) {
+					text.replace(pos, values[0].size(), values[1].c_str());
+				}
+			}
+		}
+
 		if(script) {
 
 			// Execute script, use stdout to set template result.
-
 			throw runtime_error("Script templates are not supported yet");
 
 		}
@@ -195,6 +222,10 @@
 			out.write(text.c_str(),text.size());
 		}
 
+		if(Logger::enabled(Logger::Debug)) {
+			Logger::String(text.c_str()).write(Logger::Debug,name());
+		}
+
 		if(chmod(filename.c_str(),mode) < 0) {
 			throw system_error(errno,system_category(),_("Cant update template permissions"));
 		}
@@ -202,70 +233,6 @@
 		debug("Template '",name(),"' saved on file ",path);
 
 	}
-
-	/*
-	void Template::save(const Udjat::Abstract::Object &parent, Udjat::Dialog::Progress &progress) {
-
-		Udjat::URL url{this->url};
-		url.expand(parent);
-		url.expand(*this);
-
-		String filename{this->path};
-		filename.expand(parent);
-		filename.expand(*this);
-
-		debug("Source URL: ",url.c_str());
-
-		if(type & Type::Binary) {
-
-			throw system_error(ENOTSUP, system_category(), _("Cant handle binary template"));
-
-		} else {
-
-			String text = url.get();
-			text.expand(marker,parent);
-			text.expand(marker,*this);
-			debug("marker='",string{marker}.c_str(),"'");
-
-			Udjat::File::Path::save(filename.c_str(),text.c_str());
-		}
-
-
-
-
-	}
-
-	void Template::save(Udjat::Dialog::Progress &progress, const Udjat::Abstract::Object &object, const char *path) {
-
-		auto from = save(progress);
-		if( (type & Template::Text) != 0) {
-
-			// Parse text file
-			String contents{File::Text{from.c_str()}.c_str()};
-			contents.expand(marker,object,true,true);
-
-			if(script) {
-				// Execute script, get response.
-
-			}
-
-			// and save parsed contents.
-			File::Text{path}.set(contents.c_str()).save();
-
-		} else {
-
-			throw runtime_error("Cant handle binary templates");
-
-		}
-
-		if(chmod(path,mode) < 0) {
-			throw system_error(errno,system_category(),_("Cant update template permissions"));
-		}
-
-		debug("Template '",name(),"' saved on file ",path);
-
-	}
-	*/
 
  }
 

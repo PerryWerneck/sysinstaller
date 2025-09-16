@@ -1,0 +1,265 @@
+# Maintainer: Perry Werneck <perry.werneck@gmail.com>
+# References: https://www.msys2.org/wiki/Creating-Packages/
+
+# SPDX-License-Identifier: LGPL-3.0-or-later 
+
+# Copyright (C) 2025 Perry Werneck <perry.werneck@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#---[ Paths ]----------------------------------------------------------------------------
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+sbindir=@sbindir@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+localedir=@localedir@
+docdir=@docdir@
+sysconfdir=/etc
+srcdir=@srcdir@
+
+OBJDIR=.obj
+OBJDBG=$(OBJDIR)/Debug
+OBJRLS=$(OBJDIR)/Release
+
+BINDIR=.bin
+BINDBG=$(BINDIR)/Debug
+BINRLS=$(BINDIR)/Release
+
+#---[ Library configuration ]------------------------------------------------------------
+
+PACKAGE_NAME=@PACKAGE_NAME@
+
+SOURCES= \
+	$(wildcard $(srcdir)/src/application/*.cc) \
+	$(wildcard $(srcdir)/src/library/*.cc) \
+	$(wildcard $(srcdir)/src/library/disk/*.cc) \
+	$(wildcard $(srcdir)/src/library/os/*.cc) \
+	$(wildcard $(srcdir)/src/library/os/linux/*.cc) \
+	$(wildcard $(srcdir)/src/library/repository/*.cc) \
+	$(wildcard $(srcdir)/src/library/source/*.cc) \
+	$(wildcard $(srcdir)/src/library/ui/*.cc) \
+	$(wildcard $(srcdir)/src/modules/*.cc) \
+	$(wildcard $(srcdir)/src/modules/isobuilder/*.cc) \
+	$(wildcard $(srcdir)/src/modules/isobuilder/fatfs/*.cc) \
+	$(wildcard $(srcdir)/src/modules/isobuilder/iso9660/*.cc) \
+	$(wildcard $(srcdir)/src/ui/*.cc) \
+	$(wildcard $(srcdir)/src/ui/console/*.cc)
+
+#---[ Tools ]----------------------------------------------------------------------------
+
+CXX=@CXX@
+LD=@CXX@
+LN_S=@LN_S@
+MKDIR=@MKDIR_P@
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+XGETTEXT=@XGETTEXT@
+MSGCAT=@MSGCAT@
+WINDRES=@WINDRES@
+AR=@AR@
+VALGRIND=@VALGRIND@
+DLLTOOL=@DLLTOOL@
+
+#---[ Rules ]----------------------------------------------------------------------------
+
+CFLAGS= \
+	@CPPFLAGS@ \
+	-Isrc/include \
+	-I$(srcdir)/src/include \
+	-DBUILD_DATE=`date +%Y%m%d` \
+	-DLIBDIR=$(libdir) \
+	-DLOCALEDIR=$(localedir) \
+    -DBUILD_LEGACY=1 \
+	@UDJAT_CFLAGS@ \
+	@DBUS_CFLAGS@ \
+	@HTTP_CFLAGS@ \
+	@LIBSLP_CFLAGS@ \
+	@FATFS_CFLAGS@ \
+	@ZLIB_CFLAGS@ \
+	@ISOFS_CFLAGS@
+
+LDFLAGS=\
+	@LDFLAGS@
+
+LIBS= \
+	@LIBS@ \
+	@DBUS_LIBS@ \
+	@HTTP_LIBS@ \
+	@UDJAT_LIBS@ \
+	@LIBSLP_LIBS@ \
+	@FATFS_LIBS@ \
+	@ZLIB_LIBS@ \
+	@ISOFS_LIBS@
+
+#---[ Debug Rules ]----------------------------------------------------------------------
+
+$(OBJDBG)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-ggdb -DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-ggdb -DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
+	%.rc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+	@$(WINDRES) \
+		$< \
+		-O coff \
+		-o $@
+
+#---[ Release Rules ]--------------------------------------------------------------------
+
+$(OBJRLS)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+#---[ Release Targets ]------------------------------------------------------------------
+
+all: \
+	$(BINRLS)/@PACKAGE_NAME@
+
+Release: \
+	$(BINRLS)/@PACKAGE_NAME@
+
+$(BINRLS)/@PACKAGE_NAME@: \
+	$(foreach SRC, $(basename $(SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-o $@ \
+		$(LDFLAGS) \
+		$(foreach SRC, $(basename $(SOURCES)), $(OBJRLS)/$(SRC).o) \
+		$(LIBS)
+
+
+#---[ Install Targets ]------------------------------------------------------------------
+
+install: \
+	$(BINRLS)/@PACKAGE_NAME@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(bindir)
+
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/@PACKAGE_NAME@ \
+		$(DESTDIR)$(bindir)
+
+	@$(MKDIR) \
+		$(DESTDIR)$(sysconfdir)/tmpfiles.d
+
+	@$(INSTALL_DATA) \
+		sysconf/tmpfiles.d \
+		$(DESTDIR)$(sysconfdir)/tmpfiles.d/@PACKAGE_NAME@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(datarootdir)/@PACKAGE_NAME@/templates
+
+	@$(INSTALL_DATA) \
+		templates/* \
+		$(DESTDIR)$(datarootdir)/@PACKAGE_NAME@/templates
+
+#---[ Debug Targets ]--------------------------------------------------------------------
+
+Debug: \
+	$(BINDBG)/@PACKAGE_NAME@
+
+$(BINDBG)/@PACKAGE_NAME@: \
+	$(foreach SRC, $(basename $(SOURCES)), $(OBJDBG)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS)
+
+
+run: \
+	$(BINDBG)/@PACKAGE_NAME@
+
+	cp *.xml $(BINDBG)
+	
+ifeq ($(VALGRIND),no)
+
+	@LD_LIBRARY_PATH=$(BINDBG) \
+		$(BINDBG)/@PACKAGE_NAME@ -v9 -t
+
+else
+	@touch valgrind.suppression
+
+	@LD_LIBRARY_PATH=$(BINDBG) \
+		$(VALGRIND) --leak-check=full --track-origins=yes --gen-suppressions=all --suppressions=valgrind.suppression \
+		$(BINDBG)/@PACKAGE_NAME@ -v9 -t
+endif
+
+#---[ Clean Targets ]--------------------------------------------------------------------
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+	@rm -fr doc/html
+
+cleanDebug:
+
+	@rm -fr $(OBJDBG)
+	@rm -fr $(BINDBG)
+
+cleanRelease:
+
+	@rm -fr $(OBJRLS)
+	@rm -fr $(BINRLS)
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+
+-include $(foreach SRC, $(basename $(SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(SOURCES)), $(OBJRLS)/$(SRC).d)
+

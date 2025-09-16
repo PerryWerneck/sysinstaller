@@ -31,8 +31,6 @@
  #include <memory>
  #include <vector>
 
- #include <reinstall/tools/datasource.h>
-
  namespace Reinstall {
 
 	class Repository;
@@ -48,7 +46,7 @@
 		/// @brief When true allways check file timestamp with remote server.
 		bool update_from_remote = true;
 
-		const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
+		// const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
 
 		DataSource() {
 		}
@@ -61,6 +59,9 @@
 
 		DataSource(const Udjat::XML::Node &node);
 		virtual ~DataSource();
+
+		/// @brief Build progress dialog for this source.
+		std::shared_ptr<Udjat::Dialog::Progress> ProgressFactory() const;
 
 		/// @brief True if datasource is a directory (ends with '/').
 		bool dir() const;
@@ -80,24 +81,32 @@
 		/// @return The path of file from mount point.
 		const Udjat::String fspath() const;
 
-		virtual void save(Udjat::Dialog::Progress &progress, const char *path);
+		/// @brief Save source to file.
+		/// @param path The destination file.
+		virtual void save(const char *path);
+
+		/// @brief Save source to temporary file.
+		/// @return Path to local file.
+		std::string save();
 
 		/// @brief Save source, expand URL properties.
 		/// @return Path to local file.
-		virtual std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress);
+		virtual std::string save(const Udjat::Abstract::Object &object);
 
 		/// @brief Save source.
-		virtual std::string save(Udjat::Dialog::Progress &progress);
-		virtual void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
+		virtual void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer);
 
 		static bool for_each(const Udjat::URL &url, const std::function<bool(const DataSource &value)> &func);
 
 		bool for_each(const std::function<bool(const char *filename)> &func) const;
-		bool for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
+		bool for_each(const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
 		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 
 		Udjat::URL url_local() const;
+
+		/// @brief Get URL for remote source, resolving relative URLs and SLP repositories.
+		/// @return The resolved URL for remote source.
 		Udjat::URL url_remote() const;
 
 	};
@@ -116,12 +125,15 @@
 
 	public:
 		FileSource(const char *path);
-		FileSource(const Udjat::XML::Node &node);
+		FileSource(const Udjat::XML::Node &node, bool required = true);
 		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
 
 		virtual ~FileSource();
 
 		bool has_local() const noexcept override;
+
+		// Expand string
+		void expand(Udjat::String &str, const Udjat::XML::Node &node);
 
 		// DataSource
 		const char * local() const override;
@@ -133,7 +145,7 @@
 	/// @brief Save source on temporary file
 	class TempFileSource : public DataSource {
 	private:
-		std::string filename;
+		std::string filename;		///< @brief The temporary file name.
 		const std::string url;		///< @brief The URL for source in the remote server.
 		const std::string filepath;	///< @brief Path for the file inside the destination image.
 
@@ -151,9 +163,9 @@
 
 		const char * path() const override;
 
-		std::string save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) override;
+		std::string save(const Udjat::Abstract::Object &object) override;
 
-		void save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
+		void save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) override;
 
 	};
 

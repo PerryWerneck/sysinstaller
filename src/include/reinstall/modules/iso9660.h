@@ -25,7 +25,7 @@
  #include <udjat/defs.h>
  #include <reinstall/image.h>
  #include <udjat/tools/xml.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/tools/datasource.h>
 
  typedef struct Iso_Image IsoImage;
  typedef struct iso_write_opts IsoWriteOpts;
@@ -72,17 +72,18 @@
 
 		};
 
-		Image(const Udjat::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
 
 		void post(Udjat::Abstract::Object &object);
 
-		void write(Udjat::Dialog::Progress &progress) override;
+		void write() override;
 
-		inline void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
-			Reinstall::Abstract::Image::append(progress,sources);
+
+		inline void append(std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+			Reinstall::Abstract::Image::append(sources);
 		}
 
 	protected:

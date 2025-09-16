@@ -26,7 +26,6 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
  #include <udjat/tools/file.h>
  #include <udjat/tools/configuration.h>
 
@@ -122,7 +121,7 @@
 
 		}
 
-		throw runtime_error(Logger::Message{_("Required repository '{}' not found"),name});
+		throw runtime_error(Logger::Message{_("Required repository '{}' not found at {}"),name, node.path()});
 
 	}
 

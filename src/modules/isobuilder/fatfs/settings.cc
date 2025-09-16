@@ -91,7 +91,7 @@
 			imglen{image_length(node)} {
 
 		if(!imglen) {
-			throw runtime_error("Required attribute 'size' is missing or invalid");
+			throw runtime_error(Logger::String{"Required attribute 'size' is missing or invalid on node ",node.path()});
 		}
 	}
 

@@ -21,10 +21,13 @@
   * @brief Declare application window.
   */
 
+ #error deprecated
  #pragma once
+
+ #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/version.h>
- #include <glib/gi18n-lib.h>
+ #include <glib/gi18n.h>
  #include <gtkmm.h>
 
  #include <widgets/sidebar.h>
@@ -48,18 +51,21 @@
 
  class UDJAT_PRIVATE MainWindow : public Gtk::ApplicationWindow, private Reinstall::Group::Controller, private Reinstall::GtkWriter {
  private:
-	struct {
+	struct Layout {
 		SideBar sidebar;
 		Gtk::Box box;
-		Gtk::Box vbox{Gtk::Orientation::VERTICAL};
-		Gtk::Label title{ _( "Select option" ), Gtk::Align::START };
-		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the groups & options.
+		Gtk::Box vbox;
+		Gtk::Label title;
+		Gtk::Box contents;	///< @brief The box with the groups & options.
 		Gtk::ScrolledWindow swindow;
+		Layout();
 	} layout;
 
-	struct {
-		Gtk::Button apply{_("_Apply"), true}, cancel{_("_Cancel"), true};
-		Gtk::Box box{Gtk::Orientation::HORIZONTAL,6};
+	struct Button {
+		Gtk::Button apply;
+		Gtk::Button cancel;
+		Gtk::Box box;
+		Button();
 	} button;
 
 	class Item : public Gtk::ToggleButton {

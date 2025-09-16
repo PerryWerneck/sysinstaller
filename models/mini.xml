@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<model xml:lang="en">
+	<attribute name='slp-allow-local' value='yes' />
+
+	<attribute name='title' value='Build a simple network install image'/>
+	<attribute name='sub-title' value='Build an small usb based boot device for network install' />
+	<attribute name='icon-name' value='drive-removable-media-symbolic' />
+
+	<!-- Replace every 'grub.cfg' file with template -->
+	<template name='grub.cfg' url='file://${template-dir}/grub.cfg' escape-control-characters='yes' />
+
+	<!-- Replace every 'isolinux.cfg' file with template -->
+	<template name='isolinux.cfg' url='file://${template-dir}/isolinux.cfg' escape-control-characters='no' />
+
+	<!-- Files to copy to ISO image -->
+	<source name='boot' url='./boot/x86_64/' repository='install' />
+	<source name='efi' url='./EFI/' repository='install' />
+
+	<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
+	<dialog name='confirmation' icon='dialog-question' message='Do you confirm?'>
+		This is the secondary text on confirmation message.
+	</dialog>
+
+	<dialog name='success' title='Success message' icon='dialog-information' message='Operation complete'>
+		This is the secondary text of success message.
+	</dialog>
+</model>

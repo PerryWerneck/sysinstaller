@@ -28,17 +28,16 @@
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/configuration.h>
+ #include <reinstall/dialog.h>
  #include <stdexcept>
  #include <semaphore.h>
 
  #include <fcntl.h>
+ #include <sys/stat.h>
 
  #ifndef _WIN32
 	#include <unistd.h>
  #endif // _WIN32
-
- #include <gtkmm.h>
- #include <private/gtkremovabledevicedialog.h>
 
  using namespace Udjat;
  using namespace std;
@@ -55,8 +54,7 @@
 		throw runtime_error(_("The device writer is not available"));
 	}
 
-
-	Writer::Writer() {
+	Writer::Writer(const char *name) : writer_name{name} {
 		if(instance) {
 			throw logic_error(_("Writer is already available"));
 		}
@@ -69,8 +67,7 @@
 		}
 	}
 
-
-	void Writer::write(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog, const char *isoname) {
+	void Writer::write(const char *isoname) {
 
 		int fd = ::open(isoname,O_RDONLY);
 		if(fd < 0) {
@@ -79,7 +76,7 @@
 
 		try {
 
-			write(progress,dialog,fd);
+			write(fd);
 
 		} catch(...) {
 
@@ -92,7 +89,7 @@
 
 	}
 
-	void Writer::write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd) {
+	void Writer::write(int fd) {
 
 		try {
 
@@ -103,7 +100,15 @@
 
 			size(st.st_size);
 
-			open(progress,dialog);
+			{
+				Reinstall::Dialog dummy;
+				open(dummy);
+			}
+			
+			auto progress = Udjat::Dialog::Progress::getInstance();
+
+			Logger::String{"Writing image to ",device_url.c_str()}.info();
+			progress->url(device_url.strip().c_str());
 
 			unsigned long long offset = 0;
 			uint8_t buffer[st.st_blksize];
@@ -116,14 +121,17 @@
 					throw runtime_error("Unexpected EOF on source file");
 				}
 
-				debug(offset,"/",st.st_size);
+				// debug(offset,"/",st.st_size);
 
-				progress.file_sizes(offset,st.st_size);
+				progress->set((uint64_t) offset,(uint64_t) st.st_size);
 				Writer::write(offset,buffer,(unsigned long long) bytes);
 				offset += bytes;
 
 			}
-			progress.file_sizes(offset,st.st_size);
+			progress->set((uint64_t) offset,(uint64_t) st.st_size);
+			progress->url(_("Finishing..."));
+			progress->done();
+
 
 		} catch(...) {
 
@@ -132,97 +140,7 @@
 			throw;
 		}
 
-		progress = _("Finishing");
 		close();
-
-	}
-
-	void GtkWriter::open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &settings) {
-
-		if(!selected.empty()) {
-
-			// Use pre-selected output.
-
-			try {
-
-				Writer::open(selected.c_str());
-
-			} catch(const std::exception &e) {
-
-				Logger::String{e.what()}.error("writer");
-				close();
-
-			}
-
-			return;
-
-		}
-
-		struct {
-			string devdescr;
-			string devname;
-			int response = -1;
-			sem_t semaphore;
-		} info;
-
-		sem_init(&info.semaphore,0,0);
-
-		progress.hide();
-		progress.file_sizes(0,0);
-
-		while(!*this) {
-
-			Glib::signal_idle().connect([this,&info,&settings](){
-
-				auto *dialog = new GtkRemovableDeviceDialog(*this,settings);
-
-#ifdef USE_MESSAGE_DIALOG
-				dialog->signal_response().connect([dialog,&info](int rsp){
-					info.response = rsp;
-					info.devdescr = dialog->description();
-					info.devname = dialog->device();
-					Logger::String{"User selected '",info.devdescr,"' (",info.response,")"}.trace("writer");
-					sem_post(&info.semaphore);
-					delete dialog;
-				});
-#else
-				#error Needs implementation
-#endif // USE_MESSAGE_DIALOG
-
-				dialog->present();
-
-				return 0;
-
-			});
-
-			sem_wait(&info.semaphore);
-
-			if(info.response) {
-				Logger::String{"Device selection dialog exits with rc=",info.response," (",strerror(info.response),")"}.warning("writer");
-				close();
-				throw runtime_error(strerror(info.response));
-			}
-
-			if(!*this) {
-
-				try {
-
-					debug("Opening ",info.devname.c_str());
-					Writer::open(info.devname.c_str());
-
-				} catch(const std::exception &e) {
-
-					Logger::String{e.what()}.error("writer");
-					close();
-
-				}
-
-			}
-
-		}
-
-		progress.url(info.devdescr.c_str());
-		progress.show();
 
 	}
 

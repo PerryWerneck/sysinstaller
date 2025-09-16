@@ -33,6 +33,7 @@
  #include <udjat/tools/file/temporary.h>
  #include <reinstall/image.h>
  #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/configuration.h>
  #include <reinstall/disk/fat.h>
@@ -58,7 +59,7 @@
  	}
 
  	static const char *strip_dot(const char *str) {
-		if(*str == '.' && Config::Value{"application","legacy",true}) {
+		if(*str == '.' && Config::Value<bool>{"application","legacy",true}) {
 			return str+1;
 		}
 		return str;
@@ -66,10 +67,9 @@
 
 	void Abstract::Image::append(std::shared_ptr<DataSource> source) {
 
-		auto &progress = Dialog::Progress::getInstance();
-		std::string from = source->save(progress);
+		std::string from = source->save();
 		std::string to = source->path();
-		auto efi = builder.efi();
+		auto efi = builder->efi();
 
 		if(efi->enabled() && strcmp(strip_dot(to.c_str()),strip_dot(efi->path())) == 0) {
 		
@@ -88,7 +88,6 @@
 			// Apply templates in tempfile
 			{
 				// Load file names.
-				debug("---------------------------> EFI boot");
 				std::vector<string> files;
 				Reinstall::Disk::Fat32 disk{from.c_str()};
 
@@ -101,16 +100,16 @@
 
 				for(auto file : files) {
 
-					auto tmplt = builder.tmplt(file.c_str());
+					auto tmplt = builder->tmplt(file.c_str());
 					if(tmplt) {
 						auto from = Udjat::File::Temporary::create();
 				
-						tmplt->save(builder.properties(),from.c_str(),[&progress](uint64_t current, uint64_t total){
-							progress.set(current,total);
+						auto progress = Udjat::Dialog::Progress::getInstance();
+						tmplt->save(*builder,from.c_str(),[progress](uint64_t current, uint64_t total){
 							return false;
 						});
 
-						Logger::String{"Using template '",tmplt->name(),"' for fat://",file.c_str()}.trace(builder.name());
+						Logger::String{"Using template '",tmplt->name(),"' for fat://",file.c_str()}.trace(builder->name());
 						disk.replace(from.c_str(),file.c_str());
 
 					}
@@ -125,29 +124,37 @@
 
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
+	void Abstract::Image::write(const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &) {
 		throw runtime_error(_("No write support on selected image"));
 	}
 
-	void Abstract::Image::write(Udjat::Dialog::Progress &progress) {
+	/*
+	void Abstract::Image::write() {
 
-		progress = _("Writing image");
 		Reinstall::Writer &writer = Reinstall::Writer::getInstance();
-		writer.open(progress,dialog);
+		writer.open(Reinstall::Dialog());
 
-		write(progress,[&writer](unsigned long long offset, const void *contents, unsigned long long length){
-			writer.write(offset,contents,length);
-		});
+		{
+			auto progress = Udjat::Dialog::Progress::getInstance();
+			progress->title(_("Writing image"));
+			progress->set(writer.url());
+			write([&writer,progress](unsigned long long offset, const void *contents, unsigned long long length){
+				writer.write(offset,contents,length);
+			});
+		}
+
 	}
+	*/
 
-	void Abstract::Image::append(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &sources) {
-
+	void Abstract::Image::append(list<std::shared_ptr<DataSource>> &sources) {
 		size_t item = 0;
+
+		auto &status = Udjat::Dialog::Status::getInstance();
 		for(auto &source : sources) {
-			progress.item(++item,sources.size());
+			status.step(++item,sources.size());
 			append(source);
 		}
-		progress.item();
+		status.step();
 
 	}
 

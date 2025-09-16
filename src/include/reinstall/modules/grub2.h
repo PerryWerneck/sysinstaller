@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <memory>
  #include <udjat/tools/xml.h>
 
@@ -32,7 +32,7 @@
 
 	namespace Grub2 {
 
-		class UDJAT_API Module : public Udjat::Module, public Udjat::Factory {
+		class UDJAT_API Module : public Udjat::Module, public Udjat::XML::Parser {
 		private:
 			class Action;
 
@@ -41,7 +41,8 @@
 
 			Module(const char *name = "grub2");
 			virtual ~Module();
-			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
+
+			bool parse(const Udjat::XML::Node &node) override;
 	
 		};
 	}

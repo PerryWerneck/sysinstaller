@@ -614,7 +614,7 @@ private:
 
             ParseElementState state = PARSE_ELEMENT_TAG;
             index++;
-            char split = 0;
+            // char split = 0;
             std::string attr;
 
             while (length_ > index) {

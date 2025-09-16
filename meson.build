@@ -1,13 +1,50 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.0.0',
+	version: '6.1.0',
 	default_options : ['cpp_std=c++17'],
 	license: 'GPL-3.0-or-later',
 )
 
+app_src = [
+	'src/application/main.cc',
+	'src/application/application.cc',
+	'src/ui/console/application.cc',
+]
+
+lib_src = [
+	'src/library/group.cc',
+	'src/library/action.cc',
+	'src/library/kernelparameter.cc',
+	'src/library/slpclient.cc',
+	'src/library/script.cc',
+	'src/library/writer.cc',
+	'src/library/image.cc',
+	'src/library/template.cc',
+	'src/library/builder.cc',
+	'src/library/efiboot.cc',
+	'src/library/ui/dialog.cc',
+	'src/library/ui/removabledevicedialog.cc',
+	'src/library/disk/abstract.cc',
+	'src/library/disk/fat.cc',
+	'src/library/repository/factory.cc',
+	'src/library/repository/repository.cc',
+	'src/library/repository/kparm.cc',
+	'src/library/source/data.cc',
+	'src/library/source/file.cc',
+	'src/library/source/load.cc',
+	'src/library/source/tempfile.cc',
+	'src/library/os/linux/writer.cc',
+	'src/modules/grub2.cc',
+	'src/modules/isowriter.cc',
+	'src/modules/isobuilder/module.cc',
+	'src/modules/isobuilder/iso9660/image.cc',
+	'src/modules/isobuilder/iso9660/settings.cc',
+	'src/modules/isobuilder/fatfs/image.cc',
+	'src/modules/isobuilder/fatfs/settings.cc',
+]
+
 project_description = 'Instalar/reinstalar terminal'
-project_domain = 'br.com.bb'
 
 pkg_version = meson.project_version()
 version_array = pkg_version.split('.')
@@ -33,6 +70,7 @@ endif
 
 compiler_flags_common = [
 	'-DBUILD_DATE='+time_epoch,
+	'-Wno-overloaded-virtual',
 ]
 
 if enable_debug
@@ -53,17 +91,46 @@ add_project_arguments(global_cxxflags, language: 'cpp')
 #
 # Dependencies
 #
-libslp = cxx.find_library('slp')
+libslp = cxx.find_library('slp', required: false)
+gtkmm = dependency('gtkmm-4.0', required: false)
+libisofs =	dependency('libisofs-1',required: false)
+libarchive = dependency('libarchive', required: false)
+zlib= dependency('zlib', required: false)
+
+fatfs =	dependency(
+	'libfatfs',
+	static: true,
+	required: false,
+)
+
+libudjat = dependency(
+	'libudjat',
+	version : '>=2.1.0',
+	fallback: [ 'libudjat', 'static_library' ],
+	default_options: ['default_library=static'],
+)
+
 deps = [
-	dependency('libudjat-static',version : '>=2.0.0'),
-	dependency('libudjathttp-static',version : '>=2.0.0'),
-	dependency('libudjatdbus-static',version : '>=2.0.0'),
-	dependency('gtkmm-4.0'),
-	dependency('libzip'),
-	dependency('libfatfs-static'),
-	dependency('zlib'),
-	dependency('libisofs-1'),
+	libudjat,
+	gtkmm,
+	libisofs,
 	libslp,
+	zlib,
+	fatfs,
+	libarchive,
+	cxx.find_library('dl', required: false),
+	dependency(
+		'libudjathttp',
+		version : '>=2.0.0',
+		fallback: [ 'libudjathttp', 'static_library' ],
+	    default_options: ['default_library=static'],
+	),
+	dependency(
+		'libudjatdbus',
+		version : '>=2.0.0',
+		fallback: [ 'libudjatdbus', 'static_library' ],
+	    default_options: ['default_library=static'],
+	),
 ]
 
 #
@@ -74,19 +141,46 @@ conf_data.set_quoted('PACKAGE_NAME', meson.project_name())
 conf_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf_data.set_quoted('PACKAGE_DESCRIPTION', project_description)
 conf_data.set_quoted('PACKAGE_STRING','@0@ @1@'.format(meson.project_name(), meson.project_version()))
-conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(project_domain,meson.project_name()))
+conf_data.set('PACKAGE_DOMAIN','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set_quoted('PRODUCT_ID', meson.project_name())
 conf_data.set_quoted('MODULE_VERSION',libversion)
-
+conf_data.set_quoted('DATADIR',get_option('prefix') + '/' + get_option('datadir'))
+conf_data.set_quoted('LOCALEDIR',get_option('prefix') + '/' + get_option('localedir'))
 
 conf_data.set('application_description',project_description)
-conf_data.set('application_icon','@0@.@1@'.format(project_domain,meson.project_name()))
+conf_data.set('application_icon','@0@.@1@'.format(libudjat.get_variable('product_domain'),meson.project_name()))
 conf_data.set('application_name', meson.project_name())
 
-conf_data.set('HAVE_FATFS', 1)
-conf_data.set('HAVE_ISOFS', 1)
-conf_data.set('HAVE_ZLIB', 1)
-conf_data.set('HAVE_LIBZIP', 1)
+if fatfs.found()
+	conf_data.set('HAVE_FATFS', 1)
+endif
+
+if(zlib.found())
+	conf_data.set('HAVE_ZLIB', 1)
+endif
+
+if libisofs.found()
+	conf_data.set('HAVE_LIBISOFS', 1)
+	conf_data.set('HAVE_ISOFS', 1)
+endif
+
+if libarchive.found()
+	conf_data.set('HAVE_ARCHIVE', 1)
+endif
+
+if gtkmm.found()
+	conf_data.set('HAVE_GTKMM', 1)
+	app_src += [
+		'src/ui/gtk4/toplevel.cc',
+		'src/ui/gtk4/progress.cc',
+		'src/ui/gtk4/status.cc',
+		'src/ui/gtk4/interactive.cc',
+		'src/ui/gtk4/noninteractive.cc',
+		'src/ui/gtk4/dialog.cc',
+		'src/ui/gtk4/writer.cc',
+		'src/ui/gtk4/gtkremovabledevicedialog.cc',
+	]
+endif
 
 if libslp.found()
   conf_data.set('HAVE_LIBSLP', 1)
@@ -96,64 +190,12 @@ if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   conf_data.set('HAVE_UNISTD_H', 1)
 endif
 
-if cxx.compiles('#include <getopt.h>', name : 'getopt.h')
-  conf_data.set('HAVE_GETOPT', 1)
-endif
-
 configure_file(output : 
 	'config.h', 
 	configuration : conf_data
 )
 
 includes_dir = include_directories('../src/include')
-
-app_src = [
-	'src/application/main.cc',
-	'src/application/mainwindow.cc',
-	'src/application/progress.cc',
-	'src/application/widgets/group.cc',
-	'src/application/widgets/item.cc',
-	'src/application/widgets/sidebar.cc',
-	'src/gtk4/application.cc',
-	'src/gtk4/mainloop.cc',
-	'src/gtk4/popup.cc',
-	'src/gtk4/progress.cc',
-]
-
-lib_src = [
-	'src/library/action.cc',
-	'src/library/builder.cc',
-	'src/library/disk/abstract.cc',
-	'src/library/disk/fat.cc',
-	'src/library/efiboot.cc',
-	'src/library/group.cc',
-	'src/library/gtkremovabledevicedialog.cc',
-	'src/library/image.cc',
-	'src/library/kernelparameter.cc',
-	'src/library/repository/factory.cc',
-	'src/library/repository/kparm.cc',
-	'src/library/repository/repository.cc',
-	'src/library/script.cc',
-	'src/library/slpclient.cc',
-	'src/library/source/data.cc',
-	'src/library/source/file.cc',
-	'src/library/source/load.cc',
-	'src/library/source/tempfile.cc',
-	'src/library/template.cc',
-	'src/library/ui/dialog.cc',
-	'src/library/ui/popup.cc',
-	'src/library/ui/progress.cc',
-	'src/library/writer.cc',
-	'src/library/os/linux/gtkremovabledevicedialog.cc',
-	'src/library/os/linux/writer.cc',
-	'src/modules/isowriter.cc',
-	'src/modules/grub2.cc',
-	'src/modules/isobuilder/fatfs/image.cc',
-	'src/modules/isobuilder/fatfs/settings.cc',
-	'src/modules/isobuilder/iso9660/image.cc',
-	'src/modules/isobuilder/iso9660/settings.cc',
-	'src/modules/isobuilder/module.cc',
-]
 
 executable(
 	meson.project_name(),
@@ -165,7 +207,7 @@ executable(
 
 custom_target(
 	input: 'icons/logo.svg',
-	output: '@0@.@1@.svg'.format(project_domain,meson.project_name()),
+	output: '@0@.@1@.svg'.format(libudjat.get_variable('product_domain'),meson.project_name()),
 	install: true,
 	install_dir: '/usr/share/icons/hicolor/scalable/apps',
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
@@ -179,6 +221,22 @@ custom_target(
 	command: [ 'scour', '@INPUT@', '@OUTPUT@']
 )
 
+custom_target(
+	input: 'icons/opensuse-leap.svg',
+	output: 'opensuse-leap.svg',
+	install: true,
+	install_dir:'/usr/share/@0@/icons'.format(meson.project_name()),
+	command: [ 'scour', '@INPUT@', '@OUTPUT@']
+)
+
+custom_target(
+	input: 'icons/opensuse-tumbleweed.svg',
+	output: 'opensuse-tumbleweed.svg',
+	install: true,
+	install_dir:'/usr/share/@0@/icons'.format(meson.project_name()),
+	command: [ 'scour', '@INPUT@', '@OUTPUT@']
+)
+
 install_data(
 	'stylesheet.css',
 	install_dir:'/usr/share/@0@'.format(meson.project_name())
@@ -187,7 +245,7 @@ install_data(
 install_data(
 configure_file(
         input: 'sysconf/launcher.desktop.in',
-        output: '@0@.@1@.desktop'.format(project_domain,meson.project_name()), 
+        output: '@0@.@1@.desktop'.format(libudjat.get_variable('product_domain'),meson.project_name()), 
         configuration: conf_data,
 	),
 	install_dir:'/usr/share/applications' 
@@ -212,3 +270,12 @@ install_data(
 	install_dir:'/usr/share/@0@/templates'.format(meson.project_name())
 )
 
+install_data(
+	[
+		'models/mini.xml',
+		'models/net.xml',
+		'models/full.xml',
+		'models/grub.xml',
+	],
+	install_dir:'/usr/share/@0@/models'.format(meson.project_name())
+)

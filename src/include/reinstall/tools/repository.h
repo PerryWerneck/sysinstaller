@@ -94,6 +94,8 @@
 
 		const char * remote() const override;
 
+#if __cplusplus >= 201703L
+
 		inline const auto begin() const noexcept {
 			return files.begin();
 		}
@@ -101,6 +103,18 @@
 		inline const auto end() const noexcept {
 			return files.end();
 		}
+
+#else
+
+		inline std::vector<std::string>::const_iterator begin() const noexcept {
+			return files.begin();
+		}
+
+		inline std::vector<std::string>::const_iterator end() const noexcept {
+			return files.end();
+		}
+
+#endif
 
 	};
 

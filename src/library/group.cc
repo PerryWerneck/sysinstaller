@@ -23,6 +23,33 @@
 
  #include <config.h>
  #include <udjat/defs.h>
+ #include <udjat/tools/xml.h>
+ #include <reinstall/group.h>
+ #include <udjat/tools/logger.h>
+
+ using namespace Udjat;
+ using namespace std;
+
+ namespace Reinstall {
+
+	Group::Group() {
+
+	}
+
+	Group::~Group() {
+
+	}
+
+	void Group::parse(const Udjat::XML::Node &node) {
+		debug("-----------------------------------------------------------------------");
+		debug("Setting up group '",node.attribute("name").as_string(),"'");
+		XML::parse_children(node);
+		debug("-----------------------------------------------------------------------");
+	}
+
+ }
+
+/*
  #include <udjat/tools/intl.h>
  #include <reinstall/group.h>
  #include <udjat/module/info.h>
@@ -92,3 +119,4 @@
 
  }
 
+*/

@@ -22,62 +22,64 @@
   */
 
  #pragma once
+
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
- #include <udjat/ui/dialog.h>
- #include <udjat/ui/progress.h>
-
+ #include <reinstall/dialog.h>
+ #include <memory>
+ #include <string>
+ 
  namespace Reinstall {
 
- 	class Group;
+	/// @brief Action model.
+	/// @details This class is used to define an action model, which can be used to
+	/// create actions. The model is defined in an XML file and can be used to create
+	/// actions with the same properties.
+	class UDJAT_API Model {
+	public:
+		Model(const Udjat::XML::Node &node);
 
-	class UDJAT_API Action : public Udjat::NamedObject {
-	protected:
+	};
 
-		struct Args {
-			const char *icon_name = nullptr;
-			const char *title = nullptr;
-			const char *sub_title = nullptr;
-			const char *dialog_title = "";
+	class UDJAT_API Action : private Model, public Udjat::NamedObject {
+	private:
 
-			Args(const Udjat::XML::Node &node)
-				: icon_name{Udjat::XML::QuarkFactory(node,"icon-name")},
-				  title{Udjat::XML::QuarkFactory(node,"title")},
-				  sub_title{Udjat::XML::QuarkFactory(node,"sub-title")} {
-			}
-
-		} args;
-
-		Udjat::Dialog confirmation;
-		Udjat::Dialog success;
-		Udjat::Dialog failed;
+		static const char *presets[2];
+		const char * dialog_title;
+		const char * icon_name;
 
 	public:
 
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		Action(const Udjat::XML::Node &node);
 		virtual ~Action();
 
-		void activate();
+		static bool is_default(const Udjat::XML::Node &node) noexcept;
 
-		bool getProperty(const char *key, std::string &value) const override;
+		static void preset(const char *value);
 
-		inline const char * icon_name() const noexcept {
-			return args.icon_name;
+		/// @brief Get the action title.
+		inline const char *title() const noexcept {
+			return dialog_title;
 		}
 
-		inline const char * title() const noexcept {
-			return args.title;
+		inline const char *icon() const noexcept {
+			return icon_name;
 		}
 
-		inline const char * sub_title() const noexcept {
-			return args.sub_title;
+		static inline bool has_preset() noexcept {
+			return (presets[0] && presets[1]);
 		}
 
-		virtual int activate(Udjat::Dialog::Progress &progress);
+		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.
+		virtual void activate();
 
 		/// @brief Test if the action is valid and can be activated.
 		virtual bool initialize();
+
+		std::shared_ptr<Dialog> confirmation;
+		std::shared_ptr<Dialog> success;
+		std::shared_ptr<Dialog> failed;
 
 	};
 

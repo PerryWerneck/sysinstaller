@@ -22,6 +22,10 @@
   */
 
  #include <config.h>
+ #define LOG_DOMAIN "iso9660"
+
+ #ifdef HAVE_LIBISOFS
+
  #include <udjat/defs.h>
  #include <reinstall/modules/iso9660.h>
  #include <string>
@@ -34,6 +38,9 @@
  #include <reinstall/disk/fat.h>
  #include <reinstall/tools/builder.h>
  #include <reinstall/tools/writer.h>
+
+ #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
 
  #define LIBISOFS_WITHOUT_LIBBURN
  #include <libisofs/libisofs.h>
@@ -65,7 +72,7 @@
 
 	};
 
-	Image::Image(const Udjat::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,builder}, settings{s} {
+	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,&builder}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 
@@ -353,10 +360,10 @@
 			} else {
 
 				// Not isohybrid.
-				Logger::String{"Adding ",builder.efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
+				Logger::String{"Adding ",builder->efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
 				iso_write_opts_set_part_like_isohybrid(opts, 0);
 
-				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder.efi()->path(),0);
+				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder->efi()->path(),0);
 
 				if(rc != ISO_SUCCESS) {
 					string msg{iso_error_to_msg(rc)};
@@ -368,10 +375,10 @@
 
 			if(settings.boot.catalog && *settings.boot.catalog) {
 
-				Logger::String{"Adding ",builder.efi()->path()," as boot image"}.trace("iso9660");
+				Logger::String{"Adding ",builder->efi()->path()," as boot image"}.trace("iso9660");
 
                 ElToritoBootImage *bootimg = NULL;
-                int rc = iso_image_add_boot_image(image,builder.efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);
+                int rc = iso_image_add_boot_image(image,builder->efi()->path(),ELTORITO_NO_EMUL,0,&bootimg);
                 if(rc < 0) {
  					string msg{iso_error_to_msg(rc)};
 					Logger::String{"Cant add EFI boot image: ",msg.c_str()}.error("iso9660");
@@ -382,11 +389,11 @@
 
 			} else {
 
-				Logger::String{"No boot catalog, ",builder.efi()->path()," was not added as boot image"}.warning("iso9660");
+				Logger::String{"No boot catalog, ",builder->efi()->path()," was not added as boot image"}.warning("iso9660");
 
 			}
 
-		} else if(builder.efi()->enabled()) {
+		} else if(builder->efi()->enabled()) {
 
 			throw runtime_error("EFI boot image not available");
 
@@ -394,11 +401,12 @@
 
 	}
 
-	void Image::write(Udjat::Dialog::Progress &progress) {
+	void Image::write() {
 
 		debug("Writing image");
+		auto &status = Udjat::Dialog::Status::getInstance();
 
-		progress = _( "Preparing to write" );
+		status.sub_title(_( "Preparing to write" ));
 
 		int rc = iso_image_update_sizes(image);
 		if (rc < 0) {
@@ -422,9 +430,14 @@
 			auto &writer = Reinstall::Writer::getInstance();
 			writer.size(total);
 
-			writer.open(progress,dialog);
+			writer.open(Reinstall::Dialog());
 
-			progress = _( "Writing image" );
+			auto progress = Udjat::Dialog::Progress::getInstance();
+
+			Logger::String("Writing ISO9660 image to ",writer.url()).info();
+
+			status.sub_title(_("Writing image"));
+			progress->url(writer.url());
 
 			#define BUFLEN 2048
 			unsigned char buffer[BUFLEN];
@@ -433,11 +446,14 @@
 			while(burn_src->read_xt(burn_src, buffer, BUFLEN) == BUFLEN) {
 				writer.write(current, buffer, BUFLEN);
 				current += BUFLEN;
-				progress.file_sizes(current,total);
+				progress->set((uint64_t) current,(uint64_t) total);
 			}
 
-			progress = _( "Finalizing" );
+			progress->set((uint64_t) total,(uint64_t) total);
+			progress->url(_( "Finalizing" ));
+
 			writer.close();
+			progress->done();
 
 		} catch(...) {
 
@@ -453,4 +469,5 @@
 
  }
  
+ #endif // HAVE_LIBISOFS
 

@@ -21,8 +21,14 @@
   * @brief Implement device writer.
   */
 
+ #define LOG_DOMAIN "writer"
+
  #include <config.h>
+
+ #include <sys/mount.h>	// Should be the first include to avoid errors on some systems.
+
  #include <udjat/defs.h>
+ #include <udjat/tools/logger.h>
  #include <reinstall/tools/writer.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/application.h>
@@ -36,6 +42,7 @@
  #include <fcntl.h>
  #include <unistd.h>
  #include <cstring>
+ #include <mntent.h>
 
  /*
 
@@ -75,6 +82,7 @@
 		// Set device as R/W
 		int options = O_RDWR;
 		{
+			debug("Opening device ",device_name);
 			int dfd = ::open(device_name,O_RDONLY);
 			if(dfd > 0) {
 
@@ -125,16 +133,86 @@
 		}
 
 		// ... lock it ...
-		if(::flock(fd, LOCK_EX|LOCK_NB) < 0) {
-			int err = errno;
-			Logger::Message{"Error '{}' getting lock on {}",strerror(err),device_name}.error("writer");
-			throw std::system_error(err,std::system_category(),_("Unable to lock output device"));
+		{
+			int i = 1;
+
+			while(1) {
+
+				if(::flock(fd, LOCK_EX|LOCK_NB) == 0) {
+					debug("Locked output device ",device_name);
+					break;
+				}
+
+				int err = errno;
+				debug("Error ",err," ('",strerror(err),"') locking output device ",device_name);
+
+				if(err != EAGAIN || i++ > 10) {
+					Logger::Message{"Error {} '{}' getting lock on {}",err,strerror(err),device_name}.error("writer");
+					throw std::system_error(err,std::system_category(),_("Unable to lock output device"));
+				}
+
+				Logger::Message{"Waiting for lock on {} (attempt {})",device_name,i}.trace();
+				usleep(100000); // Wait 100ms before retrying
+
+			}
 		}
 
 		Logger::String{"Got lock on ",device_name}.trace("writer");
 
-		// ... and check if it can hold the image.
+		// ... check if it can hold the image ...
 		allocate();
+
+		// ... finally umount it if mounted.
+		struct stat st;
+		int fstat(int fd, struct stat *statbuf);
+
+		if(::fstat(fd,&st)) {
+			throw system_error(errno, system_category(), _("Error getting device info"));
+		}
+
+		/*
+
+		debug("Device ",device_name," device major is ",st.st_dev);
+		*/
+
+
+		{
+			size_t len = strlen(device_name);
+			struct mntent mnt;
+			struct mntent *fs;
+			char buf[PATH_MAX*3];
+			
+			FILE *fp = setmntent("/etc/mtab", "r");
+			if (fp == NULL) {
+				throw system_error(errno, system_category(), _("Error opening /etc/mtab"));
+			}
+
+			try {
+
+				while ((fs = getmntent_r(fp,&mnt,buf,sizeof(buf))) != NULL) {
+					
+					if(strncmp(fs->mnt_fsname,device_name,len)) {
+						continue;
+					}
+
+					Logger::String{"Device ",device_name," is mounted at ",fs->mnt_dir}.trace();
+					
+					if(umount2(fs->mnt_dir, MNT_FORCE)) {
+						Logger::String{"Error unmounting ",fs->mnt_dir," ('",strerror(errno),"')"}.error();
+						if(umount2(fs->mnt_dir, MNT_DETACH)) {
+							throw system_error(errno, system_category(),strerror(errno));
+						}
+					}
+
+				}
+
+			} catch(...) {
+				endmntent(fp);
+				throw;
+			}
+			endmntent(fp);
+
+		}
 
 	}
 

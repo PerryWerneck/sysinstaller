@@ -33,7 +33,6 @@
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -74,26 +73,29 @@
 		return filepath.c_str();
 	}
 
-	std::string TempFileSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
+	std::string TempFileSource::save(const Udjat::Abstract::Object &object) {
 
 		if(!filename.empty()) {
 			return filename;
 		}
 
-		auto url = url_remote();
+		debug("From: ",url.c_str());
+		debug("To:   ",filename.c_str());
 
-		debug("Downloading ",url.c_str());
-		progress.url(url.c_str());
+		auto progress = ProgressFactory();
+		auto url = url_remote();
+		progress->set(url.c_str());
 
 		try {
 
 			filename = Udjat::File::Temporary::create();
 			Udjat::File::Handler file{filename.c_str(),true};
 			url.get([&progress,&file](uint64_t current, uint64_t total, const void *buf, size_t length){
-				progress.file_sizes(current,total);
 				file.write(buf,length);
+				progress->set(current+length,total);
 				return false;
 			});
+			progress->done();
 
 		} catch(const std::exception &e) {
 
@@ -111,12 +113,7 @@
 
 	}
 
-	void TempFileSource::save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
-
-		auto url = url_remote();
-		progress = url.c_str();
-
-		debug(url.c_str());
+	void TempFileSource::save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
 		throw runtime_error("TempFileSource::save Incomplete ");
 

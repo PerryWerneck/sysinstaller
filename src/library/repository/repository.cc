@@ -31,6 +31,7 @@
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/url/handler.h>
+ #include <udjat/tools/configuration.h>
 
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
@@ -48,7 +49,35 @@
 
  namespace Reinstall {
 
-	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node,false}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+
+		if(!(url.remote && *url.remote)) {
+			throw runtime_error(Logger::String{"Repository '",name(),"' has no remote URL defined"});
+		}
+
+		Logger::String{"Using '",url.remote,"' as remote path for repository"}.trace(name());
+
+		if(!(url.local && *url.local)) {
+			
+			String path{Config::Value<string>{"repository","cachedir",""}.c_str()};
+			if(path.empty()) {
+				throw runtime_error(Logger::String{"Repository '",name(),"' has no cache defined"});
+			}
+
+			FileSource::expand(path,node);
+			path.expand(node);
+
+#ifdef DEBUG
+			debug("Expanding path ",path.c_str());
+			if(strchr(path.c_str(),'$')) {
+				throw logic_error("Error expanding variable");
+			}
+#endif
+
+			url.local = path.as_quark();
+			Logger::String{"Using '",url.local,"' as local path for repository"}.trace(name());
+
+		}
 
 		if(!(kparm.slp && *kparm.slp) && kparm.enabled) {
 
@@ -91,10 +120,8 @@
 
 	static void parse_index_html(const char *name, const char *root, const URL &url, std::vector<std::string> &files) {
 
-		debug("--------------------- ",url.c_str());
-
 		Logger::String{"Loading ",url.c_str()}.trace(name);
-		Dialog::Progress::getInstance().url(url.c_str());
+		Dialog::Progress::getInstance()->set(url.c_str());
 
 		String response = url.get();
 
@@ -149,7 +176,7 @@
 					buffer[ix] = 0;
 				}
 			}
-			debug("Adding file ",buffer);
+//			debug("Adding file ",buffer);
 			files.emplace_back(buffer);
 		}
 
@@ -169,10 +196,6 @@
 			return true;
 		}
 
-		auto &progress = Dialog::Progress::getInstance();
-		progress.url(_("Loading repository index"));
-		progress.item();
-		
 #ifdef HAVE_ZLIB
 		{
 			debug("Trying index.gz");
@@ -197,13 +220,13 @@
 					File::Path::mkdir(filename.c_str());
 					filename += "INDEX.gz";
 
-					debug("------------->",filename.c_str());
-
+					auto progress = Dialog::Progress::getInstance();
+					progress->url(_("Loading repository index"));
 					url.get(filename.c_str(),[&progress](double current, double total){
-						progress = (total/current);
+						progress->set(current,total);
 						return false;
 					});
-
+					progress->done();
 					return index(filename.c_str());
 
 				} else {
@@ -211,15 +234,15 @@
 					// No local path, use cache.
 					debug("Using remote file");
 
+					auto progress = Dialog::Progress::getInstance();
+					progress->url(_("Loading repository index"));
 					filename = url.tempfile([&progress](double current, double total){
-						progress = (total/current);
+						progress->set(current,total);
 						return false;
 					});
-
+					progress->done();
 					bool rc = index(filename.c_str());
-
 					unlink(filename.c_str());
-
 					return rc;
 				}
 
@@ -281,11 +304,21 @@
 			ptr = strchr(arg,':');
 		}
 
-		if(!ptr) {
-			throw runtime_error("Invalid repository parameter definition");
+		if(ptr) {
+
+			preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
+
+		} else {
+
+			Config::Value<string> target{"install-targets",arg};
+			if(target.empty()) {
+				throw std::runtime_error{Logger::Message(_("No target found for '{}', please check your configuration"),arg)};
+			}
+
+			preset("install",target.c_str());
+
 		}
 
-		preset(string{arg,(size_t) (ptr-arg)}.c_str(),ptr+1);
 	}
 
  }

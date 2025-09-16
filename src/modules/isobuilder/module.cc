@@ -21,7 +21,7 @@
  #include <udjat/defs.h>
  #include <udjat/module.h>
  #include <udjat/tools/protocol.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
@@ -31,13 +31,14 @@
  #include <reinstall/tools/writer.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/builder.h>
- #include <udjat/ui/dialog.h>
- #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
  #include <vector>
  #include <reinstall/modules/isobuilder.h>
  #include <list>
  #include <reinstall/modules/iso9660.h>
  #include <reinstall/modules/fatfs.h>
+ #include <udjat/ui/status.h>
+ #include <reinstall/application.h>
 
  #include <unistd.h>
 
@@ -51,17 +52,13 @@
 	};
 
 	/// @brief Base class for actions.
-	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Action, protected Reinstall::Builder {
+	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Builder {
 	protected:
-		virtual void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) = 0;
+		virtual void build(list<std::shared_ptr<DataSource>> &files) = 0;
 
 	public:
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node}, Reinstall::Builder{*this,node} {
-
-			if(!(args.icon_name && *args.icon_name)) {
-				args.icon_name = "drive-harddisk-usb-symbolic";
-			}
+		Action(const Udjat::XML::Node &node)
+			: Reinstall::Builder{node} {
 
 		}
 
@@ -69,60 +66,55 @@
 			return Reinstall::Action::name();
 		}
 
-		bool getProperty(const char *key, std::string &value) const override {
-
-			if(Builder::getProperty(key,value)) {
-				return true;
-			}
-
-			return Reinstall::Action::getProperty(key,value);
-		}
-
-		int activate(Udjat::Dialog::Progress &progress) override {
+		void activate() override {
 
 			list<std::shared_ptr<DataSource>> files;
-			prepare(progress,files);
-			build(progress,files);
+			prepare(files);
+			build(files);
 
 			debug("IsoBuild action is complete");
 			
-			return 0;
 		}
 
 	};
 
 	/// @brief ISO9660 builder.
+#ifdef HAVE_LIBISOFS
 	class UDJAT_PRIVATE Iso9660Builder : public IsoBuilder::Module::Action {
 	private:
 		iso9660::Image::Settings imgdef;
 
 	protected:
-		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+		void build(list<std::shared_ptr<DataSource>> &files) override {
 
 			// Build image ...
-			Logger::String{"Building ISO-9660 Image"}.info(name());
-			progress = _("Building ISO-9660 Image");
-			progress.url(Logger::Message{_("Writing {} files"),files.size()}.c_str());
+			auto &status = Udjat::Dialog::Status::getInstance();
 
-			iso9660::Image image{output,*this,imgdef};
+			Logger::String{"Building ISO-9660 Image"}.info(name());
+			status.sub_title(_("Building ISO-9660 Image"));
+			status.state(_("Preparing image"));
+	
+			iso9660::Image image{*output,*this,imgdef};
 
 			image.pre(*this);
-			image.append(progress,files);
+			image.append(files);
+			
 			image.post(*this);
 
 			// ... and write it to device.
 			debug("Complete, writing...");
-			image.write(progress);
+			image.write();
 		}
 
 	public:
 
-		Iso9660Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Action{parent,node}, imgdef{node} {
+		Iso9660Builder(const Udjat::XML::Node &node)
+			: Action{node}, imgdef{node} {
 		}
 
 
 	};
+#endif // HAVE_LIBISOFS
 
 	/// @brief Fat builder.
 	class UDJAT_PRIVATE FatBuilder : public IsoBuilder::Module::Action {
@@ -130,67 +122,78 @@
 		FatFS::Image::Settings imgdef;
 
 	protected:
-		void build(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) override {
+		void build(list<std::shared_ptr<DataSource>> &files) override {
 
 			// Build image ...
+			auto &status = Udjat::Dialog::Status::getInstance();
+
 			Logger::String{"Building Fat Image"}.info(name());
-			FatFS::Image image{output,*this,imgdef};
+			status.sub_title(_("Building FAT Image"));
+
+			FatFS::Image image{*output,*this,imgdef};
 
 			image.pre(*this);
-			image.append(progress,files);
+			image.append(files);
 			image.post(*this);
 
 			// ... and write it to device.
 			debug("Complete, writing...");
-			image.write(progress);
+			image.write();
 
 		}
 
 	public:
 
-		FatBuilder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Action{parent,node}, imgdef{node} {
+		FatBuilder(const Udjat::XML::Node &node)
+			: Action{node}, imgdef{node} {
 		}
 
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory(name,moduleinfo) {
+	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{tagname} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
 	}
 
-	
-	std::shared_ptr<Udjat::Abstract::Object> Reinstall::IsoBuilder::Module::ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) {
+	bool Reinstall::IsoBuilder::Module::parse(const Udjat::XML::Node &node) {
 		try {
 
 			auto attr = XML::AttributeFactory(node,"filesystem");
 
+#ifdef HAVE_LIBISOFS
 			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
-				return make_shared<Iso9660Builder>(parent,node);
+				Reinstall::Application::getInstance().push_back(
+					node,
+					make_shared<Iso9660Builder>(node)
+				);
+				return true;
 			}
+#endif // HAVE_LIBISOFS
 
 			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
-				return make_shared<FatBuilder>(parent,node);
+				Reinstall::Application::getInstance().push_back(
+					node,
+					make_shared<FatBuilder>(node)
+				);
+				return true;
 			}
 
-			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(Factory::name());
+			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(XML::Parser::name());
 
 		} catch(const std::exception &e) {
 
-			Logger::String{e.what()}.error(Factory::name());
+			Logger::String{e.what()}.error(XML::Parser::name());
 
 		}
 
-		return std::shared_ptr<Udjat::Abstract::Object>();
+		return false;
 
 	}
 
-	Udjat::Module * Reinstall::IsoBuilder::Module::Factory(const char *name) {
-	
-		return new Module(name);
-
+	Udjat::Module * Reinstall::IsoBuilder::Module::Factory(const char *name, const char *tagname) {
+		return new Module(name,tagname);
 	}
 
 

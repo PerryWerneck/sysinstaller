@@ -26,7 +26,7 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
+ #include <udjat/ui/status.h>
  #include <mutex>
  #include <udjat/net/ip/address.h>
  #include <sys/types.h>
@@ -47,11 +47,13 @@
 
  namespace Reinstall {
 
-	SLPClient::SLPClient(const Udjat::XML::Node &node) {
-		service_type = XML::QuarkFactory(node,"slp-service-type");
-		scope_list = XML::QuarkFactory(node,"slp-scope-list");
-		filter = XML::QuarkFactory(node,"slp-filter");
-		allow_local = XML::AttributeFactory(node,"slp-allow-local").as_bool(false);
+	SLPClient::SLPClient(const Udjat::XML::Node &node) 
+		: service_type{String{node,"slp-service-type"}.as_quark()},
+		 	scope_list{String{node,"slp-scope-list"}.as_quark()},
+		 	filter{String{node,"slp-filter"}.as_quark()},
+			message{String{node,"slp-search-message",service_type}.as_quark()},
+			allow_local{XML::AttributeFactory(node,"slp-allow-local").as_bool(false)}
+	{
 	}
 
 	bool SLPClient::operator==(const SLPClient &b) const noexcept {
@@ -147,8 +149,8 @@
 #ifdef HAVE_LIBSLP
 		if(service_type && *service_type && !query.done) {
 
-			Dialog::Progress &dialog = Dialog::Progress::getInstance();
-			dialog.url(service_type);
+			auto &status = Dialog::Status::getInstance();
+			status.busy(message);
 
 			// https://github.com/ManageIQ/slp/blob/master/examples/raw_example.c
 			// https://docs.oracle.com/cd/E19455-01/806-0628/6j9vie80v/index.html
@@ -247,7 +249,11 @@
 
 									for(auto rp = ai;rp != NULL && this->query.url.empty(); rp = rp->ai_next) {
 
+#if __cplusplus >= 201703L
 										sockaddr_storage addr{IP::Factory(rp->ai_addr)};
+#else
+										sockaddr_storage addr = IP::Factory(rp->ai_addr);
+#endif // C++17
 										bool remote = true;
 
 										for(IP::Addresses &local : addresses) {
@@ -305,6 +311,7 @@
 			}
 
 			SLPClose(hSlp);
+			status.busy(false);
 			query.done = true;
 
 		}

@@ -51,6 +51,13 @@
 
  namespace Reinstall {
 
+	/*
+	DataSource::Path::Path(const XML::Node &node) {
+
+
+	}
+	*/
+
 	DataSource::DataSource(const DataSource &src)
 		: Udjat::NamedObject{src.name()}, repository{src.repository}, update_from_remote{src.update_from_remote} {
 		this->message = src.message;
@@ -69,34 +76,6 @@
 	DataSource::~DataSource() {
 	}
 
-	const char * DataSource::PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required) const {
-
-		String value{node,attrname};
-		value.expand(node).expand();
-		if(value.empty()) {
-			value = String{node,"url"}.expand(node).expand();
-		}
-
-		if(value.empty()) {
-			if(required) {
-				throw runtime_error(Logger::String{"Required attribute '",attrname,"' is missing or invalid"});
-			}
-			return "";
-		}
-
-		if(value[0] != '/') {
-			return value.as_quark();
-		}
-
-		if(node.attribute("repository")) {
-			String relative{"."};
-			relative += value;
-			return relative.as_quark();
-		}
-
-		return value.as_quark();
-	}
-
 	const char * DataSource::path() const {
 
 		const char *path = local();
@@ -109,7 +88,7 @@
 
 			path = remote();
 
-			if(path[0] == '.' && Config::Value{"application","legacy",true}) {
+			if(path[0] == '.' && Config::Value<bool>{"application","legacy",true}) {
 				Logger::Message{"Local path is empty, using remote '{}' for legacy mode",path}.trace(name());
 				return path+1;
 			}
@@ -118,6 +97,11 @@
 			msg.error(name());
 			throw logic_error(msg);
 
+		}
+
+		if(path[0] == '/' && Config::Value<bool>{"application","legacy",true}) {
+			Logger::Message{"Using relative path for '{}'",path}.warning(name());
+			return path;
 		}
 
 		Logger::Message msg{"Unable to handle non relative path '{}'",path};
@@ -207,17 +191,23 @@
 
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &progress, const char *path) {
+	std::shared_ptr<Udjat::Dialog::Progress> DataSource::ProgressFactory() const {
 
+		auto progress = Udjat::Dialog::Progress::getInstance();
+
+		progress->set(url_remote().c_str());		
+		if(message && *message) {
+			progress->title(message);
+		}
+		return progress;
+
+	}
+	void DataSource::save(const char *path) {
+
+		auto progress = ProgressFactory();
 		auto url = url_remote();
 
 		info() << "Downloading " << url.c_str() << endl;
-
-		if(message && *message) {
-			progress = message;
-		}
-
-		debug("Downloading '",url.c_str(),"' to '",path,"'");
 
 		{
 			string str{path};
@@ -233,13 +223,12 @@
 
 		try {
 
-			progress.url(url.c_str());
+			progress->set(url.c_str());
 			url.get(path,[&](uint64_t current, uint64_t total){
-
-				progress.file_sizes(current,total);
-
+				progress->set(current,total);
 				return false;
 			});
+			progress->done();
 
 		} catch(const std::exception &e) {
 
@@ -249,7 +238,7 @@
 
 	}
 
-	std::string DataSource::save(const Udjat::Abstract::Object &object, Udjat::Dialog::Progress &progress) {
+	std::string DataSource::save(const Udjat::Abstract::Object &object) {
 
 		if(has_local()) {
 
@@ -257,10 +246,6 @@
 			url.expand(object);
 
 			std::string filename{url.path().c_str()};
-
-			debug("---> URL=",url.c_str());
-			debug("---> PATH=",url.path());
-			debug("---> FILENAME=",filename.c_str());
 
 			if(!update_from_remote && access(filename.c_str(),R_OK) == 0) {
 				Logger::String{filename.c_str()," already exists"}.write(Logger::Debug,name());
@@ -270,7 +255,7 @@
 			try {
 
 				Logger::String{"Downloading ",filename.c_str()}.write(Logger::Debug,name());
-				DataSource::save(progress,filename.c_str());
+				DataSource::save(filename.c_str());
 
 			} catch(...) {
 
@@ -293,18 +278,19 @@
 
 	}
 
-	std::string DataSource::save(Udjat::Dialog::Progress &progress) {
-		return save(Udjat::Abstract::Object{},progress);
+	std::string DataSource::save() {
+		return save(Udjat::Abstract::Object{});
 	}
 
-	void DataSource::save(Udjat::Dialog::Progress &progress, const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
+	void DataSource::save(const std::function<bool(unsigned long long current, unsigned long long total, const void *buf, size_t length)> &writer) {
 
+		Udjat::Abstract::Object object;
 		const char *local_filename = this->local();
 
 		if(local_filename && *local_filename) {
 
 			// Has local (cache) file, try to use it.
-			Udjat::File::Handler{save(progress).c_str()}.save(writer);
+			Udjat::File::Handler{save(object).c_str()}.save(writer);
 			return;
 		}
 
@@ -333,11 +319,7 @@
 		return (ptr && *ptr && ptr[strlen(ptr)-1] == '/');
 	}
 
-	bool DataSource::for_each(Udjat::Dialog::Progress &progress, const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
-
-		if(message && *message) {
-			progress = message;
-		}
+	bool DataSource::for_each(const std::function<bool(std::shared_ptr<DataSource> value)> &func) const {
 
 		if(!(repository.get() && repository->index())) {
 			throw runtime_error(_("Invalid repository"));
@@ -351,7 +333,7 @@
 			// Setup local path.
 			if(required_prefix[0] != '.') {
 				Logger::Message message{"Invalid local path: {}, should start with '.'",required_prefix.c_str()};
-				if(Config::Value{"application","legacy",true}) {
+				if(Config::Value<bool>{"application","legacy",true}) {
 					const char *ptr = local();
 					if(ptr[0] == '/') {
 						required_prefix = ".";

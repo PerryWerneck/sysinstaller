@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2025 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,272 +22,216 @@
   */
 
  #include <config.h>
- #include <udjat/defs.h>
- #include <udjat/module/abstract.h>
- #include <udjat/tools/configuration.h>
+
+ #include <udjat/tools/commandlineparser.h>
+ #include <udjat/tools/intl.h>
  #include <udjat/tools/logger.h>
- #include <udjat/ui/gtk4/application.h>
- #include <udjat/ui/dialog.h>
- #include <udjat/tools/factory.h>
- #include <reinstall/tools/writer.h>
+ #include <udjat/tools/configuration.h>
+ #include <udjat/tools/intl.h>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/url.h>
  #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/repository.h>
-
- #include <private/mainwindow.h>
-
- #include <reinstall/modules/isowriter.h>
- #include <reinstall/modules/isobuilder.h>
- #include <reinstall/modules/grub2.h>
-
- #include <udjat/module/http.h>
+ #include <reinstall/tools/writer.h>
+ #include <reinstall/dialog.h>
+ #include <reinstall/application.h>
+ #include <private/console.h>
+ #include <udjat/tools/quark.h>
+ #include <locale.h>
+ 
+ #ifdef HAVE_GTKMM
+ #include <gtkmm.h>
+ #include <private/toplevel.h>
+ #endif
 
  using namespace std;
  using namespace Udjat;
 
+#ifdef HAVE_GTKMM
+ static bool tui_only() noexcept {
+
+#ifndef _WIN32
+	const char *session_type = getenv("XDG_SESSION_TYPE");
+	if(session_type) {
+		Logger::String{"Detected '",session_type,"' session"}.trace();
+		return session_type[0] == 0;
+	}
+#endif // _WIN32
+
+		return false;
+ }
+#endif // HAVE_GTKMM
+
  int main(int argc, char* argv[]) {
 
-	static const Udjat::ModuleInfo moduleinfo{"Reinstall"};
+	// Check for help options.
+	static const Udjat::CommandLineParser::Argument options[] = {
+#ifdef HAVE_GTKMM
+		{ 't', "tui", _( "Use text user interface" ) },
+		{ 'g', "gui", _( "Use graphic user interface" ) },
+#endif // HAVE_GTKMM
+		{ 'k', "kernel-parameter=n=v", _( "Set kernel parameter 'n' to 'v'" ) },
+		{ 'O', "output=img", _( "Write resulting image to file 'img' instead of usb" ) },
+		{ 'i', "install=url", _("Set install url, disable slp") },
+		{ 'r', "repo=r=u", _("Set url for repository 'r' to 'u', disable slp") },
+		{ 'y', "non-interactive", _("Non interactive") },
+		{ 'Q', "quit", _("Quit after processing") },
+		{ 'R', "reboot", _("Reboot on success") },
+		{ 'S', "select=option", _( "Auto select option" ) },
+		{ 'T', "target=target", _( "Auto select target" ) },
+		{ }
+	};
 
- 	class Application : public Udjat::Gtk::Application, private Udjat::Factory {
-	private:
-		MainWindow *window = nullptr;
-
-	public:
-		Application() :  Udjat::Factory{"MainWindow",moduleinfo} {
-		}
-
-		~Application() {
-			if(window) {
-				delete window;
-				window = nullptr;
-			}
-		}
-
-		void help(std::ostream &out) const noexcept override {
-			Udjat::Gtk::Application::help(out);
-			cout	<< "  --output=img\tWrite resulting image to file 'img' instead of usb" << endl
-					<< "  --kparm=n=v\tSet kernel parameter 'n' to 'v' on boot image" << endl
-					<< "  --repo=r=u\tSet url for repository 'r' to 'u', disable slp" << endl
-					<< "  --quit\tNon interactive exit" << endl
-					<< "  --reboot\tNon interactive reboot" << endl;
-		}
-
-		bool argument(const char *name, const char *value) override {
-
-			if(value && (strcasecmp(name,"usb-output-device") == 0 || strcasecmp(name,"output") == 0)) {
-				Reinstall::Writer::set_output(value);
-				return true;
-			}
-
-			if(value && (strcasecmp(name,"kernel-parameter") == 0 || strcasecmp(name,"kparm") == 0)) {
-				Reinstall::KernelParameter::preset(value);
-				return true;
-			}
-
-			if(value && (strcasecmp(name,"repository") == 0 || strcasecmp(name,"repo") == 0)) {
-				Reinstall::Repository::preset(value);
-				return true;
-			}
-
-			if(strcasecmp(name,"quit") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveQuit);
-				return true;
-			}
-
-			if(strcasecmp(name,"reboot") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractiveReboot);
-				return true;
-			}
-
-			if(strcasecmp(name,"non-interactive") == 0) {
-				Udjat::Dialog::set_default(Udjat::Dialog::NonInteractive);
-				return true;
-			}
-
-			return Udjat::Gtk::Application::argument(name,value);
-		}
-
-		bool argument(const char name, const char *value) {
-
-			if(value && name == 'O') {
-				Reinstall::Writer::set_output(value);
-				return true;
-			}
-
-			if(value && name == 'K') {
-				Reinstall::KernelParameter::preset(value);
-				return true;
-			}
-
-			return Udjat::Gtk::Application::argument(name,value);
-		}
-
-		bool NodeFactory(const Udjat::XML::Node &node) override {
-
-			if(!window) {
-				throw logic_error("Cant parse node before main window");
-			}
-
-			// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window.html
-
-			static const struct {
-				const char *name;
-				const std::function<void(MainWindow &window, const XML::Node &node)> apply;
-			} properties[] = {
-				{
-					"title",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_title(node.attribute("value").as_string());
-					}
-				},
-				{
-					"modal",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_modal(node.attribute("value").as_bool());
-					}
-				},
-				{
-					"icon",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_icon_name(node.attribute("value").as_string(G_STRINGIFY(PACKAGE_DOMAIN)));
-					}
-				},
-				{
-					"resizable",
-					[](MainWindow &window, const XML::Node &node) {
-						window.set_resizable(node.attribute("value").as_bool());
-					}
-				},
-				/*
-				{
-					"label",
-					[](MainWindow &window, const XML::Node &node) {
-						window.layout.title.set_markup(node.attribute("value").as_string());
-					}
-				},
-				*/
-
-
-			};
-
-			for(auto &property : properties) {
-				for(auto child = node.child("attribute");child;child = child.next_sibling("attribute")) {
-					if(!strcasecmp(child.attribute("name").as_string("none"),property.name)) {
-						property.apply(*window,child);
-					}
-				}
-			}
-
-			return true;
-
-		}
-
-		void startup(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
-			Udjat::Application::info() << "Building main window" << endl;
-			window = new MainWindow(app);
-			debug("Definitions='",definitions,"'");
-
-			{
-				// Load embedded modules
-				Logger::String{"Loading embedded modules"}.trace(Udjat::Application::name());
-
-				if(Config::Value<bool>{"modules","http",true}) {
-					Udjat::HTTP::Module::Factory();
-				}
-
-				if(Config::Value<bool>{"modules","isowriter",true}) {
-					Reinstall::IsoWriter::Module::Factory();
-				}
-
-				if(Config::Value<bool>{"modules","isobuilder",true}) {
-					Reinstall::IsoBuilder::Module::Factory();
-					if(Config::Value<bool>("modules","legacy",true)) {
-						Reinstall::IsoBuilder::Module::Factory("netinstall");
-						Reinstall::IsoBuilder::Module::Factory("network-installer");
-					}
-				}
-
-				if(Config::Value<bool>{"modules","grub2",true}) {
-					Reinstall::Grub2::Module::Factory("grub");
-				}
-
-				if(Config::Value<bool>{"modules","load-external",false}) {
-
-					Application::LibDir path{"modules"};
-					path += MODULE_VERSION "/";
-					path.mkdir(0755);
-	
-					// Load external modules
-					Logger::String{"Loading external modules from '",path.c_str(),"'"}.trace(Udjat::Application::name());
-
-					try {
-
-						Udjat::Module::load(path,false);
-
-					} catch(const std::exception &e) {
-
-						Logger::String{"Error loading modules: ",e.what()}.error(Udjat::Application::name());
-
-					}
-	
-				}
-
-			}
-
-			super::startup(app,definitions);
-		}
-
-		void activate(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
-			debug("Definitions='",definitions,"'");
-			super::activate(app,definitions);
-			if(window) {
-				window->present();
-			} else {
-				Udjat::Application::error() << "No window on activate signal" << endl;
-			}
-		}
-
-		void shutdown(Glib::RefPtr<::Gtk::Application> app, const char *definitions) override {
-			if(window) {
-				window->hide();
-			} else {
-				Udjat::Application::error() << "No window on shutdown signal" << endl;
-			}
-			debug("Definitions='",definitions,"'");
-			super::shutdown(app,definitions);
-		}
-
- 	};
-
-#ifdef DEBUG
-	Config::allow_user_homedir(true);
-	Logger::verbosity(9);
-	Logger::redirect();
-	Logger::console(true);
-
-	return Application{}.run(argc,argv,"./xml.d");
-
-#else
-
-	Logger::redirect();
-
-	// Check for dark-theme
+	bool non_interactive = false;
 	{
-		GSettings *theme = g_settings_new("org.gnome.desktop.interface");
-		if(theme) {
-			gchar *scheme = g_settings_get_string(theme,"color-scheme");
-			if(scheme && strstr(scheme,"dark")) {
-				Logger::String{"Dark theme detected"}.info();
-				setenv("GTK_THEME","Adwaita:dark",1);
-			}
-			g_object_unref(theme);
+		const char *ptr = strrchr(argv[0],'/');
+		if(ptr) {
+			ptr++;
+			non_interactive = (strcmp(ptr,"reinstall-enable") == 0 || strcmp(ptr,"reinstall-system") == 0);
 		}
 	}
 
-	return Application{}.run(argc,argv);
+	// Initialize the application.
+	Quark::init();
 
-#endif // DEBUG
+#ifdef DEBUG
+	Udjat::Config::allow_user_homedir(true);
+	Logger::verbosity(9);
+	Logger::console(true);
+#endif
+
+	if(Udjat::CommandLineParser::options(argc,argv,options)) {
+		return 0;
+	}
+
+	Logger::redirect();
+
+	// Parse command line options.
+	{
+		CommandLineParser options(argc,argv);
+		String value;
+
+		if(options.get_argument(argc,argv,'i',"install",value)) {
+			Reinstall::Repository::preset("install",value.c_str());	
+		}
+
+		if(options.get_argument(argc,argv,'O',"output",value)) {
+			Reinstall::Writer::set_output(value.c_str());
+		}
+
+		if(options.get_argument(argc,argv,'S',"select",value)) {
+			Reinstall::Action::preset(value.c_str());
+		}
+
+		if(options.get_argument(argc,argv,'S',"select",value)) {
+			Reinstall::Action::preset(value.c_str());
+		}
+
+		if(options.get_argument(argc,argv,'T',"target",value)) {
+
+			auto targets = value.split(",",2);
+
+			if(targets.empty() || targets[0].empty()) {
+				throw std::runtime_error{Logger::Message(_("Invalid target '{}', please check your configuration"),value)};
+			}
+
+			//
+			// Get TARGET URL
+			//
+#ifdef DEFAULT_INSTALL_URL
+			URL target{Config::Value<string>{"install-targets",targets[0].c_str(),DEFAULT_INSTALL_URL}.c_str()};
+#else
+			URL target{Config::Value<string>{"install-targets",targets[0].c_str(),""}.c_str()};
+			if(target.empty()) {
+				target = Config::Value<string>{"install-targets","default"}.c_str();
+			}
+#endif // DEFAULT_INSTALL_URL
+
+			if(target.empty()) {
+				throw std::runtime_error{Logger::Message(_("No target found for '{}', please check your configuration"),targets[0])};
+			}
+
+			target.expand([&targets](const char *name, std::string &val) -> bool{
+
+				if(strcasecmp(name,"hostname") == 0 || strcasecmp(name,"ip") == 0 || strcasecmp(name,"server") == 0) {
+					if(targets.size() < 2) {
+						throw std::runtime_error{"This target requires a second argument, please check your configuration"};
+					}
+					val = targets[1].c_str();
+					return true;
+
+				} else if(strcasecmp(name,"target") == 0) {
+					val = targets[0].c_str();
+					return true;
+				}
+				
+				return false;
+			});
+
+			if(targets.size() > 1) {
+				target.hostname(targets[1].c_str());
+			}
+
+			Logger::String{"Using non interactive mode with target '",target.c_str(),"'"}.info();
+
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
+			Reinstall::Repository::preset("install",target.c_str());	
+
+		}
+
+		if(options.has_argument(argc,argv,'R',"reboot")) {
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractiveReboot);
+		}
+
+		if(options.has_argument(argc,argv,'y',"non-interactive") || non_interactive) {
+			Reinstall::Dialog::preset(Reinstall::Dialog::NonInteractive);
+		}
+
+		while(options.get_argument(argc,argv,'r',"repo",value)) {
+			auto args = Udjat::String{value.c_str()}.split("=",2);
+			if(args.size() != 2) {
+				throw std::runtime_error{Logger::Message(_("Invalid repository argument: {}"),value)};
+			}
+			Reinstall::Repository::preset(args[0].c_str(),args[1].c_str());
+		}
+
+		while(options.get_argument(argc,argv,'k',"kernel-parameter",value)) {
+			Reinstall::KernelParameter::preset(value.c_str());
+		}
+
+	}
 
 
+#ifdef HAVE_GTKMM
+	// If the user requested TUI, run as a TUI application.
+
+	if( !CommandLineParser::has_argument(argc,argv,'g',"gui") && (CommandLineParser::has_argument(argc,argv,'t',"tui") || tui_only())) {
+
+		// Run as a TUI application.
+		return Reinstall::Console{}.run(argc,argv);
+
+	} else {
+
+		// Run as a GUI application.
+		if(Reinstall::Dialog::has_preset(Reinstall::Dialog::NonInteractive)) {
+
+			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) "." PACKAGE_NAME)->make_window_and_run<NonInteractiveWindow>(1,argv);
+
+		} else {
+
+			return Gtk::Application::create(G_STRINGIFY(PACKAGE_DOMAIN) "." PACKAGE_NAME)->make_window_and_run<InteractiveWindow>(1,argv);
+		
+		}
+
+	}
+#else 
+	{
+		// No GTK, run as TUI application
+		return Reinstall::Console{}.run(argc,argv);
+
+	}
+#endif // HAVE_GTKMM
+
+	return 0;
  }
 

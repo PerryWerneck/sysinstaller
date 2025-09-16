@@ -29,7 +29,7 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/file/temporary.h>
- #include <udjat/ui/dialog.h>
+ #include <udjat/ui/status.h>
  #include <udjat/ui/progress.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/configuration.h>
@@ -41,8 +41,7 @@
 
  namespace Reinstall {
 
-	Builder::Builder(const Udjat::Abstract::Object &p, const Udjat::XML::Node &node)
-		: output{"select-device",node}, parent{p} {
+	Builder::Builder(const Udjat::XML::Node &node) : Reinstall::Action{node}, output{Dialog::Factory("select-device",node)} {
 
 		{
 			// Search for EFI Boot definitions
@@ -55,10 +54,10 @@
 			}
 
 			if(!boot.efi) {
-				Logger::String{"Using default EFI Boot image"}.trace(parent.name());
+				Logger::String{"Using default EFI Boot image"}.trace(name());
 				boot.efi = make_shared<EFIBootImage>();
 			} else {
-				Logger::String{"Using customized EFI Boot image"}.trace(parent.name());
+				Logger::String{"Using customized EFI Boot image"}.trace(name());
 			}
 		}
 
@@ -91,7 +90,7 @@
 		Reinstall::DataSource::load(node,sources);
 
 		// Load templates
-		Reinstall::Template::load(parent,node,templates);
+		Reinstall::Template::load(*this,node,templates);
 
 		// Load kernel parameters.
 		Reinstall::KernelParameter::load(node,kparms);
@@ -119,7 +118,7 @@
 			const Udjat::Abstract::Object &parent;	///< @brief Parent object (for properties).
 			std::shared_ptr<Reinstall::Template> tmplt;
 
-			std::string filename;	///< @brief The temporary file with template applyed.
+			std::string tempfile;	///< @brief The temporary file with template applyed.
 
 			struct {
 				std::string local;
@@ -137,8 +136,8 @@
 
 			~TemplateSource() {
 #ifndef DEBUG
-				if(!filename.empty()) {
-					unlink(filename.c_str());
+				if(!tempfile.empty()) {
+					unlink(tempfile.c_str());
 				}
 #endif // DEBUG
 			}
@@ -153,19 +152,22 @@
 				return path.remote.c_str();
 			}
 
-			void save(Udjat::Dialog::Progress &progress, const char *path) override {
-				tmplt->save(parent,path,[&progress](uint64_t current, uint64_t total){
-					progress.set(current,total);
-					return false;
-				});
+			std::string save(const Udjat::Abstract::Object &object) override {
+				// Apply template to temporary file.
+				if(tempfile.empty()) {
+					tempfile = Udjat::File::Temporary::create();
+					save(tempfile.c_str());
+				}
+				return tempfile.c_str();
 			}
 
-			std::string save(Udjat::Dialog::Progress &progress) override {
-				if(filename.empty()) {
-					filename = File::Temporary::create();
-					save(progress,filename.c_str());
-				}
-				return filename;
+			void save(const char *path) override {
+				auto progress = ProgressFactory();		
+				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
+					progress->set(current,total);
+					return false;
+				});
+				progress->done();
 			}
 
 		};
@@ -174,13 +176,13 @@
 		for(auto &tmplt : templates) {
 			const char *remote = value->remote();
 			if(*tmplt == remote) {
-				Logger::String{"Using template '",tmplt->name(),"' for ",remote}.trace(parent.name());
-				files.push_back(make_shared<TemplateSource>(parent,tmplt,value));
+				Logger::String{"Using template '",tmplt->name(),"' for ",remote}.trace(name());
+				files.push_back(make_shared<TemplateSource>(*this,tmplt,value));
 				return;
 			}
 		}
 
-		debug("Adding ",value->name()," data source with path ",value->path());
+		// debug("Adding '",value->name(),"' data source with path ",value->path());
 		files.push_back(value);
 	}
 
@@ -192,7 +194,7 @@
 		}
 
 		if(!strcasecmp(key,"kernel-parameters")) {
-			value = KernelParameter::join(parent,kparms);
+			value = KernelParameter::join(*this,kparms);
 			debug("Kernel parameters set to '",value.c_str(),"'");
 			return true;
 		}
@@ -234,12 +236,12 @@
 					}
 				}
 
-				Logger::String{"Detected boot theme was '",boot.theme.c_str(),"'"}.trace(parent.name());
+				Logger::String{"Detected boot theme was '",boot.theme.c_str(),"'"}.trace(name());
 
 			}
 
 			value = boot.theme;
-			return !empty(value);
+			return !value.empty();
 
 		}
 
@@ -248,19 +250,20 @@
 			return true;
 		}
 
-		return false;
+		return Reinstall::Action::getProperty(key,value);
+
 	}
 
-	void Builder::prepare(Udjat::Dialog::Progress &progress, list<std::shared_ptr<DataSource>> &files) {
+	void Builder::prepare(list<std::shared_ptr<DataSource>> &files) {
 
-		progress = _("Getting required files");
+		Udjat::Dialog::Status::getInstance().sub_title(_("Getting required files"));
 
 		for(auto &source : sources) {
 
 			if(source->dir()) {
 
 				// It's a directory, push back children
-				source->for_each(progress,[this,&files](std::shared_ptr<DataSource> value){
+				source->for_each([this,&files](std::shared_ptr<DataSource> value){
 					push_back(files,value);
 					return false;
 				});
@@ -282,7 +285,7 @@
 			throw runtime_error( _("Cant find installation files"));
 		}
 
-		Logger::String{files.size()," files to download"}.trace(parent.name());
+		Logger::String{files.size()," files to download"}.trace(name());
 
 	}
 

@@ -23,8 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/ui/dialog.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/action.h>
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/kernelparameter.h>
  #include <vector>
@@ -35,7 +34,7 @@
 
  namespace Reinstall {
 
-	class UDJAT_API Builder {
+	class UDJAT_API Builder : public Reinstall::Action {
 	private:
 		std::vector<std::shared_ptr<Reinstall::DataSource>> sources;
 		std::vector<std::shared_ptr<Reinstall::Template>> templates;
@@ -51,37 +50,23 @@
 		} boot;
 
 	protected:
-		Udjat::Dialog output;
-		const Udjat::Abstract::Object &parent;
-
-		bool getProperty(const char *key, std::string &value) const;
-
-		/// @brief Select device and write image to it.
-		//void write(Udjat::Dialog::Progress &progress, Reinstall::Abstract::Image &image);
+		std::shared_ptr<Dialog> output;
 
 	public:
-		Builder(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		Builder(const Udjat::XML::Node &node);
 		virtual ~Builder();
-
-		inline const char *name() const {
-			return parent.name();
-		}
-
-		/// @brief Get parent object for this builder to allow get properties.
-		/// @return The properties object.
-		inline const Udjat::Abstract::Object &properties() const {
-			return parent;
-		}
 
 		inline std::shared_ptr<EFIBootImage> efi() {
 			return boot.efi;
 		}
 
+		bool getProperty(const char *key, std::string &value) const override;
+
 		/// @brief Find template from filename.
 		/// @return Valid template ptr if filename should be replaced.
 		std::shared_ptr<Reinstall::Template> tmplt(const char *filename);
 
-		void prepare(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &files);
+		void prepare(std::list<std::shared_ptr<DataSource>> &files);
 
 	};
 

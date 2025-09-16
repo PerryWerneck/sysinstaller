@@ -26,7 +26,6 @@
  #include <udjat/tools/xml.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
- #include <udjat/ui/progress.h>
  #include <udjat/tools/file.h>
 
  #include <unistd.h>
@@ -43,23 +42,66 @@
 		url.remote = url.local = path;
 	}
 
-	FileSource::FileSource(const Udjat::XML::Node &node) : DataSource{node} {
+	void FileSource::expand(Udjat::String &path, const Udjat::XML::Node &node) {
+		path.expand(node);
+		path.expand([this,node](const char *key, string &value) -> bool {
 
-		url.remote = PathFactory(node,"remote");
-		url.local = PathFactory(node,"local");
-		url.path = PathFactory(node,"destination",false);
+			if(!strcasecmp(key,"name")) {
+				value = name();
+				return true;
+			}
 
-		// Fixes loading of legacy control files.
-		if(!(strcmp(url.local,url.remote) || strncmp(url.local,"http:",5))) {
-			url.local = "";
+			if(!strcasecmp(key,"group-name")) {
+				for(auto xml = node; xml; xml = xml.parent()) {
+					debug("---> '",xml.name(),"'");
+					if(!strcasecmp(xml.name(),"group")) {
+						value = xml.attribute("name").as_string();
+						return true;
+					}
+				}
+			}
+
+			return false;
+		});
+	}
+
+	FileSource::FileSource(const Udjat::XML::Node &node, bool required) : DataSource{node} {
+
+		URL paths[]{
+			{node,"local",false},
+			{node,"remote",false},
+			{node,"url",false}
+		};
+
+		// Expand paths.
+		for(auto &path : paths) {
+			this->expand(path, node);
+			path.expand();
+		}
+
+		// Build URL for remote
+		if(!paths[1].empty()) {
+			url.remote = paths[1].as_quark();
+		} else if(paths[2].remote()) {
+			url.remote = paths[2].as_quark();
+		}
+
+		// Build URL for local.
+		if(!paths[0].empty()) {
+			url.local = paths[0].as_quark();
+		} else if(paths[2].local()) {
+			url.local = paths[2].as_quark();
 		}
 
 		if(url.remote[0] == '.' || url.local[0] == '.' || url.remote[0] == '/' || url.local[0] == '/') {
-			repository = Repository::Factory(node);
-		}
 
-		if(!url.local[0] && url.remote[0] == '.') {
-			url.local = url.remote;
+			// If the URL starts with '/' or '.' then it is relative to the repository.
+			repository = Repository::Factory(node);
+			if(!url.remote[0]) {
+				url.remote = url.local;
+			} else if(!url.local[0]) {
+				url.local = url.remote;
+			}
 		}
 
 	}
@@ -131,6 +173,7 @@
 	}
 
 	const char * FileSource::remote() const {
+		debug("url.remote = '",url.remote,"'");
 		return url.remote;
 	}
 

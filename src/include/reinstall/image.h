@@ -28,25 +28,26 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/ui/progress.h>
- #include <udjat/ui/dialog.h>
+ #include <reinstall/dialog.h>
  #include <list>
 
  namespace Reinstall {
 
 	class Builder;
 
+	#pragma GCC diagnostic ignored "-Woverloaded-virtual"
 	namespace Abstract {
 
 		/// @brief Abstract disk image.
 		class UDJAT_API Image {
 		protected:
-			const Udjat::Dialog &dialog;
-			Reinstall::Builder &builder;
+			const Dialog &dialog;
+			Reinstall::Builder *builder;
 
 			/// @brief EFI boot partition image file.
 			std::string efibootpart;
 
-			inline Image(const Udjat::Dialog &s, Reinstall::Builder &b) : dialog{s}, builder{b} {
+			inline Image(const Dialog &s, Reinstall::Builder *b) : dialog{s}, builder{b} {
 			}
 
 			/// @brief Add file to image.
@@ -54,20 +55,21 @@
 			/// @param to Destination file in the image.
 			virtual void append(const char *from, const char *to) = 0;
 
-			/// @brief Add sources to image.
-			void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<DataSource>> &sources);
-
 		public:
 			virtual ~Image();
 
 			static const char * application_id() noexcept;
 
+			/// @brief Add sources to image.
+			/// @param sources List of data sources to append.
+			void append(std::list<std::shared_ptr<DataSource>> &sources);
+
 			/// @brief Append data source to image, download file if needed.
 			virtual void append(std::shared_ptr<DataSource> source);
 
-			virtual void write(Udjat::Dialog::Progress &dialog, const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
+			virtual void write(const std::function<void(unsigned long long offset, const void *contents, unsigned long long length)> &task);
 
-			virtual void write(Udjat::Dialog::Progress &progress);
+			virtual void write() = 0;
 
 		};
 

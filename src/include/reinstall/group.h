@@ -24,46 +24,29 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <udjat/tools/object.h>
- #include <udjat/tools/factory.h>
- #include <list>
+ #include <memory>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_API Group : public Udjat::NamedObject {
+	class UDJAT_API Group {
 	protected:
-
 		const char *dialog_title = "";
 
 	public:
 
-		/// @brief Activity Controller
-		class UDJAT_API Controller : private Udjat::Factory {
-		private:
-			static Controller *instance;
-
-		protected:
-			Controller();
-
-		public:
-			static Controller & getInstance();
-			~Controller();
-
-			virtual std::shared_ptr<Group> get(const Udjat::XML::Node &node) = 0;
-
-			// Factory
-			bool NodeFactory(const Udjat::XML::Node &node) override;
-
-		};
-
-		Group(const Udjat::XML::Node &node);
+		Group();
 		virtual ~Group();
 
-		// Udjat::Abstract::Object
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
-		bool getProperty(const char *key, std::string &value) const override;
+		/// @brief Parse xml node, build children.
+		/// @param node The definitions for this group.
+		virtual void parse(const Udjat::XML::Node &node);
+
+		/// @brief Insert a child node.
+		/// @param node Child node to insert.
+		/// @param action The action to be performed.
+		virtual void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) = 0;
 
 	};
 

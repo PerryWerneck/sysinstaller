@@ -19,27 +19,32 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/module.h>
- #include <udjat/tools/protocol.h>
- #include <udjat/tools/string.h>
- #include <udjat/tools/factory.h>
+
+ #ifdef LOG_DOMAIN
+	#undef LOG_DOMAIN
+ #endif // LOG_DOMAIN
+ #define LOG_DOMAIN "grub2"
+ #include <udjat/tools/logger.h>
+
  #include <udjat/module/info.h>
+ #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
- #include <udjat/tools/xml.h>
- #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/ui/status.h>
+ #include <reinstall/application.h>
+ #include <reinstall/action.h>
+ #include <reinstall/dialog.h>
+ #include <reinstall/group.h>
  #include <reinstall/tools/datasource.h>
- #include <reinstall/tools/writer.h>
+ #include <reinstall/tools/kernelparameter.h>
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
+ #include <string>
+
  #include <reinstall/modules/grub2.h>
- #include <udjat/ui/dialog.h>
- #include <vector>
- #include <reinstall/tools/kernelparameter.h>
 
  using namespace Udjat;
  using namespace std;
- using namespace Reinstall;
 
  static const char * PathFactory(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node, const char *name, const char *text) {
 
@@ -115,8 +120,7 @@
 		const char *boot_label = nullptr;
 
 	public:
-		Action(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
-			: Reinstall::Action{parent,node} {
+		Action(const Udjat::XML::Node &node) : Reinstall::Action{node} {
 
 			static const char *labels[] = {
 				"grub-label",
@@ -163,8 +167,8 @@
 			// Load scripts.
 			Reinstall::Script::load(*this,node,scripts);
 
-			// Enable allow reboot by default.
-			success.set(Dialog::AllowReboot);
+			// Enable allow reboot on success dialog.
+			success->set(Dialog::Reboot);
 
 		}
 
@@ -189,8 +193,6 @@
 		}
 
 		bool getProperty(const char *key, std::string &value) const override {
-
-// 17/07/2024 00:47:11 tw-local       Unable to expand property 'install-version'
 
 			if(!strcasecmp(key,"grub-config")) {
 #ifdef DEBUG
@@ -251,8 +253,8 @@
 
 			if(!strcasecmp(key,"grub-conf-dir")) {
 #ifdef DEBUG
-				debug("Grub config was set to '",value.c_str(),"'");
 				value = "/tmp/";
+				debug("Grub config was set to '",value.c_str(),"'");
 #else
 				value = Config::Value<string>("grub","conf-dir","/etc/grub.d/");
 #endif // DEBUG
@@ -262,47 +264,53 @@
 			return Reinstall::Action::getProperty(key,value);
 		}
 
-		int activate(Udjat::Dialog::Progress &progress) override {
+		void activate() override {
 
-			progress = _("Getting required files");
+			auto &status = Udjat::Dialog::Status::getInstance();
+			status.sub_title(_("Getting required files"));
 			for(const auto &source : sources) {
-				source->save(*this,progress);
+				source->save(*this);
 			}
 
-			progress = _("Applying templates");
-			for(const auto &tmplt : templates) {
-				tmplt->save(*this,[&progress](uint64_t current, uint64_t total) {
-					progress.set(current,total);
-					return false;
-				});
+			Logger::String{"Applying templates"}.info(name());
+			{
+				status.sub_title(_("Applying templates"));
+				for(const auto &tmplt : templates) {
+					auto progress = Udjat::Dialog::Progress::getInstance();
+					progress->url(tmplt->to_string());
+					tmplt->save(*this,[progress](uint64_t current, uint64_t total) {
+						progress->set(current,total);
+						return false;
+					});
+					progress->done();
+				}
 			}
 
-			progress = _("Configuring boot loader");
-			progress.url(_("First stage"));
+			Logger::String{"Configuring boot loader"}.info(name());
+			status.sub_title(_("Configuring boot loader"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Pre,progress);
+				script->run(*this,Script::Pre,_("First stage"));
 			}
-
-			progress.url(_("Second stage"));
 			for(auto &script : scripts) {
-				script->run(*this,Script::Post,progress);
+				script->run(*this,Script::Post,_("Second stage"));
 			}
 
-			return 0;
 		}
 
 	};
 	
 
-	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::Factory("local-installer",moduleinfo) {
+	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser("local-installer") {
 	};
 
 	Grub2::Module::~Module() {
 	}	
 
-	// Udjat::Factory
-	std::shared_ptr<Abstract::Object> Grub2::Module::ObjectFactory(const Abstract::Object &parent, const XML::Node &node) {
-		return make_shared<Action>(parent,node);
+	// Udjat::XML::Parser interface.
+	bool Grub2::Module::parse(const Udjat::XML::Node &node) {
+		// Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info("isowriter");
+		Reinstall::Application::getInstance().push_back(node,make_shared<Grub2::Module::Action>(node));
+		return true;
 	}
 
 	Udjat::Module * Grub2::Module::Factory(const char *name) {
@@ -310,4 +318,3 @@
 	}
 
  }
-

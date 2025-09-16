@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/factory.h>
+ #include <udjat/tools/xml.h>
  #include <memory>
  #include <udjat/tools/xml.h>
 
@@ -32,15 +32,15 @@
 
 	namespace IsoBuilder {
 
-		class UDJAT_API Module : public Udjat::Module, public Udjat::Factory {
+		class UDJAT_API Module : public Udjat::Module, public Udjat::XML::Parser {
 		public:
 			class Action;
 			
-			static Udjat::Module * Factory(const char *name = "iso-builder");
+			static Udjat::Module * Factory(const char *name = "iso-builder", const char *tagname = "iso-builder");
 
-			Module(const char *name);
+			Module(const char *name, const char *tagname);
 			virtual ~Module();
-			std::shared_ptr<Udjat::Abstract::Object> ObjectFactory(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node) override;
+			bool parse(const Udjat::XML::Node &node) override;
 	
 		};
 	}

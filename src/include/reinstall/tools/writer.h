@@ -22,9 +22,12 @@
   */
 
  #pragma once
+
  #include <udjat/defs.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/dialog.h>
  #include <string>
+ #include <udjat/tools/string.h>
+ #include <udjat/tools/logger.h>
 
  namespace Reinstall {
 
@@ -32,20 +35,20 @@
 	class UDJAT_API Writer {
 	private:
 
+		/// @brief The writer name.
+		const char *writer_name = nullptr;
+		
 		/// @brief The active writer instance.
 		static Writer *instance;
 
 		int fd = -1;
 		unsigned long long length = 0LL;
 
-		/// @brief Device description.
-		// std::string devdescr;
-
-		/// @brief Device name.
-		//std::string devname;
-
 	protected:
-		Writer();
+		Writer(const char *name);
+
+		/// @brief The URL for progress.
+		Udjat::String device_url;
 
 		/// @brief Device set from command-line option.
 		static std::string selected;
@@ -55,6 +58,10 @@
 
 	public:
 		virtual ~Writer();
+
+		inline const char *name() const noexcept {
+			return writer_name;
+		}
 
 		inline operator bool() const noexcept {
 			return (bool) (fd != -1);
@@ -66,6 +73,11 @@
 		/// @brief Close device.
 		void close();
 
+		/// @brief The device URL (for progress bar).
+		inline const char *url() const noexcept {
+			return device_url.c_str();
+		}
+
 		/// @brief Set output from comand-line
 		static void set_output(const char *path);
 
@@ -73,7 +85,7 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) = 0;
+		virtual void open(const Reinstall::Dialog &settings) = 0;
 
 		/// @brief Get device length.
 		/// @return The device length.
@@ -85,25 +97,16 @@
 			this->length = length;
 		}
 
+		/// @brief Write file to device
+		void write(int fd);
+
+		/// @brief Write iso image to device.
+		void write(const char *isoname);
+
 		/// @brief Write data to device.
 		/// @param offset Offset of current block.
 		/// @param length Block length.
 		void write(unsigned long long offset, const void *contents, unsigned long long length);
-
-		/// @brief Write file to device
-		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, int fd);
-
-		/// @brief Write iso image to device.
-		void write(Udjat::Dialog::Progress &progress,const Udjat::Dialog &dialog, const char *isoname);
-
-	};
-
-	class UDJAT_API GtkWriter : public Writer {
-	public:
-		GtkWriter() : Writer() {
-		}
-
-		void open(Udjat::Dialog::Progress &progress, const Udjat::Dialog &dialog) override;
 
 	};
 

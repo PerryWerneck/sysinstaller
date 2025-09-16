@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<model xml:lang="en">
+	<attribute name='slp-allow-local' value='no' />
+
+	<attribute name='title' value='Reinstall this workstation'/>
+	<attribute name='sub-title' value='Do a complete network based reinstall on this workstation without any external boot device' />
+	<attribute name='icon-name' value='computer-symbolic' />
+
+	<!-- Save configuration for the new boot option (use '%' as marker) -->
+	<template name='grub-config' url='file://${template-dir}/grub2' path='${grub-conf-dir}/09_reinstall' executable='yes' marker='%' />
+	
+	<!-- Add new boot option to grub.cfg -->
+	<script name='grubconfig' type='post' user='root' group='root' strip-lines='yes' marker='%'>
+	<![CDATA[
+	#!/usr/bin/env -S /usr/bin/sudo --login -- /bin/bash
+	echo /usr/sbin/grub2-mkconfig -o "%{grub-config}"
+	echo /usr/sbin/grub2-set-default "%{install-label}"
+	echo /usr/sbin/grub2-reboot "%{install-label}"
+	]]>
+	</script>
+	
+	<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
+	<dialog name='confirmation' icon='dialog-question' message='Do you confirm?' destructive='yes'>
+		This is the secondary text on confirmation message.
+	</dialog>
+
+	<!-- icon name from https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html -->
+	<dialog name='success' title='Configuration complete' icon='dialog-information' message='Operation complete' allow-reboot='yes'>
+		Bootloader was set, the system will reinstall in the next reboot.
+	</dialog>
+</model>

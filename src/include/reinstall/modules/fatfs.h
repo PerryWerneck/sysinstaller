@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <udjat/ui/progress.h>
+ #include <reinstall/dialog.h>
 
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>
@@ -50,23 +50,22 @@
 
 		};
 
-		Image(const Udjat::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
 
 		void post(Udjat::Abstract::Object &object);
 
-		void write(Udjat::Dialog::Progress &progress) override;
+		void write() override;
 
-		void append(Udjat::Dialog::Progress &progress, std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
-			Reinstall::Abstract::Image::append(progress,sources);
+		void append(std::shared_ptr<Reinstall::DataSource> source) override;
+
+		inline void append(std::list<std::shared_ptr<Reinstall::DataSource>> &sources) {
+			Reinstall::Abstract::Image::append(sources);
 		}
 
 	protected:
-
-		// Abstract::Image
-		void append(std::shared_ptr<Reinstall::DataSource> source) override;
 		void append(const char *from, const char *to) override;
 
 	private:
@@ -76,8 +75,6 @@
 		class Disk;
 
 		std::shared_ptr<Disk> disk;
-
-
 
 	};
 
