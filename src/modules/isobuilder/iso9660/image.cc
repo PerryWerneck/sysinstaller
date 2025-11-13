@@ -43,7 +43,11 @@
  #include <udjat/ui/status.h>
 
  #define LIBISOFS_WITHOUT_LIBBURN
- #include <libisofs/libisofs.h>
+
+ extern "C" {
+	#include <libisofs/libisofs.h>
+ }
+ 
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <fcntl.h>
