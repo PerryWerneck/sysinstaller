@@ -190,7 +190,7 @@
 
 	Image::~Image() {
 
-		if(!empty(efibootpart)) {
+		if(!efibootpart.empty()) {
 			unlink(efibootpart.c_str());
 		}
 
@@ -346,7 +346,7 @@
 
 		}
 
-		if(!empty(efibootpart)) {
+		if(!efibootpart.empty()) {
 
 			if(settings.like_iso_hybrid) {
 
