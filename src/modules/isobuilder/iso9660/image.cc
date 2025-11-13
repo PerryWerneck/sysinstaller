@@ -315,9 +315,11 @@
 			el_torito_set_load_size(bootimg, 4);
 			el_torito_patch_isolinux_image(bootimg);
 
+#ifdef HAVE_ISOHYBRID
 			if(settings.like_iso_hybrid) {
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
 			}
+#endif // HAVE_ISOHYBRID
 
 			{
 				uint8_t id_string[28];
@@ -346,7 +348,10 @@
 			if(settings.like_iso_hybrid) {
 
 				Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image (ISO Hybrid)"}.trace("iso9660");
+
+#ifdef HAVE_ISOHYBRID
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
+#endif // HAVE_ISOHYBRID
 
 				// Isohybrid, set partition
 				int rc = iso_write_opts_set_partition_img(opts,2,0xef,(char *) efibootpart.c_str(),0);
@@ -361,7 +366,10 @@
 
 				// Not isohybrid.
 				Logger::String{"Adding ",builder->efi()->path()," as EFI boot image (non ISO Hybrid)"}.trace("iso9660");
+
+#ifdef HAVE_ISOHYBRID
 				iso_write_opts_set_part_like_isohybrid(opts, 0);
+#endif // HAVE_ISOHYBRID
 
 				int rc = iso_write_opts_set_efi_bootp(opts,(char *) builder->efi()->path(),0);
 

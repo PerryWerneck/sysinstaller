@@ -162,6 +162,7 @@ endif
 if libisofs.found()
 	conf_data.set('HAVE_LIBISOFS', 1)
 	conf_data.set('HAVE_ISOFS', 1)
+	conf_data.set('HAVE_ISOHYBRID', 1)
 endif
 
 if libarchive.found()
