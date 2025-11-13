@@ -176,9 +176,19 @@ if test "$app_cv_libisofs" == "yes"; then
       AC_DEFINE(HAVE_ISOHYBRID,,[ Do we have isohybrid isofs? ])
       ],
     [
-      AC_MSG_NOTICE([ No support for iso hybrid in libisofs ])
+      AC_MSG_NOTICE([ No iso hybrid in libisofs ])
     ]
   )
+
+  AC_CHECK_LIB([isofs], [iso_image_dir_get_node], 
+    [
+      AC_DEFINE(HAVE_ISOIMAGEDIR,,[ Do we have iso_image_dir_get_node in isofs? ])
+      ],
+    [
+      AC_MSG_NOTICE([ No support iso_image_dir_get_node in libisofs ])
+    ]
+  )
+
 
 else
 
