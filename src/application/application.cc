@@ -60,8 +60,10 @@
 			throw std::runtime_error{"Application already created"};
 		}
 
+#ifdef GETTEXT_PACKAGE
 		// Set locale.
 		Udjat::Application::set_gettext_package(GETTEXT_PACKAGE);
+#endif // GETTEXT_PACKAGE
 
 		/// @brief The embedded http module.
 		class Module : private Udjat::Module, private Udjat::HTTP::Handler::Factory {
