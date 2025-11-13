@@ -199,6 +199,12 @@
 
 	}
 
+#ifndef HAVE_ISOIMAGEDIR
+	static inline int iso_image_dir_get_node(IsoImage *, IsoDir *dir, const char *name, IsoNode **node, int) {
+		return iso_dir_get_node(dir, name, node);
+	}
+#endif // !HAVE_ISOIMAGEDIR
+
 	static IsoDir * getIsoDir(IsoImage *image, const char *dirname) {
 
 		if(*dirname == '/') {
@@ -211,6 +217,7 @@
 		for(auto dn : Udjat::String(dirname).split("/")) {
 
 			IsoNode *node;
+
 			rc = iso_image_dir_get_node(image,dir,dn.c_str(),&node,0);
 			if(rc == 0) {
 
