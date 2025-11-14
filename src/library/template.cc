@@ -82,9 +82,13 @@
 			if(str.empty()) {
 				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
+			debug("Raw template URL is '",str.c_str(),"'");
 
 			str.unescape();
-			str.expand(*this);
+			debug("Unescaped template URL is '",str.c_str(),"'");
+
+			str.expand(*this,false);
+			debug("Expanded template URL is '",str.c_str(),"'");
 
 			url = str.as_quark();
 
