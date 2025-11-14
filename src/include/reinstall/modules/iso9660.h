@@ -50,15 +50,15 @@
 			int allow_deep_paths = 1;
 			bool like_iso_hybrid = true;
 
-			struct {
+			struct Boot {
 
-				const char *catalog = "/boot/x86_64/loader/boot.cat";
+				const char *catalog = nullptr;
 
-				struct {
+				struct ElTorito {
 
 					bool enabled = true;
 					const char *id = nullptr;
-					const char *image = "/boot/x86_64/loader/isolinux.bin";
+					const char *image = nullptr;
 
 					inline operator bool() const noexcept {
 						return enabled;

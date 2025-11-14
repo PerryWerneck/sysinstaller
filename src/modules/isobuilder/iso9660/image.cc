@@ -322,7 +322,7 @@
 
 			if(rc < 0) {
 				string msg{iso_error_to_msg(rc)};
-				Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image"}.error("iso9660");
+				Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image to '",settings.boot.eltorito.image,"'"}.error("iso9660");
 				throw runtime_error(msg);
 			}
 

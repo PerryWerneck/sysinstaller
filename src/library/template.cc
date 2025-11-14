@@ -79,6 +79,7 @@
 		// Get URL
 		{
 			String str{node,"url",""};
+			debug("Raw template URL from XML is '",node.attribute("url").as_string(),"'");
 			if(str.empty()) {
 				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}

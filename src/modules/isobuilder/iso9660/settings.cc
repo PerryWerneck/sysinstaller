@@ -24,6 +24,11 @@
  #include <config.h>
  #include <udjat/tools/xml.h>
  #include <memory>
+ #include <pwd.h>
+
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
  #ifdef HAVE_LIBISOFS
 
@@ -36,7 +41,7 @@
 
 	Image::Settings::Settings(const Udjat::XML::Node &node) {
 
-		std::string name{XML::AttributeFactory(node,"name").as_string("iso-9660")};
+		// std::string name{XML::AttributeFactory(node,"name").as_string("iso-9660")};
 
 		system_area = XML::QuarkFactory(node,"system-area");
 
@@ -46,15 +51,23 @@
 		}
 
 		publisher_id = XML::QuarkFactory(node,"publisher-id");
-		data_preparer_id = XML::QuarkFactory(node,"data-preparer-id");
-		application_id = XML::QuarkFactory(node,"application-id");
-		system_id = XML::QuarkFactory(node,"system-id");
+
+		// Use the username as data preparer id if not set.
+		struct passwd *pw = getpwuid(getuid());
+		if(pw && pw->pw_name && *pw->pw_name) {
+			data_preparer_id = String{node,"data-preparer-id",(const char *) pw->pw_name}.as_quark();
+		} else {
+			data_preparer_id = String{node,"data-preparer-id"}.as_quark();
+		}
+
+		application_id = String{node,"application-id",PACKAGE_NAME}.as_quark();
+		system_id = String{node,"system-id","LINUX"}.as_quark();
 
 		boot.eltorito.enabled = XML::AttributeFactory(node,"eltorito").as_bool(boot.eltorito.enabled);
-		boot.eltorito.id = XML::QuarkFactory(node,"system-name");
+		boot.eltorito.id = String{node,"system-name"}.as_quark();
 
-		boot.eltorito.image = XML::QuarkFactory(node,"eltorito-boot-image",boot.eltorito.image);
-		boot.catalog = XML::QuarkFactory(node,"boot-catalog",(boot.eltorito.enabled ? boot.catalog : ""));
+		boot.eltorito.image = String{node,"eltorito-boot-image","/boot/x86_64/loader/isolinux.bin"}.as_quark();
+		boot.catalog = String{node,"boot-catalog",(boot.eltorito.enabled ? "/boot/x86_64/loader/boot.cat" : "")}.as_quark();
 
 	}
 
