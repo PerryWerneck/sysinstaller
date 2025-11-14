@@ -91,7 +91,7 @@
 		void append(const char *from, const char *to) override;
 
 	private:
-		const Settings &settings;
+		Settings settings;
 		IsoImage *image = nullptr;
 		IsoWriteOpts *opts = nullptr;
 
