@@ -72,7 +72,7 @@
 
 		};
 
-		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);

@@ -79,7 +79,7 @@
 
 	};
 
-	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{dialog,&builder}, settings{s} {
+	Image::Image(Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{&builder}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 

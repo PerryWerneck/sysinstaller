@@ -1,7 +1,7 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.1.0',
+	version: '6.2.0',
 	default_options : ['cpp_std=c++17'],
 	license: 'GPL-3.0-or-later',
 )

@@ -94,7 +94,7 @@
 			status.sub_title(_("Building ISO-9660 Image"));
 			status.state(_("Preparing image"));
 	
-			iso9660::Image image{*output,*this,imgdef};
+			iso9660::Image image{*this,imgdef};
 
 			image.pre(*this);
 			image.append(files);
@@ -130,7 +130,7 @@
 			Logger::String{"Building Fat Image"}.info(name());
 			status.sub_title(_("Building FAT Image"));
 
-			FatFS::Image image{*output,*this,imgdef};
+			FatFS::Image image{*this,imgdef};
 
 			image.pre(*this);
 			image.append(files);

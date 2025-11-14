@@ -24,8 +24,6 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <reinstall/dialog.h>
-
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>
 
@@ -50,7 +48,7 @@
 
 		};
 
-		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(Reinstall::Builder &builder, const Settings &settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
