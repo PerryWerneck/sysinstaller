@@ -152,7 +152,7 @@
 				return path.remote.c_str();
 			}
 
-			std::string save(const Udjat::Abstract::Object &object) override {
+			std::string save(const Udjat::Abstract::Object &) override {
 				// Apply template to temporary file.
 				if(tempfile.empty()) {
 					tempfile = Udjat::File::Temporary::create();

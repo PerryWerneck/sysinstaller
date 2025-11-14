@@ -136,6 +136,7 @@
 #else
 			value = Application::DataDir{"templates"};
 #endif // DEBUG
+			debug("Template directory set to '",value.c_str(),"'");
 			return true;
 		}
 
