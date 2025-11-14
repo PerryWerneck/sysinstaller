@@ -156,12 +156,14 @@
 				// Apply template to temporary file.
 				if(tempfile.empty()) {
 					tempfile = Udjat::File::Temporary::create();
+					debug("Applying template '",tmplt->name(),"' to temporary file ",tempfile.c_str());
 					save(tempfile.c_str());
 				}
 				return tempfile.c_str();
 			}
 
 			void save(const char *path) override {
+				debug("Applying template '",tmplt->name(),"' to file ",path);
 				auto progress = ProgressFactory();		
 				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
 					progress->set(current,total);
