@@ -129,6 +129,8 @@
 
 	bool Template::getProperty(const char *key, std::string &value) const {
 
+		debug("Getting template property '",key,"'");
+
 		if(!strcasecmp(key,"template-dir")) {
 #ifdef DEBUG
 			value = getenv("PWD");
