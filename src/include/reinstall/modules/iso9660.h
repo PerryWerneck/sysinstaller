@@ -72,7 +72,7 @@
 
 		};
 
-		Image(Reinstall::Builder &builder, const Settings &settings);
+		Image(Reinstall::Builder *builder, std::shared_ptr<Settings> settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
@@ -91,7 +91,7 @@
 		void append(const char *from, const char *to) override;
 
 	private:
-		Settings settings;
+		std::shared_ptr<Settings> settings;
 		IsoImage *image = nullptr;
 		IsoWriteOpts *opts = nullptr;
 

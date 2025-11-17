@@ -79,7 +79,7 @@
 
 	};
 
-	Image::Image(Reinstall::Builder &builder, const Settings &s) : Reinstall::Abstract::Image{&builder}, settings{s} {
+	Image::Image(Reinstall::Builder *builder, const std::shared_ptr<Settings> s) : Reinstall::Abstract::Image{builder}, settings{s} {
 
 		IsoBuilderSingleTon::getInstance();
 
@@ -101,8 +101,8 @@
 			int fd;
 
 			string filename;
-			if(settings.system_area && *settings.system_area) {
-				filename = settings.system_area;
+			if(settings->system_area && *settings->system_area) {
+				filename = settings->system_area;
 			} else {
 				filename = Config::Value<string>("iso9660","system-area","/usr/share/syslinux/isohdpfx.bin");
 			}
@@ -135,8 +135,8 @@
 
 		// Set volume id
 		{
-			if(settings.volume_id && *settings.volume_id) {
-				iso_image_set_volume_id(image, settings.volume_id);
+			if(settings->volume_id && *settings->volume_id) {
+				iso_image_set_volume_id(image, settings->volume_id);
 			} else {
 				iso_image_set_volume_id(image, Config::Value<string>("iso9660","volume-id",Application::Name().c_str()).c_str());
 			}
@@ -144,7 +144,7 @@
 
 		// set publisher id
 		{
-			string publisher_id{settings.publisher_id};
+			string publisher_id{settings->publisher_id};
 
 			if(publisher_id.empty()) {
 
@@ -166,16 +166,16 @@
 		}
 
 		// set data preparer id
-		if(settings.data_preparer_id && *settings.data_preparer_id) {
-			iso_image_set_data_preparer_id(image, settings.data_preparer_id);
+		if(settings->data_preparer_id && *settings->data_preparer_id) {
+			iso_image_set_data_preparer_id(image, settings->data_preparer_id);
 		} else {
 			iso_image_set_data_preparer_id(image,Config::Value<string>("iso9660","data-preparer-id",PACKAGE_NAME).c_str());;
 		}
 
 		// set system id
 		{
-			if(settings.system_id && *settings.system_id) {
-				iso_image_set_system_id(image,settings.system_id);
+			if(settings->system_id && *settings->system_id) {
+				iso_image_set_system_id(image,settings->system_id);
 			} else {
 				iso_image_set_system_id(image,Config::Value<string>("iso9660","system-id","LINUX").c_str());;
 			}
@@ -183,8 +183,8 @@
 
 		// set application id
 		{
-			if(settings.application_id && *settings.application_id) {
-				iso_image_set_application_id(image,settings.application_id);
+			if(settings->application_id && *settings->application_id) {
+				iso_image_set_application_id(image,settings->application_id);
 			} else {
 				iso_image_set_application_id(image,Config::Value<string>("iso9660","application-id",Reinstall::Abstract::Image::application_id()).c_str());;
 			}
@@ -301,28 +301,28 @@
 
 	void Image::post(Udjat::Abstract::Object &) {
 
-		iso_write_opts_set_rockridge(opts, settings.rockridge);
-		iso_write_opts_set_joliet(opts, settings.joliet);
-		iso_write_opts_set_allow_deep_paths(opts, settings.allow_deep_paths);
+		iso_write_opts_set_rockridge(opts, settings->rockridge);
+		iso_write_opts_set_joliet(opts, settings->joliet);
+		iso_write_opts_set_allow_deep_paths(opts, settings->allow_deep_paths);
 
-		if(settings.boot.eltorito) {
+		if(settings->boot.eltorito) {
 
 			ElToritoBootImage *bootimg = NULL;
 
-			Logger::String{"Setting el-torito boot image to '",settings.boot.eltorito.image,"'"}.trace("iso9660");
-			Logger::String{"Setting boot catalog to '",settings.boot.catalog,"'"}.trace("iso9660");
+			Logger::String{"Setting el-torito boot image to '",settings->boot.eltorito.image,"'"}.trace("iso9660");
+			Logger::String{"Setting boot catalog to '",settings->boot.catalog,"'"}.trace("iso9660");
 
 			int rc = iso_image_set_boot_image(
 							image,
-							settings.boot.eltorito.image,
+							settings->boot.eltorito.image,
 							ELTORITO_NO_EMUL,
-							settings.boot.catalog,
+							settings->boot.catalog,
 							&bootimg
 						);
 
 			if(rc < 0) {
 				string msg{iso_error_to_msg(rc)};
-				Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image to '",settings.boot.eltorito.image,"'"}.error("iso9660");
+				Logger::String{"Error '",msg.c_str(),"' setting el-torito boot image to '",settings->boot.eltorito.image,"'"}.error("iso9660");
 				throw runtime_error(msg);
 			}
 
@@ -330,7 +330,7 @@
 			el_torito_patch_isolinux_image(bootimg);
 
 #ifdef HAVE_ISOHYBRID
-			if(settings.like_iso_hybrid) {
+			if(settings->like_iso_hybrid) {
 				iso_write_opts_set_part_like_isohybrid(opts, 1);
 			}
 #endif // HAVE_ISOHYBRID
@@ -339,8 +339,8 @@
 				uint8_t id_string[28];
 				memset(id_string,' ',sizeof(id_string));
 
-				if(settings.boot.eltorito.id && *settings.boot.eltorito.id) {
-					strncpy((char *) id_string,settings.boot.eltorito.id,std::min(28,(int) strlen(settings.boot.eltorito.id)));
+				if(settings->boot.eltorito.id && *settings->boot.eltorito.id) {
+					strncpy((char *) id_string,settings->boot.eltorito.id,std::min(28,(int) strlen(settings->boot.eltorito.id)));
 				} else {
 					Config::Value<string> defstring("iso9660","el-torito-id",Application::Name().c_str());
 					strncpy((char *) id_string,defstring,std::min(28,(int) strlen(defstring)));
@@ -353,13 +353,13 @@
 			// bit0= Patch the boot info table of the boot image. This does the same as mkisofs option -boot-info-table.
 			el_torito_set_isolinux_options(bootimg,1,0);
 
-			Logger::String{"El-torito boot image set to '",settings.boot.eltorito.image,"'"}.trace("iso9660");
+			Logger::String{"El-torito boot image set to '",settings->boot.eltorito.image,"'"}.trace("iso9660");
 
 		}
 
 		if(!efibootpart.empty()) {
 
-			if(settings.like_iso_hybrid) {
+			if(settings->like_iso_hybrid) {
 
 				Logger::String{"Adding ",efibootpart.c_str()," as EFI boot image (ISO Hybrid)"}.trace("iso9660");
 
@@ -395,7 +395,7 @@
 
 			}
 
-			if(settings.boot.catalog && *settings.boot.catalog) {
+			if(settings->boot.catalog && *settings->boot.catalog) {
 
 				Logger::String{"Adding ",builder->efi()->path()," as boot image"}.trace("iso9660");
 
