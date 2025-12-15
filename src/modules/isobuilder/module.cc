@@ -20,10 +20,8 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/protocol.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
- #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
@@ -46,10 +44,6 @@
  using namespace std;
 
  namespace Reinstall {
-
-	static const Udjat::ModuleInfo moduleinfo{
-          "Build customized installation image."
-	};
 
 	/// @brief Base class for actions.
 	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Builder {
@@ -153,7 +147,7 @@
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{tagname} {
+	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,"Build customized installation image."), Udjat::XML::Parser{tagname} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {

@@ -27,9 +27,7 @@
  #include <udjat/tools/logger.h>
 
  #include <udjat/module.h>
- #include <udjat/tools/protocol.h>
  #include <udjat/tools/xml.h>
- #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
@@ -48,10 +46,6 @@
  using namespace std;
 
  namespace Reinstall {
-
-	static const Udjat::ModuleInfo moduleinfo{
-		"Download and write an ISO file."
-  	};
 
 	class UDJAT_PRIVATE IsoWriter::Module::Action : public Reinstall::Action {
 	private:
@@ -123,7 +117,7 @@
 		return new Module();
 	}
 	
-	IsoWriter::Module::Module() : Udjat::Module("isowriter",moduleinfo), Udjat::XML::Parser{"iso-writer"} {
+	IsoWriter::Module::Module() : Udjat::Module("isowriter","Download and write an ISO file."), Udjat::XML::Parser{"iso-writer"} {
 	};
 
 	IsoWriter::Module::~Module() {

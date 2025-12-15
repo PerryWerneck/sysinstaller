@@ -26,7 +26,6 @@
  #define LOG_DOMAIN "grub2"
  #include <udjat/tools/logger.h>
 
- #include <udjat/module/info.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
@@ -72,10 +71,6 @@
  }
 
  namespace Reinstall {
-
-	static const Udjat::ModuleInfo moduleinfo{
-		"Reinstallation without disk image."
-	};
 
 	class UDJAT_PRIVATE Grub2::Module::Action : public Reinstall::Action {
 	private:
@@ -300,7 +295,7 @@
 	};
 	
 
-	Grub2::Module::Module(const char *name) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser("local-installer") {
+	Grub2::Module::Module(const char *name) : Udjat::Module(name,"Reinstallation without disk image."), Udjat::XML::Parser("local-installer") {
 	};
 
 	Grub2::Module::~Module() {

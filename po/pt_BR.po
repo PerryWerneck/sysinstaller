@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-16 15:32-0300\n"
+"POT-Creation-Date: 2025-11-17 10:44-0300\n"
 "PO-Revision-Date: 2025-08-12 19:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -20,56 +20,56 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.6\n"
 
-#: src/application/application.cc:94
+#: src/application/application.cc:96
 msgid "Error getting boot path info"
 msgstr "Erro ao obter informações sobre o caminho de boot"
 
-#: src/application/application.cc:98
+#: src/application/application.cc:100
 #, c++-format
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/application/application.cc:105 src/library/os/linux/writer.cc:187
+#: src/application/application.cc:107 src/library/os/linux/writer.cc:187
 #: src/library/source/data.cc:159
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/application/application.cc:124 src/library/source/data.cc:178
+#: src/application/application.cc:126 src/library/source/data.cc:178
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
 
-#: src/application/application.cc:138
+#: src/application/application.cc:140
 msgid "Error readlink boot link"
 msgstr "Erro ao ler link de boot"
 
-#: src/application/application.cc:159
+#: src/application/application.cc:161
 #, c++-format
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/application/application.cc:169 src/library/builder.cc:83
+#: src/application/application.cc:171 src/library/builder.cc:83
 #: src/modules/grub2.cc:142 src/modules/grub2.cc:243
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/application/application.cc:174
+#: src/application/application.cc:176
 msgid "Remote controlled installation"
 msgstr "Instalação com assistência remota"
 
-#: src/application/application.cc:179
+#: src/application/application.cc:181
 msgid "Loading kernel..."
 msgstr "Carregando kernel..."
 
-#: src/application/application.cc:184
+#: src/application/application.cc:186
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/application/application.cc:304 src/ui/gtk4/noninteractive.cc:116
+#: src/application/application.cc:306 src/ui/gtk4/noninteractive.cc:116
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: src/application/application.cc:325
+#: src/application/application.cc:327
 msgid "Unknown error"
 msgstr "Erro inesperado"
 
@@ -243,13 +243,13 @@ msgid "f_mount has failed: "
 msgstr "f_mount falhou: "
 
 #: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
-#: src/modules/isobuilder/fatfs/image.cc:207
+#: src/modules/isobuilder/fatfs/image.cc:217
 #, c++-format
 msgid "Unable to open fat://{}"
 msgstr "Não foi possível abrir fat://{}"
 
-#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:179
-#: src/modules/isobuilder/fatfs/image.cc:248
+#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:189
+#: src/modules/isobuilder/fatfs/image.cc:258
 #, c++-format
 msgid "Unable to write fat://{}"
 msgstr "Não foi possível escrever em fat://{}"
@@ -319,14 +319,6 @@ msgstr "A ação selecionada não pode ser ativada"
 msgid "Unable to select '{}': Invalid path"
 msgstr "Não foi possível selecionar '{}': Caminho inválido"
 
-#: src/library/builder.cc:259 src/modules/grub2.cc:270
-msgid "Getting required files"
-msgstr "Obtendo arquivos necessários"
-
-#: src/library/builder.cc:285
-msgid "Cant find installation files"
-msgstr "Não encontrei arquivos de instalação"
-
 #: src/library/image.cc:128
 msgid "No write support on selected image"
 msgstr "Sem suporte para gravação na imagem selecionada"
@@ -364,10 +356,6 @@ msgstr "Comando ou script externo falhou"
 msgid "Configuring, please wait..."
 msgstr "Configurando, aguarde..."
 
-#: src/library/template.cc:230
-msgid "Cant update template permissions"
-msgstr "Erro ao atualizar permissões de modelo"
-
 #: src/library/writer.cc:54
 msgid "The device writer is not available"
 msgstr "Gravador de dispositivo não está disponível"
@@ -379,6 +367,18 @@ msgstr "Módulo de gravação já está disponível"
 #: src/library/writer.cc:132
 msgid "Finishing..."
 msgstr "Finalizando..."
+
+#: src/library/builder.cc:275 src/modules/grub2.cc:270
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:301
+msgid "Cant find installation files"
+msgstr "Não encontrei arquivos de instalação"
+
+#: src/library/template.cc:238
+msgid "Cant update template permissions"
+msgstr "Erro ao atualizar permissões de modelo"
 
 #: src/modules/isobuilder/fatfs/image.cc:79
 #, c++-format
@@ -396,42 +396,42 @@ msgstr "Erro inesperado '{}' em f_mount"
 msgid "Unexpected error '{}' on f_umount"
 msgstr "Erro inesperado '{}' em f_umount"
 
-#: src/modules/isobuilder/fatfs/image.cc:152
+#: src/modules/isobuilder/fatfs/image.cc:162
 #, c++-format
 msgid "Unable to create path fat://{} (rc={})"
 msgstr "Incapaz de criar o caminho fat://{} (rc={})"
 
-#: src/modules/isobuilder/fatfs/image.cc:162
+#: src/modules/isobuilder/fatfs/image.cc:172
 #, c++-format
 msgid "Unable to open fat://{} (rc={})"
 msgstr "Incapaz de abrir fat://{} (rc={})"
 
-#: src/modules/isobuilder/fatfs/image.cc:315
-#: src/modules/isobuilder/iso9660/image.cc:453
+#: src/modules/isobuilder/fatfs/image.cc:325
+#: src/modules/isobuilder/iso9660/image.cc:475
 msgid "Finalizing"
 msgstr "Finalizando"
 
-#: src/modules/isobuilder/iso9660/image.cc:80
+#: src/modules/isobuilder/iso9660/image.cc:87
 msgid "Error creating iso image"
 msgstr "Erro ao criar imagem iso"
 
-#: src/modules/isobuilder/iso9660/image.cc:106
+#: src/modules/isobuilder/iso9660/image.cc:113
 msgid "Error loading system area"
 msgstr "Erro lendo área de sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:112
+#: src/modules/isobuilder/iso9660/image.cc:119
 msgid "Cant read system area definition file"
 msgstr "Não foi possível ler o arquivo de definição de área do sistema"
 
-#: src/modules/isobuilder/iso9660/image.cc:242
+#: src/modules/isobuilder/iso9660/image.cc:256
 msgid "Unexpanded path in source list"
 msgstr "Caminho incorreto na lista de fontes"
 
-#: src/modules/isobuilder/iso9660/image.cc:409
+#: src/modules/isobuilder/iso9660/image.cc:431
 msgid "Preparing to write"
 msgstr "Preparando para gravar"
 
-#: src/modules/isobuilder/iso9660/image.cc:439
+#: src/modules/isobuilder/iso9660/image.cc:461
 msgid "Writing image"
 msgstr "Gravando imagem"
 
@@ -443,7 +443,7 @@ msgstr "Gerando imagem ISO-9660"
 msgid "Preparing image"
 msgstr "Preparando imagem"
 
-#: src/modules/isobuilder/module.cc:131
+#: src/modules/isobuilder/module.cc:133
 msgid "Building FAT Image"
 msgstr "Gerando imagem FAT"
 
