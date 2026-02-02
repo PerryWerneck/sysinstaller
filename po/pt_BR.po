@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 10:44-0300\n"
+"POT-Creation-Date: 2025-12-15 16:05-0300\n"
 "PO-Revision-Date: 2025-08-12 19:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -20,56 +20,56 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.6\n"
 
-#: src/application/application.cc:96
+#: src/application/application.cc:93
 msgid "Error getting boot path info"
 msgstr "Erro ao obter informações sobre o caminho de boot"
 
-#: src/application/application.cc:100
+#: src/application/application.cc:97
 #, c++-format
 msgid "{} is not a directory"
 msgstr "{} não é um diretório"
 
-#: src/application/application.cc:107 src/library/os/linux/writer.cc:187
+#: src/application/application.cc:104 src/library/os/linux/writer.cc:187
 #: src/library/source/data.cc:159
 msgid "Error opening /etc/mtab"
 msgstr "Erro ao abrir /etc/mtab"
 
-#: src/application/application.cc:126 src/library/source/data.cc:178
+#: src/application/application.cc:123 src/library/source/data.cc:178
 #, c++-format
 msgid "Cant find mountpoint for '{}'"
 msgstr "Não foi possível encontrar um ponto de montagem para {}"
 
-#: src/application/application.cc:140
+#: src/application/application.cc:137
 msgid "Error readlink boot link"
 msgstr "Erro ao ler link de boot"
 
-#: src/application/application.cc:161
+#: src/application/application.cc:158
 #, c++-format
 msgid "Required attribute '{}' not found"
 msgstr "Atributo necessário '{}' não foi encontrado"
 
-#: src/application/application.cc:171 src/library/builder.cc:83
-#: src/modules/grub2.cc:142 src/modules/grub2.cc:243
+#: src/application/application.cc:168 src/library/builder.cc:83
+#: src/modules/grub2.cc:137 src/modules/grub2.cc:238
 msgid "Reinstall workstation"
 msgstr "Reinstalar estação de trabalho"
 
-#: src/application/application.cc:176
+#: src/application/application.cc:173
 msgid "Remote controlled installation"
 msgstr "Instalação com assistência remota"
 
-#: src/application/application.cc:181
+#: src/application/application.cc:178
 msgid "Loading kernel..."
 msgstr "Carregando kernel..."
 
-#: src/application/application.cc:186
+#: src/application/application.cc:183
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/application/application.cc:306 src/ui/gtk4/noninteractive.cc:116
+#: src/application/application.cc:303 src/ui/gtk4/noninteractive.cc:116
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: src/application/application.cc:327
+#: src/application/application.cc:324
 msgid "Unknown error"
 msgstr "Erro inesperado"
 
@@ -368,7 +368,7 @@ msgstr "Módulo de gravação já está disponível"
 msgid "Finishing..."
 msgstr "Finalizando..."
 
-#: src/library/builder.cc:275 src/modules/grub2.cc:270
+#: src/library/builder.cc:275 src/modules/grub2.cc:265
 msgid "Getting required files"
 msgstr "Obtendo arquivos necessários"
 
@@ -435,51 +435,51 @@ msgstr "Preparando para gravar"
 msgid "Writing image"
 msgstr "Gravando imagem"
 
-#: src/modules/isobuilder/module.cc:94
+#: src/modules/isobuilder/module.cc:88
 msgid "Building ISO-9660 Image"
 msgstr "Gerando imagem ISO-9660"
 
-#: src/modules/isobuilder/module.cc:95
+#: src/modules/isobuilder/module.cc:89
 msgid "Preparing image"
 msgstr "Preparando imagem"
 
-#: src/modules/isobuilder/module.cc:133
+#: src/modules/isobuilder/module.cc:127
 msgid "Building FAT Image"
 msgstr "Gerando imagem FAT"
 
-#: src/modules/grub2.cc:90
+#: src/modules/grub2.cc:85
 msgid "Getting installation kernel"
 msgstr "Obtendo kernel de instalação"
 
-#: src/modules/grub2.cc:102
+#: src/modules/grub2.cc:97
 msgid "Getting init system"
 msgstr "Obtendo imagem de instalação"
 
-#: src/modules/grub2.cc:277
+#: src/modules/grub2.cc:272
 msgid "Applying templates"
 msgstr "Aplicando templates"
 
-#: src/modules/grub2.cc:290
+#: src/modules/grub2.cc:285
 msgid "Configuring boot loader"
 msgstr "Configurando carregador de boot"
 
-#: src/modules/grub2.cc:292
+#: src/modules/grub2.cc:287
 msgid "First stage"
 msgstr "Primeiro estágio"
 
-#: src/modules/grub2.cc:295
+#: src/modules/grub2.cc:290
 msgid "Second stage"
 msgstr "Segundo estágio"
 
-#: src/modules/isowriter.cc:78
+#: src/modules/isowriter.cc:72
 msgid "Updating ISO image"
 msgstr "Atualizando imagem ISO"
 
-#: src/modules/isowriter.cc:80 src/modules/isowriter.cc:107
+#: src/modules/isowriter.cc:74 src/modules/isowriter.cc:101
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
 
-#: src/modules/isowriter.cc:85
+#: src/modules/isowriter.cc:79
 msgid "Getting ISO image"
 msgstr "Obtendo imagem ISO"
 

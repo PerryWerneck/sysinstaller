@@ -64,7 +64,7 @@
 
  		<local-installer name='tw-local' default='yes' visible='only-on-linux' model='grub.xml' />
  		
- 		<iso-builder name='tw-mini' default='no' model='mini.xml' />
+ 		<iso-builder name='tw-mini' default='no' model='mini.xml' filesystem='fat' size='1Gb' />
 
 		<iso-writer name='tw-net' default='no' model='net.xml'>
 			<attribute name='url' value='../../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />

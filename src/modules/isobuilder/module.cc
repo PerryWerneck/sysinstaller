@@ -123,6 +123,7 @@
 			// Build image ...
 			auto &status = Udjat::Dialog::Status::getInstance();
 
+			debug("---------------------------------> FAT IMAGE");
 			Logger::String{"Building Fat Image"}.info(name());
 			status.sub_title(_("Building FAT Image"));
 
