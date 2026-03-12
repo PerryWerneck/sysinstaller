@@ -135,6 +135,7 @@
 
 			// ... and write it to device.
 			debug("Complete, writing...");
+			status.sub_title(_("Writing FAT Image"));
 			image.write();
 
 		}

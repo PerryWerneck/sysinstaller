@@ -108,8 +108,9 @@
 
 	}
 
-	this->device_url = info.devdescr.c_str();
-	debug("Device URL: ",this->device_url.c_str());
-	// Logger::String{"Writing image to '",this->device_url.strip().c_str(),"'"}.info();
+	this->device_url = info.devdescr.c_str();	
+	Logger::String{"Writing image to '",this->device_url.strip().c_str(),"'"}.info();
 
+	return true;
+	
  }

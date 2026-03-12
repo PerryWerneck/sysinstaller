@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 15:49-0300\n"
-"PO-Revision-Date: 2025-08-12 19:27-0300\n"
+"POT-Creation-Date: 2026-03-12 16:09-0300\n"
+"PO-Revision-Date: 2026-03-12 16:09-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 #: src/application/application.cc:93
 msgid "Error getting boot path info"
@@ -243,13 +243,13 @@ msgid "f_mount has failed: "
 msgstr "f_mount falhou: "
 
 #: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
-#: src/modules/isobuilder/fatfs/image.cc:217
+#: src/modules/isobuilder/fatfs/image.cc:219
 #, c++-format
 msgid "Unable to open fat://{}"
 msgstr "Não foi possível abrir fat://{}"
 
-#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:189
-#: src/modules/isobuilder/fatfs/image.cc:258
+#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:191
+#: src/modules/isobuilder/fatfs/image.cc:260
 #, c++-format
 msgid "Unable to write fat://{}"
 msgstr "Não foi possível escrever em fat://{}"
@@ -406,7 +406,7 @@ msgstr "Incapaz de criar o caminho fat://{} (rc={})"
 msgid "Unable to open fat://{} (rc={})"
 msgstr "Incapaz de abrir fat://{} (rc={})"
 
-#: src/modules/isobuilder/fatfs/image.cc:325
+#: src/modules/isobuilder/fatfs/image.cc:327
 #: src/modules/isobuilder/iso9660/image.cc:475
 msgid "Finalizing"
 msgstr "Finalizando"
@@ -445,6 +445,10 @@ msgstr "Preparando imagem"
 
 #: src/modules/isobuilder/module.cc:128
 msgid "Building FAT Image"
+msgstr "Gerando imagem FAT"
+
+#: src/modules/isobuilder/module.cc:138
+msgid "Writing FAT Image"
 msgstr "Gerando imagem FAT"
 
 #: src/modules/grub2.cc:85
@@ -494,6 +498,10 @@ msgstr "Selecione o grupo (Enter para sair): "
 #: src/ui/console/application.cc:186
 msgid "Select action (Enter to quit): "
 msgstr "Seleciona ação desejada (Enter para sair): "
+
+#: src/ui/console/application.cc:356
+msgid "Output device or file should be defined from command line"
+msgstr "Dispositivo ou arquivo de saída deve ser definido via linha de comando"
 
 #: src/ui/gtk4/dialog.cc:109
 msgid "_Reboot"
@@ -662,8 +670,7 @@ msgstr "Reinstalação de sistema"
 #~ msgid "Agent has nothing to report"
 #~ msgstr "Agente não tem nada a informar"
 
-#~ msgid ""
-#~ "Authentication is required and has failed or has not yet been provided."
+#~ msgid "Authentication is required and has failed or has not yet been provided."
 #~ msgstr "Autenticação falhou ou não foi fornecida."
 
 #~ msgid "Bad Request"
@@ -828,8 +835,7 @@ msgstr "Reinstalação de sistema"
 #~ msgid "Selected installation has no label"
 #~ msgstr "Instalação selecionada não tem nome"
 
-#~ msgid ""
-#~ "Something is making your server work too hard, and it just can’t keep up"
+#~ msgid "Something is making your server work too hard, and it just can’t keep up"
 #~ msgstr "Algo está fazendo seu servidor trabalhar além do limite"
 
 #~ msgid "Subprocess/Script protocol"
@@ -859,25 +865,17 @@ msgstr "Reinstalação de sistema"
 #~ msgid "The client must first authenticate itself with the proxy."
 #~ msgstr "O cliente deve primeiro autenticar no proxy"
 
-#~ msgid ""
-#~ "The initialization procedure has failed, the application cant continue"
+#~ msgid "The initialization procedure has failed, the application cant continue"
 #~ msgstr "O processo de inicialização falhou, a aplicação não pode continuar"
 
-#~ msgid ""
-#~ "The request contained valid data and was understood by the server, but "
-#~ "the server is refusing action."
-#~ msgstr ""
-#~ "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, "
-#~ "o servidor se recusou a atuar."
+#~ msgid "The request contained valid data and was understood by the server, but the server is refusing action."
+#~ msgstr "A requisição contem dados válidos e foi reconhecida pelo servidor, porem, o servidor se recusou a atuar."
 
 #~ msgid "The request has timed out"
 #~ msgstr "Tempo da requisição esgotado"
 
-#~ msgid ""
-#~ "The request method is not supported by the server and cannot be handled."
-#~ msgstr ""
-#~ "O método usado na requisição não é suportado pelo servidor e não pode ser "
-#~ "atendido."
+#~ msgid "The request method is not supported by the server and cannot be handled."
+#~ msgstr "O método usado na requisição não é suportado pelo servidor e não pode ser atendido."
 
 #~ msgid "The request succeeded."
 #~ msgstr "Requisição concluída com sucesso."
@@ -888,25 +886,16 @@ msgstr "Reinstalação de sistema"
 #~ msgid "The required attribute 'cmdline' is missing"
 #~ msgstr "Atributo necessário 'cmdline' não foi encontrado"
 
-#~ msgid ""
-#~ "The server has encountered a situation it does not know how to handle."
+#~ msgid "The server has encountered a situation it does not know how to handle."
 #~ msgstr "O servidor encontrou uma situação que ele não sabe como resolver."
 
 #~ msgid "The server is acting as a gateway and cannot get a response in time."
-#~ msgstr ""
-#~ "O servidor está atuando como proxy e não conseguiu obter uma resposta no "
-#~ "tempo esperado."
+#~ msgstr "O servidor está atuando como proxy e não conseguiu obter uma resposta no tempo esperado."
 
-#~ msgid ""
-#~ "The server is not ready to handle the request. Common causes are a server "
-#~ "that is down for maintenance or that is overloaded."
-#~ msgstr ""
-#~ "O servidor não está pronto para atender à requisição. Pode estar inativo "
-#~ "para manutenção ou sobrecarregado."
+#~ msgid "The server is not ready to handle the request. Common causes are a server that is down for maintenance or that is overloaded."
+#~ msgstr "O servidor não está pronto para atender à requisição. Pode estar inativo para manutenção ou sobrecarregado."
 
-#~ msgid ""
-#~ "The server, while working as a gateway to get a response needed to handle "
-#~ "the request, got an invalid response."
+#~ msgid "The server, while working as a gateway to get a response needed to handle the request, got an invalid response."
 #~ msgstr "O servidor está atuando como proxy e recebeu uma resposta inválida."
 
 #~ msgid "Too many requests"
