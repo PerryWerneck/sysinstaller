@@ -177,6 +177,8 @@
 		try {
 
 			auto progress = Udjat::Dialog::Progress::getInstance();
+			progress->url(String{"fat://",to}.c_str());
+
 			source->save([&fdst,progress,to](unsigned long long current, unsigned long long total, const void *buffer, size_t len) -> bool {
 
 				unsigned int wrote = 0;

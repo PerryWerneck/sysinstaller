@@ -38,30 +38,11 @@
  using namespace Udjat;
  using namespace std;
 
- void TopLevel::open(const Reinstall::Dialog &settings) {
+ bool TopLevel::open(const Reinstall::Dialog &settings) {
 
-	if(!Writer::selected.empty()) {
-
-		// Use pre-selected output.
-		try {
-
-			Writer::open(Writer::selected.c_str());
-
-		} catch(const std::exception &e) {
-
-			Logger::String{e.what()}.error("writer");
-			Writer::close();
-			throw;
-
-		}
-
-		this->device_url = Writer::selected.c_str();
-		debug("Device URL: ",this->device_url.c_str()," (pre-selected)");
-
-		// Logger::String{"Writing image to ",this->device_url.c_str()}.info();
-
-		return;
-
+	// Check for pre-selected output.
+	if(Writer::open(settings)) {
+		return true;
 	}
 
 	struct {

@@ -29,10 +29,11 @@
  
  #include <reinstall/application.h>
  #include <udjat/ui/status.h>
+ #include <reinstall/tools/writer.h>
 
  namespace Reinstall {
 
-	class UDJAT_API Console : public Reinstall::Application, private Udjat::Dialog::Status {
+	class UDJAT_API Console : public Reinstall::Application, private Udjat::Dialog::Status, private Reinstall::Writer {
 	private:
 		class Group;
 
@@ -57,6 +58,8 @@
 		int run(int argc, char *argv[]);
 
 		std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option = Dialog::None) override;	
+
+		bool open(const Reinstall::Dialog &settings) override;
 
 	};
  }

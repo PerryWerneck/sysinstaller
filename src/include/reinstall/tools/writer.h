@@ -85,7 +85,8 @@
 		static Writer & getInstance();
 
 		/// @brief Select/detect and open device.
-		virtual void open(const Reinstall::Dialog &settings) = 0;
+		/// @return true if the device is open, false it not.
+		virtual bool open(const Reinstall::Dialog &settings);
 
 		/// @brief Get device length.
 		/// @return The device length.

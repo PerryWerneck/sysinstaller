@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:05-0300\n"
+"POT-Creation-Date: 2026-02-02 15:49-0300\n"
 "PO-Revision-Date: 2025-08-12 19:27-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -443,7 +443,7 @@ msgstr "Gerando imagem ISO-9660"
 msgid "Preparing image"
 msgstr "Preparando imagem"
 
-#: src/modules/isobuilder/module.cc:127
+#: src/modules/isobuilder/module.cc:128
 msgid "Building FAT Image"
 msgstr "Gerando imagem FAT"
 

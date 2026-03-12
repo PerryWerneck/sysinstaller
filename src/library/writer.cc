@@ -144,4 +144,31 @@
 
 	}
 
+	bool Writer::open(const Reinstall::Dialog &settings) {
+
+		if(!selected.empty()) {
+
+			// Use pre-selected output.
+			try {
+
+				open(Writer::selected.c_str());
+
+			} catch(const std::exception &e) {
+
+				Logger::String{e.what()}.error("writer");
+				close();
+				throw;
+
+			}
+
+			this->device_url = selected.c_str();
+			Logger::String{"Writing image to pre-selected output ",this->device_url.c_str()}.info();
+
+			return true;
+
+		}
+
+		return false;
+	}
+
  }

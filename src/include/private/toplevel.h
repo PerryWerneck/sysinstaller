@@ -119,7 +119,8 @@
 
 	/// @brief Open target device for writing.
 	/// @see Reinstall::Writer::open()
-	void open(const Reinstall::Dialog &settings) override;
+	/// @return true if the device was open, false if not.
+	bool open(const Reinstall::Dialog &settings) override;
 
 	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
 
