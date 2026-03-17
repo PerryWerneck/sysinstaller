@@ -100,7 +100,8 @@ zlib= dependency('zlib', required: false)
 fatfs =	dependency(
 	'libfatfs',
 	static: true,
-	required: false,
+	fallback: [ 'libfatfs', 'static_library' ],
+	default_options: ['default_library=static'],
 )
 
 libudjat = dependency(

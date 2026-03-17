@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/PerryWerneck/libfatfs.git
+revision = HEAD
+depth = 1
+

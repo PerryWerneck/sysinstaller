@@ -5,3 +5,5 @@ vmdetect
 libudjat
 libudjatdbus
 libudjathttp
+subprojects/libfatfs
+*.pot
