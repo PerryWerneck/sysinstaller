@@ -1,8 +1,8 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.1.0',
-	default_options : ['cpp_std=c++17'],
+	version: '6.3.0',
+	default_options : ['cpp_std=c++17', 'buildtype=release' ],
 	license: 'GPL-3.0-or-later',
 )
 
@@ -100,7 +100,8 @@ zlib= dependency('zlib', required: false)
 fatfs =	dependency(
 	'libfatfs',
 	static: true,
-	required: false,
+	fallback: [ 'libfatfs', 'static_library' ],
+	default_options: ['default_library=static'],
 )
 
 libudjat = dependency(
@@ -162,6 +163,8 @@ endif
 if libisofs.found()
 	conf_data.set('HAVE_LIBISOFS', 1)
 	conf_data.set('HAVE_ISOFS', 1)
+	conf_data.set('HAVE_ISOHYBRID', 1)
+	conf_data.set('HAVE_ISOIMAGEDIR', 1)
 endif
 
 if libarchive.found()

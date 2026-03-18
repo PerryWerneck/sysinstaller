@@ -24,10 +24,9 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/xml.h>
- #include <reinstall/dialog.h>
-
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>
+ #include <memory>
 
  namespace FatFS {
 
@@ -50,7 +49,7 @@
 
 		};
 
-		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(Reinstall::Builder *builder, const std::shared_ptr<Settings> s);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
@@ -69,7 +68,7 @@
 		void append(const char *from, const char *to) override;
 
 	private:
-		const Settings &settings;
+		std::shared_ptr<Settings> settings;
 
 		/// @brief The FAT disk image on temporary file.
 		class Disk;

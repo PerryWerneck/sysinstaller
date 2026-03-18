@@ -92,7 +92,7 @@
 
 	std::shared_ptr<Reinstall::Action> Reinstall::Console::Group::preset;
 
-	Console::Console() {
+	Console::Console() : Reinstall::Writer{"device"} {
 		
 		load_options();
 
@@ -346,6 +346,16 @@
 		return make_shared<Dialog>(node,message,option);
 
 	}	
+
+	bool Console::open(const Reinstall::Dialog &settings) {
+
+		if(Writer::open(settings)) {
+			return true;
+		}
+
+		throw runtime_error(_("Output device or file should be defined from command line"));
+
+	}
 
  }
  

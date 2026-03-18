@@ -23,10 +23,10 @@
 	<repository name='install'>
 		<attribute name='remote' value='https://download.opensuse.org/tumbleweed/repo/oss/' />
 		<attribute name='local' value='file://${HOME}/tmp/suse/tumbleweed/repo/oss/' />
-		<attribute name='slp-service-type' value='service:install.tumbleweed' />
+		<attribute name='slp-service-type' value='service:install.tw' />
 		<attribute name='slp-scope-list' value='' />
 		<attribute name='slp-filter' value='' />
-		<attribute name='slp-kernel-parameter' value='slp:/?service=install.tumbleweed&amp;auto=1' />
+		<attribute name='slp-kernel-parameter' value='slp:/?service=install.tw&amp;auto=1' />
 		<attribute name='slp-search-message' value='Searching for repository...' />
 		<attribute name='kernel-parameter-name' value='install' allow-slp='yes' />
 	</repository>
@@ -64,7 +64,8 @@
 
  		<local-installer name='tw-local' default='yes' visible='only-on-linux' model='grub.xml' />
  		
- 		<iso-builder name='tw-mini' default='no' model='mini.xml' />
+ 		<iso-builder name='tw-mini' default='no' model='mini.xml' filesystem='fat' size='1Gb' />
+ 		<!-- iso-builder name='tw-mini' default='no' model='mini.xml' / -->
 
 		<iso-writer name='tw-net' default='no' model='net.xml'>
 			<attribute name='url' value='../../../iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso' />

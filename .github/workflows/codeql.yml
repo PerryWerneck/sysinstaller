@@ -11,7 +11,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
@@ -26,10 +26,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Packages
         run: |
-          echo 'deb https://download.opensuse.org/repositories/home:/PerryWerneck:/udjat/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/home:PerryWerneck:udjat.list
-          curl -fsSL https://download.opensuse.org/repositories/home:/PerryWerneck:/udjat/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_PerryWerneck_udjat.gpg > /dev/null
+          echo 'deb https://download.opensuse.org/repositories/home:/PerryWerneck:/udjat/xUbuntu_24.04/ /' | sudo tee /etc/apt/sources.list.d/home:PerryWerneck:udjat.list
+          curl -fsSL https://download.opensuse.org/repositories/home:/PerryWerneck:/udjat/xUbuntu_24.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_PerryWerneck_udjat.gpg > /dev/null
+          echo 'deb https://download.opensuse.org/repositories/home:/PerryWerneck/xUbuntu_24.04/ /' | sudo tee /etc/apt/sources.list.d/home:PerryWerneck.list
+          curl -fsSL https://download.opensuse.org/repositories/home:/PerryWerneck/xUbuntu_24.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_PerryWerneck.gpg > /dev/null
           sudo apt-get update
-          sudo apt-get install --yes git make autopoint gettext pkg-config libgtk-3-dev libpugixml-dev libudjat-dev libgtkmm-3.0-dev libburn-dev libisofs-dev libjsoncpp-dev libzip-dev libfdisk-dev
+          sudo apt-get install --yes git make autopoint gettext pkg-config libgtk-4-dev libudjat-dev libgtkmm-4.0-dev libburn-dev libisofs-dev libjsoncpp-dev libzip-dev libfdisk-dev libfatfs-dev
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:

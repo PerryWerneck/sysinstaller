@@ -79,12 +79,17 @@
 		// Get URL
 		{
 			String str{node,"url",""};
+			debug("Raw template URL from XML is '",node.attribute("url").as_string(),"'");
 			if(str.empty()) {
 				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
+			debug("Raw template URL is '",str.c_str(),"'");
 
 			str.unescape();
-			str.expand(*this);
+			debug("Unescaped template URL is '",str.c_str(),"'");
+
+			str.expand(*this,false);
+			debug("Expanded template URL is '",str.c_str(),"'");
 
 			url = str.as_quark();
 
@@ -129,6 +134,8 @@
 
 	bool Template::getProperty(const char *key, std::string &value) const {
 
+		debug("Getting template property '",key,"'");
+
 		if(!strcasecmp(key,"template-dir")) {
 #ifdef DEBUG
 			value = getenv("PWD");
@@ -136,6 +143,7 @@
 #else
 			value = Application::DataDir{"templates"};
 #endif // DEBUG
+			debug("Template directory set to '",value.c_str(),"'");
 			return true;
 		}
 

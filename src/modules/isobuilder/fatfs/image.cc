@@ -60,7 +60,7 @@
 		bool mounted = false;
 
 	public:
-		Disk(const Settings &settings) : Reinstall::Abstract::Disk{Udjat::File::Handler::fd, settings.imglen} {
+		Disk(const std::shared_ptr<Settings> settings) : Reinstall::Abstract::Disk{Udjat::File::Handler::fd, settings->imglen} {
 
 			if(disk_ioctl(0, CTRL_FORMAT, &fd) != RES_OK) {
 				throw runtime_error(_("Cant bind fatfs to disk image"));
@@ -123,9 +123,19 @@
 
 	};
 
-	Image::Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &s)
-		: Reinstall::Abstract::Image{dialog,&builder}, settings{s}, disk{make_shared<Disk>(settings)} {
+#ifdef BUILD_LEGACY
+	Image::Image(Reinstall::Builder *builder, std::shared_ptr<Settings> s)
+		: Reinstall::Abstract::Image{builder} {
+
+		settings = s;
+		disk = make_shared<Disk>(settings);
+
 	}
+#else
+	Image::Image(Reinstall::Builder *builder, std::shared_ptr<Settings> s)
+		: Reinstall::Abstract::Image{builder}, settings{s}, disk{make_shared<Disk>(settings)} {
+	}
+#endif // BUILD_LEGACY
 
 	Image::~Image() {
 
@@ -167,6 +177,8 @@
 		try {
 
 			auto progress = Udjat::Dialog::Progress::getInstance();
+			progress->url(String{"fat://",to}.c_str());
+
 			source->save([&fdst,progress,to](unsigned long long current, unsigned long long total, const void *buffer, size_t len) -> bool {
 
 				unsigned int wrote = 0;

@@ -28,7 +28,6 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/template.h>
  #include <udjat/ui/progress.h>
- #include <reinstall/dialog.h>
  #include <list>
 
  namespace Reinstall {
@@ -41,14 +40,19 @@
 		/// @brief Abstract disk image.
 		class UDJAT_API Image {
 		protected:
-			const Dialog &dialog;
 			Reinstall::Builder *builder;
 
 			/// @brief EFI boot partition image file.
 			std::string efibootpart;
 
-			inline Image(const Dialog &s, Reinstall::Builder *b) : dialog{s}, builder{b} {
+#ifdef BUILD_LEGACY
+			inline Image(Reinstall::Builder *b) {
+				builder = b;
 			}
+#else
+			inline Image(Reinstall::Builder *b) : builder{b} {
+			}
+#endif // BUILD_LEGACY
 
 			/// @brief Add file to image.
 			/// @param from Full path for file on local file system.

@@ -50,15 +50,15 @@
 			int allow_deep_paths = 1;
 			bool like_iso_hybrid = true;
 
-			struct {
+			struct Boot {
 
-				const char *catalog = "/boot/x86_64/loader/boot.cat";
+				const char *catalog = nullptr;
 
-				struct {
+				struct ElTorito {
 
 					bool enabled = true;
 					const char *id = nullptr;
-					const char *image = "/boot/x86_64/loader/isolinux.bin";
+					const char *image = nullptr;
 
 					inline operator bool() const noexcept {
 						return enabled;
@@ -72,7 +72,7 @@
 
 		};
 
-		Image(const Reinstall::Dialog &dialog, Reinstall::Builder &builder, const Settings &settings);
+		Image(Reinstall::Builder *builder, std::shared_ptr<Settings> settings);
 		virtual ~Image();
 
 		void pre(Udjat::Abstract::Object &object);
@@ -91,7 +91,7 @@
 		void append(const char *from, const char *to) override;
 
 	private:
-		const Settings &settings;
+		std::shared_ptr<Settings> settings;
 		IsoImage *image = nullptr;
 		IsoWriteOpts *opts = nullptr;
 

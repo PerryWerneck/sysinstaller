@@ -115,7 +115,7 @@
 
 		class TemplateSource : public DataSource {
 		private:
-			const Udjat::Abstract::Object &parent;	///< @brief Parent object (for properties).
+			const Udjat::Abstract::Object *parent;	///< @brief Parent object (for properties).
 			std::shared_ptr<Reinstall::Template> tmplt;
 
 			std::string tempfile;	///< @brief The temporary file with template applyed.
@@ -126,13 +126,27 @@
 			} path;
 
 		public:
+
+#ifdef BUILD_LEGACY
 			TemplateSource(const Udjat::Abstract::Object &p, std::shared_ptr<Reinstall::Template> t, std::shared_ptr<DataSource> source)
-				: DataSource{*source},parent{p},tmplt{t} {
+				: DataSource{*source},parent{&p},tmplt{t} {
 
 				path.local = source->local();
 				path.remote = source->remote();
 
 			}
+#else
+			TemplateSource(const Udjat::Abstract::Object &p, std::shared_ptr<Reinstall::Template> t, std::shared_ptr<DataSource> source) 
+				: DataSource{*source} {
+
+				parent = &p;
+				tmplt = t;
+
+				path.local = source->local();
+				path.remote = source->remote();
+
+			}
+#endif // BUILD_LEGACY
 
 			~TemplateSource() {
 #ifndef DEBUG
@@ -152,18 +166,20 @@
 				return path.remote.c_str();
 			}
 
-			std::string save(const Udjat::Abstract::Object &object) override {
+			std::string save(const Udjat::Abstract::Object &) override {
 				// Apply template to temporary file.
 				if(tempfile.empty()) {
 					tempfile = Udjat::File::Temporary::create();
+					debug("Applying template '",tmplt->name(),"' to temporary file ",tempfile.c_str());
 					save(tempfile.c_str());
 				}
 				return tempfile.c_str();
 			}
 
 			void save(const char *path) override {
+				debug("Applying template '",tmplt->name(),"' to file ",path);
 				auto progress = ProgressFactory();		
-				tmplt->save(parent,path,[progress](uint64_t current, uint64_t total){
+				tmplt->save(*parent,path,[progress](uint64_t current, uint64_t total){
 					progress->set(current,total);
 					return false;
 				});

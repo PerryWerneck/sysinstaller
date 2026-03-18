@@ -221,8 +221,6 @@ $(BINDBG)/@PACKAGE_NAME@: \
 
 run: \
 	$(BINDBG)/@PACKAGE_NAME@
-
-	cp *.xml $(BINDBG)
 	
 ifeq ($(VALGRIND),no)
 

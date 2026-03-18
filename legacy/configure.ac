@@ -164,10 +164,42 @@ dnl ---------------------------------------------------------------------------
 dnl Check for libisofs
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [ISOFS], [libisofs-1], AC_DEFINE(HAVE_LIBISOFS,,[ Do we have isofs? ]), AC_MSG_NOTICE([isofs not present.]))
+PKG_CHECK_MODULES( [ISOFS], [libisofs-1], [app_cv_libisofs="yes"], [app_cv_libisofs="no"])
+
+if test "$app_cv_libisofs" == "yes"; then
+
+  AC_MSG_NOTICE([isofs is present.])
+  AC_DEFINE(HAVE_LIBISOFS,,[ Do we have isofs? ])
+
+  AC_CHECK_LIB([isofs], [iso_write_opts_set_part_like_isohybrid], 
+    [
+      AC_DEFINE(HAVE_ISOHYBRID,,[ Do we have isohybrid isofs? ])
+      ],
+    [
+      AC_MSG_NOTICE([ No iso hybrid in libisofs ])
+    ]
+  )
+
+  AC_CHECK_LIB([isofs], [iso_image_dir_get_node], 
+    [
+      AC_DEFINE(HAVE_ISOIMAGEDIR,,[ Do we have iso_image_dir_get_node in isofs? ])
+      ],
+    [
+      AC_MSG_NOTICE([ No support iso_image_dir_get_node in libisofs ])
+    ]
+  )
+
+
+else
+
+  AC_MSG_NOTICE([isofs not present.])
+
+fi
+
 
 AC_SUBST(ISOFS_LIBS)
 AC_SUBST(ISOFS_CFLAGS)
+
 
 dnl ---------------------------------------------------------------------------
 dnl Check for fatfs

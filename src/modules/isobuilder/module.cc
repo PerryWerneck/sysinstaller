@@ -20,10 +20,8 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/protocol.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
- #include <udjat/module/info.h>
  #include <udjat/tools/xml.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
@@ -46,10 +44,6 @@
  using namespace std;
 
  namespace Reinstall {
-
-	static const Udjat::ModuleInfo moduleinfo{
-          "Build customized installation image."
-	};
 
 	/// @brief Base class for actions.
 	class UDJAT_PRIVATE IsoBuilder::Module::Action : public Reinstall::Builder {
@@ -82,7 +76,7 @@
 #ifdef HAVE_LIBISOFS
 	class UDJAT_PRIVATE Iso9660Builder : public IsoBuilder::Module::Action {
 	private:
-		iso9660::Image::Settings imgdef;
+		std::shared_ptr<iso9660::Image::Settings> imgdef;
 
 	protected:
 		void build(list<std::shared_ptr<DataSource>> &files) override {
@@ -94,7 +88,7 @@
 			status.sub_title(_("Building ISO-9660 Image"));
 			status.state(_("Preparing image"));
 	
-			iso9660::Image image{*output,*this,imgdef};
+			iso9660::Image image{this,imgdef};
 
 			image.pre(*this);
 			image.append(files);
@@ -109,7 +103,9 @@
 	public:
 
 		Iso9660Builder(const Udjat::XML::Node &node)
-			: Action{node}, imgdef{node} {
+			: Action{node} {
+
+			imgdef = make_shared<iso9660::Image::Settings>(node);
 		}
 
 
@@ -119,7 +115,7 @@
 	/// @brief Fat builder.
 	class UDJAT_PRIVATE FatBuilder : public IsoBuilder::Module::Action {
 	private:
-		FatFS::Image::Settings imgdef;
+		std::shared_ptr<FatFS::Image::Settings> imgdef;
 
 	protected:
 		void build(list<std::shared_ptr<DataSource>> &files) override {
@@ -127,10 +123,11 @@
 			// Build image ...
 			auto &status = Udjat::Dialog::Status::getInstance();
 
+			debug("---------------------------------> FAT IMAGE");
 			Logger::String{"Building Fat Image"}.info(name());
 			status.sub_title(_("Building FAT Image"));
 
-			FatFS::Image image{*output,*this,imgdef};
+			FatFS::Image image{this,imgdef};
 
 			image.pre(*this);
 			image.append(files);
@@ -138,6 +135,7 @@
 
 			// ... and write it to device.
 			debug("Complete, writing...");
+			status.sub_title(_("Writing FAT Image"));
 			image.write();
 
 		}
@@ -145,13 +143,13 @@
 	public:
 
 		FatBuilder(const Udjat::XML::Node &node)
-			: Action{node}, imgdef{node} {
+			: Action{node} {
+			imgdef = make_shared<FatFS::Image::Settings>(node);
 		}
-
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,moduleinfo), Udjat::XML::Parser{tagname} {
+	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,"Build customized installation image."), Udjat::XML::Parser{tagname} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
