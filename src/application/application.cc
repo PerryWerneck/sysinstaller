@@ -25,7 +25,7 @@
  #include <udjat/tools/application.h>
  #include <reinstall/application.h>
  #include <udjat/tools/xml.h>
- #include <udjat/module/abstract.h>
+ #include <udjat/module/http.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
@@ -51,7 +51,7 @@
 
 	Application *Application::instance = nullptr;
 
-	Application::Application() : XML::Parser{"group"} {
+	Application::Application() : XML::Parser{"group"}, HTTP::Handler::Factory{"default"} {
 
 		if(instance) {
 			throw std::runtime_error{"Application already created"};
@@ -61,16 +61,6 @@
 		// Set locale.
 		Udjat::Application::set_gettext_package(GETTEXT_PACKAGE);
 #endif // GETTEXT_PACKAGE
-
-		/// @brief The embedded http module.
-		class Module : private Udjat::Module, private Udjat::HTTP::Handler::Factory {
-		public:
-			Module() : Udjat::Module{"http"}, HTTP::Handler::Factory{"default"} {
-			}
-		};
-
-		// Create the module instance, the core of libudjat takes care of the rest.
-		new Module();
 
 		instance = this;
 		Logger::String{"Starting application version " PACKAGE_VERSION}.info();

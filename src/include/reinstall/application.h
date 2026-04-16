@@ -31,13 +31,14 @@
  #include <string>
  #include <udjat/tools/xml.h>
  #include <udjat/module/abstract.h>
+ #include <udjat/module/http.h>
  #include <udjat/tools/url/handler/http.h>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser {
+	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser, private Udjat::HTTP::Module, private Udjat::HTTP::Handler::Factory {
 	private:
 		static Application *instance;	///< @brief Singleton instance.
 
