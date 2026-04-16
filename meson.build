@@ -122,7 +122,7 @@ deps = [
 	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
-		version : '>=2.0.0',
+		version : '>=2.1.0',
 		fallback: [ 'libudjathttp', 'static_library' ],
 	    default_options: ['default_library=static'],
 	),
