@@ -54,6 +54,43 @@
 
  namespace FatFS {
 
+	static const struct {
+		int code;
+		const char *message;
+	} errors[] = {
+		{ FR_OK,                    N_("Succeeded") },
+		{ FR_DISK_ERR,              N_("A hard error occurred in the low level disk I/O layer") },
+		{ FR_INT_ERR,               N_("Assertion failed") },
+		{ FR_NOT_READY,             N_("The physical drive cannot work") },
+		{ FR_NO_FILE,               N_("Could not find the file") },
+		{ FR_NO_PATH,               N_("Could not find the path") },
+		{ FR_INVALID_NAME,          N_("The path name format is invalid") },
+		{ FR_DENIED,                N_("Access denied due to prohibited access or directory full") },
+		{ FR_EXIST,                 N_("Access denied due to prohibited access") },
+		{ FR_INVALID_OBJECT,        N_("The file/directory object is invalid") },
+		{ FR_WRITE_PROTECTED,       N_("The physical drive is write protected") },
+		{ FR_INVALID_DRIVE,         N_("The logical drive number is invalid") },
+		{ FR_NOT_ENABLED,           N_("The volume has no work area") },
+		{ FR_NO_FILESYSTEM,         N_("There is no valid FAT volume") },
+		{ FR_MKFS_ABORTED,          N_("The f_mkfs() aborted due to any problem") },
+		{ FR_TIMEOUT,               N_("Could not get a grant to access the volume within defined period") },
+		{ FR_LOCKED,                N_("The operation is rejected according to the file sharing policy") },
+		{ FR_NOT_ENOUGH_CORE,       N_("LFN working buffer could not be allocated") },
+		{ FR_TOO_MANY_OPEN_FILES,   N_("Number of open files > FF_FS_LOCK") },
+		{ FR_INVALID_PARAMETER,     N_("Given parameter is invalid") },
+	};
+
+	static const char * error_msg(int rc) {
+
+		for(const auto &error : errors) {
+			if(error.code == rc) {
+				return dgettext(GETTEXT_PACKAGE,error.message);
+			}
+		}
+
+		return _("Unexpected error from libfatfs");
+	}
+
 	class Image::Disk : private Udjat::File::Temporary, public Reinstall::Abstract::Disk {
 	private:
 		FATFS fs;
@@ -76,7 +113,7 @@
 				auto rc = f_mkfs("0:", &parm, work, sizeof work);
 
 				if(rc != FR_OK) {
-					throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mkfs"), rc});
+					throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mkfs"), error_msg(rc)});
 				}
 
 			}
@@ -86,7 +123,7 @@
 		void mount() {
 			auto rc = f_mount(&fs, "0:", 1);
 			if(rc != FR_OK) {
-				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mount"), rc});
+				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_mount"), error_msg(rc)});
 			}
 			mounted = true;
 		}
@@ -94,7 +131,7 @@
 		void unmount() {
 			auto rc = f_unmount("0:");
 			if(rc != FR_OK) {
-				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_umount"), rc});
+				throw runtime_error(Logger::Message{ _("Unexpected error '{}' on f_umount"), error_msg(rc)});
 			}
 			mounted = false;
 		}
@@ -116,7 +153,7 @@
 				Logger::String{"Forcing unmount of FAT image"}.warning();
 				auto rc = f_unmount("0:");
 				if(rc != FR_OK) {
-					Logger::Message{ _("Unexpected error '{}' on f_umount"), rc}.error();
+					Logger::Message{ _("Unexpected error '{}' on f_umount"), error_msg(rc)}.error();
 				}
 			}
 		}
@@ -159,7 +196,7 @@
 
 					rc = f_mkdir(path.c_str());
 					if(rc != FR_OK && rc != FR_EXIST) {
-						throw runtime_error(Logger::Message{_("Unable to create path fat://{} (rc={})"),path.c_str(),rc});
+						throw runtime_error(Logger::Message{_("Unable to create path fat://{} ({})"),path.c_str(),error_msg(rc)});
 					}
 
 					ptr = next;
@@ -169,7 +206,8 @@
 			// Open file
 			rc = f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS);
 			if(rc != FR_OK) {
-				throw runtime_error(Logger::Message{_("Unable to open fat://{} (rc={})"),to,rc});
+				Logger::String{"f_open(",to,") failed with rc=",rc}.error();
+				throw runtime_error(Logger::Message{_("Unable to open fat://{} ({})"),to,error_msg(rc)});
 			}
 
 		}
@@ -187,8 +225,9 @@
 				progress->set((uint64_t) (current + len), (uint64_t) total);
 
 				while(len > 0) {
-					if(f_write(&fdst, ptr, (unsigned int) len, &wrote) != FR_OK) {
-						throw runtime_error(Logger::Message{_("Unable to write fat://{}"),to});
+					int rc = f_write(&fdst, ptr, (unsigned int) len, &wrote); 
+					if(rc != FR_OK) {
+						throw runtime_error(Logger::Message{_("Error '{}' writing to fat://{}"),error_msg(rc),to});
 					}
 					len -= wrote;
 					ptr += wrote;
@@ -215,8 +254,9 @@
 
 		FIL fdst;
 
-		if(f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-			throw runtime_error(Logger::Message{_("Unable to open fat://{}"),to});
+		int rc = f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS); 
+		if(rc != FR_OK) {
+			throw runtime_error(Logger::Message{_("Error '{}' opening fat://{}"),error_msg(rc),to});
 		}
 
 		try {
@@ -255,9 +295,10 @@
 				const BYTE *ptr = buffer;
 
 				while(len > 0) {
-					if(f_write(&fdst, ptr, (unsigned int) len, &wrote)  != FR_OK) {
+					int rc = f_write(&fdst, ptr, (unsigned int) len, &wrote);
+					if(rc != FR_OK) {
 						::close(fd);
-						throw runtime_error(Logger::Message{_("Unable to write fat://{}"),to});
+						throw runtime_error(Logger::Message{_("Error '{}' writing to fat://{}"),error_msg(rc),to});
 					}
 					len -= wrote;
 					ptr += wrote;

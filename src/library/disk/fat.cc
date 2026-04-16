@@ -202,7 +202,7 @@
 
 		FIL fdst;
 		if(f_open(&fdst, to, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-			throw runtime_error(Logger::Message{_("Unable to open fat://{}"),to});
+			throw runtime_error(Logger::Message{_("Unable to create fat://{}"),to});
 		}
 
 		try {
