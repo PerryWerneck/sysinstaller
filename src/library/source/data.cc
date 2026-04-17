@@ -66,7 +66,7 @@
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
 
-		allow_cache = XML::AttributeFactory(node,"allow-cache").as_bool(Config::Value<bool>{"http","allow-cache",true}.get());
+		allow_cache = XML::AttributeFactory(node,"allow-cache").as_bool(Config::Value<bool>{"url-handler","allow-cache",true}.get());
 
 #ifdef DEBUG
 		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(false);
