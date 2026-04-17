@@ -40,6 +40,7 @@
 	protected:
 
 		const char *message = "";
+		bool allow_cache = true;
 
 		std::shared_ptr<Repository> repository;
 

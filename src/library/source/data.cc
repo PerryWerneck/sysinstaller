@@ -30,6 +30,7 @@
  #include <udjat/tools/file/temporary.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/url.h>
+ #include <udjat/tools/url/handler.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
@@ -59,11 +60,13 @@
 	*/
 
 	DataSource::DataSource(const DataSource &src)
-		: Udjat::NamedObject{src.name()}, repository{src.repository}, update_from_remote{src.update_from_remote} {
+		: Udjat::NamedObject{src.name()}, allow_cache{src.allow_cache}, repository{src.repository}, update_from_remote{src.update_from_remote} {
 		this->message = src.message;
 	}
 
 	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
+
+		allow_cache = XML::AttributeFactory(node,"allow-cache").as_bool(Config::Value<bool>{"http","allow-cache",true}.get());
 
 #ifdef DEBUG
 		update_from_remote = XML::AttributeFactory(node,"update-from-remote").as_bool(false);
@@ -224,10 +227,21 @@
 		try {
 
 			progress->set(url.c_str());
+
+			auto handler = url.handler();
+			handler->update_if_exists(allow_cache);
+
+			handler->get(path,[&](uint64_t current, uint64_t total){
+				progress->set(current,total);
+				return false;
+			});
+
+			/*
 			url.get(path,[&](uint64_t current, uint64_t total){
 				progress->set(current,total);
 				return false;
 			});
+			*/
 			progress->done();
 
 		} catch(const std::exception &e) {
@@ -297,7 +311,11 @@
 		// No cache, download it directly.
 		auto url = url_remote();
 
-		url.get(writer);
+		auto handler = url.handler();
+		handler->update_if_exists(allow_cache);
+
+		// url.get(writer);
+		handler->get(writer);
 
 	}
 
