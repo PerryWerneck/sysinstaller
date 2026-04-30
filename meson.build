@@ -260,7 +260,7 @@ configure_file(
         output: 'tmpfiles', 
         configuration: conf_data,
 	),
-	rename: meson.project_name(),
+	rename: '@0@.conf'.format(meson.project_name()),
 	install_dir:'/etc/tmpfiles.d' 
 )
 
