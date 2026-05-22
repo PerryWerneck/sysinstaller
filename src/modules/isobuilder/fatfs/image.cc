@@ -84,7 +84,11 @@
 
 		for(const auto &error : errors) {
 			if(error.code == rc) {
+#ifdef GETTEXT_PACKAGE
 				return dgettext(GETTEXT_PACKAGE,error.message);
+#else
+				return error.message;
+#endif
 			}
 		}
 
