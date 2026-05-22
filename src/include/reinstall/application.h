@@ -38,7 +38,7 @@
 
 	class Action;
 
-	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser, private Udjat::HTTP::Module, private Udjat::HTTP::Handler::Factory {
+	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser, private Udjat::HTTP::Handler::Factory {
 	private:
 		static Application *instance;	///< @brief Singleton instance.
 

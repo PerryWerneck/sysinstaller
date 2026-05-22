@@ -192,6 +192,10 @@
 		}
 #endif
 
+		if(Config::Value<bool>{"modules","http",true}) {
+			Udjat::HTTP::Module::Factory();
+		}
+
 		if(Config::Value<bool>{"modules","isowriter",true}) {
 			Reinstall::IsoWriter::Module::Factory();
 		}

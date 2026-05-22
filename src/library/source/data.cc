@@ -113,6 +113,28 @@
 
 	}
 
+	bool DataSource::has_remote() const noexcept {
+
+		try {
+
+			const char *ptr = remote();
+
+			return (ptr && *ptr);
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error(name());
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error checking remote path"}.error(name());
+
+		}
+
+		return false;
+		
+	}
+
 	bool DataSource::has_local() const noexcept {
 
 		try {
