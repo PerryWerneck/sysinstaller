@@ -74,14 +74,17 @@
 		set_valign(Gtk::Align::START);
 		set_halign(Gtk::Align::FILL);
 
+		label.set_text(node["title"]);
+		body.set_text(node["sub-title"]);
+
 		get_style_context()->add_class("action-button");
 		grid.get_style_context()->add_class("action-container");
 
-		const char *icon_name = XML::AttributeFactory(node,"icon-name").as_string();			
+		auto icon_name = node["icon-name"];
 		int margin = 0;
-		if(icon_name && *icon_name) {
+		if(!icon_name.empty()) {
 
-			debug("Using icon '",icon_name,"'");
+			debug("Using icon '",icon_name.c_str(),"'");
 			margin = 1;
 	
 			Gtk::Image image;
@@ -130,7 +133,6 @@
 			});
 	
 		});
-	
 	
 	}
 	
@@ -308,21 +310,10 @@
 			attach(title,margin,0);
 			attach(sub_title,margin,1);
 			attach(contents,margin,2);
-				
-		}
 
-		void parse(const Udjat::XML::Node &node) override {
-			const char *str = XML::StringFactory(node,"title");
-			if(str && *str) {
-				title.set_text(str);
-			} 
+			title.set_text(node["title"]);
+			sub_title.set_text(node["sub-title"]);
 
-			str = XML::StringFactory(node,"sub-title");
-			if(str && *str) {
-				sub_title.set_text(str);
-			}
-
-			Reinstall::Group::parse(node);
 		}
 
 		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {

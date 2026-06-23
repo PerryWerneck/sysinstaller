@@ -1,7 +1,7 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.3.2',
+	version: '6.4.0',
 	default_options : ['cpp_std=c++17', 'buildtype=release' ],
 	license: 'GPL-3.0-or-later',
 )
@@ -106,7 +106,7 @@ fatfs =	dependency(
 
 libudjat = dependency(
 	'libudjat',
-	version : '2.6.0',
+	version : '>=2.7.0',
 	fallback: [ 'libudjat' ],
 	default_options: ['default_library=static'],
 )
@@ -122,13 +122,13 @@ deps = [
 	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
-		version : '2.1.1',
+		version : '>=2.1.2',
 		fallback: [ 'libudjathttp' ],
 	    default_options: ['default_library=static'],
 	),
 	dependency(
 		'libudjatdbus',
-		version : '>=2.0.0',
+		version : '>=2.4.1',
 		fallback: [ 'libudjatdbus' ],
 	    default_options: ['default_library=static'],
 	),

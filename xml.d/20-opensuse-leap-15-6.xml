@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<config xml:lang="en">
+
+	<!-- 
+	
+		URL for the installation repository 
+		
+		Repository attributes:
+		
+			name: 			The repository name (install).
+			URL: 				The default URL to the repository.
+
+		Optional attributes for automatic repository detection using SLP (http://www.openslp.org/):
+		
+			slp-service-type:	The service type string, including the authority string (if any) for the request.
+			slp-scope-list:   A pointer to a comma separated list of scope names.
+			slp-filter:       A query formulated of attribute pattern matching expressions in the form of an LDAPv3 search filter.
+			slp-url:			    The URL for the kernel parameter when SLP is available.
+		
+	-->
+	<repository name='install'>
+		<attribute name='remote' value='https://download.opensuse.org/distribution/leap/15.6/repo/oss/' />
+		<!-- attribute name='local' value='file:///srv/www/suse/leap/15.6/repo/oss/' / -->
+		<attribute name='local' value='file://${HOME}/tmp/suse/leap/15.6/repo/oss/' />
+		<attribute name='slp-service-type' value='service:install.leap-15.6' />
+		<attribute name='slp-scope-list' value='' />
+		<attribute name='slp-filter' value='' />
+		<attribute name='kernel-parameter-name' value='install' allow-slp='yes' />
+	</repository>
+
+	<!-- Path for the installation kernel (Full URL or repository path) -->
+	<kernel url='/boot/x86_64/loader/linux' repository='install' />
+
+	<!-- Path for the installation init (Full URL or repository path) -->
+	<init url='/boot/x86_64/loader/initrd' repository='install' />
+
+	<kernel-parameter name='splash' value='silent' /> 
+	<kernel-parameter name='lang' value='pt_BR' />
+	<kernel-parameter name='dhcptimeout' value='240' /> 
+	<kernel-parameter name='noshell' value='1' /> 
+	<kernel-parameter name='insecure' value='1' /> 
+	<kernel-parameter name='self_update' value='0' />
+	
+	<!-- Path for EFI boot-image -->
+	<efi-boot-image path='/boot/x86_64/efi' repository='install' />
+
+	<group name='Leap-15.6' >
+
+ 		<attribute name='title' value='OpenSUSE Leap 15.6' />
+ 		<attribute name='system-name' value='OpenSUSE Leap 15.6' />
+ 		<attribute name='icon' value='opensuse-leap' />
+ 		<attribute name='sub-title' value='A new type of a hybrid Linux distribution' url='https://get.opensuse.org/leap/15.6/' /> 		
+
+ 		<local-installer name='156-local' default='no' visible='only-on-linux' model='grub.xml' />
+ 		
+ 		<iso-builder name='156-mini' default='no' model='mini.xml' />
+
+		<iso-writer name='156-net' default='no' model='net.xml'>
+			<attribute name='remote' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-NET-x86_64-Build710.3-Media.iso' />
+		</iso-writer>
+
+		<iso-writer name='156-full' default='no' model='full.xml'>
+	 		<attribute name='remote' value='https://download.opensuse.org/distribution/leap/15.6/iso/openSUSE-Leap-15.6-DVD-x86_64-Build710.3-Media.iso' />
+		</iso-writer>
+
+	</group>
+
+</config>
+
+
