@@ -106,7 +106,7 @@ fatfs =	dependency(
 
 libudjat = dependency(
 	'libudjat',
-	version : '>=2.7.0',
+	version : '2.6.0',
 	fallback: [ 'libudjat' ],
 	default_options: ['default_library=static'],
 )
@@ -122,7 +122,7 @@ deps = [
 	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
-		version : '>=2.1.0',
+		version : '2.1.1',
 		fallback: [ 'libudjathttp' ],
 	    default_options: ['default_library=static'],
 	),
