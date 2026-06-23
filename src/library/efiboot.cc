@@ -21,7 +21,6 @@
  #include <udjat/defs.h>
  #include <memory>
  #include <reinstall/tools/efiboot.h>
-
  #include <udjat/tools/xml.h>
 
  using namespace std;
@@ -29,7 +28,7 @@
 
  namespace Reinstall {
 
-	EFIBootImage::EFIBootImage(const pugi::xml_node &node) : NamedObject{node} {
+	EFIBootImage::EFIBootImage(const Udjat::XML::Node &node) : NamedObject{node} {
 
 		options.enabled = XML::AttributeFactory(node,"enabled").as_bool(options.enabled);
 		options.path = XML::QuarkFactory(node,"path",options.path);

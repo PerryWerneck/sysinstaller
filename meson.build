@@ -100,14 +100,14 @@ zlib= dependency('zlib', required: false)
 fatfs =	dependency(
 	'libfatfs',
 	static: true,
-	fallback: [ 'libfatfs', 'static_library' ],
+	fallback: [ 'libfatfs' ],
 	default_options: ['default_library=static'],
 )
 
 libudjat = dependency(
 	'libudjat',
-	version : '>=2.6.0',
-	fallback: [ 'libudjat', 'static_library' ],
+	version : '>=2.7.0',
+	fallback: [ 'libudjat' ],
 	default_options: ['default_library=static'],
 )
 
@@ -123,13 +123,13 @@ deps = [
 	dependency(
 		'libudjathttp',
 		version : '>=2.1.0',
-		fallback: [ 'libudjathttp', 'static_library' ],
+		fallback: [ 'libudjathttp' ],
 	    default_options: ['default_library=static'],
 	),
 	dependency(
 		'libudjatdbus',
 		version : '>=2.0.0',
-		fallback: [ 'libudjatdbus', 'static_library' ],
+		fallback: [ 'libudjatdbus' ],
 	    default_options: ['default_library=static'],
 	),
 ]

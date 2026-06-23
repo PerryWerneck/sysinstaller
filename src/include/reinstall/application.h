@@ -30,7 +30,7 @@
  #include <unordered_map>
  #include <string>
  #include <udjat/tools/xml.h>
- #include <udjat/module/abstract.h>
+ #include <udjat/module.h>
  #include <udjat/module/http.h>
  #include <udjat/tools/url/handler/http.h>
 

@@ -37,6 +37,7 @@
  #include <udjat/ui/progress.h>
  #include <reinstall/modules/isowriter.h>
  #include <reinstall/application.h>
+ #include <udjat/tools/file/temporary.h>
 
  #ifdef HAVE_UNISTD_H
 	#include <unistd.h>

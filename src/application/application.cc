@@ -193,18 +193,22 @@
 #endif
 
 		if(Config::Value<bool>{"modules","http",true}) {
+			Logger::String{"Loading http module"}.info();
 			Udjat::HTTP::Module::Factory();
 		}
 
 		if(Config::Value<bool>{"modules","isowriter",true}) {
+			Logger::String{"Loading isowriter module"}.info();
 			Reinstall::IsoWriter::Module::Factory();
 		}
 
 		if(Config::Value<bool>{"modules","isobuilder",true}) {
 
+			Logger::String{"Loading isobuilder module"}.info();
 			Reinstall::IsoBuilder::Module::Factory();
 
 			if(Config::Value<bool>{"application","legacy",false}) {
+				Logger::String{"Loading network-installer module (legacy)"}.info();
 				Reinstall::IsoBuilder::Module::Factory("netinstall","network-installer");
 			}
 

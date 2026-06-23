@@ -49,9 +49,6 @@
 
 		EFIBootImage(const Udjat::XML::Node &node);
 
-		/// @brief Set source image.
-		// static std::shared_ptr<EFIBootImage> factory(const pugi::xml_node &node);
-
 		inline operator bool() const noexcept {
 			return options.enabled;
 		}

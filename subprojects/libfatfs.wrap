@@ -3,3 +3,5 @@ url = https://github.com/PerryWerneck/libfatfs.git
 revision = develop
 depth = 1
 
+[provide]
+libfatfs = static_library

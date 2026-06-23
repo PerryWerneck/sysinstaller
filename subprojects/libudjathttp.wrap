@@ -3,3 +3,5 @@ url = https://github.com/PerryWerneck/libudjathttp
 revision = develop
 depth = 1
 
+[provide]
+libudjathttp = static_library
