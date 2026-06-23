@@ -40,6 +40,7 @@
 	protected:
 
 		const char *message = "";
+		bool allow_cache = true;
 
 		std::shared_ptr<Repository> repository;
 
@@ -72,6 +73,7 @@
 		/// @brief Get path for source on remote filesystem.
 		virtual const char * remote() const = 0;
 
+		virtual bool has_remote() const noexcept;
 		virtual bool has_local() const noexcept;
 
 		/// @brief Get path for source on target image.
@@ -131,6 +133,7 @@
 		virtual ~FileSource();
 
 		bool has_local() const noexcept override;
+		bool has_remote() const noexcept override;
 
 		// Expand string
 		void expand(Udjat::String &str, const Udjat::XML::Node &node);

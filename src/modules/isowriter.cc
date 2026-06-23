@@ -56,6 +56,7 @@
 
 		Action(const Udjat::XML::Node &node)
 			: Reinstall::Action{node}, iso{node}, use_cached{node.attribute("cache").as_bool(use_cached)} {
+	
 		}
 
 		~Action() {
@@ -65,7 +66,7 @@
 
 			auto &status = Udjat::Dialog::Status::getInstance();
 
-			if(iso.has_local() && use_cached) {
+			if(iso.has_local() && (use_cached || !iso.has_remote())) {
 
 				Logger::String{"Updating and writing local ISO image '",iso.local(),"'."}.info();
 
@@ -79,10 +80,11 @@
 				status.sub_title(_("Getting ISO image"));
 				
 				auto url = iso.url_remote();	// Use remote URL for download, this method will resolve relative URLs and SLP repos.
+				
 				auto progress = iso.ProgressFactory();
 				progress->url(url);
 
-				Logger::String{"Getting ISO image from '",url,"'."}.info();
+				Logger::String{"Getting ISO image from '",url.c_str(),"'."}.info();
 
 				auto filename = File::Temporary::create();
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 16:20-0300\n"
-"PO-Revision-Date: 2026-03-12 16:09-0300\n"
+"POT-Creation-Date: 2026-05-21 21:18-0300\n"
+"PO-Revision-Date: 2026-04-16 12:03-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
 "Language: pt_BR\n"
@@ -19,59 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 3.8\n"
-
-#: src/application/application.cc:93
-msgid "Error getting boot path info"
-msgstr "Erro ao obter informações sobre o caminho de boot"
-
-#: src/application/application.cc:97
-#, c++-format
-msgid "{} is not a directory"
-msgstr "{} não é um diretório"
-
-#: src/application/application.cc:104 src/library/os/linux/writer.cc:187
-#: src/library/source/data.cc:159
-msgid "Error opening /etc/mtab"
-msgstr "Erro ao abrir /etc/mtab"
-
-#: src/application/application.cc:123 src/library/source/data.cc:178
-#, c++-format
-msgid "Cant find mountpoint for '{}'"
-msgstr "Não foi possível encontrar um ponto de montagem para {}"
-
-#: src/application/application.cc:137
-msgid "Error readlink boot link"
-msgstr "Erro ao ler link de boot"
-
-#: src/application/application.cc:158
-#, c++-format
-msgid "Required attribute '{}' not found"
-msgstr "Atributo necessário '{}' não foi encontrado"
-
-#: src/application/application.cc:168 src/library/builder.cc:83
-#: src/modules/grub2.cc:137 src/modules/grub2.cc:238
-msgid "Reinstall workstation"
-msgstr "Reinstalar estação de trabalho"
-
-#: src/application/application.cc:173
-msgid "Remote controlled installation"
-msgstr "Instalação com assistência remota"
-
-#: src/application/application.cc:178
-msgid "Loading kernel..."
-msgstr "Carregando kernel..."
-
-#: src/application/application.cc:183
-msgid "Loading installer..."
-msgstr "Carregando instalador..."
-
-#: src/application/application.cc:303 src/ui/gtk4/noninteractive.cc:116
-msgid "Initializing..."
-msgstr "Inicializando..."
-
-#: src/application/application.cc:324
-msgid "Unknown error"
-msgstr "Erro inesperado"
 
 #: src/application/main.cc:70
 msgid "Use text user interface"
@@ -132,6 +79,59 @@ msgstr "Nenhum target '{}' disponível, verifique sua configuração"
 msgid "Invalid repository argument: {}"
 msgstr "Argumento inválido para repositório: {}"
 
+#: src/application/application.cc:83
+msgid "Error getting boot path info"
+msgstr "Erro ao obter informações sobre o caminho de boot"
+
+#: src/application/application.cc:87
+#, c++-format
+msgid "{} is not a directory"
+msgstr "{} não é um diretório"
+
+#: src/application/application.cc:94 src/library/os/linux/writer.cc:187
+#: src/library/source/data.cc:184
+msgid "Error opening /etc/mtab"
+msgstr "Erro ao abrir /etc/mtab"
+
+#: src/application/application.cc:113 src/library/source/data.cc:203
+#, c++-format
+msgid "Cant find mountpoint for '{}'"
+msgstr "Não foi possível encontrar um ponto de montagem para {}"
+
+#: src/application/application.cc:127
+msgid "Error readlink boot link"
+msgstr "Erro ao ler link de boot"
+
+#: src/application/application.cc:148
+#, c++-format
+msgid "Required attribute '{}' not found"
+msgstr "Atributo necessário '{}' não foi encontrado"
+
+#: src/application/application.cc:158 src/library/builder.cc:83
+#: src/modules/grub2.cc:137 src/modules/grub2.cc:238
+msgid "Reinstall workstation"
+msgstr "Reinstalar estação de trabalho"
+
+#: src/application/application.cc:163
+msgid "Remote controlled installation"
+msgstr "Instalação com assistência remota"
+
+#: src/application/application.cc:168
+msgid "Loading kernel..."
+msgstr "Carregando kernel..."
+
+#: src/application/application.cc:173
+msgid "Loading installer..."
+msgstr "Carregando instalador..."
+
+#: src/application/application.cc:297 src/ui/gtk4/noninteractive.cc:116
+msgid "Initializing..."
+msgstr "Inicializando..."
+
+#: src/application/application.cc:318
+msgid "Unknown error"
+msgstr "Erro inesperado"
+
 #: src/library/disk/abstract.cc:50
 msgid "Cant open disk device/file"
 msgstr "Não foi possível abrir imagem ou dispositivo de disco"
@@ -140,83 +140,102 @@ msgstr "Não foi possível abrir imagem ou dispositivo de disco"
 msgid "Cant allocate disk image"
 msgstr "Não foi possível alocar imagem de disco"
 
-#: src/library/disk/fat.cc:49
+#: src/library/disk/fat.cc:49 src/modules/isobuilder/fatfs/image.cc:61
 msgid "Succeeded"
 msgstr "Concluído com sucesso"
 
 #: src/library/disk/fat.cc:50 src/library/disk/fat.cc:69
+#: src/modules/isobuilder/fatfs/image.cc:62
 msgid "A hard error occurred in the low level disk I/O layer"
 msgstr "Um erro físico aconteceu na camada de I/O de disco"
 
 #: src/library/disk/fat.cc:51 src/library/disk/fat.cc:70
+#: src/modules/isobuilder/fatfs/image.cc:63
 msgid "Assertion failed"
 msgstr "Operação falhou"
 
 #: src/library/disk/fat.cc:52 src/library/disk/fat.cc:71
+#: src/modules/isobuilder/fatfs/image.cc:64
 msgid "The physical drive cannot work"
 msgstr "Disco físico não funciona"
 
 #: src/library/disk/fat.cc:53 src/library/disk/fat.cc:72
+#: src/modules/isobuilder/fatfs/image.cc:65
 msgid "Could not find the file"
 msgstr "Não foi possível encontrar arquivo"
 
 #: src/library/disk/fat.cc:54 src/library/disk/fat.cc:73
+#: src/modules/isobuilder/fatfs/image.cc:66
 msgid "Could not find the path"
 msgstr "Não foi possível encontrar o diretório"
 
 #: src/library/disk/fat.cc:55 src/library/disk/fat.cc:74
+#: src/modules/isobuilder/fatfs/image.cc:67
 msgid "The path name format is invalid"
 msgstr "O formado do caminho de arquivo não é válido"
 
 #: src/library/disk/fat.cc:56 src/library/disk/fat.cc:75
+#: src/modules/isobuilder/fatfs/image.cc:68
 msgid "Access denied due to prohibited access or directory full"
 msgstr "Acesso negado ou diretório cheio"
 
 #: src/library/disk/fat.cc:57 src/library/disk/fat.cc:76
+#: src/modules/isobuilder/fatfs/image.cc:69
 msgid "Access denied due to prohibited access"
 msgstr "Acesso negado"
 
 #: src/library/disk/fat.cc:58 src/library/disk/fat.cc:77
+#: src/modules/isobuilder/fatfs/image.cc:70
 msgid "The file/directory object is invalid"
 msgstr "O objeto de arquivo ou diretório não é valido"
 
 #: src/library/disk/fat.cc:59 src/library/disk/fat.cc:78
+#: src/modules/isobuilder/fatfs/image.cc:71
 msgid "The physical drive is write protected"
 msgstr "O disco físico está protegido contra gravação"
 
 #: src/library/disk/fat.cc:60 src/library/disk/fat.cc:79
+#: src/modules/isobuilder/fatfs/image.cc:72
 msgid "The logical drive number is invalid"
 msgstr "O número de drive lógico não é válido"
 
 #: src/library/disk/fat.cc:61 src/library/disk/fat.cc:80
+#: src/modules/isobuilder/fatfs/image.cc:73
 msgid "The volume has no work area"
 msgstr "O volume não tem área de trabalho"
 
 #: src/library/disk/fat.cc:62 src/library/disk/fat.cc:81
+#: src/modules/isobuilder/fatfs/image.cc:74
 msgid "There is no valid FAT volume"
 msgstr "Não encontrei um volume FAT válido"
 
 #: src/library/disk/fat.cc:63 src/library/disk/fat.cc:82
+#: src/modules/isobuilder/fatfs/image.cc:75
 msgid "The f_mkfs() aborted due to any problem"
 msgstr "O comando f_mkfs() encerrou devido a um problema"
 
 #: src/library/disk/fat.cc:64 src/library/disk/fat.cc:83
+#: src/modules/isobuilder/fatfs/image.cc:76
 msgid "Could not get a grant to access the volume within defined period"
 msgstr "Não foi possível conseguir acesso ao dispositivo no período definido"
 
 #: src/library/disk/fat.cc:65 src/library/disk/fat.cc:84
+#: src/modules/isobuilder/fatfs/image.cc:77
 msgid "The operation is rejected according to the file sharing policy"
 msgstr "Operação recusada pela policy de compartilhamento de arquivos"
 
 #: src/library/disk/fat.cc:66 src/library/disk/fat.cc:85
+#: src/modules/isobuilder/fatfs/image.cc:78
 msgid "LFN working buffer could not be allocated"
 msgstr "Buffer de trabalho LFN não pode ser alocado"
 
 #: src/library/disk/fat.cc:67 src/library/disk/fat.cc:86
+#: src/modules/isobuilder/fatfs/image.cc:79
 msgid "Number of open files > FF_FS_LOCK"
 msgstr "Número de arquivos abertos ultrapassa FF_FS_LOCK"
 
 #: src/library/disk/fat.cc:68 src/library/disk/fat.cc:87
+#: src/modules/isobuilder/fatfs/image.cc:80
 msgid "Given parameter is invalid"
 msgstr "Parâmetro informado não é válido"
 
@@ -224,7 +243,7 @@ msgstr "Parâmetro informado não é válido"
 msgid "Empty disk image"
 msgstr "Imagem de disco vazia"
 
-#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:66
+#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:103
 msgid "Cant bind fatfs to disk image"
 msgstr "Não foi possível ligar imagem de disco ao fatfs"
 
@@ -242,14 +261,17 @@ msgstr "f_mounf falhou: {}"
 msgid "f_mount has failed: "
 msgstr "f_mount falhou: "
 
-#: src/library/disk/fat.cc:160 src/library/disk/fat.cc:205
-#: src/modules/isobuilder/fatfs/image.cc:219
+#: src/library/disk/fat.cc:160
 #, c++-format
 msgid "Unable to open fat://{}"
 msgstr "Não foi possível abrir fat://{}"
 
-#: src/library/disk/fat.cc:246 src/modules/isobuilder/fatfs/image.cc:191
-#: src/modules/isobuilder/fatfs/image.cc:260
+#: src/library/disk/fat.cc:205
+#, c++-format
+msgid "Unable to create fat://{}"
+msgstr "Não foi possível criar fat://{}"
+
+#: src/library/disk/fat.cc:246
 #, c++-format
 msgid "Unable to write fat://{}"
 msgstr "Não foi possível escrever em fat://{}"
@@ -289,12 +311,12 @@ msgstr "Carregando índice do repositório"
 msgid "Kernel parameter for repository '{}' has an empty value"
 msgstr "Parâmetro de kernel para o repositório '{}' tem valor inválido"
 
-#: src/library/source/data.cc:152
+#: src/library/source/data.cc:177
 #, c++-format
 msgid "Error getting info for '{}'"
 msgstr "Erro ao obter informações sobre '{}'"
 
-#: src/library/source/data.cc:325
+#: src/library/source/data.cc:365
 msgid "Invalid repository"
 msgstr "Repositório inválido"
 
@@ -348,11 +370,11 @@ msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
 msgid "Kernel parameter '{}' has an empty value"
 msgstr "Parâmetro de kernel '{}' tem valor vazio"
 
-#: src/library/script.cc:270
+#: src/library/script.cc:271
 msgid "External command failed"
 msgstr "Comando ou script externo falhou"
 
-#: src/library/script.cc:337
+#: src/library/script.cc:338
 msgid "Configuring, please wait..."
 msgstr "Configurando, aguarde..."
 
@@ -376,37 +398,52 @@ msgstr "Obtendo arquivos necessários"
 msgid "Cant find installation files"
 msgstr "Não encontrei arquivos de instalação"
 
-#: src/library/template.cc:238
+#: src/library/template.cc:255
 msgid "Cant update template permissions"
 msgstr "Erro ao atualizar permissões de modelo"
 
-#: src/modules/isobuilder/fatfs/image.cc:79
+#: src/modules/isobuilder/fatfs/image.cc:91
+msgid "Unexpected error from libfatfs"
+msgstr "Erro inesperado '{}' na libfatfs"
+
+#: src/modules/isobuilder/fatfs/image.cc:116
 #, c++-format
 msgid "Unexpected error '{}' on f_mkfs"
 msgstr "Erro inesperado '{}' em f_mkfs"
 
-#: src/modules/isobuilder/fatfs/image.cc:89
+#: src/modules/isobuilder/fatfs/image.cc:126
 #, c++-format
 msgid "Unexpected error '{}' on f_mount"
 msgstr "Erro inesperado '{}' em f_mount"
 
-#: src/modules/isobuilder/fatfs/image.cc:97
-#: src/modules/isobuilder/fatfs/image.cc:119
+#: src/modules/isobuilder/fatfs/image.cc:134
+#: src/modules/isobuilder/fatfs/image.cc:156
 #, c++-format
 msgid "Unexpected error '{}' on f_umount"
 msgstr "Erro inesperado '{}' em f_umount"
 
-#: src/modules/isobuilder/fatfs/image.cc:162
+#: src/modules/isobuilder/fatfs/image.cc:199
 #, c++-format
-msgid "Unable to create path fat://{} (rc={})"
-msgstr "Incapaz de criar o caminho fat://{} (rc={})"
+msgid "Unable to create path fat://{} ({})"
+msgstr "Incapaz de criar o caminho fat://{} ({})"
 
-#: src/modules/isobuilder/fatfs/image.cc:172
+#: src/modules/isobuilder/fatfs/image.cc:210
 #, c++-format
-msgid "Unable to open fat://{} (rc={})"
-msgstr "Incapaz de abrir fat://{} (rc={})"
+msgid "Unable to open fat://{} ({})"
+msgstr "Incapaz de abrir fat://{} ({})"
 
-#: src/modules/isobuilder/fatfs/image.cc:327
+#: src/modules/isobuilder/fatfs/image.cc:230
+#: src/modules/isobuilder/fatfs/image.cc:301
+#, c++-format
+msgid "Error '{}' writing to fat://{}"
+msgstr "Erro '{}' gravando arquivo fat://{}"
+
+#: src/modules/isobuilder/fatfs/image.cc:259
+#, c++-format
+msgid "Error '{}' opening fat://{}"
+msgstr "Erro '{}' ao abrir fat://{}"
+
+#: src/modules/isobuilder/fatfs/image.cc:368
 #: src/modules/isobuilder/iso9660/image.cc:475
 msgid "Finalizing"
 msgstr "Finalizando"
@@ -475,15 +512,15 @@ msgstr "Primeiro estágio"
 msgid "Second stage"
 msgstr "Segundo estágio"
 
-#: src/modules/isowriter.cc:72
+#: src/modules/isowriter.cc:73
 msgid "Updating ISO image"
 msgstr "Atualizando imagem ISO"
 
-#: src/modules/isowriter.cc:74 src/modules/isowriter.cc:101
+#: src/modules/isowriter.cc:75 src/modules/isowriter.cc:103
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
 
-#: src/modules/isowriter.cc:79
+#: src/modules/isowriter.cc:80
 msgid "Getting ISO image"
 msgstr "Obtendo imagem ISO"
 

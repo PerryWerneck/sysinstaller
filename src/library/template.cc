@@ -35,6 +35,7 @@
  #include <udjat/tools/file/path.h>
  #include <udjat/tools/logger.h>
  #include <udjat/tools/intl.h>
+ #include <udjat/tools/url/handler.h>
  #include <stdexcept>
 
  #include <unistd.h>
@@ -177,13 +178,29 @@
 		filename.expand(parent);
 		filename.expand(*this);
 
+		String text;
+
+		// Download template
+		{
+			URL url{this->url};
+			url.expand(parent);
+			url.expand(*this);
+
+			auto handler = url.handler();
+			handler->update_if_exists(false); // Never cache template sources.
+			text = handler->get(progress);
+		}
+		
+		text.expand(marker,parent);
+		text.expand(marker,*this);
+
+		/*
 		Udjat::URL url{this->url};
 		url.expand(parent);
 		url.expand(*this);
 
 		String text{url.get(progress)};
-		text.expand(marker,parent);
-		text.expand(marker,*this);
+		*/
 
 		// handle escape sequences.
 		if(escape) {

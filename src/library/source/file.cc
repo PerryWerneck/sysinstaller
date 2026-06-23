@@ -109,6 +109,36 @@
 	FileSource::~FileSource() {
 	}
 
+	bool FileSource::has_remote() const noexcept {
+
+		try {
+
+			if(!(url.remote && *url.remote)) {
+				return false;
+			}
+
+			if(url.remote[0] != '.') {
+				return true;
+			}
+
+			// Check if repository has local.
+			if(repository && repository->has_remote()) {
+				return true;
+			}
+
+		} catch(const std::exception &e) {
+
+			Logger::String{e.what()}.error(name());
+
+		} catch(...) {
+
+			Logger::String{"Unexpected error"}.error(name());
+
+		}
+		return false;
+	}
+
+
 	bool FileSource::has_local() const noexcept {
 
 		try {

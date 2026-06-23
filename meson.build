@@ -1,7 +1,7 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.3.0',
+	version: '6.3.2',
 	default_options : ['cpp_std=c++17', 'buildtype=release' ],
 	license: 'GPL-3.0-or-later',
 )
@@ -106,7 +106,7 @@ fatfs =	dependency(
 
 libudjat = dependency(
 	'libudjat',
-	version : '>=2.1.0',
+	version : '>=2.6.0',
 	fallback: [ 'libudjat', 'static_library' ],
 	default_options: ['default_library=static'],
 )
@@ -122,7 +122,7 @@ deps = [
 	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
-		version : '>=2.0.0',
+		version : '>=2.1.0',
 		fallback: [ 'libudjathttp', 'static_library' ],
 	    default_options: ['default_library=static'],
 	),
@@ -260,7 +260,7 @@ configure_file(
         output: 'tmpfiles', 
         configuration: conf_data,
 	),
-	rename: meson.project_name(),
+	rename: '@0@.conf'.format(meson.project_name()),
 	install_dir:'/etc/tmpfiles.d' 
 )
 
