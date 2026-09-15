@@ -32,11 +32,11 @@
  #include <reinstall/tools/datasource.h>
  #include <reinstall/tools/repository.h>
  #include <private/slpclient.h>
- #include <list>
+//  #include <list>
 
- #ifdef HAVE_ZLIB
-	#include <zlib.h>
- #endif // HAVE_ZLIB
+//  #ifdef HAVE_ZLIB
+// 	#include <zlib.h>
+//  #endif // HAVE_ZLIB
 
  using namespace Udjat;
  using namespace std;
@@ -70,58 +70,79 @@
 
 	std::shared_ptr<Repository> Repository::Factory(const Udjat::Properties &node) {
 
-		const char * name = XML::StringFactory(node,"repository","install");
+		std::shared_ptr<Repository> ret;
+		const auto name = node.get("repository","install");
 
-		/*
+		node.for_each("repository",[&name,&ret](const Udjat::Properties &child) {
 
-		Cant share repository definitions because we can have many 'installs'
-		static mutex guard;
-		lock_guard<mutex> lock(guard);
-
-
-		static list<std::shared_ptr<Repository>> repositories;
-
-		for(auto repository : repositories) {
-			if(!strcasecmp(repository->name(),name)) {
-				return repository;
-			}
-		}
-
-		*/
-
-		for(auto parent = node;parent;parent = parent.parent()) {
-
-			for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
-
-				if(strcasecmp(child.attribute("name").as_string(),name)) {
-					continue;
-				}
-
-				if(!strcasecmp(XML::StringFactory(child,"repository",""),name)) {
-					Logger::String{"Ignoring circular dependency"}.warning("repository");
-					continue;
-				}
-
-				auto repo = make_shared<Repository>(child);
-				// repositories.push_back(repo);
-
-				for(const auto preset : presets) {
-
-					if(!strcasecmp(repo->name(),preset.name)) {
-						// Found preset.
-						repo->url.remote = preset.value;
-						Logger::String{"Using '",repo->url.remote,"' as remote URL"}.info(repo->name());
-						repo->slpclient->clear();
-					}
-
-				}
-
-				return cache(repo);
+			if(strcasecmp(child["name"].c_str(),name.c_str())) {
+				// Not the same name, skip.
+				return false;
 			}
 
+			if(!strcasecmp(child["repository"].c_str(),name.c_str())) {
+				Logger::String{"Ignoring circular dependency"}.warning("repository");
+				return false;
+			}
+
+			auto repo = make_shared<Repository>(child);
+
+			for(const auto preset : presets) {
+
+				if(!strcasecmp(repo->name(),preset.name)) {
+					// Found preset.
+					repo->url.remote = preset.value;
+					Logger::String{"Using '",repo->url.remote,"' as remote URL"}.info(repo->name());
+					repo->slpclient->clear();
+				}
+
+			}
+
+			ret = cache(repo);
+			
+			return false;
+
+		});
+
+		if(ret) {
+			return ret;
 		}
 
 		throw runtime_error(Logger::Message{_("Required repository '{}' not found at {}"),name, node.path()});
+
+		// for(auto parent = node;parent;parent = parent.parent()) {
+
+		// 	for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
+
+		// 		if(strcasecmp(child.attribute("name").as_string(),name)) {
+		// 			continue;
+		// 		}
+
+		// 		if(!strcasecmp(XML::StringFactory(child,"repository",""),name)) {
+		// 			Logger::String{"Ignoring circular dependency"}.warning("repository");
+		// 			continue;
+		// 		}
+
+		// 		auto repo = make_shared<Repository>(child);
+		// 		// repositories.push_back(repo);
+
+		// 		for(const auto preset : presets) {
+
+		// 			if(!strcasecmp(repo->name(),preset.name)) {
+		// 				// Found preset.
+		// 				repo->url.remote = preset.value;
+		// 				Logger::String{"Using '",repo->url.remote,"' as remote URL"}.info(repo->name());
+		// 				repo->slpclient->clear();
+		// 			}
+
+		// 		}
+
+		// 		return cache(repo);
+		// 	}
+
+		// }
+
+		// throw runtime_error(Logger::Message{_("Required repository '{}' not found at {}"),name, node.path()});
 
 	}
 

@@ -23,6 +23,7 @@
 
  #include <config.h>
  #include <udjat/tools/properties.h>
+ #include <udjat/tools/string.h>
  #include <memory>
 
  #ifdef HAVE_FATFS
@@ -39,46 +40,49 @@
 
 	static uint64_t image_length(const Udjat::Properties &node) {
 
-		const char *ptr = XML::StringFactory(node,"size");
-		if(!(ptr && *ptr)) {
-			ptr = XML::StringFactory(node,"length");
+		auto size = node["size"];
+		if(size.empty()) {
+			size = node["length"];
 		}
 
-		if(!(ptr && *ptr)) {
+		if(size.empty()) {
 			return 0LL;
 		}
 
-		uint64_t imagesize = 0LL;
+		return size.as_ull();
+		
+		// uint64_t imagesize = 0LL;
 
-		while(*ptr && isdigit(*ptr)) {
-			imagesize *= 10;
-			imagesize += (*ptr - '0');
-			ptr++;
-		}
+		// const char *ptr = size.c_str();
+		// while(*ptr && isdigit(*ptr)) {
+		// 	imagesize *= 10;
+		// 	imagesize += (*ptr - '0');
+		// 	ptr++;
+		// }
 
-		while(*ptr && isspace(*ptr)) {
-			ptr++;
-		}
+		// while(*ptr && isspace(*ptr)) {
+		// 	ptr++;
+		// }
 
-		if(*ptr) {
-			static const char *units[] = { "B", "KB", "MB", "GB" };
+		// if(*ptr) {
+		// 	static const char *units[] = { "B", "KB", "MB", "GB" };
 
-			bool found = false;
-			for(const char *unit : units) {
-				if(!strcasecmp(ptr,unit)) {
-					found = true;
-					break;
-				}
-				imagesize *= 1024;
-			}
+		// 	bool found = false;
+		// 	for(const char *unit : units) {
+		// 		if(!strcasecmp(ptr,unit)) {
+		// 			found = true;
+		// 			break;
+		// 		}
+		// 		imagesize *= 1024;
+		// 	}
 
-			if(!found) {
-				throw runtime_error(Logger::String{"Unexpected size unit: '",ptr,"'"});
-			}
+		// 	if(!found) {
+		// 		throw runtime_error(Logger::String{"Unexpected size unit: '",ptr,"'"});
+		// 	}
 
-		}
+		// }
 
-		return imagesize;
+		// return imagesize;
 
 	}
 

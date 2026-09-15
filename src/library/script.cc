@@ -48,11 +48,11 @@
 
  namespace Reinstall {
 
- 	static int getuid(const pugi::xml_node &node) {
+ 	static int getuid(const Properties &node) {
 
- 		const char *user = node.attribute("user").as_string("");
+ 		auto user = node["user"];
 
- 		if(!(user && *user)) {
+ 		if(user.empty()) {
 			return -1;
  		}
 
@@ -67,7 +67,7 @@
 		struct passwd pwd;
 		struct passwd *result;
 
-		if(getpwnam_r(user, &pwd, buffer, szBuffer, &result) != 0) {
+		if(getpwnam_r(user.c_str(), &pwd, buffer, szBuffer, &result) != 0) {
 			throw system_error(errno,system_category(),user);
 		};
 
@@ -79,11 +79,11 @@
 
  	}
 
- 	static int getgid(const pugi::xml_node &node) {
+ 	static int getgid(const Properties &node) {
 
- 		const char *group = node.attribute("group").as_string("");
+ 		auto group = node["group"];
 
- 		if(!(group && *group)) {
+ 		if(group.empty()) {
 			return -1;
  		}
 
@@ -98,7 +98,7 @@
 		struct group grp;
 		struct group *result;
 
-		if(getgrnam_r(group, &grp, buffer, szBuffer, &result) != 0) {
+		if(getgrnam_r(group.c_str(), &grp, buffer, szBuffer, &result) != 0) {
 			throw system_error(errno,system_category(),group);
 		};
 
@@ -111,8 +111,8 @@
  	}
 
 	Script::Script(const Udjat::Abstract::Object &parent, const Udjat::Properties &node)
-		: Reinstall::FileSource{node,false}, rtime{(Script::RunTime) String{XML::StringFactory(node,"type","post")}.select("pre","post",nullptr)},
-		marker{node.attribute("marker").as_string(((std::string) Config::Value<String>("string","marker","$")).c_str())[0]},
+		: Reinstall::FileSource{node,false}, rtime{(Script::RunTime) node.get("type","post").select("pre","post",nullptr)},
+		marker{node.get("marker",Config::Value<String>("marker","$").c_str())[0]},
 		uid{getuid(node)}, gid{getgid(node)}, cmdline{String{node,"cmdline"}.as_quark()} {
 
 		// Just in case.
@@ -131,10 +131,10 @@
 
 				// Not text, get from URLs.
 
-				URL attr{XML::StringFactory(node,"url")};
+				URL attr{node["url"].c_str()};
 
-				url.remote = XML::QuarkFactory(node,"remote");
-				url.local = XML::QuarkFactory(node,"local");
+				url.remote = node["remote"].as_quark();
+				url.local = node["local"].as_quark();
 
 				if(!url.local[0] && attr.local()) {
 					url.local = attr.as_quark();
@@ -164,7 +164,7 @@
 					text.expand(marker,node);
 				}
 
-				if(node.attribute("strip-lines").as_bool()) {
+				if(node.get("strip-lines",false)) {
 					String stripped;
 					text.for_each("\n",[&stripped](const String &value) {
 						stripped += const_cast<String &>(value).strip();
@@ -200,7 +200,7 @@
 
 	void Script::load(const Udjat::Abstract::Object &parent, const Udjat::Properties &node, std::vector<std::shared_ptr<Script>> &scripts) {
 
-		parent.for_each(node, "script", [&scripts, &parent](const XML::Node &child){
+		node.for_each_child("script", [&scripts, &parent](const Udjat::Properties &child){
 			scripts.push_back(make_shared<Script>(parent,child));
 			return false;
 		});

@@ -25,6 +25,7 @@
  #include <reinstall/dialog.h>
  #include <reinstall/application.h>
  #include <udjat/tools/properties.h>
+ #include <udjat/tools/xml.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
  #include <memory>
@@ -40,18 +41,36 @@
 
 	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::Properties &node, const char *message, const Option option) {
 
-		debug("Searching for dialog '",name,"' in ",node.attribute("name").as_string());
+		std::shared_ptr<Dialog> dialog;
+		debug("Searching for dialog '",name,"' in ",node["name"].c_str());
 
-		for(auto parent = node;parent;parent = parent.parent()) {
-			for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
-				if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
-					continue;
-				}
+		node.for_each("repository",[name,&dialog,message,option](const Udjat::Properties &child) {
 
-				debug("==============================> Found dialog '",name,"' in ",child.attribute("name").as_string());
-				return Application::getInstance().DialogFactory(name,child,message,option);
+			if(strcasecmp(child["name"].c_str(),name)) {
+				return false;
 			}
+
+			dialog = Application::getInstance().DialogFactory(name,child,message,option);
+
+			return true;
+		});
+
+		if(dialog) {
+			return dialog;
 		}
+
+		// for(auto parent = node;parent;parent = parent.parent()) {
+		// 	for(auto child = parent.child("dialog");child;child = child.next_sibling("dialog")) {
+		// 		if(strcasecmp(XML::StringFactory(child,"name"),name) || !is_allowed(child)) {
+		// 			continue;
+		// 		}
+
+		// 		debug("==============================> Found dialog '",name,"' in ",child.attribute("name").as_string());
+		// 		return Application::getInstance().DialogFactory(name,child,message,option);
+		// 	}
+		// }
+
+
 		Logger::String{"Cant find dialog '",name,"', building from default config"}.trace("dialog");
 
 		XML::Node defnode;
@@ -85,23 +104,23 @@
 		return Option::None;
 	}
 
-	Dialog::Buttons::Buttons(const XML::Node &node) {
-		for(const auto &button : String{XML::StringFactory(node,"button-order","continue,quit,cancel,reboot")}.split(",")) {
+	Dialog::Buttons::Buttons(const Properties &node) {
+		for(const auto &button : node.get("button-order","continue,quit,cancel,reboot").split(",")) {
 			auto opt = Dialog::OptionFactory(button.c_str());
 			if(opt != Option::None) {
 				order.push_back(opt);
 			}
 		}
-		destructive = Dialog::OptionFactory(XML::StringFactory(node,"destructive-button","reboot"));
-		suggested = Dialog::OptionFactory(XML::StringFactory(node,"suggested-button","none"));
+		destructive = Dialog::OptionFactory(node.get("destructive-button","reboot").c_str());
+		suggested = Dialog::OptionFactory(node.get("suggested-button","none").c_str());
 	}
 
 	Dialog::Dialog(const Udjat::Properties &node, const char *msg, const Option o) 
 		: options{(Option) (o|presets)}, 
 			buttons{node},
-			title{XML::QuarkFactory(node,"dialog-title")},
-			message{XML::QuarkFactory(node,"message",msg)},
-			destructive{XML::AttributeFactory(node,"destructive").as_bool(false)}  {
+			title{node["dialog-title"].c_str()},
+			message{node.get("message",msg).c_str()},
+			destructive{node.get("destructive",false)}  {
 
 		details = String{node.child_value()}.strip().as_quark();
 
@@ -126,7 +145,7 @@
 		};
 
 		for(const auto &option : opts) {
-			if(XML::AttributeFactory(node,option.attrname).as_bool( (options & option.value) != 0)) {
+			if(node.get(option.attrname,(bool) (options & option.value) != 0)) {
 				options = (Option) (options | option.value);
 				debug("Option ",option.attrname," is set (",options,")");
 			} else {
