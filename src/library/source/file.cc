@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/file.h>
@@ -42,7 +42,7 @@
 		url.remote = url.local = path;
 	}
 
-	void FileSource::expand(Udjat::String &path, const Udjat::XML::Node &node) {
+	void FileSource::expand(Udjat::String &path, const Udjat::Properties &node) {
 		path.expand(node);
 		path.expand([this,node](const char *key, string &value) -> bool {
 
@@ -65,7 +65,7 @@
 		});
 	}
 
-	FileSource::FileSource(const Udjat::XML::Node &node, bool required) : DataSource{node} {
+	FileSource::FileSource(const Udjat::Properties &node, bool required) : DataSource{node} {
 
 		URL paths[]{
 			{node,"local",false},
@@ -173,7 +173,7 @@
 	}
 
 
-	Udjat::XML::Node find(Udjat::XML::Node node, const char *nodename, bool required) {
+	Udjat::Properties find(Udjat::Properties node, const char *nodename, bool required) {
 
 		while(node) {
 			if(!strcasecmp(node.name(),nodename)) {
@@ -190,11 +190,11 @@
 			throw runtime_error(Logger::String{"Required node '",nodename,"' is missing"});
 		}
 
-		return Udjat::XML::Node{};
+		return Udjat::Properties{};
 
 	}
 
-	FileSource::FileSource(const Udjat::XML::Node &node, const char *nodename, bool required)
+	FileSource::FileSource(const Udjat::Properties &node, const char *nodename, bool required)
 		: FileSource{find(node,nodename,required)} {
 	}
 

@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/string.h>
@@ -110,7 +110,7 @@
 
  	}
 
-	Script::Script(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node)
+	Script::Script(const Udjat::Abstract::Object &parent, const Udjat::Properties &node)
 		: Reinstall::FileSource{node,false}, rtime{(Script::RunTime) String{XML::StringFactory(node,"type","post")}.select("pre","post",nullptr)},
 		marker{node.attribute("marker").as_string(((std::string) Config::Value<String>("string","marker","$")).c_str())[0]},
 		uid{getuid(node)}, gid{getgid(node)}, cmdline{String{node,"cmdline"}.as_quark()} {
@@ -198,7 +198,7 @@
 		}
 	}
 
-	void Script::load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts) {
+	void Script::load(const Udjat::Abstract::Object &parent, const Udjat::Properties &node, std::vector<std::shared_ptr<Script>> &scripts) {
 
 		parent.for_each(node, "script", [&scripts, &parent](const XML::Node &child){
 			scripts.push_back(make_shared<Script>(parent,child));

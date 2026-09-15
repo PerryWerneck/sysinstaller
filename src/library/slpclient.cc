@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/ui/status.h>
@@ -47,12 +47,12 @@
 
  namespace Reinstall {
 
-	SLPClient::SLPClient(const Udjat::XML::Node &node) 
-		: service_type{String{node,"slp-service-type"}.as_quark()},
-		 	scope_list{String{node,"slp-scope-list"}.as_quark()},
-		 	filter{String{node,"slp-filter"}.as_quark()},
-			message{String{node,"slp-search-message",service_type}.as_quark()},
-			allow_local{XML::AttributeFactory(node,"slp-allow-local").as_bool(false)}
+	SLPClient::SLPClient(const Udjat::Properties &node) 
+		: service_type{node["slp-service-type"].as_quark()},
+		 	scope_list{node["slp-scope-list"].as_quark()},
+		 	filter{node["slp-filter"].as_quark()},
+			message{node.get("slp-search-message",service_type).as_quark()},
+			allow_local{node.get("slp-allow-local",false)}
 	{
 	}
 
@@ -79,7 +79,7 @@
 
 	}
 
-	std::shared_ptr<SLPClient> SLPClient::Factory(const Udjat::XML::Node &node) {
+	std::shared_ptr<SLPClient> SLPClient::Factory(const Udjat::Properties &node) {
 		return cache(std::make_shared<SLPClient>(node));
 	}
 

@@ -24,7 +24,7 @@
  #pragma once
 
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <memory>
  #include <vector>
@@ -53,7 +53,7 @@
 			const char *name = nullptr;
 			const char *slp = nullptr;
 
-			KParm(const Udjat::XML::Node &node);
+			KParm(const Udjat::Properties &node);
 
 		} kparm;
 
@@ -67,9 +67,9 @@
 
 	public:
 
-		static std::shared_ptr<Repository> Factory(const Udjat::XML::Node &node);
+		static std::shared_ptr<Repository> Factory(const Udjat::Properties &node);
 
-		Repository(const Udjat::XML::Node &node);
+		Repository(const Udjat::Properties &node);
 		virtual ~Repository();
 
 		bool operator==(const Repository &repo) const noexcept;

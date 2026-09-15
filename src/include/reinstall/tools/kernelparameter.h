@@ -24,7 +24,7 @@
  #pragma once
 
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/string.h>
  #include <memory>
  #include <vector>
@@ -49,13 +49,13 @@
 		constexpr KernelParameter(const char *n) : object_name{n} {
 		}
 
-		KernelParameter(const Udjat::XML::Node &node) : object_name{Udjat::String{node,"name"}.as_quark()} {
+		KernelParameter(const Udjat::Properties &node) : object_name{Udjat::String{node,"name"}.as_quark()} {
 		}
 
 		virtual ~KernelParameter();
 
 		// @brief Convenience method to expand values when building object.
-		static const char * expand(const Udjat::XML::Node &node, const char *attrname);
+		static const char * expand(const Udjat::Properties &node, const char *attrname);
 
 		/// @brief Override xml defined kernel parameters.
 		static inline void preset(const char *name, const char *value) {
@@ -80,7 +80,7 @@
 		/// @param node XML node to load from.
 		/// @param parameters Array to store loaded parameters.
 		/// @param relpaths If true set path to be relative to partition.
-		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &parameters, bool relpaths = false);
+		static void load(const Udjat::Properties &node, std::vector<std::shared_ptr<KernelParameter>> &parameters, bool relpaths = false);
 		static std::string join(const Udjat::Abstract::Object &object, const std::vector<std::shared_ptr<KernelParameter>> &parameters);
 
 	};

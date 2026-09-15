@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/file/path.h>
  #include <udjat/tools/file/handler.h>
@@ -64,7 +64,7 @@
 		this->message = src.message;
 	}
 
-	DataSource::DataSource(const Udjat::XML::Node &node) : Udjat::NamedObject{node} {
+	DataSource::DataSource(const Udjat::Properties &node) : Udjat::NamedObject{node} {
 
 		allow_cache = XML::AttributeFactory(node,"allow-cache").as_bool(Config::Value<bool>{"url-handler","allow-cache",true}.get());
 

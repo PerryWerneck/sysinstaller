@@ -33,7 +33,7 @@
  #include <udjat/tools/logger.h>
 
  #include <udjat/tools/configuration.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/ui/console.h>
  #include <udjat/ui/status.h>
  #include <udjat/ui/progress.h>
@@ -59,7 +59,7 @@
 			std::shared_ptr<Reinstall::Action> action; ///< @brief The action associated with this item.
 			const char *label;
 
-			Item(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> a) 
+			Item(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> a) 
 				: action{a},label{XML::QuarkFactory(node,"title",XML::AttributeFactory(node,"name").as_string("Unnamed action"))} {	
 			}
 
@@ -68,13 +68,13 @@
 
 		const char *label; ///< @brief The label for this group.
 
-		Group(const Udjat::XML::Node &node) : label{XML::QuarkFactory(node,"title",XML::AttributeFactory(node,"name").as_string("Unnamed group"))} {
+		Group(const Udjat::Properties &node) : label{XML::QuarkFactory(node,"title",XML::AttributeFactory(node,"name").as_string("Unnamed group"))} {
 			debug("Creating group '",label,"'");
 		}
 
 		~Group() override = default;
 
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
+		void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) override {
 
 #if __cplusplus >= 201703L
 			auto &itn = itens.emplace_back(node,action);
@@ -253,7 +253,7 @@
 		return 0;
 	}
 
-	std::shared_ptr<Reinstall::Group> Console::group_factory(const Udjat::XML::Node &node) {
+	std::shared_ptr<Reinstall::Group> Console::group_factory(const Udjat::Properties &node) {
 		auto group = make_shared<Group>(node);
 		groups.push_back(group);
 		return group;
@@ -263,12 +263,12 @@
 		Logger::String{e.what()}.error();
 	}
 
-	std::shared_ptr<Reinstall::Dialog> Console::DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option) {
+	std::shared_ptr<Reinstall::Dialog> Console::DialogFactory(const char *name, const Udjat::Properties &node, const char *message, const Dialog::Option option) {
 
 		class Dialog : public Reinstall::Dialog {
 		public:
 
-			Dialog(const Udjat::XML::Node &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
+			Dialog(const Udjat::Properties &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
 			}
 
 			virtual ~Dialog() {

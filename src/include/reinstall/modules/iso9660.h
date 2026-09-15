@@ -24,7 +24,7 @@
  #pragma once
  #include <udjat/defs.h>
  #include <reinstall/image.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/tools/datasource.h>
 
  typedef struct Iso_Image IsoImage;
@@ -68,7 +68,7 @@
 
 			} boot;
 
-			Settings(const Udjat::XML::Node &node);
+			Settings(const Udjat::Properties &node);
 
 		};
 

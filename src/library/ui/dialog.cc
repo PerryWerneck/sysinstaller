@@ -24,7 +24,7 @@
  #include <config.h>
  #include <reinstall/dialog.h>
  #include <reinstall/application.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/logger.h>
  #include <memory>
@@ -38,7 +38,7 @@
 
 	Dialog::Option Dialog::presets = Dialog::None;
 
-	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::XML::Node &node, const char *message, const Option option) {
+	std::shared_ptr<Dialog> Dialog::Factory(const char *name, const Udjat::Properties &node, const char *message, const Option option) {
 
 		debug("Searching for dialog '",name,"' in ",node.attribute("name").as_string());
 
@@ -96,7 +96,7 @@
 		suggested = Dialog::OptionFactory(XML::StringFactory(node,"suggested-button","none"));
 	}
 
-	Dialog::Dialog(const Udjat::XML::Node &node, const char *msg, const Option o) 
+	Dialog::Dialog(const Udjat::Properties &node, const char *msg, const Option o) 
 		: options{(Option) (o|presets)}, 
 			buttons{node},
 			title{XML::QuarkFactory(node,"dialog-title")},

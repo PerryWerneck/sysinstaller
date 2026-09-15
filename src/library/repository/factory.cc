@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/tools/file.h>
@@ -68,7 +68,7 @@
 
 	}
 
-	std::shared_ptr<Repository> Repository::Factory(const Udjat::XML::Node &node) {
+	std::shared_ptr<Repository> Repository::Factory(const Udjat::Properties &node) {
 
 		const char * name = XML::StringFactory(node,"repository","install");
 

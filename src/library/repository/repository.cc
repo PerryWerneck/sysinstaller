@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/intl.h>
  #include <udjat/ui/progress.h>
@@ -49,7 +49,7 @@
 
  namespace Reinstall {
 
-	Repository::Repository(const Udjat::XML::Node &node) : FileSource{node,false}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
+	Repository::Repository(const Udjat::Properties &node) : FileSource{node,false}, KernelParameter{node}, kparm{node}, slpclient{SLPClient::Factory(node)} {
 
 		if(!(url.remote && *url.remote)) {
 			throw runtime_error(Logger::String{"Repository '",name(),"' has no remote URL defined"});

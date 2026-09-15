@@ -37,7 +37,7 @@
  using namespace std;
  using namespace Gtk;
 
- std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const char *name, const Udjat::XML::Node &node, const char *msg, const Reinstall::Dialog::Option buttons) {
+ std::shared_ptr<Reinstall::Dialog> TopLevel::DialogFactory(const char *name, const Udjat::Properties &node, const char *msg, const Reinstall::Dialog::Option buttons) {
 
 	class Popup : public MessageDialog {
 	public:
@@ -71,7 +71,7 @@
 		};
 
 	public:
-		Dialog(const Udjat::XML::Node &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
+		Dialog(const Udjat::Properties &node, const char *msg, const Option option) : Reinstall::Dialog{node,msg,option} {
 		}
 
 		virtual ~Dialog() {

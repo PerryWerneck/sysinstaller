@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <reinstall/tools/template.h>
  #include <udjat/tools/application.h>
@@ -45,16 +45,19 @@
 
  namespace Reinstall {
 
-	Template::Template(const Udjat::XML::Node &node)
+	Template::Template(const Udjat::Properties &node)
 		: Udjat::NamedObject{node}, 
-			escape{node.attribute("escape-control-characters").as_bool(false)},
-			quirk{String{node,"quirk",""}.as_quark()} {
+			escape{node.get("escape-control-characters",false)},
+			quirk{node["quirk"].as_quark()} {
 
 		// Get marker.
 		{
-			const char *sMarker = node.attribute("marker").as_string(((std::string) Config::Value<String>("template","marker","$")).c_str());
+			auto sMarker = node.get(
+									"marker",
+									Config::Value<String>("template","marker","$").c_str()
+								);
 
-			if(strlen(sMarker) > 1 || !sMarker[0]) {
+			if(sMarker.size() > 1 || sMarker.empty()) {
 				throw runtime_error("Marker attribute is invalid");
 			}
 
@@ -62,25 +65,25 @@
 		}
 
 		// Get Type
-		if(XML::AttributeFactory(node,"binary").as_bool(false)) {
+		if(node.get("binary",false)) {
 			type = (Type) (type|Template::Binary);
 		} else {
 			type = (Type) (type|Template::Text);
 		}
 
-		if(XML::AttributeFactory(node,"script").as_bool()) {
+		if(node.get("script",false)) {
 			Logger::String{node.path()," is using deprecated attribute 'script', use 'executable' instead"}.trace(name());
 			mode = 0755;
 		}
 
-		if(XML::AttributeFactory(node,"executable").as_bool()) {
+		if(node.get("executable",false)) {
 			mode = 0755;
 		}
 
 		// Get URL
 		{
-			String str{node,"url",""};
-			debug("Raw template URL from XML is '",node.attribute("url").as_string(),"'");
+			auto str = node["url"];
+			// debug("Raw template URL from XML is '",node.attribute("url").as_string(),"'");
 			if(str.empty()) {
 				throw runtime_error(Logger::String{"Required attribute 'url' is missing or invalid on ",node.path()});
 			}
@@ -100,7 +103,7 @@
 
 		// Get path
 		{
-			String str{node,"path",""};
+			auto str = node["path"];
 			if(!str.empty()) {
 
 				str.unescape();
@@ -161,9 +164,9 @@
 		return Udjat::NamedObject::getProperty(key,value);
 	}
 
-	void Template::load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Template>> &templates) {
+	void Template::load(const Udjat::Abstract::Object &parent, const Udjat::Properties &node, std::vector<std::shared_ptr<Template>> &templates) {
 
-		parent.for_each(node, "template", [&templates](const XML::Node &child){
+		node.for_each_child("template", [&templates](const Properties &child){
 			templates.push_back(make_shared<Template>(child));
 			return false;
 		});

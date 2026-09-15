@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/image.h>
  #include <reinstall/disk/abstract.h>
  #include <memory>
@@ -42,7 +42,7 @@
 			uint32_t au_size = 0;	///< @brief Specifies size of the cluster (allocation unit) in unit of byte.
 			uint64_t imglen = 0LL;	///< @brief The image length.
 
-			Settings(const Udjat::XML::Node &node);
+			Settings(const Udjat::Properties &node);
 
 			/// @brief Get fat length (in bytes).
 			size_t fat_length() const noexcept;

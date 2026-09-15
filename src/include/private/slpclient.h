@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
 
  namespace Reinstall {
@@ -42,7 +42,7 @@
 		} query;
 
 	public:
-		SLPClient(const Udjat::XML::Node &node);
+		SLPClient(const Udjat::Properties &node);
 
 		bool operator==(const SLPClient &b) const noexcept;
 
@@ -56,7 +56,7 @@
 			return service_type;
 		}
 
-		static std::shared_ptr<SLPClient> Factory(const Udjat::XML::Node &node);
+		static std::shared_ptr<SLPClient> Factory(const Udjat::Properties &node);
 
 	};
 

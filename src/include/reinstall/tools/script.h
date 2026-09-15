@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <reinstall/tools/datasource.h>
 
@@ -32,7 +32,7 @@
 	class UDJAT_API Script : private Reinstall::FileSource {
 	public:
 
-		Script(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node);
+		Script(const Udjat::Abstract::Object &parent, const Udjat::Properties &node);
 		~Script();
 
 		enum RunTime : uint8_t {
@@ -40,7 +40,7 @@
 			Post
 		};
 
-		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Script>> &scripts);
+		static void load(const Udjat::Abstract::Object &parent, const Udjat::Properties &node, std::vector<std::shared_ptr<Script>> &scripts);
 
 		void run(const Udjat::Abstract::Object &object, const RunTime rtime, const char *msg = "");
 

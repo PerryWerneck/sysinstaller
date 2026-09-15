@@ -24,10 +24,10 @@
  #include <config.h>
  #include <udjat/tools/application.h>
  #include <reinstall/application.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/module/http.h>
  #include <udjat/tools/logger.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/configuration.h>
  #include <udjat/tools/intl.h>
  #include <string>
@@ -51,7 +51,7 @@
 
 	Application *Application::instance = nullptr;
 
-	Application::Application() : XML::Parser{"group"}, HTTP::Handler::Factory{"default"} {
+	Application::Application() : Properties::Parser{"group"}, HTTP::Handler::Factory{"default"} {
 
 		if(instance) {
 			throw std::runtime_error{"Application already created"};
@@ -250,11 +250,11 @@
 	void Application::loaded() noexcept {
 	}
 
-	void Application::push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> child) {
+	void Application::push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> child) {
 
 		debug("Adding action '",child->name(),"'");
 
-		string parent{node.parent().attribute("name").as_string("default")};
+		string parent = node.parent().get("name","default").c_str();
 
 		auto result = groups.find(parent);
 		if(result == groups.end()) {
@@ -265,9 +265,9 @@
 
 	}
 
-	bool Application::parse(const Udjat::XML::Node &node) {
+	bool Application::parse(const Udjat::Properties &node) {
 
-		string name{node.attribute("name").as_string("default")};
+		string name = node.get("name","default");
 		std::shared_ptr<Group> group;
 
 		auto result = groups.find(name);

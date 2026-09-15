@@ -89,7 +89,7 @@
 
  }
 
- std::shared_ptr<Reinstall::Group> NonInteractiveWindow::group_factory(const Udjat::XML::Node &node) {
+ std::shared_ptr<Reinstall::Group> NonInteractiveWindow::group_factory(const Udjat::Properties &node) {
 
 	class Group : public Reinstall::Group {
 	private:
@@ -97,11 +97,11 @@
 
 	public:
 
-		Group(NonInteractiveWindow *h, const Udjat::XML::Node &node) : hwnd{*h} {
+		Group(NonInteractiveWindow *h, const Udjat::Properties &node) : hwnd{*h} {
 			// Initialize group with the XML node.
 		}
 
-		void push_back(const Udjat::XML::Node &node, shared_ptr<Reinstall::Action> action) override {
+		void push_back(const Udjat::Properties &node, shared_ptr<Reinstall::Action> action) override {
 
 			if(!Reinstall::Action::is_default(node)) {
 				return;

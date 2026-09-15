@@ -26,9 +26,10 @@
  #include <udjat/defs.h>
  #include <memory>
  #include <functional>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <cstdarg>
  #include <vector>
+ #include <cstdint>
 
  namespace Reinstall {
 
@@ -52,10 +53,10 @@
 
 		Dialog() = default;
 
-		Dialog(const Udjat::XML::Node &node, const char *message = "", const Option option = None);
+		Dialog(const Udjat::Properties &node, const char *message = "", const Option option = None);
 		virtual ~Dialog() = default;
 		
-		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::XML::Node &node, const char *message = "", const Option option = None);
+		static std::shared_ptr<Dialog> Factory(const char *name, const Udjat::Properties &node, const char *message = "", const Option option = None);
 
 		void set(const Option option);
 		static void preset(const Option option) noexcept;
@@ -102,7 +103,7 @@
 			Option suggested = None; 	///< The suggested button option.
 
 			Buttons() = default; 
-			Buttons(const Udjat::XML::Node &node);
+			Buttons(const Udjat::Properties &node);
 		} buttons;
 		
 		/// @brief The title for the dialog (not the title bar).

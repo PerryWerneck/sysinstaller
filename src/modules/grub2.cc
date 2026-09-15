@@ -39,13 +39,14 @@
  #include <reinstall/tools/template.h>
  #include <reinstall/tools/script.h>
  #include <string>
+ #include <udjat/tools/properties.h>
 
  #include <reinstall/modules/grub2.h>
 
  using namespace Udjat;
  using namespace std;
 
- static const char * PathFactory(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node, const char *name, const char *text) {
+ static const char * PathFactory(const Udjat::Abstract::Object &object, const Udjat::Properties &node, const char *name, const char *text) {
 
 	String str{text};
 
@@ -77,7 +78,7 @@
 
 		class Kernel : public Reinstall::FileSource {
 		public:
-			Kernel(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"kernel"} {
+			Kernel(const Udjat::Abstract::Object &object, const Udjat::Properties &node) : FileSource{node,"kernel"} {
 				url.local = ::PathFactory(object,node,"kernel","file://${boot.path.mount}${boot.path.relative}/${filename}");
 				url.path = ::PathFactory(object,node,"kernel","${boot.path.relative}/${filename}");
 
@@ -89,7 +90,7 @@
 
 		class Init : public Reinstall::FileSource {
 		public:
-			Init(const Udjat::Abstract::Object &object, const Udjat::XML::Node &node) : FileSource{node,"init"} {
+			Init(const Udjat::Abstract::Object &object, const Udjat::Properties &node) : FileSource{node,"init"} {
 				url.local = ::PathFactory(object,node,"initrd","file://${boot.path.mount}${boot.path.relative}/${filename}");
 				url.path = ::PathFactory(object,node,"initrd","${boot.path.relative}/${filename}");
 
@@ -101,7 +102,7 @@
 
 		class DUD : public Reinstall::FileSource {
 			public:
-				DUD(const Udjat::XML::Node &node, const char *path) : FileSource{node} {
+				DUD(const Udjat::Properties &node, const char *path) : FileSource{node} {
 					url.local = path;
 				}
 
@@ -115,7 +116,7 @@
 		const char *boot_label = nullptr;
 
 	public:
-		Action(const Udjat::XML::Node &node) : Reinstall::Action{node} {
+		Action(const Udjat::Properties &node) : Reinstall::Action{node} {
 
 			static const char *labels[] = {
 				"grub-label",
@@ -125,7 +126,7 @@
 			};
 
 			for(const char *label : labels) {
-				const char *ptr = XML::QuarkFactory(node,label);
+				const char *ptr = node[label].as_quark();
 				if(ptr && *ptr) {
 					boot_label = ptr;
 					Logger::String{"Setting boot-label to '",boot_label,"' from attribute '",label,"'"}.trace(name());
@@ -143,15 +144,24 @@
 			sources.push_back(make_shared<Kernel>(*this,node));
 			sources.push_back(make_shared<Init>(*this,node));
 
-			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
-				for(Udjat::XML::Node child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
-					auto path = XML::QuarkFactory(child,"path");
-					if(path && *path) {
-						auto source = make_shared<DUD>(child,path);
-						sources.push_back(source);
-					}
+			node.for_each_child("driver-update-disk",[this](const Properties &property){
+				auto path = property["path"];
+				if(!path.empty()) {
+					auto source = make_shared<DUD>(property,path.as_quark());
+					sources.push_back(source);
 				}
-			}
+				return false;
+			});
+
+			// for(Udjat::Properties nd = node; nd; nd = nd.parent()) {
+			// 	for(Udjat::Properties child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
+			// 		auto path = XML::QuarkFactory(child,"path");
+			// 		if(path && *path) {
+			// 			auto source = make_shared<DUD>(child,path);
+			// 			sources.push_back(source);
+			// 		}
+			// 	}
+			// }
 
 			// Load kernel parameters.
 			Reinstall::KernelParameter::load(node,kparms,true);
@@ -295,14 +305,14 @@
 	};
 	
 
-	Grub2::Module::Module(const char *name) : Udjat::Module(name,"Reinstallation without disk image."), Udjat::XML::Parser("local-installer") {
+	Grub2::Module::Module(const char *name) : Udjat::Module(name,"Reinstallation without disk image."), Udjat::Properties::Parser("local-installer") {
 	};
 
 	Grub2::Module::~Module() {
 	}	
 
-	// Udjat::XML::Parser interface.
-	bool Grub2::Module::parse(const Udjat::XML::Node &node) {
+	// Udjat::Properties::Parser interface.
+	bool Grub2::Module::parse(const Udjat::Properties &node) {
 		// Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info("isowriter");
 		Reinstall::Application::getInstance().push_back(node,make_shared<Grub2::Module::Action>(node));
 		return true;

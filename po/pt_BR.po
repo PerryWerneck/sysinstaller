@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: reinstall 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-21 21:18-0300\n"
+"POT-Creation-Date: 2026-06-23 19:19-0300\n"
 "PO-Revision-Date: 2026-04-16 12:03-0300\n"
 "Last-Translator: Perry Werneck <perry.werneck@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <perry.werneck@gmail.com>\n"
@@ -124,11 +124,11 @@ msgstr "Carregando kernel..."
 msgid "Loading installer..."
 msgstr "Carregando instalador..."
 
-#: src/application/application.cc:297 src/ui/gtk4/noninteractive.cc:116
+#: src/application/application.cc:301 src/ui/gtk4/noninteractive.cc:116
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: src/application/application.cc:318
+#: src/application/application.cc:322
 msgid "Unknown error"
 msgstr "Erro inesperado"
 
@@ -243,7 +243,7 @@ msgstr "Parâmetro informado não é válido"
 msgid "Empty disk image"
 msgstr "Imagem de disco vazia"
 
-#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:103
+#: src/library/disk/fat.cc:118 src/modules/isobuilder/fatfs/image.cc:107
 msgid "Cant bind fatfs to disk image"
 msgstr "Não foi possível ligar imagem de disco ao fatfs"
 
@@ -370,6 +370,14 @@ msgstr "DUD  '{}' não tem attributos 'path' ou 'url'"
 msgid "Kernel parameter '{}' has an empty value"
 msgstr "Parâmetro de kernel '{}' tem valor vazio"
 
+#: src/library/builder.cc:275 src/modules/grub2.cc:265
+msgid "Getting required files"
+msgstr "Obtendo arquivos necessários"
+
+#: src/library/builder.cc:301
+msgid "Cant find installation files"
+msgstr "Não encontrei arquivos de instalação"
+
 #: src/library/script.cc:271
 msgid "External command failed"
 msgstr "Comando ou script externo falhou"
@@ -377,6 +385,10 @@ msgstr "Comando ou script externo falhou"
 #: src/library/script.cc:338
 msgid "Configuring, please wait..."
 msgstr "Configurando, aguarde..."
+
+#: src/library/template.cc:255
+msgid "Cant update template permissions"
+msgstr "Erro ao atualizar permissões de modelo"
 
 #: src/library/writer.cc:54
 msgid "The device writer is not available"
@@ -390,60 +402,48 @@ msgstr "Módulo de gravação já está disponível"
 msgid "Finishing..."
 msgstr "Finalizando..."
 
-#: src/library/builder.cc:275 src/modules/grub2.cc:265
-msgid "Getting required files"
-msgstr "Obtendo arquivos necessários"
-
-#: src/library/builder.cc:301
-msgid "Cant find installation files"
-msgstr "Não encontrei arquivos de instalação"
-
-#: src/library/template.cc:255
-msgid "Cant update template permissions"
-msgstr "Erro ao atualizar permissões de modelo"
-
-#: src/modules/isobuilder/fatfs/image.cc:91
+#: src/modules/isobuilder/fatfs/image.cc:95
 msgid "Unexpected error from libfatfs"
 msgstr "Erro inesperado '{}' na libfatfs"
 
-#: src/modules/isobuilder/fatfs/image.cc:116
+#: src/modules/isobuilder/fatfs/image.cc:120
 #, c++-format
 msgid "Unexpected error '{}' on f_mkfs"
 msgstr "Erro inesperado '{}' em f_mkfs"
 
-#: src/modules/isobuilder/fatfs/image.cc:126
+#: src/modules/isobuilder/fatfs/image.cc:130
 #, c++-format
 msgid "Unexpected error '{}' on f_mount"
 msgstr "Erro inesperado '{}' em f_mount"
 
-#: src/modules/isobuilder/fatfs/image.cc:134
-#: src/modules/isobuilder/fatfs/image.cc:156
+#: src/modules/isobuilder/fatfs/image.cc:138
+#: src/modules/isobuilder/fatfs/image.cc:160
 #, c++-format
 msgid "Unexpected error '{}' on f_umount"
 msgstr "Erro inesperado '{}' em f_umount"
 
-#: src/modules/isobuilder/fatfs/image.cc:199
+#: src/modules/isobuilder/fatfs/image.cc:203
 #, c++-format
 msgid "Unable to create path fat://{} ({})"
 msgstr "Incapaz de criar o caminho fat://{} ({})"
 
-#: src/modules/isobuilder/fatfs/image.cc:210
+#: src/modules/isobuilder/fatfs/image.cc:214
 #, c++-format
 msgid "Unable to open fat://{} ({})"
 msgstr "Incapaz de abrir fat://{} ({})"
 
-#: src/modules/isobuilder/fatfs/image.cc:230
-#: src/modules/isobuilder/fatfs/image.cc:301
+#: src/modules/isobuilder/fatfs/image.cc:234
+#: src/modules/isobuilder/fatfs/image.cc:305
 #, c++-format
 msgid "Error '{}' writing to fat://{}"
 msgstr "Erro '{}' gravando arquivo fat://{}"
 
-#: src/modules/isobuilder/fatfs/image.cc:259
+#: src/modules/isobuilder/fatfs/image.cc:263
 #, c++-format
 msgid "Error '{}' opening fat://{}"
 msgstr "Erro '{}' ao abrir fat://{}"
 
-#: src/modules/isobuilder/fatfs/image.cc:368
+#: src/modules/isobuilder/fatfs/image.cc:372
 #: src/modules/isobuilder/iso9660/image.cc:475
 msgid "Finalizing"
 msgstr "Finalizando"
@@ -512,15 +512,15 @@ msgstr "Primeiro estágio"
 msgid "Second stage"
 msgstr "Segundo estágio"
 
-#: src/modules/isowriter.cc:73
+#: src/modules/isowriter.cc:74
 msgid "Updating ISO image"
 msgstr "Atualizando imagem ISO"
 
-#: src/modules/isowriter.cc:75 src/modules/isowriter.cc:103
+#: src/modules/isowriter.cc:76 src/modules/isowriter.cc:104
 msgid "Writing ISO image"
 msgstr "Gravando imagem ISO"
 
-#: src/modules/isowriter.cc:80
+#: src/modules/isowriter.cc:81
 msgid "Getting ISO image"
 msgstr "Obtendo imagem ISO"
 
@@ -568,14 +568,14 @@ msgstr "_Não"
 msgid "_Yes"
 msgstr "_Sim"
 
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:56 src/ui/gtk4/interactive.cc:139
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:56 src/ui/gtk4/interactive.cc:141
 msgid "_Cancel"
 msgstr "_Cancelar"
 
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:57
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:323
 #: src/ui/gtk4/gtkremovabledevicedialog.cc:388
-#: src/ui/gtk4/gtkremovabledevicedialog.cc:402 src/ui/gtk4/interactive.cc:139
+#: src/ui/gtk4/gtkremovabledevicedialog.cc:402 src/ui/gtk4/interactive.cc:141
 msgid "C_ontinue"
 msgstr "C_ontinuar"
 
@@ -624,7 +624,7 @@ msgstr "Acesso negado"
 msgid "Invalid device"
 msgstr "Dispositivo inválido"
 
-#: src/ui/gtk4/interactive.cc:150
+#: src/ui/gtk4/interactive.cc:152
 msgid "Select an option"
 msgstr "Selecione uma opção"
 

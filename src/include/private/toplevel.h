@@ -30,7 +30,7 @@
  #include <string>
  #include <reinstall/application.h>
  #include <reinstall/dialog.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/tools/writer.h>
  #include <reinstall/action.h>
  #include <udjat/ui/progress.h>
@@ -122,7 +122,7 @@
 	/// @return true if the device was open, false if not.
 	bool open(const Reinstall::Dialog &settings) override;
 
-	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Reinstall::Dialog::Option option) override;	
+	std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::Properties &node, const char *message, const Reinstall::Dialog::Option option) override;	
 
  };
 
@@ -134,7 +134,7 @@
 	NonInteractiveWindow();
 	~NonInteractiveWindow() override;
 
-	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
+	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::Properties &node) override;
 
 	void activate() noexcept override;
 	void loaded() noexcept override;
@@ -169,7 +169,7 @@
 	~InteractiveWindow() override;
 
  protected:
-	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) override;
+	std::shared_ptr<Reinstall::Group> group_factory(const Udjat::Properties &node) override;
 
 	void select(std::shared_ptr<Reinstall::Action> action) override;
 

@@ -22,7 +22,7 @@
   */
 
  #include <config.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <memory>
  #include <pwd.h>
 
@@ -39,7 +39,7 @@
 
  namespace iso9660 {
 
-	Image::Settings::Settings(const Udjat::XML::Node &node) {
+	Image::Settings::Settings(const Udjat::Properties &node) {
 
 		// std::string name{XML::AttributeFactory(node,"name").as_string("iso-9660")};
 

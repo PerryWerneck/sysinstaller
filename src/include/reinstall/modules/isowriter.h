@@ -24,15 +24,15 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <memory>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
 
  namespace Reinstall {
 
 	namespace IsoWriter {
 
-		class UDJAT_API Module : public Udjat::Module, public Udjat::XML::Parser {
+		class UDJAT_API Module : public Udjat::Module, public Udjat::Properties::Parser {
 		private:
 			class Action;
 
@@ -41,7 +41,7 @@
 
 			Module();
 			virtual ~Module();
-			bool parse(const Udjat::XML::Node &node) override;
+			bool parse(const Udjat::Properties &node) override;
 	
 		};
 	}

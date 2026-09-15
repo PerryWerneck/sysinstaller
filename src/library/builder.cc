@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/tools/builder.h>
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
@@ -41,17 +41,14 @@
 
  namespace Reinstall {
 
-	Builder::Builder(const Udjat::XML::Node &node) : Reinstall::Action{node}, output{Dialog::Factory("select-device",node)} {
+	Builder::Builder(const Udjat::Properties &node) : Reinstall::Action{node}, output{Dialog::Factory("select-device",node)} {
 
 		{
 			// Search for EFI Boot definitions
-			for(auto parent = node;(parent && !boot.efi); parent = parent.parent()) {
-
-				for(auto child = node.child("efi-boot-image");child;child = child.next_sibling("efi-boot-image")) {
-					boot.efi = make_shared<EFIBootImage>(child);
-					break;
-				}
-			}
+			node.for_each("efi-boot-image",[this](const Properties &child) {
+				boot.efi = make_shared<EFIBootImage>(child);
+				return true; // Stop searching.
+			});
 
 			if(!boot.efi) {
 				Logger::String{"Using default EFI Boot image"}.trace(name());
@@ -61,7 +58,7 @@
 			}
 		}
 
-		boot.theme = XML::StringFactory(node,"boot-theme");
+		boot.theme = node["boot-theme"].as_quark();
 
 		static const char *labels[] = {
 			"grub-label",

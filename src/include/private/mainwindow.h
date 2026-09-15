@@ -33,7 +33,7 @@
  #include <widgets/sidebar.h>
 
  #include <udjat/tools/factory.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
 
  #include <reinstall/group.h>
  #include <reinstall/action.h>
@@ -76,7 +76,7 @@
 		Gtk::Label label, body;
 
 	public:
-		Item(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> action);
+		Item(const Udjat::Properties &node, std::shared_ptr<Udjat::Abstract::Object> action);
 		virtual ~Item();
 
 		inline operator bool() const noexcept {
@@ -101,10 +101,10 @@
 		Gtk::Box contents{Gtk::Orientation::VERTICAL};	///< @brief The box with the options.
 
 	public:
-		Group(const Udjat::XML::Node &node);
+		Group(const Udjat::Properties &node);
 
 		// Udjat::Abstract::Object
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
+		void push_back(const Udjat::Properties &node, std::shared_ptr<Udjat::Abstract::Object> child) override;
 
 	};
 
@@ -119,7 +119,7 @@
 	MainWindow(Glib::RefPtr<::Gtk::Application> app);
 	virtual ~MainWindow();
 
-	std::shared_ptr<Reinstall::Group> get(const Udjat::XML::Node &node) override;
+	std::shared_ptr<Reinstall::Group> get(const Udjat::Properties &node) override;
 
  };
 

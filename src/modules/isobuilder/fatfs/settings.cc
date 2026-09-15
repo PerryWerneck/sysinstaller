@@ -22,7 +22,7 @@
   */
 
  #include <config.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <memory>
 
  #ifdef HAVE_FATFS
@@ -37,7 +37,7 @@
 
 	// Reference: http://elm-chan.org/fsw/ff/doc/mkfs.html
 
-	static uint64_t image_length(const Udjat::XML::Node &node) {
+	static uint64_t image_length(const Udjat::Properties &node) {
 
 		const char *ptr = XML::StringFactory(node,"size");
 		if(!(ptr && *ptr)) {
@@ -82,7 +82,7 @@
 
 	}
 
-	Image::Settings::Settings(const Udjat::XML::Node &node)
+	Image::Settings::Settings(const Udjat::Properties &node)
 		: type{FM_ANY}, n_fats{(uint8_t)
 			XML::AttributeFactory(node,"n_fats").as_uint(1)},
 			align{XML::AttributeFactory(node,"align").as_uint(0)},

@@ -53,7 +53,7 @@
 		std::shared_ptr<Dialog> output;
 
 	public:
-		Builder(const Udjat::XML::Node &node);
+		Builder(const Udjat::Properties &node);
 		virtual ~Builder();
 
 		inline std::shared_ptr<EFIBootImage> efi() {

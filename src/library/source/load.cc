@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/file.h>
  #include <udjat/tools/file/handler.h>
@@ -47,13 +47,13 @@
 
  namespace Reinstall {
 
-	void DataSource::load(const Udjat::XML::Node &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {
+	void DataSource::load(const Udjat::Properties &node, vector<std::shared_ptr<DataSource>> &sources, const char *nodename) {
 
 		if(nodename) {
 
 			// Has node name, load it.
-			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
-				for(Udjat::XML::Node child = nd.child(nodename); child; child = child.next_sibling(nodename)) {
+			for(Udjat::Properties nd = node; nd; nd = nd.parent()) {
+				for(Udjat::Properties child = nd.child(nodename); child; child = child.next_sibling(nodename)) {
 					sources.push_back(make_shared<FileSource>(child));
 				}
 			}
@@ -66,14 +66,14 @@
 			// ... then load <driver-update-disk />
 			class DUD : public Reinstall::FileSource {
 			public:
-				DUD(const Udjat::XML::Node &node, const char *path) : FileSource{node} {
+				DUD(const Udjat::Properties &node, const char *path) : FileSource{node} {
 					url.path = path;
 				}
 
 			};
 
-			for(Udjat::XML::Node nd = node; nd; nd = nd.parent()) {
-				for(Udjat::XML::Node child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
+			for(Udjat::Properties nd = node; nd; nd = nd.parent()) {
+				for(Udjat::Properties child = nd.child("driver-update-disk"); child; child = child.next_sibling("driver-update-disk")) {
 					auto path = XML::QuarkFactory(child,"path");
 					if(path && *path) {
 						auto source = make_shared<DUD>(child,path);

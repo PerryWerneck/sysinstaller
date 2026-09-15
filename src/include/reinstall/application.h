@@ -29,7 +29,7 @@
  #include <memory>
  #include <unordered_map>
  #include <string>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/module.h>
  #include <udjat/module/http.h>
  #include <udjat/tools/url/handler/http.h>
@@ -38,7 +38,7 @@
 
 	class Action;
 
-	class UDJAT_PRIVATE Application : protected Udjat::XML::Parser, private Udjat::HTTP::Handler::Factory {
+	class UDJAT_PRIVATE Application : protected Udjat::Properties::Parser, private Udjat::HTTP::Handler::Factory {
 	private:
 		static Application *instance;	///< @brief Singleton instance.
 
@@ -48,7 +48,7 @@
 		std::unordered_map<std::string, std::shared_ptr<Reinstall::Group>> groups;
 
 		/// @brief Build a new group.
-		virtual std::shared_ptr<Reinstall::Group> group_factory(const Udjat::XML::Node &node) = 0;
+		virtual std::shared_ptr<Reinstall::Group> group_factory(const Udjat::Properties &node) = 0;
 
 		/// @brief Notify the user that the operation has failed.
 		/// @param e The exception that was thrown.
@@ -70,10 +70,10 @@
 		/// @brief Build a new dialog.
 		/// @param node The dialog description.
 		/// @return Pointer to the dialog.
-		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::XML::Node &node, const char *message, const Dialog::Option option = Dialog::None) = 0;	
+		virtual std::shared_ptr<Reinstall::Dialog> DialogFactory(const char *name, const Udjat::Properties &node, const char *message, const Dialog::Option option = Dialog::None) = 0;	
 	
 		/// @brief Push-bach an action based on the XML node.
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Action> child);
+		void push_back(const Udjat::Properties &node, std::shared_ptr<Action> child);
 
 		/// @brief Set the selected action.
 		virtual void select(std::shared_ptr<Action> action);
@@ -84,7 +84,7 @@
 		/// @brief Activate the selected action.
 		virtual void activate() noexcept;
 
-		bool parse(const Udjat::XML::Node &node) override;
+		bool parse(const Udjat::Properties &node) override;
 
 	};
 

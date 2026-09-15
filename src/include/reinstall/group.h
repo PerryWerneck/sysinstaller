@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <memory>
 
  namespace Reinstall {
@@ -41,12 +41,12 @@
 
 		/// @brief Parse xml node, build children.
 		/// @param node The definitions for this group.
-		virtual void parse(const Udjat::XML::Node &node);
+		virtual void parse(const Udjat::Properties &node);
 
 		/// @brief Insert a child node.
 		/// @param node Child node to insert.
 		/// @param action The action to be performed.
-		virtual void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) = 0;
+		virtual void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) = 0;
 
 	};
 

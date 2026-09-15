@@ -27,8 +27,8 @@
  #include <udjat/tools/logger.h>
 
  #include <udjat/module.h>
- #include <udjat/tools/xml.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
@@ -55,8 +55,8 @@
 
 	public:
 
-		Action(const Udjat::XML::Node &node)
-			: Reinstall::Action{node}, iso{node}, use_cached{node.attribute("cache").as_bool(use_cached)} {
+		Action(const Udjat::Properties &props)
+			: Reinstall::Action{props}, iso{props}, use_cached{props.get("cache",use_cached)} {
 	
 		}
 
@@ -120,14 +120,14 @@
 		return new Module();
 	}
 	
-	IsoWriter::Module::Module() : Udjat::Module("isowriter","Download and write an ISO file."), Udjat::XML::Parser{"iso-writer"} {
+	IsoWriter::Module::Module() : Udjat::Module("isowriter","Download and write an ISO file."), Udjat::Properties::Parser{"iso-writer"} {
 	};
 
 	IsoWriter::Module::~Module() {
 	}
 
-	// Udjat::XML::Parser interface.
-	bool IsoWriter::Module::parse(const Udjat::XML::Node &node) {
+	// Udjat::Properties::Parser interface.
+	bool IsoWriter::Module::parse(const Udjat::Properties &node) {
 		// Logger::String{"Building action '",node.attribute("name").as_string(),"' from '",node.path(),"'"}.info();
 		Reinstall::Application::getInstance().push_back(node,make_shared<IsoWriter::Module::Action>(node));
 		return true;

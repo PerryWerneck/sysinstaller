@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/url.h>
  #include <udjat/tools/string.h>
@@ -47,7 +47,7 @@
 		/// @brief When true allways check file timestamp with remote server.
 		bool update_from_remote = true;
 
-		// const char * PathFactory(const Udjat::XML::Node &node, const char *attrname, bool required = true) const;
+		// const char * PathFactory(const Udjat::Properties &node, const char *attrname, bool required = true) const;
 
 		DataSource() {
 		}
@@ -58,7 +58,7 @@
 
 		DataSource(const char *name) : Udjat::NamedObject(name) {}
 
-		DataSource(const Udjat::XML::Node &node);
+		DataSource(const Udjat::Properties &node);
 		virtual ~DataSource();
 
 		/// @brief Build progress dialog for this source.
@@ -103,7 +103,7 @@
 		bool for_each(const std::function<bool(const char *filename)> &func) const;
 		bool for_each(const std::function<bool(std::shared_ptr<DataSource> value)> &func) const;
 
-		static void load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
+		static void load(const Udjat::Properties &node, std::vector<std::shared_ptr<DataSource>> &sources, const char *nodename = nullptr);
 
 		Udjat::URL url_local() const;
 
@@ -127,8 +127,8 @@
 
 	public:
 		FileSource(const char *path);
-		FileSource(const Udjat::XML::Node &node, bool required = true);
-		FileSource(const Udjat::XML::Node &node, const char *nodename, bool required = true);
+		FileSource(const Udjat::Properties &node, bool required = true);
+		FileSource(const Udjat::Properties &node, const char *nodename, bool required = true);
 
 		virtual ~FileSource();
 
@@ -136,7 +136,7 @@
 		bool has_remote() const noexcept override;
 
 		// Expand string
-		void expand(Udjat::String &str, const Udjat::XML::Node &node);
+		void expand(Udjat::String &str, const Udjat::Properties &node);
 
 		// DataSource
 		const char * local() const override;

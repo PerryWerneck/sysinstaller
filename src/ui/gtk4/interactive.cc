@@ -55,7 +55,7 @@
 	class Label : public Gtk::Label {
 	public:
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
-		Label(const Udjat::XML::Node &node, const char *style, const char *attrname) 
+		Label(const Udjat::Properties &node, const char *style, const char *attrname) 
 		: Gtk::Label{XML::AttributeFactory(node,attrname).as_string(), Gtk::Align::START} {
 			get_style_context()->add_class(style);
 		}
@@ -66,7 +66,7 @@
 	Gtk::LinkButton help_button;
 
  public:
-	Item(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) 
+	Item(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) 
 		: label{node,"action-title","title"}, body{node,"action-subtitle","sub-title"} {
 
 		set_hexpand(true);
@@ -250,7 +250,7 @@
 	set_use_underline(true);
   }
 
-  std::shared_ptr<Reinstall::Group> InteractiveWindow::group_factory(const Udjat::XML::Node &node) {
+  std::shared_ptr<Reinstall::Group> InteractiveWindow::group_factory(const Udjat::Properties &node) {
 	
 	static std::shared_ptr<Item> active_item;	///< @brief The selected item.
 	
@@ -262,7 +262,7 @@
 		std::vector<std::shared_ptr<Item>> items;			///< @brief The list of items in this group.
 
 	public:
-		Group(const Udjat::XML::Node &node) {
+		Group(const Udjat::Properties &node) {
 
 			get_style_context()->add_class("group-title-box");
 
@@ -316,7 +316,7 @@
 
 		}
 
-		void push_back(const Udjat::XML::Node &node, std::shared_ptr<Reinstall::Action> action) override {
+		void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) override {
 
 			sem_t semaphore;
 			sem_init(&semaphore,0,0);

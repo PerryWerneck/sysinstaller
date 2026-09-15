@@ -24,7 +24,7 @@
  #pragma once
 
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <reinstall/dialog.h>
  #include <memory>
@@ -38,7 +38,7 @@
 	/// actions with the same properties.
 	class UDJAT_API Model {
 	public:
-		Model(const Udjat::XML::Node &node);
+		Model(const Udjat::Properties &node);
 
 	};
 
@@ -51,10 +51,10 @@
 
 	public:
 
-		Action(const Udjat::XML::Node &node);
+		Action(const Udjat::Properties &node);
 		virtual ~Action();
 
-		static bool is_default(const Udjat::XML::Node &node) noexcept;
+		static bool is_default(const Udjat::Properties &node) noexcept;
 
 		static void preset(const char *value);
 

@@ -31,7 +31,7 @@
  #include <stdexcept>
  #include <reinstall/dialog.h>
  #include <udjat/tools/intl.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
 
  using namespace Udjat;
  using namespace std;
@@ -40,17 +40,17 @@
 
 	const char * Action::presets[2] = {nullptr,nullptr};
 
-	Model::Model(const Udjat::XML::Node &node) {
+	Model::Model(const Udjat::Properties &node) {
 
-		const char *logname = node.attribute("name").as_string();
+		auto logname = node["name"];
 
 		String name{node,"model"};
 		if(name.empty()) {
-			Logger::String{"Building action for node '",node.path(),"'"}.info(logname);
+			Logger::String{"Building action for node '",node.path(),"'"}.info(logname.c_str());
 			return;
 		}
 
-		Logger::String{"Building action using model '", name.c_str(),"' for node '",node.path(),"'"}.trace(logname);
+		Logger::String{"Building action using model '", name.c_str(),"' for node '",node.path(),"'"}.trace(logname.c_str());
 
 #ifdef DEBUG
 		String path{getenv("PWD")};
@@ -63,21 +63,21 @@
 
 		debug("Model path: ",path.c_str());
 
-		XML::Document{path.c_str()}.copy_to(*(const_cast<XML::Node *>(&node)));
+		const_cast<Udjat::Properties &>(node).load(path.c_str());
 
 	}
 
-	Action::Action::Action(const Udjat::XML::Node &node) 
+	Action::Action::Action(const Udjat::Properties &node) 
 		: Model{node}, NamedObject{node}, 
-			dialog_title{XML::QuarkFactory(node,"dialog-title")},
-		 	icon_name{XML::QuarkFactory(node,"icon-name")} {
+			dialog_title{node["dialog-title"].as_quark()},
+		 	icon_name{node["icon-name"].as_quark()} {
 		
 		if(!(dialog_title && *dialog_title)) {
-			dialog_title = XML::QuarkFactory(node,"title");
+			dialog_title = node["title"].as_quark();
 		}
 
 		if(!(icon_name && *icon_name)) {
-			icon_name = XML::QuarkFactory(node,"icon");
+			icon_name = node["icon"].as_quark();
 		}	
 
 		confirmation = Dialog::Factory("confirmation",node,_("Do you confirm?"));
@@ -114,22 +114,24 @@
 		Logger::String{"Setting preset to '",presets[0],"/",presets[1],"'"}.info();
 	}
 
-	bool Action::is_default(const Udjat::XML::Node &node) noexcept {
+	bool Action::is_default(const Udjat::Properties &node) noexcept {
 
 		bool has_preset = Action::has_preset();
 		if(has_preset) {
-			if(has_preset && strcasecmp(presets[0],node.parent().attribute("name").as_string("default"))) {
+
+			if(strcasecmp(presets[0],node.parent().get("name","default").c_str())) {
 				return false;
 			}
 
-			if(has_preset && strcasecmp(presets[1],node.attribute("name").as_string("default"))) {
+			if(strcasecmp(presets[1],node.get("name","default").c_str())) {
 				return false;
-			}			
+			}	
+
 		}
 
-		return XML::AttributeFactory(node,"default").as_bool(has_preset) || 
-		       XML::AttributeFactory(node,"selected").as_bool(has_preset) || 
-		       XML::AttributeFactory(node,"active").as_bool(has_preset);
+		return node.get("default",has_preset) || 
+		       node.get("selected",has_preset) || 
+		       node.get("active",has_preset);
 
 	}
 

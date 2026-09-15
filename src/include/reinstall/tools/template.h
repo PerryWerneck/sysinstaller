@@ -23,7 +23,7 @@
 
  #pragma once
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <vector>
 
@@ -37,12 +37,12 @@
 			Binary		= 0x04,		///< @brief Template is a binary file, just replace it.
 		};
 
-		Template(const Udjat::XML::Node &node);
+		Template(const Udjat::Properties &node);
 		virtual ~Template();
 
 		bool getProperty(const char *key, std::string &value) const override;
 
-		static void load(const Udjat::Abstract::Object &parent, const Udjat::XML::Node &node, std::vector<std::shared_ptr<Template>> &templates);
+		static void load(const Udjat::Abstract::Object &parent, const Udjat::Properties &node, std::vector<std::shared_ptr<Template>> &templates);
 
 		// Check if template match path.
 		bool operator==(const char *path) const;

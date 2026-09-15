@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <udjat/tools/string.h>
  #include <udjat/tools/intl.h>
@@ -51,7 +51,7 @@
 		KParm(const char *name, const char *value) : KernelParameter{name}, val{value} {
 		}
 
-		KParm(const Udjat::XML::Node &node) : KernelParameter{node}, val{expand(node,"value")} {
+		KParm(const Udjat::Properties &node) : KernelParameter{node}, val{expand(node,"value")} {
 		}
 
 		std::string value(const Udjat::Abstract::Object &object) const override {
@@ -69,7 +69,7 @@
 	KernelParameter::~KernelParameter() {
 	}
 
-	const char * KernelParameter::expand(const Udjat::XML::Node &node, const char *attrname) {
+	const char * KernelParameter::expand(const Udjat::Properties &node, const char *attrname) {
 		return String{node,attrname}.expand(node).expand().as_quark();
 	}
 
@@ -79,7 +79,7 @@
 		return expanded;
 	}
 
-	String PathFactory(const Udjat::XML::Node &node, bool relative) {
+	String PathFactory(const Udjat::Properties &node, bool relative) {
 		
 		String path{node,"path"};
 		if(path.empty() || !relative) {
@@ -148,7 +148,7 @@
 		return path;
 	}
 
-	void KernelParameter::load(const Udjat::XML::Node &node, std::vector<std::shared_ptr<KernelParameter>> &kparms, bool relpaths) {
+	void KernelParameter::load(const Udjat::Properties &node, std::vector<std::shared_ptr<KernelParameter>> &kparms, bool relpaths) {
 
 		// Use map to avoid add of the same key more than one time.
 		std::unordered_map<std::string, std::shared_ptr<KernelParameter>> keys;
@@ -290,7 +290,6 @@
 			}
 
 		}
-
 
 	}
 

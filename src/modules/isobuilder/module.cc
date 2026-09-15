@@ -20,9 +20,9 @@
  #include <config.h>
  #include <udjat/defs.h>
  #include <udjat/module.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/configuration.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/action.h>
  #include <udjat/tools/intl.h>
  #include <reinstall/tools/datasource.h>
@@ -51,7 +51,7 @@
 		virtual void build(list<std::shared_ptr<DataSource>> &files) = 0;
 
 	public:
-		Action(const Udjat::XML::Node &node)
+		Action(const Udjat::Properties &node)
 			: Reinstall::Builder{node} {
 
 		}
@@ -102,7 +102,7 @@
 
 	public:
 
-		Iso9660Builder(const Udjat::XML::Node &node)
+		Iso9660Builder(const Udjat::Properties &node)
 			: Action{node} {
 
 			imgdef = make_shared<iso9660::Image::Settings>(node);
@@ -142,47 +142,56 @@
 
 	public:
 
-		FatBuilder(const Udjat::XML::Node &node)
+		FatBuilder(const Udjat::Properties &node)
 			: Action{node} {
 			imgdef = make_shared<FatFS::Image::Settings>(node);
 		}
 
 	};
 
-	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,"Build customized installation image."), Udjat::XML::Parser{tagname} {
+	Reinstall::IsoBuilder::Module::Module(const char *name, const char *tagname) : Udjat::Module(name,"Build customized installation image."), Udjat::Properties::Parser{tagname} {
 	}
 
 	Reinstall::IsoBuilder::Module::~Module() {
 	}
 
-	bool Reinstall::IsoBuilder::Module::parse(const Udjat::XML::Node &node) {
+	bool Reinstall::IsoBuilder::Module::parse(const Udjat::Properties &props) {
 		try {
 
-			auto attr = XML::AttributeFactory(node,"filesystem");
+			auto attr = props.get(
+				"filesystem",
+#if defined(HAVE_LIBISOFS)
+				"iso9660"
+#elif defined(HAVE_LIBFATFS)
+				"fat32"
+#else
+				""
+#endif // HAVE_LIBISOFS
+			);
 
 #ifdef HAVE_LIBISOFS
-			if(strcasecmp(attr.as_string("iso9660"),"iso9660") == 0) {
+			if(strcasecmp(attr.c_str(),"iso9660") == 0) {
 				Reinstall::Application::getInstance().push_back(
-					node,
-					make_shared<Iso9660Builder>(node)
+					props,
+					make_shared<Iso9660Builder>(props)
 				);
 				return true;
 			}
 #endif // HAVE_LIBISOFS
 
-			if(strcasecmp(attr.as_string("fat"),"fat") == 0 || strcasecmp(attr.as_string("fat32"),"fat32") == 0) {
+			if(strcasecmp(attr.c_str(),"fat") == 0 || strcasecmp(attr.c_str(),"fat32") == 0) {
 				Reinstall::Application::getInstance().push_back(
-					node,
-					make_shared<FatBuilder>(node)
+					props,
+					make_shared<FatBuilder>(props)
 				);
 				return true;
 			}
 
-			Logger::String{"Unexpected value for attribute filesystem: '",attr.as_string(),"'"}.error(XML::Parser::name());
+			Logger::String{"Unexpected value for attribute filesystem: '",attr.c_str(),"'"}.error(props.node_name());
 
 		} catch(const std::exception &e) {
 
-			Logger::String{e.what()}.error(XML::Parser::name());
+			Logger::String{e.what()}.error(props.node_name());
 
 		}
 

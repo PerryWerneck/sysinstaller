@@ -23,7 +23,7 @@
 
  #include <config.h>
  #include <udjat/defs.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <reinstall/group.h>
  #include <udjat/tools/logger.h>
 
@@ -40,10 +40,13 @@
 
 	}
 
-	void Group::parse(const Udjat::XML::Node &node) {
+	void Group::parse(const Udjat::Properties &node) {
 		debug("-----------------------------------------------------------------------");
-		debug("Setting up group '",node.attribute("name").as_string(),"'");
-		XML::parse_children(node);
+		debug("Setting up group '",node["name"].c_str(),"'");
+		node.for_each_child([](const Properties &property) {
+			Properties::parse(property);
+			return false;
+		});
 		debug("-----------------------------------------------------------------------");
 	}
 

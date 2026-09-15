@@ -21,17 +21,19 @@
  #include <udjat/defs.h>
  #include <memory>
  #include <reinstall/tools/efiboot.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
 
  using namespace std;
  using namespace Udjat;
 
  namespace Reinstall {
 
-	EFIBootImage::EFIBootImage(const Udjat::XML::Node &node) : NamedObject{node} {
+	EFIBootImage::EFIBootImage(const Udjat::Properties &props) : NamedObject{props} {
 
-		options.enabled = XML::AttributeFactory(node,"enabled").as_bool(options.enabled);
-		options.path = XML::QuarkFactory(node,"path",options.path);
+		options.enabled = props.get("enabled",options.enabled);
+		if(props.contains("path")) {
+			options.path = props["path"].as_quark();
+		}
 
 	}
 

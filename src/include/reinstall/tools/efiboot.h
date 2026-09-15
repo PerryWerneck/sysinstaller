@@ -21,7 +21,7 @@
 
  #include <udjat/defs.h>
  #include <reinstall/action.h>
- #include <udjat/tools/xml.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/object.h>
  #include <memory>
 
@@ -47,7 +47,7 @@
 		constexpr EFIBootImage() {
 		}
 
-		EFIBootImage(const Udjat::XML::Node &node);
+		EFIBootImage(const Udjat::Properties &node);
 
 		inline operator bool() const noexcept {
 			return options.enabled;
