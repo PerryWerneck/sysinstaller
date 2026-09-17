@@ -173,123 +173,119 @@
 
 		}
 
-		for(auto parent = node;parent;parent = parent.parent()) {
+		// First search for 'kernel-parameter' nodes.
+		node.for_each("kernel-parameter", [&](const Udjat::Properties &child) {
 
-			// First search for 'kernel-parameter' nodes.
-			for(auto child = parent.child("kernel-parameter");child;child = child.next_sibling("kernel-parameter")) {
+			if(child.contains("repository")) {
 
-				const char *reponame = child.attribute("repository").as_string();
-
-				if(reponame && *reponame) {
-
-					// It's a repository
-					auto kparm = Repository::Factory(child);
-					if(keys.find(kparm->parameter_name()) == keys.end()) {
-						keys[kparm->parameter_name()] = kparm;
-						kparms.push_back(kparm);
+				throw runtime_error(
+					Logger::Message{
+						_("Kernel parameter '{}' has a 'repository' attribute, this is not allowed, use a 'repository' node instead"),child["name"].c_str()
 					}
+				);
+	
+			} else {
 
-					Logger::String{"Repository declared as kernel parameter, using legacy mode"}.trace(kparm->parameter_name());
-
-				} else {
-
-					// It's a standard kernel parameter.
-					auto kparm = make_shared<KParm>(child);
-					if(keys.find(kparm->parameter_name()) == keys.end()) {
-						keys[kparm->parameter_name()] = kparm;
-						kparms.push_back(kparm);
-					}
-
-				}
-
-			}
-
-			// Then search for repositories.
-			for(auto child = parent.child("repository");child;child = child.next_sibling("repository")) {
-
-				auto kparm = Repository::Factory(child);
-				auto name = kparm->parameter_name();
-
-				if(name && *name && keys.find(name) == keys.end()) {
-					keys[name] = kparm;
+				// It's a standard kernel parameter.
+				auto kparm = make_shared<KParm>(child);
+				if(keys.find(kparm->parameter_name()) == keys.end()) {
+					keys[kparm->parameter_name()] = kparm;
 					kparms.push_back(kparm);
 				}
 
 			}
 
-			// Then search for driver-update-disks
-			for(auto child = parent.child("driver-update-disk");child;child = child.next_sibling("driver-update-disk")) {
+			return false; // Continue enumeration.
 
-				String name{child,"kernel-parameter",false};
-				if(name.empty()) {
-					name = Config::Value<string>("kernel-parameters","driver-update-disk","dud").c_str();
-				}
+		});
 
-				// Check if path is defined.
-				{
-					String path{PathFactory(child, relpaths)};
-					if(!path.empty()) {
-						// Local path is defined, use it.
-						kparms.push_back(
-							make_shared<KParm>(
-								name.as_quark(),
-								String{"hd:",path.c_str()}.as_quark()
-							)
-						);
-						continue;
-					}
-				}
+		// Then search for repositories.
+		node.for_each("repository", [&](const Udjat::Properties &child) {
 
-				String url{child,"url"};
-				if(url.empty()) {
-					throw runtime_error(Logger::Message{_("Driver update disk '{}' has no path or url defined"),String{child,"name"}.c_str()});
-				}
+			auto kparm = Repository::Factory(child);
+			auto name = kparm->parameter_name();
 
-				// Remote path is defined, use it.
-				if(url[0] != '.') {
+			if(name && *name && keys.find(name) == keys.end()) {
+				keys[name] = kparm;
+				kparms.push_back(kparm);
+			}
 
-					// It's a full URL, use it without adjustments.
+			return false; // Continue enumeration.
+
+		});
+
+		// Then search for driver-update-disks.
+		node.for_each("driver-update-disk", [&](const Udjat::Properties &child) {
+
+			auto name = child["kernel-parameter"];
+			if(name.empty()) {
+				name = Config::Value<string>("kernel-parameters","driver-update-disk","dud").c_str();
+			}
+
+			// Check if path is defined.
+			{
+				String path{PathFactory(child, relpaths)};
+				if(!path.empty()) {
+					// Local path is defined, use it.
 					kparms.push_back(
 						make_shared<KParm>(
 							name.as_quark(),
-							url.as_quark()
+							String{"hd:",path.c_str()}.as_quark()
 						)
 					);
-
-				} else {
-
-					// It's relative to repository, get value later.
-					class RemoteUpdateDisk : public KernelParameter {
-					private:
-						std::shared_ptr<Repository> repository;
-						const char *path;
-
-					public:
-						RemoteUpdateDisk(const char *name, std::shared_ptr<Repository> repo, const char *url) : KernelParameter{name}, repository{repo}, path{url} {
-						}
-
-						std::string value(const Udjat::Abstract::Object &object) const override {
-							URL url{repository->remote()};
-							url += path;
-							url.expand(object);
-							return url;
-						}
-				
-					};
-
-					kparms.push_back(
-						make_shared<RemoteUpdateDisk>(
-							name.as_quark(),
-							Repository::Factory(child),
-							url.as_quark()
-						)
-					);
-
+					return false; // Continue enumeration.
 				}
+			}
+
+			String url = child["url"];
+			if(url.empty()) {
+				throw runtime_error(Logger::Message{_("Driver update disk '{}' has no path or url defined"),String{child,"name"}.c_str()});
+			}
+
+			// Remote path is defined, use it.
+			if(url[0] != '.') {
+
+				// It's a full URL, use it without adjustments.
+				kparms.push_back(
+					make_shared<KParm>(
+						name.as_quark(),
+						url.as_quark()
+					)
+				);
+
+			} else {
+
+				// It's relative to repository, get value later.
+				class RemoteUpdateDisk : public KernelParameter {
+				private:
+					std::shared_ptr<Repository> repository;
+					const char *path;
+
+				public:
+					RemoteUpdateDisk(const char *name, std::shared_ptr<Repository> repo, const char *url) : KernelParameter{name}, repository{repo}, path{url} {
+					}
+
+					std::string value(const Udjat::Abstract::Object &object) const override {
+						URL url{repository->remote()};
+						url += path;
+						url.expand(object);
+						return url;
+					}
+			
+				};
+
+				kparms.push_back(
+					make_shared<RemoteUpdateDisk>(
+						name.as_quark(),
+						Repository::Factory(child),
+						url.as_quark()
+					)
+				);
 
 			}
 
-		}
+			return false; // Continue enumeration.
+		});
 
 	}
 
