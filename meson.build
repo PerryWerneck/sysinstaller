@@ -8,6 +8,7 @@ project(
 
 app_src = [
 	'src/application/main.cc',
+	'src/application/application.cc',
 ]
 
 lib_src = [

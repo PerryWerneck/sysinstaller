@@ -29,40 +29,182 @@
  #include <udjat/tools/logger.h>
  #include <udjat/tools/argumentparser.h>
  #include <udjat/tools/configuration.h>
+ #include <udjat/tools/intl.h>
+ #include <udjat/tools/application.h>
+ #include <cstdint>
+ #include <iostream>
 
+ #include <private/application.h>
+
+#ifdef HAVE_GTKMM
+ static bool has_graphical_session();
+#endif
+
+ using namespace Reinstall;
  using namespace Udjat;
+ using namespace std;
+
+ enum UIMode : uint8_t {
+	TUI,
+#ifdef HAVE_GTKMM
+	GUI,
+#endif // HAVE_GTKMM
+ }; 
+
+#if defined(HAVE_GTKMM) && !defined(DEBUG)
+ static UIMode ui_mode = GUI;
+#else
+ static UIMode ui_mode = TUI;
+#endif
 
  int main(int argc, char **argv) {
 
-#ifdef HAVE_GTKMM
-	enum {
-		TEXT_MODE,
-		GRAPHICAL_MODE,
-	} mode = GRAPHICAL_MODE;
-#else
-	enum {
-		TEXT_MODE,
-	} mode = TEXT_MODE;
-#endif // HAVE_GTKMM
+#ifdef GETTEXT_PACKAGE
+	// Set locale.
+	Udjat::Application::set_gettext_package(GETTEXT_PACKAGE);
+#endif // GETTEXT_PACKAGE
 
+	//
+	// Check defaults
+	//
+	{
+		const char *ptr = strrchr(argv[0],'/');
+		if(ptr) {
+			ptr++;
+			if(strcmp(ptr,"reinstall-enable") == 0 || strcmp(ptr,"reinstall-system") == 0) {
+				Reinstall::Application::non_interactive(true);
+			}
+		}
+
+#ifdef HAVE_GTKMM
+		if(!has_graphical_session()) {
+			ui_mode = TUI;
+		}
+#endif
+
+	}
+
+	//
+	// Parse arguments
+	//
+	{
+		ArgumentParser parser;
+
+		using Argument = ArgumentParser::Argument;
+		using Result = ArgumentParser::Result;
+
+		if(!Reinstall::Application::non_interactive()) {
+			parser.append(
+				Argument{
+					'y', "non-interactive", _("Run in non-interactive mode"),
+					[](const char *, char) {
+						Reinstall::Application::non_interactive(true);
+						return Result::Handled;
+					}
+				}
+			);
+		}
+
+		parser.append(
+			Argument{
+				'Q', "quit", _("Quit after processing"),
+                [](const char *, char) {
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'R', "reboot", _("Reboot after processing"),
+                [](const char *, char) {
+					return Result::Handled;
+				}
+			},
+#ifdef HAVE_GTKMM
+			Argument{
+				't', "tui", _("Run in text mode"),
+                [](const char *, char) {
+					ui_mode = TUI;
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'g', "gui", _("Run in graphical mode"),
+                [](const char *, char) {
+					ui_mode = GUI;
+					return Result::Handled;
+				}
+			},
+#endif // HAVE_GTKMM
+			_("Image options"),
+			Argument{
+				'S', "select", _("Auto-select image to build"), _("path"),
+                [](const char *arg, char) {
+					Reinstall::Application::set_selected_path(arg);
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'O', "output", _("Write image to file instead of device"), _("filename"),
+                [](const char *arg, char) {
+					if(!arg || !*arg) {
+						throw std::invalid_argument("Missing output filename");
+					}
+					return Result::Handled;
+				}
+			}
+		);
+
+		try {
+
+			if(parser.add_logger_group().parse(argc,argv)) {
+				return 0;
+			}
+
+		} catch(const std::exception &e) {
+
+			cerr << endl << e.what() << endl;
+			return -1;
+	
+		}
+
+	}
+
+	//
+	// Start application
+	//
 #ifdef DEBUG
 	Udjat::Config::allow_user_homedir(true);
 	Logger::verbosity(9);
 	Logger::console(true);
 #endif
 
-
 #ifdef HAVE_GTKMM
-	if(mode == GRAPHICAL_MODE) {
-		Logger::String{"starting graphical mode"}.trace();
+	if(ui_mode == GUI) {
+		Logger::String{"Starting graphical mode"}.trace();
 		return 0;
 	}
 #endif // HAVE_GTKMM
 
 	Logger::String{"Starting text mode"}.trace();
-	
-
-	return 0;
+	return Reinstall::Application::run_tui();
  }
 
+#ifdef HAVE_GTKMM
+ bool has_graphical_session() {
+    const char* session = std::getenv("XDG_SESSION_TYPE");
+    if (session) {
+        if (std::strcmp(session, "wayland") == 0 ||
+            std::strcmp(session, "x11") == 0)
+            return true;
+        if (std::strcmp(session, "tty") == 0)
+            return false;
+    }
 
+    if (std::getenv("WAYLAND_DISPLAY"))
+        return true;
+
+    if (std::getenv("DISPLAY"))
+        return true;
+
+    return false;
+}
+#endif // HAVE_GTKMM

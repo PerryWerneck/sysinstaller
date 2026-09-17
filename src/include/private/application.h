@@ -1,0 +1,83 @@
+/* SPDX-License-Identifier: LGPL-3.0-or-later */
+
+/*
+ * Copyright (C) 2026 Perry Werneck <perry.werneck@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+ /**
+  * @brief Declare main application.
+  */
+
+ #pragma once
+ #include <udjat/defs.h>
+ #include <udjat/tools/properties.h>
+ #include <memory>
+ #include <vector>
+ #include <udjat/tools/string.h>
+
+ namespace Reinstall {
+
+	class UDJAT_PRIVATE Application : private Udjat::Properties::ObjectBuilder {
+	private:
+		static Application *instance;		///< @brief Singleton instance.
+		static bool non_interactive_mode;	///< @brief If true set non-interactive mode, if false set interactive mode.	
+		static std::vector<String> selected_path;	/// @brief Selected path for auto-selecting image to build.
+
+		protected:
+
+		class Item : public Udjat::String {
+		public:
+			Item(const Udjat::Properties &props);
+			virtual ~Item() = default;
+
+		};
+
+		std::vector<std::shared_ptr<Item>> itens;	///< @brief List of items.
+		std::shared_ptr<Item> selected_item;	///< @brief Selected item.
+
+		/// @brief Insert item into list, if item already exists log warning and ignore.
+		/// @param props The properties to build the item.
+		/// @param item The item to insert.
+		/// @return true if the item was selected.
+		bool push_back(const Udjat::Properties &props,std::shared_ptr<Item> item);
+
+	public:
+
+		Application();
+		virtual ~Application();
+
+		static int run_tui() noexcept;
+
+		// bool build(const Udjat::Properties &props) override;
+
+		static Application & get_instance();
+
+		static void set_selected_path(const char *path);
+
+		/// @brief Set non-interactive mode, usually for scripts.
+		/// @param value If true set non-interactive mode, if false set interactive mode.
+		static inline void non_interactive(bool value) noexcept {
+			non_interactive_mode = value;
+		}
+
+		static inline bool non_interactive() noexcept {
+			return non_interactive_mode;
+		}
+
+	};
+
+ }
+
