@@ -56,7 +56,7 @@
 	public:
 		// https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Label.html
 		Label(const Udjat::Properties &node, const char *style, const char *attrname) 
-		: Gtk::Label{XML::AttributeFactory(node,attrname).as_string(), Gtk::Align::START} {
+		: Gtk::Label{node.get(attrname).c_str(), Gtk::Align::START} {
 			get_style_context()->add_class(style);
 		}
 	
@@ -286,16 +286,16 @@
 		
 			int margin = 0;
 		
-			auto icon = XML::AttributeFactory(node,"icon");
-			if(icon) {
-				debug("Using icon '",icon.as_string(),"'");
+			if(node.contains("icon")) {
+				auto icon = node.get("icon","image-missing");
+				debug("Using icon '",icon.c_str(),"'");
 				margin = 1;
 		
 				Gtk::Image image;
 				//image.set_icon_size(Gtk::IconSize::LARGE);
 				image.set_pixel_size(32);
 				image.get_style_context()->add_class("group-icon");
-				image.set_from_icon_name(icon.as_string("image-missing"));
+				image.set_from_icon_name(icon.c_str());
 		
 				attach(image,0,0,1,2);
 				contents.get_style_context()->add_class("item-box-no-icon");
