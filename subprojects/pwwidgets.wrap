@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/PerryWerneck/gtk4.git
+revision = v1
+depth = 1
+
+[provide]
+pwwidgets = static_library

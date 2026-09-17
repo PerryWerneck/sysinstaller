@@ -1,50 +1,19 @@
 project(
 	'reinstall', 
 	['cpp'],
-	version: '6.5.0',
+	version: '7.0.0',
 	default_options : ['cpp_std=c++17', 'buildtype=release' ],
 	license: 'GPL-3.0-or-later',
 )
 
 app_src = [
 	'src/application/main.cc',
-	'src/application/application.cc',
-	'src/ui/console/application.cc',
 ]
 
 lib_src = [
-	'src/library/group.cc',
-	'src/library/action.cc',
-	'src/library/kernelparameter.cc',
-	'src/library/slpclient.cc',
-	'src/library/script.cc',
-	'src/library/writer.cc',
-	'src/library/image.cc',
-	'src/library/template.cc',
-	'src/library/builder.cc',
-	'src/library/efiboot.cc',
-	'src/library/ui/dialog.cc',
-	'src/library/ui/removabledevicedialog.cc',
-	'src/library/disk/abstract.cc',
-	'src/library/disk/fat.cc',
-	'src/library/repository/factory.cc',
-	'src/library/repository/repository.cc',
-	'src/library/repository/kparm.cc',
-	'src/library/source/data.cc',
-	'src/library/source/file.cc',
-	'src/library/source/load.cc',
-	'src/library/source/tempfile.cc',
-	'src/library/os/linux/writer.cc',
-	'src/modules/grub2.cc',
-	'src/modules/isowriter.cc',
-	'src/modules/isobuilder/module.cc',
-	'src/modules/isobuilder/iso9660/image.cc',
-	'src/modules/isobuilder/iso9660/settings.cc',
-	'src/modules/isobuilder/fatfs/image.cc',
-	'src/modules/isobuilder/fatfs/settings.cc',
 ]
 
-project_description = 'Instalar/reinstalar terminal'
+project_description = 'Installation media creation tool'
 
 pkg_version = meson.project_version()
 version_array = pkg_version.split('.')
@@ -106,7 +75,7 @@ fatfs =	dependency(
 
 libudjat = dependency(
 	'libudjat',
-	version : '>=2.7.0',
+	version : '>=3.0.0',
 	fallback: [ 'libudjat' ],
 	default_options: ['default_library=static'],
 )
@@ -122,17 +91,26 @@ deps = [
 	cxx.find_library('dl', required: false),
 	dependency(
 		'libudjathttp',
-		version : '>=2.1.2',
+		version : '>=3.0.0',
 		fallback: [ 'libudjathttp' ],
 	    default_options: ['default_library=static'],
 	),
 	dependency(
 		'libudjatdbus',
-		version : '>=2.4.1',
+		version : '>=3.0.0',
 		fallback: [ 'libudjatdbus' ],
 	    default_options: ['default_library=static'],
 	),
 ]
+
+if gtkmm.found()
+	deps += dependency(
+		'pwwidgets',
+		version : '>=1.0.0',
+		fallback: [ 'pwwidgets' ],
+	    default_options: ['default_library=static'],
+	)
+endif
 
 #
 # Configuration
@@ -174,14 +152,6 @@ endif
 if gtkmm.found()
 	conf_data.set('HAVE_GTKMM', 1)
 	app_src += [
-		'src/ui/gtk4/toplevel.cc',
-		'src/ui/gtk4/progress.cc',
-		'src/ui/gtk4/status.cc',
-		'src/ui/gtk4/interactive.cc',
-		'src/ui/gtk4/noninteractive.cc',
-		'src/ui/gtk4/dialog.cc',
-		'src/ui/gtk4/writer.cc',
-		'src/ui/gtk4/gtkremovabledevicedialog.cc',
 	]
 endif
 
