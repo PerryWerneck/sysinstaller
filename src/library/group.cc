@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2026 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -32,22 +32,22 @@
 
  namespace Reinstall {
 
-	Group::Group() {
-
+	Group::Group(const Udjat::Properties &props) : String{props["name"].c_str()} {
+	
 	}
 
 	Group::~Group() {
 
 	}
 
-	void Group::parse(const Udjat::Properties &node) {
-		debug("-----------------------------------------------------------------------");
-		debug("Setting up group '",node["name"].c_str(),"'");
-		node.for_each_child([](const Properties &property) {
-			Properties::parse(property);
-			return false;
-		});
-		debug("-----------------------------------------------------------------------");
+	void Group::parse(const Udjat::Properties &props) {
+		// debug("-----------------------------------------------------------------------");
+		// debug("Setting up group '",c_str(),"'");
+		// props.for_each_child([](const Properties &property) {
+		// 	Properties::parse(property);
+		// 	return false;
+		// });
+		// debug("-----------------------------------------------------------------------");
 	}
 
  }

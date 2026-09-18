@@ -28,6 +28,7 @@
  #include <stdexcept>
  #include <vector>
  #include <udjat/tools/string.h>
+ #include <reinstall/group.h>
 
  using namespace Udjat;
  using namespace std;
@@ -86,36 +87,33 @@
 		String{path}.split(selected_path,"/");
 	}
 
-	bool Application::push_back(const Udjat::Properties &props, std::shared_ptr<Item> item) {
+	bool Application::push_back(const Udjat::Properties &props, std::shared_ptr<Group> group) {
 
-		for(const auto &itn : itens) {
-			if(!strcasecmp(itn->c_str(),item->c_str())) {
-				Logger::String{"Item '", item->c_str(), "' already exists"}.warning("groups");
+		for(const auto &itn : groups) {
+			if(!strcasecmp(itn->c_str(),group->c_str())) {
+				Logger::String{"Group '", group->c_str(), "' already exists"}.warning("groups");
 				break;
 			}
 		}
-		itens.push_back(item);
+		groups.push_back(group);
 
 		if(selected_path.size() >=1) {
-			if(strcasecmp(selected_path[0].c_str(),item->c_str())) {
+			if(strcasecmp(selected_path[0].c_str(),group->c_str())) {
 				return false;
 			}
-			selected_item = item;
+			Logger::String{"Auto-selecting group '",group->label(),"' by command-line path"}.info("groups");
+			selected_group = group;
 			return true;
 		}
 
 		if(props.get("default",false)) {
-			selected_item = item;
+			Logger::String{"Auto-selecting group '",group->label(),"'"}.info("groups");
+			selected_group = group;
 			return true;
 		}
 
 		return false;
 	}
-
-	Application::Item::Item(const Udjat::Properties &props) : String{props["name"].c_str()} {
-	
-	}
-
 
  }
  

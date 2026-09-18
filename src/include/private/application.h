@@ -30,6 +30,8 @@
 
  namespace Reinstall {
 
+	class Group;
+
 	class UDJAT_PRIVATE Application : private Udjat::Properties::ObjectBuilder {
 	private:
 		static Application *instance;						///< @brief Singleton instance.
@@ -38,21 +40,14 @@
 
 	protected:
 
-		class Item : public Udjat::String {
-		public:
-			Item(const Udjat::Properties &props);
-			virtual ~Item() = default;
-
-		};
-
-		std::vector<std::shared_ptr<Item>> itens;	///< @brief List of items.
-		std::shared_ptr<Item> selected_item;	///< @brief Selected item.
+		std::vector<std::shared_ptr<Group>> groups;		///< @brief List of groups.
+		std::shared_ptr<Group> selected_group;			///< @brief Selected group.
 
 		/// @brief Insert item into list, if item already exists log warning and ignore.
 		/// @param props The properties to build the item.
 		/// @param item The item to insert.
 		/// @return true if the item was selected.
-		bool push_back(const Udjat::Properties &props,std::shared_ptr<Item> item);
+		bool push_back(const Udjat::Properties &props,std::shared_ptr<Group> group);
 
 		/// @brief Run interactive mode.
 		/// @return return code (0 = ok)
@@ -71,8 +66,6 @@
 		virtual int run();
 
 		static int run_tui();
-
-		// bool build(const Udjat::Properties &props) override;
 
 		static Application & get_instance();
 

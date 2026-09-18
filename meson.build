@@ -13,6 +13,7 @@ app_src = [
 ]
 
 lib_src = [
+	'src/library/group.cc',
 ]
 
 project_description = 'Installation media creation tool'

@@ -24,19 +24,17 @@
  #pragma once
  #include <udjat/defs.h>
  #include <udjat/tools/properties.h>
+ #include <udjat/tools/string.h>
  #include <memory>
 
  namespace Reinstall {
 
 	class Action;
 
-	class UDJAT_API Group {
-	protected:
-		const char *dialog_title = "";
-
+	class UDJAT_API Group : public Udjat::String {
 	public:
 
-		Group();
+		Group(const Udjat::Properties &props);
 		virtual ~Group();
 
 		/// @brief Parse xml node, build children.
@@ -46,7 +44,10 @@
 		/// @brief Insert a child node.
 		/// @param node Child node to insert.
 		/// @param action The action to be performed.
-		virtual void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) = 0;
+		// virtual void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) = 0;
+
+		/// @brief Get label (for menu and logging);
+		virtual const char *label() const noexcept = 0;
 
 	};
 

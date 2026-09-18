@@ -26,6 +26,10 @@
  #include <vector>
  #include <private/application.h>
  #include <iostream>
+ #include <reinstall/group.h>
+ #include <udjat/ui/menu.h>
+ #include <udjat/ui/console/menu.h>
+ #include <udjat/tools/intl.h>
 
  #ifdef LOG_DOMAIN
 	#undef LOG_DOMAIN
@@ -48,7 +52,27 @@
 
 			int run_interactive() override {
 
-				return -1;
+				while(1) {
+
+					Console::Menu<string> menu{_("Select system:")};
+					for(const auto &group: groups) {
+						menu.append(group->label());
+					}
+
+					try {
+
+						auto group = groups[menu.select()];
+						Logger::String{"User selected '",group->label(),"'"}.info();
+
+					} catch(const std::exception &e) {
+						Logger::String{e.what()}.info();
+						return 0;
+					}
+
+					
+				}
+
+				return 0;
 			}
 
 			int run_non_interactive() override {
@@ -57,10 +81,22 @@
 			}
 
 			bool build(const Udjat::Properties &props) override {
-				
-				debug("Building group '",props["name"].c_str(),"'");
-				
 
+				class Group : public Reinstall::Group {
+				private:
+					std::string title;
+				public:
+					Group(const Udjat::Properties &props) 
+						: Reinstall::Group{props},title{props["title"].c_str()} {
+					}
+
+					const char *label() const noexcept override {
+						return title.c_str();
+					}
+
+				};
+
+				push_back(props,make_shared<Group>(props));
 				return true;
 			}
 
