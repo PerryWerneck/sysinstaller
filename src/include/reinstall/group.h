@@ -41,10 +41,10 @@
 		/// @param node The definitions for this group.
 		virtual void parse(const Udjat::Properties &node);
 
-		/// @brief Insert a child node.
-		/// @param node Child node to insert.
-		/// @param action The action to be performed.
-		// virtual void push_back(const Udjat::Properties &node, std::shared_ptr<Reinstall::Action> action) = 0;
+		/// @brief Insert action on group.
+		/// @param props The properties to setup group.
+		/// @param action The action to insert.
+		virtual void push_back(const Udjat::Properties &props,std::shared_ptr<Action> action) = 0;
 
 		/// @brief Get label (for menu and logging);
 		virtual const char *label() const noexcept = 0;

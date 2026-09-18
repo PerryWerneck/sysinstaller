@@ -28,6 +28,7 @@
  #include <stdexcept>
  #include <vector>
  #include <udjat/tools/string.h>
+ #include <udjat/tools/intl.h>
  #include <reinstall/group.h>
 
  using namespace Udjat;
@@ -91,10 +92,11 @@
 
 		for(const auto &itn : groups) {
 			if(!strcasecmp(itn->c_str(),group->c_str())) {
-				Logger::String{"Group '", group->c_str(), "' already exists"}.warning("groups");
-				break;
+				Logger::String{"Group '", group->c_str(), "' already exists"}.error("groups");
+				return false;
 			}
 		}
+
 		groups.push_back(group);
 
 		if(selected_path.size() >=1) {
@@ -113,6 +115,31 @@
 		}
 
 		return false;
+	}
+
+	std::shared_ptr<Group> Application::find_group(const Udjat::Properties &props) {
+	
+		if(groups.empty()) {
+			throw logic_error(_("A valid group is required to perform this action"));
+		}
+
+		if(!props.contains("group")) {
+			return groups.back();
+		}
+
+		auto name = props["group"];
+		for(const auto &itn : groups) {
+			if(!strcasecmp(itn->c_str(),name.c_str())) {
+				return itn;
+			}
+		}
+
+		throw runtime_error(Logger::Message{_("Required group '{}' is undefined"),name.c_str()});
+
+	}
+
+	bool Application::push_back(const Udjat::Properties &props,std::shared_ptr<Action> action) {
+		find_group(props)->push_back(props,action);
 	}
 
  }

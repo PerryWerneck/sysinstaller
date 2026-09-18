@@ -107,14 +107,11 @@
 
 		parser.append(
 			Argument{
-				'Q', "quit", _("Quit after processing"),
-                [](const char *, char) {
-					return Result::Handled;
-				}
-			},
-			Argument{
-				'R', "reboot", _("Reboot after processing"),
-                [](const char *, char) {
+				'O', "output", _("Write image to file instead of device"), _("filename"),
+                [](const char *arg, char) {
+					if(!arg || !*arg) {
+						throw std::invalid_argument("Missing output filename");
+					}
 					return Result::Handled;
 				}
 			},
@@ -134,7 +131,7 @@
 				}
 			},
 #endif // HAVE_GTKMM
-			_("Image options"),
+			_("Build options"),
 			Argument{
 				'S', "select", _("Auto-select image to build"), _("path"),
                 [](const char *arg, char) {
@@ -143,14 +140,39 @@
 				}
 			},
 			Argument{
-				'O', "output", _("Write image to file instead of device"), _("filename"),
+				'Q', "quit", _("Quit after processing"),
+                [](const char *, char) {
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'R', "reboot", _("Reboot after processing"),
+                [](const char *, char) {
+					return Result::Handled;
+				}
+			},
+			_("Network options"),
+			Argument{
+				'i', "install", _("Set URL for installation repository"), "url",
                 [](const char *arg, char) {
-					if(!arg || !*arg) {
-						throw std::invalid_argument("Missing output filename");
-					}
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'T', "target", _("Set installation repository from target-name"), "target",
+                [](const char *arg, char) {
+					Reinstall::Application::set_selected_path(arg);
+					return Result::Handled;
+				}
+			},
+			Argument{
+				'X', "no-slp", _("Disable SLP search"),
+                [](const char *arg, char) {
+					Reinstall::Application::set_selected_path(arg);
 					return Result::Handled;
 				}
 			}
+			
 		);
 
 		try {

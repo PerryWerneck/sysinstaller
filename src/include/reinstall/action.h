@@ -25,50 +25,24 @@
 
  #include <udjat/defs.h>
  #include <udjat/tools/properties.h>
- #include <udjat/tools/object.h>
+ #include <udjat/tools/activatable.h>
  #include <reinstall/dialog.h>
- #include <memory>
- #include <string>
+ #include <udjat/tools/string.h>
  
  namespace Reinstall {
 
-	/// @brief Action model.
-	/// @details This class is used to define an action model, which can be used to
-	/// create actions. The model is defined in an XML file and can be used to create
-	/// actions with the same properties.
-	class UDJAT_API Model {
-	public:
-		Model(const Udjat::Properties &node);
-
-	};
-
-	class UDJAT_API Action : private Model, public Udjat::NamedObject {
+	class UDJAT_API Action : public Udjat::String {
 	private:
-
-		static const char *presets[2];
-		const char * dialog_title;
-		const char * icon_name;
+		std::string title;
 
 	public:
 
 		Action(const Udjat::Properties &node);
 		virtual ~Action();
 
-		static bool is_default(const Udjat::Properties &node) noexcept;
-
-		static void preset(const char *value);
-
-		/// @brief Get the action title.
-		inline const char *title() const noexcept {
-			return dialog_title;
-		}
-
-		inline const char *icon() const noexcept {
-			return icon_name;
-		}
-
-		static inline bool has_preset() noexcept {
-			return (presets[0] && presets[1]);
+		/// @brief Get label (for menu and logging);
+		inline const char *label() const noexcept {
+			return title.c_str();
 		}
 
 		/// @brief Activate the action, called on selected action when the 'apply' button is pressed.

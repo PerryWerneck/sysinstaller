@@ -31,6 +31,7 @@
  namespace Reinstall {
 
 	class Group;
+	class Action;
 
 	class UDJAT_PRIVATE Application : private Udjat::Properties::ObjectBuilder {
 	private:
@@ -38,16 +39,24 @@
 		static bool non_interactive_mode;					///< @brief If true set non-interactive mode, if false set interactive mode.	
 		static std::vector<Udjat::String> selected_path;	///< @brief Selected path for auto-selecting image to build.
 
+		std::shared_ptr<Group> find_group(const Udjat::Properties &props);
+		
 	protected:
 
 		std::vector<std::shared_ptr<Group>> groups;		///< @brief List of groups.
 		std::shared_ptr<Group> selected_group;			///< @brief Selected group.
 
-		/// @brief Insert item into list, if item already exists log warning and ignore.
-		/// @param props The properties to build the item.
-		/// @param item The item to insert.
-		/// @return true if the item was selected.
+		/// @brief Insert group, if already exists log warning and ignore.
+		/// @param props The properties to setup group.
+		/// @param group The group to insert.
+		/// @return true if the group was selected.
 		bool push_back(const Udjat::Properties &props,std::shared_ptr<Group> group);
+
+		/// @brief Insert action on group.
+		/// @param props The properties to get the target group.
+		/// @param action The action to insert.
+		/// @return true if the action was selected.
+		virtual bool push_back(const Udjat::Properties &props,std::shared_ptr<Action> action);
 
 		/// @brief Run interactive mode.
 		/// @return return code (0 = ok)

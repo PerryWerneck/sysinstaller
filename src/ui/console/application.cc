@@ -45,6 +45,28 @@
 	int Application::run_tui() {
 
 		class TextApplication : public Reinstall::Application {
+		private:
+
+			class Group : public Reinstall::Group {
+			private:
+				std::string title;
+				std::vector<std::shared_ptr<Action>> actions;
+
+			public:
+				Group(const Udjat::Properties &props) 
+					: Reinstall::Group{props},title{props["title"].c_str()} {
+				}
+
+				const char *label() const noexcept override {
+					return title.c_str();
+				}
+
+				void push_back(const Udjat::Properties &,std::shared_ptr<Action> action) override {
+					actions.push_back(action);
+				}
+
+			};
+
 		public:
 
 			TextApplication() {
@@ -81,21 +103,6 @@
 			}
 
 			bool build(const Udjat::Properties &props) override {
-
-				class Group : public Reinstall::Group {
-				private:
-					std::string title;
-				public:
-					Group(const Udjat::Properties &props) 
-						: Reinstall::Group{props},title{props["title"].c_str()} {
-					}
-
-					const char *label() const noexcept override {
-						return title.c_str();
-					}
-
-				};
-
 				push_back(props,make_shared<Group>(props));
 				return true;
 			}
