@@ -180,12 +180,26 @@
 #ifdef HAVE_GTKMM
 	if(ui_mode == GUI) {
 		Logger::String{"Starting graphical mode"}.trace();
-		return 0;
+		return -1;
 	}
 #endif // HAVE_GTKMM
 
 	Logger::String{"Starting text mode"}.trace();
-	return Reinstall::Application::run_tui();
+
+	try {
+
+		return Reinstall::Application::run_tui();
+
+	} catch(const std::exception &e) {
+
+		Logger::console(false);
+		Logger::String{e.what()}.error("tui");
+
+		cerr << endl << e.what() << endl;
+	}
+	
+	return -1;
+
  }
 
 #ifdef HAVE_GTKMM

@@ -32,11 +32,11 @@
 
 	class UDJAT_PRIVATE Application : private Udjat::Properties::ObjectBuilder {
 	private:
-		static Application *instance;		///< @brief Singleton instance.
-		static bool non_interactive_mode;	///< @brief If true set non-interactive mode, if false set interactive mode.	
-		static std::vector<String> selected_path;	/// @brief Selected path for auto-selecting image to build.
+		static Application *instance;						///< @brief Singleton instance.
+		static bool non_interactive_mode;					///< @brief If true set non-interactive mode, if false set interactive mode.	
+		static std::vector<Udjat::String> selected_path;	///< @brief Selected path for auto-selecting image to build.
 
-		protected:
+	protected:
 
 		class Item : public Udjat::String {
 		public:
@@ -54,12 +54,23 @@
 		/// @return true if the item was selected.
 		bool push_back(const Udjat::Properties &props,std::shared_ptr<Item> item);
 
+		/// @brief Run interactive mode.
+		/// @return return code (0 = ok)
+		virtual int run_interactive() = 0;
+
+		/// @brief Run interactive mode.
+		/// @return return code (0 = ok)
+		virtual int run_non_interactive() = 0;
+
 	public:
 
 		Application();
 		virtual ~Application();
 
-		static int run_tui() noexcept;
+		/// @brief Load configuration files, call user interaction.
+		virtual int run();
+
+		static int run_tui();
 
 		// bool build(const Udjat::Properties &props) override;
 

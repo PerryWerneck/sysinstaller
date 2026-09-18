@@ -23,15 +23,18 @@
 
  #include <config.h>
  #include <private/application.h>
+ #include <udjat/tools/properties.h>
  #include <udjat/tools/logger.h>
  #include <stdexcept>
+ #include <vector>
+ #include <udjat/tools/string.h>
 
  using namespace Udjat;
  using namespace std;
 
  namespace Reinstall {
 
-	Application *instance = nullptr;
+	Application * Application::instance = nullptr;
 	bool Application::non_interactive_mode = false;
 	std::vector<String> Application::selected_path;
 
@@ -46,6 +49,28 @@
 		instance = nullptr;
 	}
 
+	int Application::run() {
+
+		//
+		// Load options
+		//
+#ifdef DEBUG
+		Properties::parse(MimeType::xml,"./xml.d");
+#else
+		Properties::parse(MimeType::xml);
+#endif
+
+		//
+		// Run user interaction.
+		//	
+		if(non_interactive_mode) {
+			return run_non_interactive();
+		}
+
+		return run_interactive();
+
+	}
+
 	Application & Application::get_instance() {
 		if(!instance) {
 			throw std::logic_error("Application instance does not exist");
@@ -57,13 +82,15 @@
 		if(!(path && *path)) {
 			throw std::invalid_argument("Missing path");
 		}
-		selected_path = String{path}.split("/");
+		selected_path.clear();
+		String{path}.split(selected_path,"/");
 	}
 
 	bool Application::push_back(const Udjat::Properties &props, std::shared_ptr<Item> item) {
+
 		for(const auto &itn : itens) {
 			if(!strcasecmp(itn->c_str(),item->c_str())) {
-				Logger::String{"Item '", item->c_str(), "' already exists: "}.warning();
+				Logger::String{"Item '", item->c_str(), "' already exists"}.warning("groups");
 				break;
 			}
 		}
@@ -83,6 +110,10 @@
 		}
 
 		return false;
+	}
+
+	Application::Item::Item(const Udjat::Properties &props) : String{props["name"].c_str()} {
+	
 	}
 
 
